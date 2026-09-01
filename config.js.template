@@ -1,0 +1,3 @@
+// Generated at frontend-container startup. Never place secrets here.
+window.ORCA_API_BASE = "${ORCA_API_BASE}";
+window.ORCA_WS_BASE = "${ORCA_WS_BASE}";

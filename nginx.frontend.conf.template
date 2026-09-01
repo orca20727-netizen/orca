@@ -1,0 +1,19 @@
+server {
+    # Railway assigns PORT dynamically. docker-compose works with the
+    # entrypoint default of 3000.
+    listen ${PORT};
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # SPA-style fallback: unknown paths still resolve to index.html rather
+    # than a bare nginx 404, matching how start_demo.sh's http.server behaves.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # index.html/app.js talk to the backend directly on :8000 (see
+    # window.ORCA_API_BASE / ORCA_WS_BASE in app.js), so this server only
+    # ever needs to serve static files -- no reverse proxy required.
+}

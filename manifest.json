@@ -1,0 +1,17 @@
+{
+  "name": "ORCA INSIGHT — ISRO Marine Intelligence",
+  "short_name": "ORCA INSIGHT",
+  "description": "Collaborative Multi-Agent Marine Intelligence for Indian Coastal Fishermen (SIH 2026 PS 26176 / ISRO)",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#060c18",
+  "theme_color": "#06b6d4",
+  "orientation": "any",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
