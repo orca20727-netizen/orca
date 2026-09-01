@@ -1,0 +1,72 @@
+{
+  "boundaries": [
+    {
+      "name": "India - Sri Lanka IMBL (Palk Strait & Gulf of Mannar)",
+      "country": "Sri Lanka",
+      "warning_distance_nm": 5.0,
+      "danger_distance_nm": 2.0,
+      "coordinates": [
+        [
+          10.08,
+          79.86
+        ],
+        [
+          9.9,
+          79.52
+        ],
+        [
+          9.67,
+          79.38
+        ],
+        [
+          9.33,
+          79.25
+        ],
+        [
+          9.1,
+          79.4
+        ],
+        [
+          8.75,
+          79.05
+        ],
+        [
+          8.35,
+          78.9
+        ],
+        [
+          8.0,
+          78.8
+        ]
+      ]
+    },
+    {
+      "name": "India - Pakistan IMBL (Sir Creek / Arabian Sea)",
+      "country": "Pakistan",
+      "warning_distance_nm": 8.0,
+      "danger_distance_nm": 3.0,
+      "coordinates": [
+        [
+          23.6,
+          68.1
+        ],
+        [
+          23.4,
+          67.85
+        ],
+        [
+          23.1,
+          67.45
+        ],
+        [
+          22.8,
+          67.1
+        ],
+        [
+          22.4,
+          66.7
+        ]
+      ]
+    }
+  ]
+}

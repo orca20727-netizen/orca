@@ -1,0 +1,56 @@
+{
+  "bulletins": [
+    {
+      "id": "ISRO-INCOIS/ADV/2026/08-30/01",
+      "title": "High-Yield PFZ Alert: Wadge Bank & Malabar Offshore Convergence",
+      "severity": "ADVISORY",
+      "issued_at": "2026-08-30 06:00 IST",
+      "valid_until": "2026-08-31 18:00 IST",
+      "source": "ISRO Oceansat-3 OCM-3 & INCOIS Hyderabad",
+      "region": "South-West Coast (Kerala & Tamil Nadu)",
+      "summary": "Pronounced chlorophyll-a front (1.8 - 2.1 mg/m3) aligned with thermal front (27.6\u00b0C - 28.4\u00b0C). High probability of pelagic shoals (Tuna, Mackerel, Carangids). Safe sea venture clearance issued for craft >= 9m.",
+      "wave_forecast": "1.1m to 1.4m Significant Wave Height",
+      "wind_forecast": "12-16 knots Westerly",
+      "confidence": 96
+    },
+    {
+      "id": "ISRO-INCOIS/ADV/2026/08-30/02",
+      "title": "IMBL Proximity & Geofencing Alert: Palk Strait Sector 4",
+      "severity": "CRITICAL",
+      "issued_at": "2026-08-30 10:15 IST",
+      "valid_until": "2026-08-31 23:59 IST",
+      "source": "Indian Coast Guard & ORCA Geofencing Core",
+      "region": "Palk Bay / Rameswaram Offshore",
+      "summary": "High vessel cluster observed within 2 NM of India-Sri Lanka IMBL boundary. Fishermen are strictly warned not to cross latitude 09\u00b015N / longitude 79\u00b020E. Navigational transponders must remain ACTIVE on VHF Ch 16.",
+      "wave_forecast": "0.7m to 0.9m",
+      "wind_forecast": "8-11 knots Easterly",
+      "confidence": 99
+    },
+    {
+      "id": "ISRO-INCOIS/ADV/2026/08-30/03",
+      "title": "Squally Weather & Sea State Advisory: North Gujarat & Gulf of Kutch",
+      "severity": "WARNING",
+      "issued_at": "2026-08-30 08:30 IST",
+      "valid_until": "2026-08-31 12:00 IST",
+      "source": "IMD Cyclone Warning Centre & INSAT-3DR",
+      "region": "Gujarat Coast (Okha, Porbandar, Veraval)",
+      "summary": "Gusty winds reaching 22-26 knots with wave heights up to 2.3m expected due to low-pressure trough. Small country craft advised not to venture beyond 15 NM offshore. ETA calculations should factor 25% transit delay.",
+      "wave_forecast": "1.8m to 2.3m Moderate Sea",
+      "wind_forecast": "20-25 knots South-Westerly",
+      "confidence": 92
+    },
+    {
+      "id": "ISRO-INCOIS/ADV/2026/08-30/04",
+      "title": "Marine Protected Area Compliance: Gulf of Mannar Marine Biosphere",
+      "severity": "INFO",
+      "issued_at": "2026-08-29 18:00 IST",
+      "valid_until": "Permanent Notice",
+      "source": "Ministry of Environment, Forest & Climate Change",
+      "region": "Gulf of Mannar",
+      "summary": "Mechanized trawling strictly prohibited in Core Sanctuary Zone (Islands 1 to 21). Automated AIS tracking logs all entries. Please route along designated navigation channels.",
+      "wave_forecast": "0.8m to 1.2m",
+      "wind_forecast": "10-14 knots",
+      "confidence": 100
+    }
+  ]
+}

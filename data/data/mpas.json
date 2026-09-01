@@ -1,0 +1,139 @@
+{
+  "mpas": [
+    {
+      "id": "MPA-01",
+      "name": "Gulf of Mannar Marine National Park",
+      "status": "STRICT_PROTECTION_NO_FISHING",
+      "center": [
+        9.15,
+        78.95
+      ],
+      "bounds": [
+        [
+          9.0,
+          78.6
+        ],
+        [
+          9.35,
+          78.6
+        ],
+        [
+          9.35,
+          79.2
+        ],
+        [
+          9.0,
+          79.2
+        ]
+      ],
+      "description": "21 coral islands, dugong sanctuary, sea turtle nesting grounds. Automated geofence fines apply.",
+      "polygon": [
+        [
+          9.0,
+          78.65
+        ],
+        [
+          9.06,
+          78.75
+        ],
+        [
+          9.12,
+          78.85
+        ],
+        [
+          9.18,
+          78.97
+        ],
+        [
+          9.23,
+          79.07
+        ],
+        [
+          9.27,
+          79.16
+        ],
+        [
+          9.2,
+          79.13
+        ],
+        [
+          9.15,
+          79.03
+        ],
+        [
+          9.1,
+          78.92
+        ],
+        [
+          9.04,
+          78.81
+        ],
+        [
+          8.98,
+          78.71
+        ],
+        [
+          8.94,
+          78.63
+        ]
+      ],
+      "polygon_source": "SIMPLIFIED_APPROXIMATION (illustrative chain-of-islands shape, not surveyed boundary data)"
+    },
+    {
+      "id": "MPA-02",
+      "name": "Marine National Park Jamnagar (Gulf of Kutch)",
+      "status": "RESTRICTED_ECO_ZONE",
+      "center": [
+        22.48,
+        69.8
+      ],
+      "bounds": [
+        [
+          22.35,
+          69.45
+        ],
+        [
+          22.65,
+          69.45
+        ],
+        [
+          22.65,
+          70.15
+        ],
+        [
+          22.35,
+          70.15
+        ]
+      ],
+      "description": "Mangrove & coral reef habitat. Fishing prohibited within 5 NM of inner park boundary."
+    },
+    {
+      "id": "MPA-03",
+      "name": "Gahirmatha Marine Sanctuary",
+      "status": "SEASONAL_TURTLE_SANCTUARY",
+      "center": [
+        20.72,
+        87.05
+      ],
+      "bounds": [
+        [
+          20.5,
+          86.8
+        ],
+        [
+          20.95,
+          86.8
+        ],
+        [
+          20.95,
+          87.3
+        ],
+        [
+          20.5,
+          87.3
+        ]
+      ],
+      "description": "World largest Olive Ridley turtle rookery. Mechanized trawling prohibited."
+    }
+  ]
+}
