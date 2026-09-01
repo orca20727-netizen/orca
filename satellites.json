@@ -1,0 +1,121 @@
+{
+  "satellites": [
+    {
+      "id": "oceansat-3",
+      "name": "ISRO Oceansat-3 (EOS-06)",
+      "norad_id": 54361,
+      "orbit_type": "Sun-Synchronous Polar LEO",
+      "altitude_km": 742,
+      "sensors": [
+        {
+          "name": "OCM-3 (Ocean Colour Monitor)",
+          "bands": 13,
+          "resolution_m": 360,
+          "metric": "Chlorophyll-a & TSS"
+        },
+        {
+          "name": "SSTM (Sea Surface Temp Monitor)",
+          "bands": 2,
+          "resolution_m": 1000,
+          "metric": "Thermal Fronts & SST"
+        },
+        {
+          "name": "Ku-Band Scatterometer",
+          "bands": 1,
+          "resolution_km": 25,
+          "metric": "Ocean Surface Wind Vectors"
+        },
+        {
+          "name": "ARGOS-4",
+          "bands": 1,
+          "resolution_m": 0,
+          "metric": "Marine Beacon Tracking"
+        }
+      ],
+      "last_pass_ist": "Today 11:42 IST",
+      "next_pass_ist": "Today 17:15 IST",
+      "health_status": "OPTIMAL",
+      "data_sync_latency_sec": 14,
+      "coverage_area": "Arabian Sea & Bay of Bengal",
+      "battery_level_pct": 98.4,
+      "active_swath_width_km": 1420
+    },
+    {
+      "id": "insat-3dr",
+      "name": "ISRO INSAT-3DR",
+      "norad_id": 41752,
+      "orbit_type": "Geostationary (74\u00b0 E)",
+      "altitude_km": 35786,
+      "sensors": [
+        {
+          "name": "Multi-Spectral Imager (6-Band)",
+          "bands": 6,
+          "resolution_m": 1000,
+          "metric": "Cloud Cover & Cyclone Tracking"
+        },
+        {
+          "name": "19-Channel Sounder",
+          "bands": 19,
+          "resolution_km": 10,
+          "metric": "Atmospheric Temp & Humidity Profiles"
+        },
+        {
+          "name": "SAS&R",
+          "bands": 1,
+          "resolution_m": 0,
+          "metric": "406 MHz Distress Beacon Receiver"
+        }
+      ],
+      "last_pass_ist": "Continuous Live Stream",
+      "next_pass_ist": "Continuous Live Stream",
+      "health_status": "OPTIMAL",
+      "data_sync_latency_sec": 4,
+      "coverage_area": "Entire Indian Ocean Basin",
+      "battery_level_pct": 100.0,
+      "active_swath_width_km": 18000
+    },
+    {
+      "id": "sentinel-3",
+      "name": "ESA/Copernicus Sentinel-3A/B",
+      "norad_id": 41335,
+      "orbit_type": "Sun-Synchronous Polar LEO",
+      "altitude_km": 814,
+      "sensors": [
+        {
+          "name": "OLCI (Ocean & Land Colour Instrument)",
+          "bands": 21,
+          "resolution_m": 300,
+          "metric": "Phytoplankton Blooms"
+        },
+        {
+          "name": "SLSTR (Sea & Land Temp Radiometer)",
+          "bands": 9,
+          "resolution_m": 500,
+          "metric": "High-Precision SST Validation"
+        },
+        {
+          "name": "SRAL (SAR Altimeter)",
+          "bands": 2,
+          "resolution_m": 300,
+          "metric": "Significant Wave Height (SWH)"
+        }
+      ],
+      "last_pass_ist": "Today 09:18 IST",
+      "next_pass_ist": "Today 21:04 IST",
+      "health_status": "OPTIMAL",
+      "data_sync_latency_sec": 45,
+      "coverage_area": "Global Coastal Waters",
+      "battery_level_pct": 96.8,
+      "active_swath_width_km": 1270
+    }
+  ],
+  "system_telemetry": {
+    "constellation_uptime_pct": 99.94,
+    "last_incois_sync": "2026-08-30T12:50:00+05:30",
+    "active_ground_stations": [
+      "Shadnagar NRSC",
+      "Bhopal Regional",
+      "Antarctica Bharti"
+    ]
+  }
+}

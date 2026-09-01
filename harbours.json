@@ -1,0 +1,88 @@
+{
+  "harbours": [
+    {
+      "id": "HBR-KOC",
+      "name": "Kochi Fisheries Harbour (Thoppumpady)",
+      "state": "Kerala",
+      "coordinates": [
+        9.93,
+        76.26
+      ],
+      "capacity_vessels": 600,
+      "vhf_channel": "Ch 16 / 68",
+      "fuel_station": true,
+      "ice_plant": true,
+      "rescue_station_dist_nm": 0.5
+    },
+    {
+      "id": "HBR-MNG",
+      "name": "Mangaluru Old Port (Bunder)",
+      "state": "Karnataka",
+      "coordinates": [
+        12.86,
+        74.83
+      ],
+      "capacity_vessels": 450,
+      "vhf_channel": "Ch 16 / 72",
+      "fuel_station": true,
+      "ice_plant": true,
+      "rescue_station_dist_nm": 1.2
+    },
+    {
+      "id": "HBR-CHN",
+      "name": "Chennai Kasimedu Fishing Harbour",
+      "state": "Tamil Nadu",
+      "coordinates": [
+        13.12,
+        80.29
+      ],
+      "capacity_vessels": 850,
+      "vhf_channel": "Ch 16 / 12",
+      "fuel_station": true,
+      "ice_plant": true,
+      "rescue_station_dist_nm": 0.8
+    },
+    {
+      "id": "HBR-TUT",
+      "name": "Thoothukudi (Tuticorin) Fishing Harbour",
+      "state": "Tamil Nadu",
+      "coordinates": [
+        8.78,
+        78.16
+      ],
+      "capacity_vessels": 380,
+      "vhf_channel": "Ch 16 / 08",
+      "fuel_station": true,
+      "ice_plant": true,
+      "rescue_station_dist_nm": 2.0
+    },
+    {
+      "id": "HBR-VER",
+      "name": "Veraval Fishing Harbour",
+      "state": "Gujarat",
+      "coordinates": [
+        20.9,
+        70.36
+      ],
+      "capacity_vessels": 1200,
+      "vhf_channel": "Ch 16 / 74",
+      "fuel_station": true,
+      "ice_plant": true,
+      "rescue_station_dist_nm": 1.5
+    },
+    {
+      "id": "HBR-VSK",
+      "name": "Visakhapatnam Fishing Harbour",
+      "state": "Andhra Pradesh",
+      "coordinates": [
+        17.69,
+        83.3
+      ],
+      "capacity_vessels": 500,
+      "vhf_channel": "Ch 16 / 14",
+      "fuel_station": true,
+      "ice_plant": true,
+      "rescue_station_dist_nm": 0.9
+    }
+  ]
+}

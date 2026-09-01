@@ -1,0 +1,301 @@
+{
+  "zones": [
+    {
+      "id": "PFZ-01",
+      "name": "Kochi Deep Offshore (Malabar)",
+      "region": "Kerala Coast",
+      "center": [
+        9.85,
+        75.6
+      ],
+      "bounds": [
+        [
+          9.6,
+          75.3
+        ],
+        [
+          10.1,
+          75.3
+        ],
+        [
+          10.1,
+          75.9
+        ],
+        [
+          9.6,
+          75.9
+        ]
+      ],
+      "sst_celsius": 28.4,
+      "sst_gradient_c_per_km": 0.18,
+      "chlorophyll_mg_m3": 1.85,
+      "yield_rating": "HIGH",
+      "yield_score_pct": 94,
+      "dominant_species": [
+        "Indian Mackerel",
+        "Yellowfin Tuna",
+        "Sardines"
+      ],
+      "depth_m": 75,
+      "valid_until_ist": "2026-08-31 06:00 IST",
+      "vessels_in_zone": 8,
+      "safety_status": "SAFE",
+      "advisory_notes": "Strong chlorophyll front aligned with 28.4\u00b0C SST contour. High pelagic aggregation detected by OCM-3."
+    },
+    {
+      "id": "PFZ-02",
+      "name": "Mangaluru Shelf Front",
+      "region": "Karnataka Coast",
+      "center": [
+        12.75,
+        74.3
+      ],
+      "bounds": [
+        [
+          12.5,
+          74.0
+        ],
+        [
+          13.0,
+          74.0
+        ],
+        [
+          13.0,
+          74.6
+        ],
+        [
+          12.5,
+          74.6
+        ]
+      ],
+      "sst_celsius": 28.1,
+      "sst_gradient_c_per_km": 0.14,
+      "chlorophyll_mg_m3": 1.42,
+      "yield_rating": "HIGH",
+      "yield_score_pct": 89,
+      "dominant_species": [
+        "King Seerfish",
+        "Ribbon Fish",
+        "Squid"
+      ],
+      "depth_m": 60,
+      "valid_until_ist": "2026-08-31 06:00 IST",
+      "vessels_in_zone": 6,
+      "safety_status": "SAFE",
+      "advisory_notes": "Coastal upwelling boundary creating rich nutrient zone. High fish shoal density confirmed."
+    },
+    {
+      "id": "PFZ-03",
+      "name": "Wadge Bank Special Zone",
+      "region": "Kanyakumari / Tamil Nadu",
+      "center": [
+        7.85,
+        77.2
+      ],
+      "bounds": [
+        [
+          7.55,
+          76.85
+        ],
+        [
+          8.15,
+          76.85
+        ],
+        [
+          8.15,
+          77.55
+        ],
+        [
+          7.55,
+          77.55
+        ]
+      ],
+      "sst_celsius": 27.6,
+      "sst_gradient_c_per_km": 0.22,
+      "chlorophyll_mg_m3": 2.1,
+      "yield_rating": "VERY HIGH",
+      "yield_score_pct": 98,
+      "dominant_species": [
+        "Skipjack Tuna",
+        "Snappers",
+        "Carangids",
+        "Cuttlefish"
+      ],
+      "depth_m": 45,
+      "valid_until_ist": "2026-08-31 06:00 IST",
+      "vessels_in_zone": 12,
+      "safety_status": "CAUTION_WIND",
+      "advisory_notes": "Premier oceanic fishing bank. High current shear observed. Good catch probability for mechanized craft."
+    },
+    {
+      "id": "PFZ-04",
+      "name": "Coromandel South (Pondicherry Offshore)",
+      "region": "Tamil Nadu Coast",
+      "center": [
+        11.85,
+        80.2
+      ],
+      "bounds": [
+        [
+          11.55,
+          79.9
+        ],
+        [
+          12.15,
+          79.9
+        ],
+        [
+          12.15,
+          80.5
+        ],
+        [
+          11.55,
+          80.5
+        ]
+      ],
+      "sst_celsius": 29.1,
+      "sst_gradient_c_per_km": 0.12,
+      "chlorophyll_mg_m3": 0.95,
+      "yield_rating": "MODERATE",
+      "yield_score_pct": 72,
+      "dominant_species": [
+        "Scomberomorus",
+        "Barracuda",
+        "Anchovies"
+      ],
+      "depth_m": 80,
+      "valid_until_ist": "2026-08-31 06:00 IST",
+      "vessels_in_zone": 5,
+      "safety_status": "SAFE",
+      "advisory_notes": "Moderate chlorophyll layer. Safe navigation conditions."
+    },
+    {
+      "id": "PFZ-05",
+      "name": "Visakhapatnam Deep Front",
+      "region": "Andhra Coast",
+      "center": [
+        17.5,
+        83.7
+      ],
+      "bounds": [
+        [
+          17.2,
+          83.35
+        ],
+        [
+          17.8,
+          83.35
+        ],
+        [
+          17.8,
+          84.05
+        ],
+        [
+          17.2,
+          84.05
+        ]
+      ],
+      "sst_celsius": 28.8,
+      "sst_gradient_c_per_km": 0.16,
+      "chlorophyll_mg_m3": 1.65,
+      "yield_rating": "HIGH",
+      "yield_score_pct": 87,
+      "dominant_species": [
+        "Threadfin Bream",
+        "Prawns",
+        "Tuna",
+        "Croakers"
+      ],
+      "depth_m": 90,
+      "valid_until_ist": "2026-08-31 06:00 IST",
+      "vessels_in_zone": 4,
+      "safety_status": "SAFE",
+      "advisory_notes": "Slight cyclonic gyre in northern Bay of Bengal enhancing nutrient convergence."
+    },
+    {
+      "id": "PFZ-06",
+      "name": "Veraval Saurashtra Bank",
+      "region": "Gujarat Coast",
+      "center": [
+        20.65,
+        70.15
+      ],
+      "bounds": [
+        [
+          20.35,
+          69.8
+        ],
+        [
+          20.95,
+          69.8
+        ],
+        [
+          20.95,
+          70.5
+        ],
+        [
+          20.35,
+          70.5
+        ]
+      ],
+      "sst_celsius": 27.9,
+      "sst_gradient_c_per_km": 0.19,
+      "chlorophyll_mg_m3": 1.98,
+      "yield_rating": "HIGH",
+      "yield_score_pct": 91,
+      "dominant_species": [
+        "Pomfret",
+        "Bombay Duck",
+        "Ribbonfish",
+        "Shrimp"
+      ],
+      "depth_m": 50,
+      "valid_until_ist": "2026-08-31 06:00 IST",
+      "vessels_in_zone": 9,
+      "safety_status": "SAFE",
+      "advisory_notes": "High productivity continental shelf. Recommended for trawlers and gillnetters."
+    },
+    {
+      "id": "PFZ-07",
+      "name": "Ratnagiri Deep Shelf",
+      "region": "Maharashtra Coast",
+      "center": [
+        16.85,
+        72.85
+      ],
+      "bounds": [
+        [
+          16.55,
+          72.5
+        ],
+        [
+          17.15,
+          72.5
+        ],
+        [
+          17.15,
+          73.2
+        ],
+        [
+          16.55,
+          73.2
+        ]
+      ],
+      "sst_celsius": 28.5,
+      "sst_gradient_c_per_km": 0.13,
+      "chlorophyll_mg_m3": 1.3,
+      "yield_rating": "MODERATE",
+      "yield_score_pct": 78,
+      "dominant_species": [
+        "Mackerel",
+        "Catfish",
+        "Cephalopods"
+      ],
+      "depth_m": 65,
+      "valid_until_ist": "2026-08-31 06:00 IST",
+      "vessels_in_zone": 3,
+      "safety_status": "SAFE",
+      "advisory_notes": "Stable sea state. Good for overnight gillnet operations."
+    }
+  ]
+}
