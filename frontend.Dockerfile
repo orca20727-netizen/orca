@@ -3,8 +3,6 @@
 # from ./Dockerfile (port 8000). Run together via docker-compose.yml.
 FROM nginx:1.27-alpine
 
-RUN apk add --no-cache gettext
-
 COPY index.html app.js styles.css sw.js manifest.json /usr/share/nginx/html/
 COPY icons/ /usr/share/nginx/html/icons/
 COPY data/ /usr/share/nginx/html/data/
