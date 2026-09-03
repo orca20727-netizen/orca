@@ -110,6 +110,17 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _valid_coordinate(lat: Any, lon: Any) -> Optional[tuple[float, float]]:
+    """Accept AISStream's upper/lower-case coordinate variants safely."""
+    try:
+        lat_value, lon_value = float(lat), float(lon)
+    except (TypeError, ValueError):
+        return None
+    if -90 <= lat_value <= 90 and -180 <= lon_value <= 180 and (lat_value or lon_value):
+        return lat_value, lon_value
+    return None
+
+
 class AISGateway:
     def __init__(self, api_key: str) -> None:
         self.api_key = api_key
@@ -164,11 +175,22 @@ class AISGateway:
         if mmsi is None:
             return
         vessel_id = str(mmsi)
+        message_body = msg.get("Message") or {}
+        report = message_body.get("PositionReport") or message_body.get("StandardClassBPositionReport") or {}
+        coordinates = _valid_coordinate(
+            report.get("Latitude", meta.get("Latitude", meta.get("latitude"))),
+            report.get("Longitude", meta.get("Longitude", meta.get("longitude"))),
+        )
+        # Never create a map marker from a static AIS message without a valid
+        # GPS position; that was the source of port-centred placeholder pins.
+        if coordinates is None:
+            return
+        latitude, longitude = coordinates
 
         entry = self._vessels.setdefault(vessel_id, {
             "id": vessel_id,
-            "lat": meta.get("latitude", 0.0),
-            "lon": meta.get("longitude", 0.0),
+            "lat": latitude,
+            "lon": longitude,
             "name": (meta.get("ShipName") or "").strip() or "Unnamed vessel",
             "speed_knots": 0.0,
             "heading": 0.0,
@@ -182,22 +204,14 @@ class AISGateway:
         })
         entry["_last_seen"] = asyncio.get_event_loop().time()
 
-        if meta.get("latitude") is not None:
-            entry["lat"] = meta["latitude"]
-        if meta.get("longitude") is not None:
-            entry["lon"] = meta["longitude"]
+        entry["lat"], entry["lon"] = latitude, longitude
         if meta.get("ShipName"):
             name = meta["ShipName"].strip()
             if name:
                 entry["name"] = name
 
         msg_type = msg.get("MessageType")
-        if msg_type == "PositionReport":
-            report = msg.get("Message", {}).get("PositionReport", {})
-            if "Latitude" in report:
-                entry["lat"] = report["Latitude"]
-            if "Longitude" in report:
-                entry["lon"] = report["Longitude"]
+        if msg_type in ("PositionReport", "StandardClassBPositionReport"):
             if "Sog" in report and report["Sog"] is not None:
                 # VesselTelemetry caps speed_knots at 100; AIS speed-not-available is 102.3
                 entry["speed_knots"] = min(max(report["Sog"], 0), 100)
