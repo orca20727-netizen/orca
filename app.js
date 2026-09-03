@@ -1016,7 +1016,7 @@ function renderVesselsOnMap() {
             ▲
           </div>
           <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-slate-950/80 px-1 rounded text-slate-300 border border-slate-800 pointer-events-none">
-            ${vessel.id.split('-').slice(1).join('-')}
+            ${vessel.id.   ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}.join('-')}
           </span>
         </div>
       `,
@@ -1040,7 +1040,8 @@ function renderVesselsOnMap() {
           <div><span class="text-slate-400">Zone:</span> <span class="text-slate-200 font-semibold">${vessel.zone}</span></div>
           <div><span class="text-slate-400">IMBL Dist:</span> <span class="${vessel.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${vessel.imbl_dist_nm} NM</span></div>
           <div><span class="text-slate-400">Status:</span> <span class="font-bold ${vessel.status.includes('ALERT') ? 'text-red-400' : 'text-emerald-400'}">${vessel.status}</span></div>
-          <div><span class="text-slate-400">Fuel:</span> <span class="text-slate-200">${vessel.fuel_pct}%</span></div>
+          <div><span class="text-slate-400">Fuel:</span> <span class="text-slate-200">${vessel.fuel_pct != null ? vessel.fuel_pct + '%' : 'N/A'}</span></div>
+          //Fix vessel label and fuel display for live AIS vessels
         </div>
       </div>
     `;
