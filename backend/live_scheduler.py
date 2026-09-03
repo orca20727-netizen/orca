@@ -8,13 +8,13 @@ from contextlib import asynccontextmanager
 from live_data import live_data
 from data_source_registry import data_source_registry
 from alert_service import alert_service
+from ais_gateway import start_ais_gateway, stop_ais_gateway
 
 logger = logging.getLogger(__name__)
-REFRESH_SECONDS = max(60, int(os.getenv("LIVE_FEED_REFRESH_SECONDS", "900")))
+REFRESH_SECONDS = max(60, int(os.getenv("LIVE_FEED_REFRESH_SECONDS", "60")))
 
 
 def _bundled_bulletins() -> list:
-    """Static bulletins remain explicitly labelled when no live bulletin feed exists."""
     try:
         path = os.path.join(os.path.dirname(__file__), "..", "data", "bulletins.json")
         with open(path, "r") as source:
@@ -25,7 +25,6 @@ def _bundled_bulletins() -> list:
 
 
 async def evaluate_alerts() -> None:
-    # Importing here keeps the scheduler independent from app construction.
     from core import HARBOURS
     created = await alert_service.evaluate(HARBOURS.values(), _bundled_bulletins())
     if created:
@@ -41,12 +40,14 @@ async def refresh_loop() -> None:
 @asynccontextmanager
 async def lifespan(app):
     await asyncio.gather(live_data.refresh_all(), data_source_registry.refresh(), evaluate_alerts())
-    task = asyncio.create_task(refresh_loop())
+    refresh_task = asyncio.create_task(refresh_loop())
+    ais_task = start_ais_gateway()
     try:
         yield
     finally:
-        task.cancel()
+        refresh_task.cancel()
         try:
-            await task
+            await refresh_task
         except asyncio.CancelledError:
             pass
+        await stop_ais_gateway()
