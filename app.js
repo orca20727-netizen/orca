@@ -2307,7 +2307,7 @@ async function refreshSafetyBarometer(lat, lon) {
     state.liveMarine.windSpeed = weather.surface_wind_knots;
     state.liveMarine.seaState = weather.sea_state_douglas;
     state.liveMarine.lightningRisk = weather.lightning_risk_pct;
-    state.liveMarine.isLiveFeed = weather.data_source?.wave_height === 'LIVE_OPEN_METEO_MARINE';
+    state.liveMarine.windDirection = weather.wind_direction;     state.liveMarine.safetyScore = weather.safety_score;     state.liveMarine.clearanceVerdict = weather.clearance_verdict;     state.liveMarine.isLiveFeed = weather.data_source?.wave_height === 'LIVE_OPEN_METEO_MARINE';      updateMapHUD();
 
     renderTrendSparklines();
   } catch (err) {
@@ -2316,6 +2316,33 @@ async function refreshSafetyBarometer(lat, lon) {
 }
 
 // Applies a /api/weather response to the score card + 4 condition tiles.
+// Keeps the GIS Command Map's bottom info bar (wave/wind/clearance) in
+// sync with the same live weather reading the Safety Barometer uses --
+// this bar used to be static hardcoded text and never changed.
+function updateMapHUD() {
+  const waveEl = document.getElementById('mapHudWave');
+  const windEl = document.getElementById('mapHudWind');
+  const clearanceEl = document.getElementById('mapHudClearance');
+  if (!waveEl && !windEl && !clearanceEl) return;
+
+  if (waveEl && state.liveMarine.waveHeight != null) {
+    waveEl.textContent = `${state.liveMarine.waveHeight} m`;
+  }
+  if (windEl && state.liveMarine.windSpeed != null) {
+    const dir = state.liveMarine.windDirection || '';
+    const dirAbbrev = dir ? ` ${dir[0]}` : '';
+    windEl.textContent = `${state.liveMarine.windSpeed} kn${dirAbbrev}`;
+  }
+  if (clearanceEl && state.liveMarine.clearanceVerdict) {
+    const verdict = state.liveMarine.clearanceVerdict;
+    const score = state.liveMarine.safetyScore ?? '—';
+    clearanceEl.textContent = `${verdict} (${score}/100)`;
+    const colorClass = verdict === 'SAFE' ? 'text-emerald-400'
+      : verdict === 'CAUTION' ? 'text-amber-400'
+      : 'text-rose-400';
+    clearanceEl.className = `font-bold ${colorClass}`;
+  }
+}
 function updateSafetyIndexCard(weather) {
   const scoreEl = document.getElementById('safetyIndexScore');
   const verdictEl = document.getElementById('safetyVerdictText');
