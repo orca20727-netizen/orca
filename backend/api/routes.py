@@ -182,11 +182,12 @@ async def get_fleet(pfz_id: str = DEFAULT_PFZ_ID):
 @router.get("/api/live/status")
 async def live_status():
     """Source, observation time, and ingestion time for every live feed."""
-from ais_gateway import get_gateway_state
+    from ais_gateway import get_gateway_state
     return {
         "snapshots": live_data.status(),
         "source_registry": data_source_registry.status,
         "ais_gateway": get_gateway_state(),
+    }
     }
 
 
@@ -205,7 +206,7 @@ async def refresh_live_feeds():
 @router.get("/api/live/vessels")
 async def live_vessels():
     snapshot = live_data.store.latest("vessel")
-if snapshot:
+    if snapshot:
         return snapshot
     from ais_gateway import get_gateway_state
     return {"payload": [], "status": "NOT_CONFIGURED", "ais_gateway": get_gateway_state()}
