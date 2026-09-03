@@ -1,45 +1,3 @@
-// PWA Service Worker
-function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').then(() => {
-      console.log('ORCA INSIGHT: Offline PWA Service Worker Active');
-    }).catch(err => {
-      console.warn('PWA Registration notice:', err);
-    });
-  }
-}    // Live deployments intentionally do not install an offline service worker.
-function registerServiceWorker() {
-  return;
-}
-fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, {}, 5000)  fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, { cache: 'no-store' }, 5000)    renderVesselsOnMap();
-    renderVesselsTable();      renderVesselsOnMap();
-    if (state.map) state.map.invalidateSize(false);
-    renderVesselsTable();
-setInterval(refreshExternalTelemetry, 60000);  setInterval(refreshExternalTelemetry, 10000);
-waveHeight: 1.25,  waveHeight: null,function updateSafetyMetricsUI() {  function updateSafetyMetricsUI() {
-  const waveVal = document.getElementById('marineWaveVal');
-  const windVal = document.getElementById('marineWindVal');
-  const seaVal = document.getElementById('marineSeaVal');
-  if (waveVal) waveVal.textContent = Number.isFinite(state.liveMarine.waveHeight) ? state.liveMarine.waveHeight.toFixed(2) + ' m' : '—';
-  if (windVal) windVal.textContent = Number.isFinite(state.liveMarine.windSpeed) ? state.liveMarine.windSpeed.toFixed(1) + ' kn' : '—';
-  if (seaVal) seaVal.textContent = Number.isFinite(state.liveMarine.seaState) ? 'State ' + state.liveMarine.seaState : '—';
-}function updateSafetyMetricsUI() {
-  const waveVal = document.getElementById('marineWaveVal');
-  const windVal = document.getElementById('marineWindVal');
-  const seaVal = document.getElementById('marineSeaVal');
-  
-  if (waveVal) waveVal.textContent = `${state.liveMarine.waveHeight.toFixed(2)} m`;
-  if (windVal) windVal.textContent = `${state.liveMarine.windSpeed.toFixed(1)} kn`;
-  if (seaVal) seaVal.textContent = `State ${state.liveMarine.seaState}`;
-}  function updateSafetyMetricsUI() {
-  const waveVal = document.getElementById('marineWaveVal');
-  const windVal = document.getElementById('marineWindVal');
-  const seaVal = document.getElementById('marineSeaVal');
-  if (waveVal) waveVal.textContent = Number.isFinite(state.liveMarine.waveHeight) ? state.liveMarine.waveHeight.toFixed(2) + ' m' : '—';
-  if (windVal) windVal.textContent = Number.isFinite(state.liveMarine.windSpeed) ? state.liveMarine.windSpeed.toFixed(1) + ' kn' : '—';
-  if (seaVal) seaVal.textContent = Number.isFinite(state.liveMarine.seaState) ? 'State ' + state.liveMarine.seaState : '—';
-}      updateSafetyMetricsUI();        updateSafetyMetricsUI();
-      renderTrendSparklines();
 /**
  * ORCA INSIGHT - Final Production Multi-Agent Marine Intelligence Platform
  * Smart India Hackathon 2026 · Problem Statement 26176 · ISRO (Dept. of Space)
@@ -456,18 +414,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Fetch real Open-Meteo Marine Data for default Kochi Harbour
   fetchLiveMarineTelemetry(9.93, 76.26);
   refreshExternalTelemetry();
-  setInterval(refreshExternalTelemetry, 60000);
+  // Match the live AIS publisher cadence so the Fleet Monitor shows a new
+  // server snapshot within one polling cycle.
+  setInterval(refreshExternalTelemetry, 10000);
 });
 
-// PWA Service Worker
+// Live deployments intentionally do not install an offline service worker:
+// cached application shells can hide fresh vessel and safety data on devices
+// that previously visited the dashboard.
 function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').then(() => {
-      console.log('ORCA INSIGHT: Offline PWA Service Worker Active');
-    }).catch(err => {
-      console.warn('PWA Registration notice:', err);
-    });
-  }
+  return;
 }
 
 // Fetch wrapper with a hard timeout so a missing/unreachable backend fails
