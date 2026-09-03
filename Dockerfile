@@ -1,3 +1,5 @@
+# Single-service ORCA image. FastAPI serves both the API and the static
+# dashboard, allowing a deployment to use one Railway service and one domain.
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -6,6 +8,8 @@ COPY backend/requirements.txt backend/requirements.txt
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
 COPY backend/ backend/
+COPY ais_gateway.py backend/ais_gateway.py
+# The repository stores the uploaded data under data/data/.
 COPY data/data/ data/
 COPY index.html app.js styles.css sw.js manifest.json config.js static/
 
