@@ -1,5 +1,5 @@
 // ORCA INSIGHT Service Worker - Offline Marine Caching
-const CACHE_NAME = 'orca-insight-v1.4.0';
+const CACHE_NAME = 'orca-insight-v2.0.0-live';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -62,9 +62,26 @@ self.addEventListener('fetch', (event) => {
   //    always go straight to the network.
   const isSameOrigin = url.origin === self.location.origin;
   const isApiPath = url.pathname.startsWith('/api/');
+  const isAppShell = url.pathname === '/' || url.pathname.endsWith('/index.html') ||
+    /\/(app|config|live-overrides)\.js$/.test(url.pathname) || url.pathname.endsWith('/styles.css');
 
   if (req.method !== 'GET' || !isSameOrigin || isApiPath) {
     event.respondWith(fetch(req));
+    return;
+  }
+
+  // Always prefer the network for the application shell. This prevents a
+  // phone/tablet that visited an earlier version from retaining stale UI,
+  // hard-coded demo counters, or obsolete API wiring.
+  if (isAppShell) {
+    event.respondWith(
+      fetch(req).then((response) => {
+        if (response && response.status === 200) {
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, response.clone()));
+        }
+        return response;
+      }).catch(() => caches.match(req))
+    );
     return;
   }
 
