@@ -400,37 +400,57 @@ const agentsList = [
   }
 ];
 
+// Runs one startup step in isolation. Every step used to run back-to-back
+// with no guard, which meant a single throwing step (e.g. an invalid
+// GeoJSON layer, or a missing function) silently aborted every step after
+// it -- including the Safety Barometer refresh and Fleet Monitor's live
+// vessel polling, leaving the whole page frozen on stale placeholder
+// values with no visible error. A broken feature must never again be able
+// to take the rest of the dashboard down with it.
+function runStartupStep(label, fn) {
+  try {
+    return fn();
+  } catch (err) {
+    console.error(`ORCA INSIGHT: startup step "${label}" failed and was skipped:`, err);
+    return null;
+  }
+}
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
-  registerServiceWorker();
-  checkBackendHealth();
-  setInterval(checkBackendHealth, 15000); // re-check periodically in case the backend starts later
-  await loadInitialData();
-  setupNavigation();
-  setupLanguageSwitcher();
-  setupMap();
-  setupChatbot();
-  setupSpeechRecognition();
-  setupDAGVisualizer();
-  setupRoutePlanner();
-  setupFleetMonitor();
-  setupSafetyBarometer();
-  setupNavICTelemetry();
-  setupGeofenceTracking();
-  setupBulletins();
-  setupProactiveAlerts();
-  setupSOSModal();
-  setupMSSCodeGenerator();
-  startLiveVesselSimulation();
-  updateLiveClock();
+  runStartupStep('registerServiceWorker', registerServiceWorker);
+  runStartupStep('checkBackendHealth', checkBackendHealth);
+  setInterval(() => runStartupStep('checkBackendHealth', checkBackendHealth), 15000); // re-check periodically in case the backend starts later
+  try {
+    await loadInitialData();
+  } catch (err) {
+    console.error('ORCA INSIGHT: loadInitialData failed:', err);
+  }
+  runStartupStep('setupNavigation', setupNavigation);
+  runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
+  runStartupStep('setupMap', setupMap);
+  runStartupStep('setupChatbot', setupChatbot);
+  runStartupStep('setupSpeechRecognition', setupSpeechRecognition);
+  runStartupStep('setupDAGVisualizer', setupDAGVisualizer);
+  runStartupStep('setupRoutePlanner', setupRoutePlanner);
+  runStartupStep('setupFleetMonitor', setupFleetMonitor);
+  runStartupStep('setupSafetyBarometer', setupSafetyBarometer);
+  runStartupStep('setupNavICTelemetry', setupNavICTelemetry);
+  runStartupStep('setupGeofenceTracking', setupGeofenceTracking);
+  runStartupStep('setupBulletins', setupBulletins);
+  runStartupStep('setupProactiveAlerts', setupProactiveAlerts);
+  runStartupStep('setupSOSModal', setupSOSModal);
+  runStartupStep('setupMSSCodeGenerator', setupMSSCodeGenerator);
+  runStartupStep('startLiveVesselSimulation', startLiveVesselSimulation);
+  runStartupStep('updateLiveClock', updateLiveClock);
   setInterval(updateLiveClock, 1000);
 
   // Fetch real Open-Meteo Marine Data for default Kochi Harbour
-  fetchLiveMarineTelemetry(9.93, 76.26);
-  refreshExternalTelemetry();
+  runStartupStep('fetchLiveMarineTelemetry', () => fetchLiveMarineTelemetry(9.93, 76.26));
+  runStartupStep('refreshExternalTelemetry', refreshExternalTelemetry);
   // Match the live AIS publisher cadence so the Fleet Monitor shows a new
   // server snapshot within one polling cycle.
-  setInterval(refreshExternalTelemetry, 10000);
+  setInterval(() => runStartupStep('refreshExternalTelemetry', refreshExternalTelemetry), 10000);
 });
 
 // Live deployments intentionally do not install an offline service worker:
@@ -666,7 +686,7 @@ async function loadInitialData() {
       // from datameet/maps (CC-0), simplified from 10.7MB to ~150KB with
       // turf.simplify at a 0.01-degree tolerance -- plenty precise for a
       // national-scale reference overlay, not a street-level navigation aid.
-      fetch('data/india_boundary.geojson').then(r => r.json()).catch(() => null)
+      fetch('data/india_boundary.geojson').then(r => r.ok ? r.json() : null).catch(() => null)
     ]);
 
     state.satellites = satRes.satellites || [];
@@ -897,19 +917,29 @@ function setupMap() {
 // see data/README or the ORCA_HANDOFF doc for the full source citation.
 function renderIndiaBoundaryLayer() {
   if (!state.mapLayers.indiaBoundary || !state.indiaBoundary) return;
-  state.mapLayers.indiaBoundary.clearLayers();
+  // Guarded: this is an optional cosmetic overlay. A malformed or missing
+  // boundary file (e.g. a 404 error body that still parses as JSON) must
+  // never be allowed to throw here and abort the rest of setupMap() --
+  // that exact failure mode previously took down the whole page's live
+  // data refresh (see renderSatelliteCards incident). Fail silently and
+  // leave the layer empty instead.
+  try {
+    state.mapLayers.indiaBoundary.clearLayers();
 
-  const layer = L.geoJSON(state.indiaBoundary, {
-    style: {
-      color: '#ff9933',
-      weight: 3,
-      opacity: 0.95,
-      fill: false
-    },
-    interactive: false
-  });
-  layer.bindTooltip('India — official boundary (Survey of India)', { sticky: true });
-  state.mapLayers.indiaBoundary.addLayer(layer);
+    const layer = L.geoJSON(state.indiaBoundary, {
+      style: {
+        color: '#ff9933',
+        weight: 3,
+        opacity: 0.95,
+        fill: false
+      },
+      interactive: false
+    });
+    layer.bindTooltip('India — official boundary (Survey of India)', { sticky: true });
+    state.mapLayers.indiaBoundary.addLayer(layer);
+  } catch (err) {
+    console.warn('India boundary overlay skipped (invalid/missing data):', err);
+  }
 }
 
 function renderPFZLayers() {
