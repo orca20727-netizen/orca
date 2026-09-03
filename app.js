@@ -1,3 +1,4 @@
+setInterval(refreshExternalTelemetry, 60000);  setInterval(refreshExternalTelemetry, 10000);
 waveHeight: 1.25,  waveHeight: null,function updateSafetyMetricsUI() {  function updateSafetyMetricsUI() {
   const waveVal = document.getElementById('marineWaveVal');
   const windVal = document.getElementById('marineWindVal');
