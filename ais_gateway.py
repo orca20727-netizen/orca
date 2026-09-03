@@ -144,7 +144,7 @@ class AISGateway:
                 await self._task
             except asyncio.CancelledError:
                 pass
-                    def get_state(self) -> Dict[str, Any]:
+    def get_state(self) -> Dict[str, Any]:
         return {
             "configured": True,
             "connected": self._connected_since is not None,
@@ -154,7 +154,7 @@ class AISGateway:
             "last_disconnect_reason": self._last_disconnect_reason,
         }
 
-        async def _connect_forever(self) -> None:
+    async def _connect_forever(self) -> None:
         while True:
             try:
                 await self._connect_once()
