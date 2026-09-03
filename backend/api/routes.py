@@ -188,7 +188,7 @@ async def live_status():
         "source_registry": data_source_registry.status,
         "ais_gateway": get_gateway_state(),
     }
-    }
+    
 
 
 @router.get("/api/data-sources")
