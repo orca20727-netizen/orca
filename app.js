@@ -1067,6 +1067,17 @@ function renderVesselsOnMap() {
   if (dagPanelVesselCounter) {
     dagPanelVesselCounter.textContent = `${state.vessels.length} Tracked`;
   }
+
+  // Fit the GIS view to the actual incoming AIS coordinates so vessels near
+  // Kochi, Mumbai, Chennai, Vizag, etc. are not hidden by a port-centred
+  // default map view. Invalid coordinates are excluded at the backend.
+  const livePoints = state.vessels
+    .filter(v => Number.isFinite(Number(v.lat)) && Number.isFinite(Number(v.lon)))
+    .map(v => [Number(v.lat), Number(v.lon)]);
+  if (state.map && livePoints.length > 1 && !state.hasFittedLiveFleet) {
+    state.map.fitBounds(L.latLngBounds(livePoints), { padding: [36, 36], maxZoom: 7 });
+    state.hasFittedLiveFleet = true;
+  }
 }
 
 function renderHeatmapLayers() {
