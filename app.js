@@ -1281,7 +1281,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
 
   if (distEl) distEl.textContent = `${distNM.toFixed(1)} NM`;
   if (etaEl) etaEl.textContent = `${etaHoursFloor}h ${etaMinutes}m (One-Way)`;
-  if (speedEl) speedEl.textContent = `A* routed · ${route.route_source || 'A_STAR'}`;
+  if (speedEl) {     speedEl.textContent = route.effective_speed_knots != null       ? `${route.effective_speed_knots} kn (Wave-adjusted)`       : '—';   }
 
   if (duskEl) {
     if (isReturnSafe) {
