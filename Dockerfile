@@ -9,9 +9,8 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 
 COPY backend/ backend/
 COPY ais_gateway.py backend/ais_gateway.py
-# The repository stores the uploaded data under data/data/.
 COPY data/data/ data/
-COPY index.html app.js styles.css sw.js manifest.json config.js static/
+COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js static/
 
 EXPOSE 8000
 
