@@ -1,3 +1,27 @@
+waveHeight: 1.25,  waveHeight: null,function updateSafetyMetricsUI() {  function updateSafetyMetricsUI() {
+  const waveVal = document.getElementById('marineWaveVal');
+  const windVal = document.getElementById('marineWindVal');
+  const seaVal = document.getElementById('marineSeaVal');
+  if (waveVal) waveVal.textContent = Number.isFinite(state.liveMarine.waveHeight) ? state.liveMarine.waveHeight.toFixed(2) + ' m' : '—';
+  if (windVal) windVal.textContent = Number.isFinite(state.liveMarine.windSpeed) ? state.liveMarine.windSpeed.toFixed(1) + ' kn' : '—';
+  if (seaVal) seaVal.textContent = Number.isFinite(state.liveMarine.seaState) ? 'State ' + state.liveMarine.seaState : '—';
+}function updateSafetyMetricsUI() {
+  const waveVal = document.getElementById('marineWaveVal');
+  const windVal = document.getElementById('marineWindVal');
+  const seaVal = document.getElementById('marineSeaVal');
+  
+  if (waveVal) waveVal.textContent = `${state.liveMarine.waveHeight.toFixed(2)} m`;
+  if (windVal) windVal.textContent = `${state.liveMarine.windSpeed.toFixed(1)} kn`;
+  if (seaVal) seaVal.textContent = `State ${state.liveMarine.seaState}`;
+}  function updateSafetyMetricsUI() {
+  const waveVal = document.getElementById('marineWaveVal');
+  const windVal = document.getElementById('marineWindVal');
+  const seaVal = document.getElementById('marineSeaVal');
+  if (waveVal) waveVal.textContent = Number.isFinite(state.liveMarine.waveHeight) ? state.liveMarine.waveHeight.toFixed(2) + ' m' : '—';
+  if (windVal) windVal.textContent = Number.isFinite(state.liveMarine.windSpeed) ? state.liveMarine.windSpeed.toFixed(1) + ' kn' : '—';
+  if (seaVal) seaVal.textContent = Number.isFinite(state.liveMarine.seaState) ? 'State ' + state.liveMarine.seaState : '—';
+}      updateSafetyMetricsUI();        updateSafetyMetricsUI();
+      renderTrendSparklines();
 /**
  * ORCA INSIGHT - Final Production Multi-Agent Marine Intelligence Platform
  * Smart India Hackathon 2026 · Problem Statement 26176 · ISRO (Dept. of Space)
