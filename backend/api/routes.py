@@ -136,6 +136,7 @@ async def plan_route(req: RouteRequest):
         "mpa_avoidance_active": result["mpa_avoidance_active"],
         "route_source": result["route_source"],
         "eta_hours": eta.get("one_way_eta_hours"),
+        "effective_speed_knots": eta.get("effective_speed_knots"),rs": eta.get("one_way_eta_hours"),
         "estimated_return_ist": eta.get("estimated_return_ist"),
         "dusk_safety_verdict": eta.get("dusk_safety_verdict"),
     }
