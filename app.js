@@ -2258,6 +2258,41 @@ function setupSafetyBarometer() {
   setInterval(() => refreshSafetyBarometer(lat, lon), 5 * 60 * 1000);
 }
 
+function renderSatelliteCards() {
+  const container = document.getElementById('satelliteCardsGrid');
+  if (!container || state.satellites.length === 0) return;
+
+  container.innerHTML = state.satellites.map(sat => `
+    <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-cyan-500/60 transition shadow-lg">
+      <div class="flex items-start justify-between gap-2 mb-2">
+        <div>
+          <h4 class="font-bold text-slate-100 text-sm">${sat.name}</h4>
+          <span class="text-[10px] font-mono text-slate-400">NORAD: ${sat.norad_id} · ${sat.orbit_type}</span>
+        </div>
+        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+          ${sat.health_status}
+        </span>
+      </div>
+
+      <div class="my-3 space-y-1.5 text-xs">
+        ${sat.sensors.map(sen => `
+          <div class="flex items-center justify-between bg-slate-950/70 px-2 py-1 rounded border border-slate-800">
+            <span class="text-cyan-300 font-mono text-[11px]">${sen.name}</span>
+            <span class="text-slate-400 text-[10px]">${sen.metric}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800 text-slate-400 font-mono">
+        <div><span>Sync Latency:</span> <strong class="text-cyan-400">${sat.data_sync_latency_sec}s</strong></div>
+        <div><span>Battery:</span> <strong class="text-emerald-400">${sat.battery_level_pct}%</strong></div>
+        <div><span>Last Pass:</span> <span class="text-slate-300 text-[10px]">${sat.last_pass_ist}</span></div>
+        <div><span>Altitude:</span> <span class="text-slate-300 text-[10px]">${sat.altitude_km} km</span></div>
+      </div>
+    </div>
+  `).join('');
+}
 // Pulls the backend's real hazard score and applies it to the Safety Index
 // card and the 4 condition tiles.
 async function refreshSafetyBarometer(lat, lon) {
