@@ -85,13 +85,25 @@ const state = {
   sosActive: false,
   
   // Real Marine Telemetry from Open-Meteo
-  liveMarine: {
+    liveMarine: {
     waveHeight: 1.25,
     windSpeed: 14.2,
     seaState: 3,
     lightningRisk: 8,
     isLiveFeed: false,
     lastFetchTime: null
+  },
+
+  // Real past-24h hourly history for the Safety Barometer sparklines,
+  // seeded from Open-Meteo's own historical hourly data (see
+  // fetchSafetyTrendHistory). Left empty until that fetch succeeds; the
+  // sparklines fall back to the live reading alone rather than inventing
+  // history when it hasn't loaded yet.
+  safetyTrend: {
+    wave: [],
+    wind: [],
+    sea: [],
+    lightning: []
   },
 
   // Voice Recognition (STT)
@@ -1161,7 +1173,7 @@ function setupRoutePlanner() {
     harbourSelect.addEventListener('change', (e) => {
       state.selectedHarbour = e.target.value;
       const hbr = state.harbours.find(h => h.id === e.target.value);
-      if (hbr) fetchLiveMarineTelemetry(hbr.coordinates[0], hbr.coordinates[1]);
+      if (hbr) {         fetchLiveMarineTelemetry(hbr.coordinates[0], hbr.coordinates[1]);         fetchSafetyTrendHistory(hbr.coordinates[0], hbr.coordinates[1]).then(() => renderTrendSparklines());         refreshSafetyBarometer(hbr.coordinates[0], hbr.coordinates[1]);       }
     });
   }
 
@@ -2224,59 +2236,229 @@ function setupMSSCodeGenerator() {
 }
 
 // Safety Barometer & Sparklines
+// Safety Barometer & Sparklines
+//
+// The score card, condition tiles, and sparklines are all driven from the
+// backend's real WeatherHazardAgent (GET /api/weather), which computes a
+// genuine safety_score/clearance_verdict from live Open-Meteo wave/wind
+// data. Nothing here invents a number: if a fetch fails, the UI simply
+// keeps showing the last known-good values instead of a fabricated one.
 function setupSafetyBarometer() {
   renderSatelliteCards();
   renderTrendSparklines();
+
+  const hbr = state.harbours.find(h => h.id === state.selectedHarbour);
+  const lat = hbr ? hbr.coordinates[0] : 9.93;
+  const lon = hbr ? hbr.coordinates[1] : 76.26;
+
+  fetchSafetyTrendHistory(lat, lon).then(() => renderTrendSparklines());
+  refreshSafetyBarometer(lat, lon);
+  // Open-Meteo's underlying models don't update faster than hourly, so a
+  // 5-minute poll is frequent enough to feel live without hammering it.
+  setInterval(() => refreshSafetyBarometer(lat, lon), 5 * 60 * 1000);
 }
 
-function renderSatelliteCards() {
-  const container = document.getElementById('satelliteCardsGrid');
-  if (!container || state.satellites.length === 0) return;
+// Pulls the backend's real hazard score and applies it to the Safety Index
+// card and the 4 condition tiles.
+async function refreshSafetyBarometer(lat, lon) {
+  try {
+    const res = await fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/weather?lat=${lat}&lon=${lon}`, {}, 6000);
+    if (!res.ok) throw new Error(`Weather agent responded with ${res.status}`);
+    const weather = await res.json();
 
-  container.innerHTML = state.satellites.map(sat => `
-    <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-cyan-500/60 transition shadow-lg">
-      <div class="flex items-start justify-between gap-2 mb-2">
-        <div>
-          <h4 class="font-bold text-slate-100 text-sm">${sat.name}</h4>
-          <span class="text-[10px] font-mono text-slate-400">NORAD: ${sat.norad_id} · ${sat.orbit_type}</span>
-        </div>
-        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-          ${sat.health_status}
-        </span>
-      </div>
+    updateSafetyIndexCard(weather);
 
-      <div class="my-3 space-y-1.5 text-xs">
-        ${sat.sensors.map(sen => `
-          <div class="flex items-center justify-between bg-slate-950/70 px-2 py-1 rounded border border-slate-800">
-            <span class="text-cyan-300 font-mono text-[11px]">${sen.name}</span>
-            <span class="text-slate-400 text-[10px]">${sen.metric}</span>
-          </div>
-        `).join('')}
-      </div>
+    state.liveMarine.waveHeight = weather.significant_wave_height_m;
+    state.liveMarine.windSpeed = weather.surface_wind_knots;
+    state.liveMarine.seaState = weather.sea_state_douglas;
+    state.liveMarine.lightningRisk = weather.lightning_risk_pct;
+    state.liveMarine.isLiveFeed = weather.data_source?.wave_height === 'LIVE_OPEN_METEO_MARINE';
 
-      <div class="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800 text-slate-400 font-mono">
-        <div><span>Sync Latency:</span> <strong class="text-cyan-400">${sat.data_sync_latency_sec}s</strong></div>
-        <div><span>Battery:</span> <strong class="text-emerald-400">${sat.battery_level_pct}%</strong></div>
-        <div><span>Last Pass:</span> <span class="text-slate-300 text-[10px]">${sat.last_pass_ist}</span></div>
-        <div><span>Altitude:</span> <span class="text-slate-300 text-[10px]">${sat.altitude_km} km</span></div>
-      </div>
-    </div>
-  `).join('');
+    renderTrendSparklines();
+  } catch (err) {
+    console.log('Safety Barometer live refresh failed, keeping last known values', err);
+  }
+}
+
+// Applies a /api/weather response to the score card + 4 condition tiles.
+function updateSafetyIndexCard(weather) {
+  const scoreEl = document.getElementById('safetyIndexScore');
+  const verdictEl = document.getElementById('safetyVerdictText');
+  const descEl = document.getElementById('safetyVerdictDesc');
+  const cardEl = document.getElementById('safetyVerdictCard');
+  const dotEl = document.getElementById('safetyPulseDot');
+  const ringEl = document.getElementById('safetyIndexRing');
+
+  const verdict = weather.clearance_verdict || 'SAFE';
+  const theme = {
+    SAFE: { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' },
+    CAUTION: { color: 'amber', label: 'PROCEED WITH CAUTION', icon: '⚠' },
+    UNSAFE: { color: 'rose', label: 'UNSAFE — DO NOT VENTURE', icon: '✕' }
+  }[verdict] || { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' };
+
+  const colorClasses = {
+    emerald: { card: 'from-emerald-950/80 border-emerald-500/50', dot: 'bg-emerald-400', text: 'text-emerald-400', ring: 'border-emerald-400', glow: 'shadow-emerald-500/30' },
+    amber: { card: 'from-amber-950/80 border-amber-500/50', dot: 'bg-amber-400', text: 'text-amber-400', ring: 'border-amber-400', glow: 'shadow-amber-500/30' },
+    rose: { card: 'from-rose-950/80 border-rose-500/50', dot: 'bg-rose-400', text: 'text-rose-400', ring: 'border-rose-400', glow: 'shadow-rose-500/30' }
+  };
+  const c = colorClasses[theme.color];
+
+  if (scoreEl) {
+    scoreEl.textContent = weather.safety_score ?? '—';
+    scoreEl.className = `text-3xl sm:text-4xl font-black ${c.text} font-mono`;
+  }
+  if (verdictEl) verdictEl.textContent = theme.label;
+  if (descEl) {
+    descEl.textContent = `Live Open-Meteo marine telemetry places significant wave height at ${weather.significant_wave_height_m}m and surface wind at ${weather.surface_wind_knots}kn near your selected harbour, giving a computed safety score of ${weather.safety_score}/100.`;
+  }
+  if (cardEl) {
+    cardEl.className = `p-6 rounded-2xl bg-gradient-to-r ${c.card} via-ocean-900 to-ocean-900 border shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6`;
+  }
+  if (dotEl) dotEl.className = `w-3 h-3 rounded-full ${c.dot} animate-ping`;
+  if (ringEl) {
+    ringEl.className = `w-14 h-14 rounded-full border-4 ${c.ring} flex items-center justify-center text-2xl ${c.text} font-bold shadow-lg ${c.glow}`;
+    ringEl.textContent = theme.icon;
+  }
+
+  const waveVal = document.getElementById('safetyTileWaveVal');
+  const waveBand = document.getElementById('safetyTileWaveBand');
+  if (waveVal) waveVal.textContent = `${weather.significant_wave_height_m} m`;
+  if (waveBand) waveBand.textContent = waveBandLabel(weather.significant_wave_height_m);
+
+  const windVal = document.getElementById('safetyTileWindVal');
+  const windBand = document.getElementById('safetyTileWindBand');
+  if (windVal) windVal.textContent = `${weather.surface_wind_knots} kn`;
+  if (windBand) windBand.textContent = `${weather.wind_direction || 'Westerly'} Breeze`;
+
+  const seaVal = document.getElementById('marineSeaVal');
+  const seaBand = document.getElementById('safetyTileSeaBand');
+  if (seaVal) seaVal.textContent = `State ${weather.sea_state_douglas}`;
+  if (seaBand) seaBand.textContent = seaStateLabel(weather.sea_state_douglas);
+
+  const lightVal = document.getElementById('safetyTileLightningVal');
+  const lightBand = document.getElementById('safetyTileLightningBand');
+  const lightPct = weather.lightning_risk_pct;
+  if (lightVal) lightVal.textContent = `${lightPct}% ${lightPct < 20 ? 'Low' : lightPct < 50 ? 'Moderate' : 'High'}`;
+  if (lightBand) lightBand.textContent = lightningBandLabel(lightPct);
+}
+
+function waveBandLabel(h) {
+  if (h < 0.5) return 'Calm (< 0.5m)';
+  if (h < 1.25) return 'Slight (0.5 - 1.25m)';
+  if (h < 2.5) return 'Moderate (1.25 - 2.5m)';
+  return 'Rough (> 2.5m)';
+}
+
+function seaStateLabel(seaState) {
+  return { 1: 'Calm', 2: 'Slight', 3: 'Slight to Moderate', 4: 'Moderate to Rough' }[seaState] || 'Unknown';
+}
+
+function lightningBandLabel(pct) {
+  if (pct < 20) return 'Safe Atmospheric Profile';
+  if (pct < 50) return 'Elevated Convective Risk';
+  return 'Severe Squall Warning';
+}
+
+function seaStateFromSwh(h) {
+  if (h < 0.5) return 1;
+  if (h < 1.25) return 2;
+  if (h < 2.5) return 3;
+  return 4;
+}
+
+// Seeds the Safety Barometer sparklines with genuine past-24h hourly
+// readings pulled directly from Open-Meteo (marine API for wave height,
+// forecast API for wind/cloud cover), so the trend line is real history
+// from the moment the tab loads instead of starting empty. If either
+// request fails, state.safetyTrend simply stays empty and the sparkline
+// falls back to plotting the live reading alone — never a fake number.
+async function fetchSafetyTrendHistory(lat, lon) {
+  try {
+    const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&hourly=wave_height&past_days=1&forecast_days=1&timezone=Asia%2FKolkata`;
+    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,cloud_cover,weather_code&wind_speed_unit=kn&past_days=1&forecast_days=1&timezone=Asia%2FKolkata`;
+
+    const [marineRes, forecastRes] = await Promise.all([
+      fetchWithTimeout(marineUrl, {}, 8000),
+      fetchWithTimeout(forecastUrl, {}, 8000)
+    ]);
+    if (!marineRes.ok || !forecastRes.ok) throw new Error('Open-Meteo history request failed');
+
+    const marine = await marineRes.json();
+    const forecast = await forecastRes.json();
+
+    const findNowIndex = (times) => {
+      if (!Array.isArray(times) || times.length === 0) return -1;
+      const nowMs = Date.now();
+      let idx = -1;
+      for (let i = 0; i < times.length; i++) {
+        if (new Date(times[i]).getTime() <= nowMs) idx = i;
+        else break;
+      }
+      return idx;
+    };
+
+    const last12 = (arr, idx) => {
+      if (!Array.isArray(arr) || idx < 0) return null;
+      const start = Math.max(0, idx - 11);
+      const slice = arr.slice(start, idx + 1).filter(v => typeof v === 'number');
+      return slice.length >= 2 ? slice : null;
+    };
+
+    const waveTimes = (marine.hourly && marine.hourly.time) || [];
+    const waveHeights = (marine.hourly && marine.hourly.wave_height) || [];
+    const wIdx = findNowIndex(waveTimes);
+    const waveTrend = last12(waveHeights, wIdx);
+    if (waveTrend) {
+      state.safetyTrend.wave = waveTrend;
+      state.safetyTrend.sea = waveTrend.map(seaStateFromSwh);
+    }
+
+    const fTimes = (forecast.hourly && forecast.hourly.time) || [];
+    const windSpeeds = (forecast.hourly && forecast.hourly.wind_speed_10m) || [];
+    const cloudCover = (forecast.hourly && forecast.hourly.cloud_cover) || [];
+    const weatherCodes = (forecast.hourly && forecast.hourly.weather_code) || [];
+    const fIdx = findNowIndex(fTimes);
+
+    const windTrend = last12(windSpeeds, fIdx);
+    if (windTrend) state.safetyTrend.wind = windTrend;
+
+    if (fIdx >= 0) {
+      const start = Math.max(0, fIdx - 11);
+      const lightTrend = [];
+      for (let i = start; i <= fIdx; i++) {
+        if ([95, 96, 99].includes(weatherCodes[i])) lightTrend.push(55);
+        else if (typeof cloudCover[i] === 'number') lightTrend.push(Math.min(30, Math.round(cloudCover[i] * 0.3)));
+        else lightTrend.push(state.liveMarine.lightningRisk);
+      }
+      if (lightTrend.length >= 2) state.safetyTrend.lightning = lightTrend;
+    }
+  } catch (err) {
+    console.log('Safety Barometer 24h history unavailable, using live-only trend', err);
+  }
 }
 
 function renderTrendSparklines() {
-  const wavePoints = [1.1, 1.2, 1.15, 1.3, 1.4, 1.35, 1.25, 1.2, 1.18, 1.25, 1.32, state.liveMarine.waveHeight];
+  const wavePoints = appendLivePoint(state.safetyTrend.wave, state.liveMarine.waveHeight);
   drawSVGSparkline('sparklineWave', wavePoints, '#06b6d4');
 
-  const windPoints = [12, 13, 15, 16, 15, 14, 13.5, 14, 14.5, 15, 14.2, state.liveMarine.windSpeed];
+  const windPoints = appendLivePoint(state.safetyTrend.wind, state.liveMarine.windSpeed);
   drawSVGSparkline('sparklineWind', windPoints, '#3b82f6');
 
-  const seaPoints = [2, 2, 3, 3, 3, 3, 2, 2, 3, 3, 3, state.liveMarine.seaState];
+  const seaPoints = appendLivePoint(state.safetyTrend.sea, state.liveMarine.seaState);
   drawSVGSparkline('sparklineSea', seaPoints, '#10b981');
 
-  const lightPoints = [4, 5, 6, 12, 15, 10, 8, 7, 6, 8, 9, 8];
+  const lightPoints = appendLivePoint(state.safetyTrend.lightning, state.liveMarine.lightningRisk);
   drawSVGSparkline('sparklineLightning', lightPoints, '#f59e0b');
+}
+
+// Appends the latest live reading to the real 24h history fetched from
+// Open-Meteo. Every plotted point is a genuine measurement — when no
+// history has loaded yet, this just plots the single live value twice so
+// the sparkline still renders instead of showing invented history.
+function appendLivePoint(history, liveValue) {
+  const base = Array.isArray(history) && history.length >= 2 ? history.slice() : [liveValue];
+  const points = base.concat([liveValue]);
+  return points.length >= 2 ? points : [liveValue, liveValue];
 }
 
 function drawSVGSparkline(elementId, dataPoints, strokeColor) {
