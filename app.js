@@ -69,8 +69,10 @@ const state = {
     harbours: null,
     vessels: null,
     heatmap: null,
-    route: null
+    route: null,
+    indiaBoundary: null
   },
+  indiaBoundary: null,
   selectedHarbour: 'HBR-KOC',
   selectedPFZ: 'PFZ-01',
   activeVesselMarkers: {},
@@ -651,14 +653,20 @@ function showHazardAlert(alert, allowBrowserNotification) {
 // Load JSON Datasets
 async function loadInitialData() {
   try {
-    const [satRes, pfzRes, imblRes, mpaRes, hbrRes, vesRes, bulRes] = await Promise.all([
+    const [satRes, pfzRes, imblRes, mpaRes, hbrRes, vesRes, bulRes, indiaRes] = await Promise.all([
       fetch('data/satellites.json').then(r => r.json()),
       fetch('data/pfz_zones.json').then(r => r.json()),
       fetch('data/imbl_boundaries.json').then(r => r.json()),
       fetch('data/mpas.json').then(r => r.json()),
       fetch('data/harbours.json').then(r => r.json()),
       fetch('data/simulated_vessels.json').then(r => r.json()),
-      fetch('data/bulletins.json').then(r => r.json())
+      fetch('data/bulletins.json').then(r => r.json()),
+      // Official India boundary (per Survey of India, including J&K/Ladakh
+      // and Aksai Chin as depicted in India's own government maps), sourced
+      // from datameet/maps (CC-0), simplified from 10.7MB to ~150KB with
+      // turf.simplify at a 0.01-degree tolerance -- plenty precise for a
+      // national-scale reference overlay, not a street-level navigation aid.
+      fetch('data/india_boundary.geojson').then(r => r.json()).catch(() => null)
     ]);
 
     state.satellites = satRes.satellites || [];
@@ -666,6 +674,7 @@ async function loadInitialData() {
     state.imblBoundaries = imblRes.boundaries || [];
     state.mpas = mpaRes.mpas || [];
     state.harbours = hbrRes.harbours || [];
+    state.indiaBoundary = indiaRes || null;
     // Keep the file available for offline demo assets, but do not display its
     // simulated vessels in the live fleet/map UI. Only /api/live/vessels can
     // populate state.vessels.
@@ -855,6 +864,12 @@ function setupMap() {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(state.map);
 
+  // Official India boundary overlay (Survey of India depiction) -- drawn
+  // right on top of the base tiles so it visually corrects them, rather
+  // than trying to replace the whole basemap provider. Added first among
+  // the feature groups so operational layers (PFZ, vessels, etc.) still
+  // render above it.
+  state.mapLayers.indiaBoundary = L.featureGroup().addTo(state.map);
   state.mapLayers.pfz = L.featureGroup().addTo(state.map);
   state.mapLayers.imbl = L.featureGroup().addTo(state.map);
   state.mapLayers.mpas = L.featureGroup().addTo(state.map);
@@ -863,6 +878,7 @@ function setupMap() {
   state.mapLayers.heatmap = L.featureGroup().addTo(state.map);
   state.mapLayers.route = L.featureGroup().addTo(state.map);
 
+  renderIndiaBoundaryLayer();
   renderPFZLayers();
   renderIMBLLayers();
   renderMPALayers();
@@ -870,6 +886,30 @@ function setupMap() {
   renderVesselsOnMap();
   renderHeatmapLayers();
   setupLayerToggles();
+}
+
+// Draws India's officially correct external boundary -- per the Survey of
+// India's depiction (Jammu & Kashmir/Ladakh, Aksai Chin, and the China/
+// Pakistan-disputed sectors shown as Indian territory, no dotted/disputed
+// lines) -- as a bold outline on top of the base map. Source: data/
+// india_boundary.geojson, compiled by datameet/maps (CC-0) from LSIB (US
+// Dept of State), Pakistan admin boundary data, and Natural Earth vectors;
+// see data/README or the ORCA_HANDOFF doc for the full source citation.
+function renderIndiaBoundaryLayer() {
+  if (!state.mapLayers.indiaBoundary || !state.indiaBoundary) return;
+  state.mapLayers.indiaBoundary.clearLayers();
+
+  const layer = L.geoJSON(state.indiaBoundary, {
+    style: {
+      color: '#ff9933',
+      weight: 3,
+      opacity: 0.95,
+      fill: false
+    },
+    interactive: false
+  });
+  layer.bindTooltip('India — official boundary (Survey of India)', { sticky: true });
+  state.mapLayers.indiaBoundary.addLayer(layer);
 }
 
 function renderPFZLayers() {
@@ -1144,7 +1184,8 @@ function setupLayerToggles() {
     { id: 'layerMPA', layer: state.mapLayers.mpas },
     { id: 'layerHarbours', layer: state.mapLayers.harbours },
     { id: 'layerVessels', layer: state.mapLayers.vessels },
-    { id: 'layerHeatmap', layer: state.mapLayers.heatmap }
+    { id: 'layerHeatmap', layer: state.mapLayers.heatmap },
+    { id: 'layerIndiaBoundary', layer: state.mapLayers.indiaBoundary }
   ];
 
   toggles.forEach(t => {
@@ -1281,7 +1322,11 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
 
   if (distEl) distEl.textContent = `${distNM.toFixed(1)} NM`;
   if (etaEl) etaEl.textContent = `${etaHoursFloor}h ${etaMinutes}m (One-Way)`;
-  if (speedEl) {     speedEl.textContent = route.effective_speed_knots != null       ? `${route.effective_speed_knots} kn (Wave-adjusted)`       : '—';   }
+  if (speedEl) {
+    speedEl.textContent = route.effective_speed_knots != null
+      ? `${route.effective_speed_knots} kn (Wave-adjusted)`
+      : '—';
+  }
 
   if (duskEl) {
     if (isReturnSafe) {
@@ -2305,9 +2350,14 @@ async function refreshSafetyBarometer(lat, lon) {
 
     state.liveMarine.waveHeight = weather.significant_wave_height_m;
     state.liveMarine.windSpeed = weather.surface_wind_knots;
+    state.liveMarine.windDirection = weather.wind_direction;
     state.liveMarine.seaState = weather.sea_state_douglas;
     state.liveMarine.lightningRisk = weather.lightning_risk_pct;
-    state.liveMarine.windDirection = weather.wind_direction;     state.liveMarine.safetyScore = weather.safety_score;     state.liveMarine.clearanceVerdict = weather.clearance_verdict;     state.liveMarine.isLiveFeed = weather.data_source?.wave_height === 'LIVE_OPEN_METEO_MARINE';      updateMapHUD();
+    state.liveMarine.safetyScore = weather.safety_score;
+    state.liveMarine.clearanceVerdict = weather.clearance_verdict;
+    state.liveMarine.isLiveFeed = weather.data_source?.wave_height === 'LIVE_OPEN_METEO_MARINE';
+
+    updateMapHUD();
 
     renderTrendSparklines();
   } catch (err) {
@@ -2315,7 +2365,6 @@ async function refreshSafetyBarometer(lat, lon) {
   }
 }
 
-// Applies a /api/weather response to the score card + 4 condition tiles.
 // Keeps the GIS Command Map's bottom info bar (wave/wind/clearance) in
 // sync with the same live weather reading the Safety Barometer uses --
 // this bar used to be static hardcoded text and never changed.
@@ -2343,6 +2392,8 @@ function updateMapHUD() {
     clearanceEl.className = `font-bold ${colorClass}`;
   }
 }
+
+// Applies a /api/weather response to the score card + 4 condition tiles.
 function updateSafetyIndexCard(weather) {
   const scoreEl = document.getElementById('safetyIndexScore');
   const verdictEl = document.getElementById('safetyVerdictText');

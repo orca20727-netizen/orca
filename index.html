@@ -432,6 +432,10 @@
             <input type="checkbox" id="layerHeatmap" checked class="rounded bg-ocean-800 border-ocean-600 text-amber-500 focus:ring-0">
             <span>Density Heatmap</span>
           </label>
+          <label class="flex items-center gap-1.5 cursor-pointer font-medium" style="color:#ff9933;">
+            <input type="checkbox" id="layerIndiaBoundary" checked class="rounded bg-ocean-800 border-ocean-600 focus:ring-0" style="accent-color:#ff9933;">
+            <span>India Boundary (Survey of India)</span>
+          </label>
         </div>
       </div>
 
@@ -486,9 +490,12 @@
         <div class="lg:col-span-3 rounded-xl overflow-hidden border border-ocean-700/80 shadow-2xl relative">
           <div id="mapContainer" class="w-full h-[540px] z-10"></div>
           
+          <div class="absolute bottom-3 left-3 right-3 z-20 bg-ocean-950/90 backdrop-blur-md border border-ocean-700/80 rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div class="flex items-center gap-4">
               <div><span class="text-slate-400">Wave Height:</span> <span id="mapHudWave" class="text-cyan-400 font-bold">1.25 m</span></div>
               <div><span class="text-slate-400">Wind:</span> <span id="mapHudWind" class="text-slate-200 font-bold">14.2 kn W</span></div>
               <div><span class="text-slate-400">Clearance:</span> <span id="mapHudClearance" class="text-emerald-400 font-bold">SAFE (88/100)</span></div>
+            </div>
             <div id="mapActiveVessels" class="text-amber-300 font-bold">
               35 Active Vessels
             </div>
