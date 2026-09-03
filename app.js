@@ -473,7 +473,7 @@ async function refreshExternalTelemetry() {
     const res = await fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, {}, 5000);
     if (!res.ok) return;
     const snapshot = await res.json();
-    if (snapshot.status !== 'LIVE' || !Array.isArray(snapshot.payload) || !snapshot.payload.length) return;
+    if (snapshot.status !== 'LIVE' || !Array.isArray(snapshot.payload) || !snapshot.payload.length) {       updateAisFeedBanner(snapshot.status, snapshot.ais_gateway);       return;     }     updateAisFeedBanner('LIVE');
     state.vessels = snapshot.payload;
     state.usesLiveVessels = true;
     renderVesselsOnMap();
@@ -482,6 +482,32 @@ async function refreshExternalTelemetry() {
   } catch (err) {
     console.warn('External telemetry refresh unavailable; retaining last known data.', err);
   }
+}
+
+function updateAisFeedBanner(status, gatewayState) {
+  const id = 'aisFeedStatusBanner';
+  let el = document.getElementById(id);
+  if (status === 'LIVE') {
+    if (el) el.remove();
+    return;
+  }
+  if (!el) {
+    el = document.createElement('div');
+    el.id = id;
+    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:2147483000;background:#78350f;color:#fef3c7;font:600 12px/1.5 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center;box-shadow:0 -2px 8px rgba(0,0,0,.35);';
+    document.body.appendChild(el);
+  }
+  let detail = 'Live AIS vessel feed unavailable -- showing 0 vessels.';
+  if (gatewayState) {
+    if (!gatewayState.configured) {
+      detail = 'Live AIS vessel feed is not configured on this deployment.';
+    } else if (gatewayState.connected) {
+      detail = 'Connected to the AIS provider (AISstream.io), but it isn’t sending vessel data right now — likely a provider-side outage, not a local fault.';
+    } else {
+      detail = 'Disconnected from the AIS provider (AISstream.io); reconnecting automatically.';
+    }
+  }
+  el.textContent = '⚠ ' + detail;
 }
 
 // Live Open-Meteo Marine API Integration
