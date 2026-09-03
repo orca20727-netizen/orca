@@ -56,7 +56,10 @@ PORTS = [
     ("Haldia", "Purba Medinipur, West Bengal", 22.03, 88.06),
 ]
 
-PUBLISH_INTERVAL_SECONDS = max(5, int(os.getenv("AIS_PUBLISH_INTERVAL_SECONDS", "20")))
+# Publish fresh AIS positions to the dashboard every 10 seconds by default.
+# The lower bound avoids excessive database writes while keeping the Fleet
+# Monitor responsive enough for operational use.
+PUBLISH_INTERVAL_SECONDS = max(5, int(os.getenv("AIS_PUBLISH_INTERVAL_SECONDS", "10")))
 RECONNECT_DELAY_SECONDS = 5
 STALE_AFTER_SECONDS = 30 * 60  # drop a vessel from the published snapshot after 30 min silence
 
