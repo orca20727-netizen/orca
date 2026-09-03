@@ -1,3 +1,7 @@
+fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, {}, 5000)  fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, { cache: 'no-store' }, 5000)    renderVesselsOnMap();
+    renderVesselsTable();      renderVesselsOnMap();
+    if (state.map) state.map.invalidateSize(false);
+    renderVesselsTable();
 setInterval(refreshExternalTelemetry, 60000);  setInterval(refreshExternalTelemetry, 10000);
 waveHeight: 1.25,  waveHeight: null,function updateSafetyMetricsUI() {  function updateSafetyMetricsUI() {
   const waveVal = document.getElementById('marineWaveVal');
