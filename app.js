@@ -1,3 +1,16 @@
+// PWA Service Worker
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(() => {
+      console.log('ORCA INSIGHT: Offline PWA Service Worker Active');
+    }).catch(err => {
+      console.warn('PWA Registration notice:', err);
+    });
+  }
+}    // Live deployments intentionally do not install an offline service worker.
+function registerServiceWorker() {
+  return;
+}
 fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, {}, 5000)  fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, { cache: 'no-store' }, 5000)    renderVesselsOnMap();
     renderVesselsTable();      renderVesselsOnMap();
     if (state.map) state.map.invalidateSize(false);
