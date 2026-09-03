@@ -128,6 +128,10 @@ class AISGateway:
         self._vessels: Dict[str, Dict[str, Any]] = {}
         self._last_publish = 0.0
         self._task: Optional[asyncio.Task] = None
+        self._connected_since = None
+        self._last_message_at = None
+        self._last_published_at = None
+        self._last_disconnect_reason = None
 
     def start(self) -> asyncio.Task:
         self._task = asyncio.create_task(self._connect_forever())
@@ -140,15 +144,27 @@ class AISGateway:
                 await self._task
             except asyncio.CancelledError:
                 pass
+                    def get_state(self) -> Dict[str, Any]:
+        return {
+            "configured": True,
+            "connected": self._connected_since is not None,
+            "connected_since": self._connected_since,
+            "last_message_at": self._last_message_at,
+            "last_published_at": self._last_published_at,
+            "last_disconnect_reason": self._last_disconnect_reason,
+        }
 
-    async def _connect_forever(self) -> None:
+        async def _connect_forever(self) -> None:
         while True:
             try:
                 await self._connect_once()
             except asyncio.CancelledError:
                 raise
             except Exception as exc:  # noqa: BLE001
+                self._last_disconnect_reason = str(exc) or exc.__class__.__name__
                 logger.warning("AIS gateway disconnected: %s -- reconnecting in %ss", exc, RECONNECT_DELAY_SECONDS)
+            finally:
+                self._connected_since = None
             await asyncio.sleep(RECONNECT_DELAY_SECONDS)
 
     async def _connect_once(self) -> None:
@@ -158,9 +174,12 @@ class AISGateway:
                 "BoundingBoxes": self.bounding_boxes,
                 "FilterMessageTypes": ["PositionReport", "ShipStaticData"],
             }))
+            self._connected_since = _now_iso()
+            self._last_message_at = None
             logger.info("AIS gateway connected (coverage boxes=%s)", self.bounding_boxes)
 
             async for raw in ws:
+                self._last_message_at = _now_iso()
                 self._handle_message(raw)
                 await self._maybe_publish()
 
@@ -250,11 +269,16 @@ class AISGateway:
             if loop_time - vessel["_last_seen"] < STALE_AFTER_SECONDS
         ]
         if fresh:
-            live_data.store.save("vessel", fresh, "AISstream.io live AIS feed", _now_iso())
+            self._last_published_at = _now_iso()
+            live_data.store.save("vessel", fresh, "AISstream.io live AIS feed", self._last_published_at)
             logger.info("AIS gateway published %d vessel position(s)", len(fresh))
 
 
 _gateway: Optional[AISGateway] = None
+def get_gateway_state() -> Dict[str, Any]:
+    if _gateway is None:
+        return {"configured": False, "connected": False}
+    return _gateway.get_state()
 
 
 def start_ais_gateway() -> Optional[asyncio.Task]:
