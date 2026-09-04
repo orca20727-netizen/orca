@@ -218,6 +218,12 @@ body {
   background: var(--cyan-primary);
 }
 
+/* Firefox scrollbar support (phase 8 polish) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--bg-primary);
+}
+
 /* Glowing Elements */
 .glow-cyan {
   box-shadow: 0 0 20px var(--cyan-glow);
@@ -623,4 +629,17 @@ body {
   bottom: -120px;
   left: 25%;
   animation-delay: 4s;
+}
+
+/* ============================================
+   Polish: selection & focus-visible (phase 8)
+   ============================================ */
+::selection {
+  background: var(--cyan-primary);
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
