@@ -445,6 +445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('ORCA INSIGHT: loadInitialData failed:', err);
   }
   runStartupStep('setupNavigation', setupNavigation);
+  runStartupStep('setupSlideFillButtons', setupSlideFillButtons);
   runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
   runStartupStep('setupThemeSwitcher', setupThemeSwitcher);
   runStartupStep('setupMap', setupMap);
@@ -827,6 +828,7 @@ function switchTab(tabId) {
       btn.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
       btn.classList.add('text-slate-400', 'border-transparent');
     }
+    btn.classList.toggle('sfb-active', btn.getAttribute('data-nav-target') === tabId);
   });
 
   if (tabId === 'map' && state.map) {
@@ -836,6 +838,58 @@ function switchTab(tabId) {
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Slide Fill Button (liquid hover-fill effect)
+// Faithful vanilla CSS/JS recreation of the Originkit "Slide Fill Button" —
+// the real component's source is paywalled inside Framer and not publicly
+// retrievable, so this reproduces the documented effect from scratch.
+function setupSlideFillButtons() {
+  const buttons = document.querySelectorAll('.sfb-btn:not(.sfb-enhanced)');
+  if (!buttons.length) return;
+
+  if (!window.__sfbResizeObserver) {
+    window.__sfbResizeObserver = new ResizeObserver(entries => {
+      entries.forEach(entry => {
+        const btn = entry.target;
+        const submerged = btn.querySelector('.sfb-inner--submerged');
+        if (submerged) submerged.style.height = btn.offsetHeight + 'px';
+      });
+    });
+  }
+
+  buttons.forEach(btn => {
+    const cs = getComputedStyle(btn);
+
+    const baseInner = document.createElement('span');
+    baseInner.className = 'sfb-inner';
+    while (btn.firstChild) baseInner.appendChild(btn.firstChild);
+
+    const content = document.createElement('span');
+    content.className = 'sfb-content';
+    content.appendChild(baseInner);
+
+    const fill = document.createElement('span');
+    fill.className = 'sfb-fill';
+    fill.setAttribute('aria-hidden', 'true');
+    const submerged = baseInner.cloneNode(true);
+    submerged.classList.add('sfb-inner--submerged');
+    fill.appendChild(submerged);
+
+    btn.appendChild(content);
+    btn.appendChild(fill);
+    btn.classList.add('sfb-enhanced');
+
+    [baseInner, submerged].forEach(inner => {
+      inner.style.display = cs.display.includes('flex') ? cs.display : 'flex';
+      inner.style.alignItems = cs.alignItems;
+      inner.style.justifyContent = cs.justifyContent;
+      inner.style.gap = cs.gap;
+    });
+
+    submerged.style.height = btn.offsetHeight + 'px';
+    window.__sfbResizeObserver.observe(btn);
+  });
 }
 
 // Language Switcher
@@ -1233,7 +1287,7 @@ function renderVesselsOnMap() {
     // Simulated fill-in vessels get a visibly different marker (dashed
     // outline, hollow center, "SIM" tag) so they're never mistaken for real
     // AIS traffic at a glance, regardless of their status color.
-    const simBorder = vessel.is_simulated ? 'border-dashed border-2 border-slate-200 opacity-80' : 'border border-slate-900';
+    const simBorder = vessel.is_simulated ? 'border-dashed border-2 border-slate-200 opacity-80' : 'border border-ocean-700';
 
     const icon = L.divIcon({
       className: 'vessel-marker-icon',
@@ -1980,7 +2034,7 @@ async function handleChatQuery(queryText) {
           </summary>
           <div class="mt-3 space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono">
             ${advisory.agentSteps.map(step => `
-              <div class="flex items-start justify-between border-b border-slate-900 pb-1.5 last:border-0">
+              <div class="flex items-start justify-between border-b border-ocean-700 pb-1.5 last:border-0">
                 <div>
                   <span class="text-cyan-400 font-semibold">[${step.agent}]</span>
                   <p class="text-slate-300 text-[11px] mt-0.5">${step.trace}</p>
