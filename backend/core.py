@@ -27,6 +27,7 @@ from language import detect_query_language
 from session_store import session_store
 from data_source_registry import data_source_registry
 from stats_store import stats_store
+from alert_service import alert_service
 
 logger = logging.getLogger(__name__)
 
@@ -237,6 +238,18 @@ async def run_pipeline(query: str, origin_harbour: str, target_pfz: str, respons
     _record("fleet", fleet_data, ("vessels_in_target_zone",))
     _record("eta", eta_data, ("one_way_eta_hours", "route_distance_nm"))
 
+    # A cheap read of this site's own recently-recorded proactive hazard
+    # alerts (backend/alert_service.py -- wave/wind/lightning thresholds
+    # and any bundled cyclone bulletin match). Handed to the Synthesis
+    # Agent so a direct "any lightning or cyclone alerts?" question can be
+    # answered from this website's own alert history instead of silently
+    # ignoring the question.
+    try:
+        active_alerts = alert_service.store.list(20)
+    except Exception:
+        logger.exception("core: could not read recent alerts -- proceeding without them")
+        active_alerts = []
+
     return {
         "plan": plan,
         "satellite": sat_data,
@@ -247,6 +260,7 @@ async def run_pipeline(query: str, origin_harbour: str, target_pfz: str, respons
         "eta": eta_data,
         "query": query,
         "language": language,
+        "active_alerts": active_alerts,
         "conversation_context": {"session_id": session_id, "history": context["history"], "carried_forward": context["carried_forward"], "resolved_origin_harbour": origin_harbour, "resolved_target_pfz": target_pfz},
         "source_provenance": {
             "ocean": {"tier": sat_data.get("source_tier"), "data_source": sat_data.get("data_source"), "registry": data_source_registry.for_dataset("ocean_sst_weather")},
