@@ -105,6 +105,14 @@ class NeuralSynthesisAgent:
         f = t.get("fleet", {}) or {}
         e = t.get("eta", {}) or {}
         routing = e.get("routing", {}) or {}
+        # The zone this specific request actually resolved to (from the
+        # user's query/session context) -- distinct from p["top_recommended_pfz"],
+        # which is a separate "best zone reachable from your current
+        # position" ranking that may legitimately name a different zone.
+        # Answers that describe "this zone's conditions" use the resolved
+        # target zone; PFZ_RECOMMENDATION/GENERAL_VOYAGE_SAFETY continue to
+        # use the ranking's own recommendation, unchanged.
+        target_zone_label = t.get("target_pfz_label")
 
         if intent == "WEATHER_SAFETY":
             wave = w.get("significant_wave_height_m")
@@ -204,13 +212,15 @@ class NeuralSynthesisAgent:
                 txt = f"One-way ETA is {_fmt(e.get('one_way_eta_hours'), ' hours')}. Return-time verdict is unavailable."
         elif intent == "OCEAN_CONDITIONS":
             # "Which regions show high chlorophyll / favorable SST?" -- the
-            # satellite agent's live reading plus its own historical trend,
-            # grounded the same way every other branch is (no fabricated
-            # multi-region scan the underlying agents don't actually do).
+            # satellite agent's live reading (now taken at the resolved
+            # target zone's own coordinates, not a fixed origin harbour)
+            # plus its own historical trend, grounded the same way every
+            # other branch is (no fabricated multi-region scan the
+            # underlying agents don't actually do).
             sst = s.get("sst_celsius")
             chl = s.get("chlorophyll_mg_m3")
             front = s.get("thermal_front_detected")
-            location_name = p.get("top_recommended_pfz") or s.get("region") or "this position"
+            location_name = target_zone_label or p.get("top_recommended_pfz") or s.get("region") or "this position"
             txt = (
                 f"At {location_name}, sea surface temperature is "
                 f"{_fmt(sst, ' degC')}{_trend_clause('sst_celsius', sst, ' degC', agent='satellite')}, with "
@@ -226,14 +236,25 @@ class NeuralSynthesisAgent:
         elif intent == "YIELD_TREND_ANALYSIS":
             # "Why has fish productivity declined?" -- answered the only
             # honest way a stats-grounded system can: by comparing the
-            # live PFZ yield (and the SST/chlorophyll it's derived from)
-            # against this site's own recorded history for that same
-            # metric, and saying plainly when there isn't enough history
-            # yet to call it a decline at all.
-            yield_pct = p.get("yield_score_pct")
+            # live PFZ yield (and the SST/chlorophyll it's derived from,
+            # now taken at the resolved target zone) against this site's
+            # own recorded history for that same metric, and saying
+            # plainly when there isn't enough history yet to call it a
+            # decline at all.
+            # The PFZ agent's `yield_score_pct` field is the RANKING's own
+            # single top-scoring zone (from the vessel's current
+            # position) -- not necessarily the zone this question is
+            # about. `full_ranking` carries every zone's own figures, so
+            # look up the actually-requested zone there first; only fall
+            # back to the ranking's top pick if that lookup fails (e.g.
+            # degraded PFZ agent, or an unrecognised zone id).
+            target_id = t.get("target_pfz_id")
+            zone_entry = next((z for z in (p.get("full_ranking") or []) if z.get("id") == target_id), None)
+            yield_pct = zone_entry.get("yield_score_pct") if zone_entry else p.get("yield_score_pct")
             yield_stats = stats_store.trend("yield_score_pct", agent="pfz")
             sst = s.get("sst_celsius")
             chl = s.get("chlorophyll_mg_m3")
+            location_label = target_zone_label or p.get("top_recommended_pfz") or "the target zone"
             if yield_stats.get("count", 0) >= 3 and yield_pct is not None and yield_stats.get("avg"):
                 avg = yield_stats["avg"]
                 delta_pct = (yield_pct - avg) / avg * 100
@@ -247,7 +268,7 @@ class NeuralSynthesisAgent:
                     trend_clause = f"consistent with this zone's own {yield_stats['count']}-reading average of {avg:.1f}%"
                     verdict = "within its normal recorded range, not a meaningful decline"
                 txt = (
-                    f"Predicted yield at {_fmt(p.get('top_recommended_pfz'))} is {_fmt(yield_pct, '%')}, "
+                    f"Predicted yield at {location_label} is {_fmt(yield_pct, '%')}, "
                     f"{trend_clause} -- {verdict}. "
                     f"Sea surface temperature is {_fmt(sst, ' degC')}{_trend_clause('sst_celsius', sst, ' degC', agent='satellite')} "
                     f"and chlorophyll-a is {_fmt(chl, ' mg/m3')}{_trend_clause('chlorophyll_mg_m3', chl, ' mg/m3', agent='satellite')}, "
@@ -255,7 +276,7 @@ class NeuralSynthesisAgent:
                 )
             else:
                 txt = (
-                    f"Predicted yield at {_fmt(p.get('top_recommended_pfz'))} is {_fmt(yield_pct, '%')}. "
+                    f"Predicted yield at {location_label} is {_fmt(yield_pct, '%')}. "
                     "Not enough recorded history on this zone yet to say whether that is a decline or within its "
                     "normal range -- ORCA only compares against its own accumulated readings, and needs at least "
                     "3 prior readings for this metric before it will call a trend either way."
