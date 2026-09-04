@@ -14,6 +14,14 @@
    colors (emerald/amber/red = safe/warn/danger, and the cyan-500/600
    button/badge shades) intentionally stay constant across themes so they
    keep meaning what they mean.
+
+   Each theme also now defines a parallel set of --glass-*/--glow-accent*
+   tokens (UI/UX restyle, phase 1) so glassmorphic surfaces and accent
+   glows can be themed the same way: rgba glass fills/borders tuned to
+   that theme's own chrome, and a glow color tuned to that theme's own
+   cyan-400 rather than one glow value forced across all four themes
+   (a bright cyan glow reads fine on the dark themes but is too harsh on
+   Day's light chrome, so Day's glow uses its darker cyan-400 instead).
    ========================================================================== */
 
 :root,
@@ -37,6 +45,14 @@
 
   --cyan-400: #22d3ee;
   --cyan-300: #67e8f9;
+
+  /* Glass & glow tokens */
+  --glass-bg: rgba(15, 28, 52, 0.62);
+  --glass-bg-strong: rgba(11, 20, 38, 0.80);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --glow-accent: rgba(6, 182, 212, 0.28);
+  --glow-accent-strong: rgba(6, 182, 212, 0.55);
 }
 
 [data-theme="day"] {
@@ -64,6 +80,16 @@
 
   --cyan-400: #0e7490;
   --cyan-300: #0891b2;
+
+  /* Glass & glow tokens -- lighter/softer than the dark themes since these
+     sit on white/near-white chrome; glow uses Day's own darker cyan-400
+     so it reads as a tint rather than a neon blur. */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --glow-accent: rgba(14, 116, 144, 0.18);
+  --glow-accent-strong: rgba(14, 116, 144, 0.34);
 }
 
 [data-theme="grey"] {
@@ -87,6 +113,14 @@
 
   --cyan-400: #22d3ee;
   --cyan-300: #67e8f9;
+
+  /* Glass & glow tokens */
+  --glass-bg: rgba(26, 26, 30, 0.62);
+  --glass-bg-strong: rgba(19, 19, 22, 0.80);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --glow-accent: rgba(6, 182, 212, 0.24);
+  --glow-accent-strong: rgba(6, 182, 212, 0.48);
 }
 
 [data-theme="blue"] {
@@ -109,6 +143,14 @@
 
   --cyan-400: #22d3ee;
   --cyan-300: #67e8f9;
+
+  /* Glass & glow tokens */
+  --glass-bg: rgba(10, 26, 68, 0.62);
+  --glass-bg-strong: rgba(7, 18, 51, 0.80);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --glow-accent: rgba(6, 182, 212, 0.30);
+  --glow-accent-strong: rgba(6, 182, 212, 0.58);
 }
 
 :root {
@@ -135,6 +177,14 @@
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+
+  /* Shared glass/motion tokens (theme-agnostic; per-theme rgba tints are
+     defined above alongside each theme's own --ocean-*/--cyan-* values) */
+  --glass-blur: 20px;
+  --radius-pill: 999px;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  --text-gradient-primary: linear-gradient(135deg, var(--cyan-light) 0%, var(--cyan-primary) 50%, var(--teal-primary) 100%);
 }
 
 * {
