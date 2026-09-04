@@ -598,12 +598,15 @@ async def test_synthesis_agent_mpa_breach_warns_explicitly():
 
 
 @pytest.mark.asyncio
-async def test_synthesis_agent_labels_fallback_honestly_when_groq_unconfigured():
+async def test_synthesis_agent_uses_only_the_in_house_stats_engine():
+    """There is no external AI/LLM API anywhere in this system any more --
+    every advisory comes from the rule-based ORCA_STATS_ENGINE, reasoning
+    over this website's own telemetry and its own stats ledger."""
     agent = NeuralSynthesisAgent()
-    assert agent._client is None  # no GROQ_API_KEY in the test environment
+    assert not hasattr(agent, "_client")  # no external API client of any kind
     synth = await agent.synthesize({"plan": {"intent": "GENERAL_VOYAGE_SAFETY"}})
-    assert "DETERMINISTIC_FALLBACK" in synth["llm_engine"]
-    assert "GROQ" not in synth["llm_engine"] or "unavailable" in synth["llm_engine"].lower()
+    assert "ORCA_STATS_ENGINE" in synth["llm_engine"]
+    assert "GROQ" not in synth["llm_engine"]
 
 
 @pytest.mark.asyncio
