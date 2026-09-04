@@ -50,6 +50,8 @@ const state = {
   // as if they were real vessels. It stays empty until the backend receives
   // a valid AIS/GPS snapshot.
   usesLiveVessels: true,
+  liveVesselCount: 0,
+  simulatedVesselCount: 0,
   latestChatQuery: "Is it safe to sail to PFZ-01 from Kochi today?",
   satellites: [],
   pfzZones: [],
@@ -181,7 +183,7 @@ const translations = {
     windSpeed: "Surface Wind Speed",
     seaState: "Douglas Sea State",
     lightningRisk: "Lightning & Squall Risk",
-    vesselTableTitle: "Live Coastal Fleet Telemetry (Simulated AIS)",
+    vesselTableTitle: "Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)",
     simulatedDisclaimer: "DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Smart India Hackathon 2026 judging demonstration."
   },
   hi: {
@@ -227,7 +229,7 @@ const translations = {
     windSpeed: "हवा की गति",
     seaState: "समुद्र की स्थिति (डगलस)",
     lightningRisk: "बिजली और तूफान का जोखिम",
-    vesselTableTitle: "लाइव तटीय बेड़ा टेलीमेट्री (सिम्युलेटेड एआईएस)",
+    vesselTableTitle: "लाइव तटीय बेड़ा टेलीमेट्री (लाइव एआईएस + सिम्युलेटेड)",
     simulatedDisclaimer: "अस्वीकरण: उपग्रह डेटा और नाव की स्थितियां एसआईएच 2026 के लिए सिम्युलेटेड हैं।"
   },
   ta: {
@@ -499,16 +501,25 @@ function updateBackendStatusBadges() {
 
 // Pull server-validated AIS/GPS snapshots when an operator has configured a
 // real feed. The browser never calls satellite/AIS providers directly, so
-// provider credentials stay on the backend. Fleet rendering remains empty
-// until a live snapshot exists; simulated vessels are never used here.
+// provider credentials stay on the backend. The backend backfills any port
+// with zero live coverage using a clearly-tagged simulated fleet (see
+// backend ais_gateway.enrich_simulated_vessels) -- every vessel arrives with
+// an explicit `is_simulated` flag, so the frontend never has to guess and
+// never presents simulated data as real AIS traffic.
 async function refreshExternalTelemetry() {
   if (!(await checkBackendHealth())) return;
   try {
     const res = await fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, {}, 5000);
     if (!res.ok) return;
     const snapshot = await res.json();
-    if (snapshot.status !== 'LIVE' || !Array.isArray(snapshot.payload) || !snapshot.payload.length) {       updateAisFeedBanner(snapshot.status, snapshot.ais_gateway);       return;     }     updateAisFeedBanner('LIVE');
+    if ((snapshot.status !== 'LIVE' && snapshot.status !== 'SIMULATED_FALLBACK') || !Array.isArray(snapshot.payload) || !snapshot.payload.length) {
+      updateAisFeedBanner(snapshot.status, snapshot.ais_gateway);
+      return;
+    }
+    updateAisFeedBanner(snapshot.status, snapshot.ais_gateway, snapshot.live_vessel_count, snapshot.simulated_vessel_count);
     state.vessels = snapshot.payload;
+    state.liveVesselCount = snapshot.live_vessel_count ?? snapshot.payload.filter(v => !v.is_simulated).length;
+    state.simulatedVesselCount = snapshot.simulated_vessel_count ?? snapshot.payload.filter(v => v.is_simulated).length;
     state.usesLiveVessels = true;
     renderVesselsOnMap();
     renderVesselsTable();
@@ -518,19 +529,34 @@ async function refreshExternalTelemetry() {
   }
 }
 
-function updateAisFeedBanner(status, gatewayState) {
+function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
   const id = 'aisFeedStatusBanner';
   let el = document.getElementById(id);
-  if (status === 'LIVE') {
+
+  // LIVE with no simulated backfill needed -- nothing to explain, remove any banner.
+  if (status === 'LIVE' && !simulatedCount) {
     if (el) el.remove();
     return;
   }
+
   if (!el) {
     el = document.createElement('div');
     el.id = id;
-    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:2147483000;background:#78350f;color:#fef3c7;font:600 12px/1.5 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center;box-shadow:0 -2px 8px rgba(0,0,0,.35);';
+    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:2147483000;font:600 12px/1.5 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center;box-shadow:0 -2px 8px rgba(0,0,0,.35);';
     document.body.appendChild(el);
   }
+
+  // Blended live + simulated coverage: informational, not an error/warning.
+  if ((status === 'LIVE' || status === 'SIMULATED_FALLBACK') && simulatedCount) {
+    el.style.background = '#0c4a6e';
+    el.style.color = '#e0f2fe';
+    const liveText = liveCount ? `${liveCount} live AIS vessel${liveCount === 1 ? '' : 's'}` : 'no live AIS vessels right now';
+    el.textContent = `ℹ Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
+    return;
+  }
+
+  el.style.background = '#78350f';
+  el.style.color = '#fef3c7';
   let detail = 'Live AIS vessel feed unavailable -- showing 0 vessels.';
   if (gatewayState) {
     if (!gatewayState.configured) {
@@ -1116,15 +1142,20 @@ function renderVesselsOnMap() {
       colorClass = 'bg-cyan-500 text-slate-950';
     }
 
+    // Simulated fill-in vessels get a visibly different marker (dashed
+    // outline, hollow center, "SIM" tag) so they're never mistaken for real
+    // AIS traffic at a glance, regardless of their status color.
+    const simBorder = vessel.is_simulated ? 'border-dashed border-2 border-slate-200 opacity-80' : 'border border-slate-900';
+
     const icon = L.divIcon({
       className: 'vessel-marker-icon',
       html: `
         <div class="relative flex items-center justify-center">
-          <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md border border-slate-900 ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
+          <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md ${simBorder} ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
             ▲
           </div>
           <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-slate-950/80 px-1 rounded text-slate-300 border border-slate-800 pointer-events-none">
-                        ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}
+                        ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' · SIM' : ''}
           </span>
         </div>
       `,
@@ -1136,6 +1167,7 @@ function renderVesselsOnMap() {
 
     const popupHtml = `
       <div class="p-2 min-w-[220px]">
+        ${vessel.is_simulated ? '<div class="mb-1 px-1.5 py-0.5 inline-block rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500">Simulated · no live AIS coverage here</div>' : ''}
         <div class="flex items-center justify-between mb-1">
           <span class="font-bold text-white text-xs">${vessel.name}</span>
           <span class="text-[10px] font-mono px-1 rounded bg-slate-800 text-cyan-300 border border-slate-700">${vessel.id}</span>
@@ -1161,7 +1193,9 @@ function renderVesselsOnMap() {
 
   const mapVesselCounter = document.getElementById('mapActiveVessels');
   if (mapVesselCounter) {
-    mapVesselCounter.textContent = `${state.vessels.length} Active Vessels`;
+    mapVesselCounter.textContent = state.simulatedVesselCount
+      ? `${state.vessels.length} Active Vessels (${state.liveVesselCount} live · ${state.simulatedVesselCount} simulated)`
+      : `${state.vessels.length} Active Vessels`;
   }
 
   // These two live outside the map tab (home KPI card + DAG side panel)
@@ -2661,7 +2695,11 @@ function renderFleetDistributionChart() {
   }).join('');
 
   const totalEl = document.getElementById('fleetTotalActive');
-  if (totalEl) totalEl.textContent = state.vessels.length;
+  if (totalEl) {
+    totalEl.textContent = state.simulatedVesselCount
+      ? `${state.vessels.length} (${state.liveVesselCount} live · ${state.simulatedVesselCount} sim)`
+      : state.vessels.length;
+  }
 }
 
 function renderVesselsTable(filteredList = null) {
@@ -2679,16 +2717,21 @@ function renderVesselsTable(filteredList = null) {
     } else if (v.status === 'TRANSIT') {
       statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300">IN TRANSIT</span>`;
     }
+    // Simulated fill-in vessels always carry their own tag alongside the
+    // status badge, so a scan of the table never mistakes one for real AIS.
+    const simTag = v.is_simulated
+      ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500" title="Simulated -- no live AIS coverage near this port">SIM</span>`
+      : '';
 
     return `
-      <tr class="border-b border-slate-800 hover:bg-slate-800/50 transition">
+      <tr class="border-b border-slate-800 hover:bg-slate-800/50 transition ${v.is_simulated ? 'opacity-80' : ''}">
         <td class="py-2.5 px-3 font-mono text-cyan-400 text-xs font-bold">${v.id}</td>
         <td class="py-2.5 px-3 text-xs text-white font-medium">${v.name}</td>
         <td class="py-2.5 px-3 text-xs text-slate-400">${v.type}</td>
         <td class="py-2.5 px-3 text-xs text-slate-300">${v.zone}</td>
         <td class="py-2.5 px-3 font-mono text-xs text-slate-200">${v.speed_knots} kn / ${v.heading}°</td>
         <td class="py-2.5 px-3 font-mono text-xs ${v.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${v.imbl_dist_nm} NM</td>
-        <td class="py-2.5 px-3">${statusBadge}</td>
+        <td class="py-2.5 px-3">${statusBadge}${simTag}</td>
         <td class="py-2.5 px-3 text-right">
           <button onclick="zoomToVessel('${v.id}')" class="px-2 py-1 bg-slate-800 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[11px] font-medium transition">
             Locate ➔
