@@ -286,3 +286,105 @@ body {
 .soundbar:nth-child(2) { animation-delay: 0.2s; }
 .soundbar:nth-child(3) { animation-delay: 0.4s; }
 .soundbar:nth-child(4) { animation-delay: 0.1s; }
+
+/* ============================================
+   Slide Fill Button (liquid hover-fill effect)
+   Faithful vanilla CSS/JS recreation — the
+   proprietary Originkit Framer component's
+   source is paywalled and not retrievable, so
+   this reproduces the documented visual effect
+   from scratch per the user's explicit choice.
+   ============================================ */
+.sfb-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sfb-btn > .sfb-content {
+  position: relative;
+  z-index: 1;
+}
+
+.sfb-inner {
+  display: flex;
+  align-items: center;
+}
+
+.sfb-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0%;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--cyan-light) 0%, var(--cyan-primary) 55%, var(--teal-primary) 100%);
+  transition: height 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.sfb-btn:hover .sfb-fill,
+.sfb-btn:focus-visible .sfb-fill {
+  height: 100%;
+}
+
+.sfb-btn.sfb-active .sfb-fill {
+  height: 40%;
+}
+
+.sfb-btn.sfb-active:hover .sfb-fill,
+.sfb-btn.sfb-active:focus-visible .sfb-fill {
+  height: 100%;
+}
+
+.sfb-fill::before,
+.sfb-fill::after {
+  content: '';
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  top: 0;
+  height: 10px;
+  background-repeat: repeat-x;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.sfb-fill::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10' viewBox='0 0 40 10'%3E%3Cpath d='M0 5 Q10 0 20 5 T40 5 V10 H0 Z' fill='white' fill-opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 40px 10px;
+  animation: sfb-wave-scroll 1.6s linear infinite;
+}
+
+.sfb-fill::after {
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='8' viewBox='0 0 28 8'%3E%3Cpath d='M0 4 Q7 0 14 4 T28 4 V8 H0 Z' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E");
+  background-size: 28px 8px;
+  opacity: 0.35;
+  animation: sfb-wave-scroll 2.4s linear infinite reverse;
+}
+
+@keyframes sfb-wave-scroll {
+  from { background-position-x: 0; }
+  to { background-position-x: 40px; }
+}
+
+.sfb-inner--submerged {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sfb-fill::before,
+  .sfb-fill::after {
+    animation: none;
+  }
+  .sfb-fill {
+    transition-duration: 0.01ms;
+  }
+}
