@@ -508,3 +508,14 @@ body {
   box-shadow: 0 0 20px var(--glow-accent-strong);
   transform: translateY(-2px);
 }
+
+/* ============================================
+   Typography (glass restyle, phase 5)
+   ============================================ */
+.text-gradient {
+  background: var(--text-gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
