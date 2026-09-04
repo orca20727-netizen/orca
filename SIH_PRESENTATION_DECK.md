@@ -110,7 +110,7 @@ when the backend is unavailable.
 
 ## 📈 Slide 7: Technical Feasibility & Scalability
 - **Frontend:** Lightweight PWA running at 60 FPS on basic Android phones.
-- **Backend:** Async FastAPI with LangGraph state machine & Groq Llama-3-70B.
+- **Backend:** Async FastAPI multi-agent DAG with an in-house rule-based Stats Synthesis Engine -- zero external AI/LLM API, reasoning entirely over the site's own live telemetry and its own persistent stats ledger.
 - **Open Data Pipelines:** Zero proprietary vendor lock-in (ISRO MOSDAC, Open-Meteo, Copernicus, AISStream).
 
 ---
