@@ -99,6 +99,7 @@ class NeuralSynthesisAgent:
 
     def _synthesize(self, t: Dict[str, Any], intent: str, response_language: str = "en", language_note: Optional[str] = None) -> Dict[str, Any]:
         w = t.get("weather", {}) or {}
+        s = t.get("satellite", {}) or {}
         p = t.get("pfz", {}) or {}
         g = t.get("geofence", {}) or {}
         f = t.get("fleet", {}) or {}
@@ -107,6 +108,27 @@ class NeuralSynthesisAgent:
 
         if intent == "WEATHER_SAFETY":
             wave = w.get("significant_wave_height_m")
+            lightning = w.get("lightning_risk_pct")
+            lightning_level = (
+                "High" if isinstance(lightning, (int, float)) and lightning >= 50
+                else "Moderate" if isinstance(lightning, (int, float)) and lightning >= 25
+                else "Low" if isinstance(lightning, (int, float))
+                else None
+            )
+            lightning_clause = (
+                f" Lightning/squall risk is {_fmt(lightning, '%')} ({lightning_level})."
+                if lightning_level else ""
+            )
+            # Directly answers "any lightning or cyclone alerts?" with the
+            # site's own currently-recorded proactive alerts (see
+            # backend/alert_service.py) rather than a generic wave/wind
+            # paragraph that never mentions either hazard by name.
+            cyclone_alerts = [a for a in (t.get("active_alerts") or []) if a.get("alert_type") == "CYCLONE_BULLETIN"]
+            cyclone_clause = (
+                f" Active cyclone bulletin on file: {cyclone_alerts[0].get('title')} -- {cyclone_alerts[0].get('message')}"
+                if cyclone_alerts
+                else " No active cyclone bulletin on file for this coastline right now."
+            )
             txt = (
                 f"Sea state {_fmt(w.get('sea_state_douglas'))} (Douglas scale) with "
                 f"{_fmt(wave, ' m')} significant wave height"
@@ -114,6 +136,7 @@ class NeuralSynthesisAgent:
                 f"{_fmt(w.get('surface_wind_knots'), ' kn')} winds. "
                 f"Weather safety score is {_fmt(w.get('safety_score'), '/100')}. "
                 f"Weather clearance verdict: {_fmt(w.get('clearance_verdict'))}."
+                f"{lightning_clause}{cyclone_clause}"
             )
         elif intent == "IMBL_BOUNDARY":
             txt = (
@@ -179,6 +202,64 @@ class NeuralSynthesisAgent:
                 )
             else:
                 txt = f"One-way ETA is {_fmt(e.get('one_way_eta_hours'), ' hours')}. Return-time verdict is unavailable."
+        elif intent == "OCEAN_CONDITIONS":
+            # "Which regions show high chlorophyll / favorable SST?" -- the
+            # satellite agent's live reading plus its own historical trend,
+            # grounded the same way every other branch is (no fabricated
+            # multi-region scan the underlying agents don't actually do).
+            sst = s.get("sst_celsius")
+            chl = s.get("chlorophyll_mg_m3")
+            front = s.get("thermal_front_detected")
+            location_name = p.get("top_recommended_pfz") or s.get("region") or "this position"
+            txt = (
+                f"At {location_name}, sea surface temperature is "
+                f"{_fmt(sst, ' degC')}{_trend_clause('sst_celsius', sst, ' degC', agent='satellite')}, with "
+                f"chlorophyll-a concentration at {_fmt(chl, ' mg/m3')}"
+                f"{_trend_clause('chlorophyll_mg_m3', chl, ' mg/m3', agent='satellite')}. "
+                + (
+                    "A thermal front is detected here, typically favorable for pelagic fish aggregation. "
+                    if front
+                    else "No significant thermal front detected at this position right now. "
+                )
+                + f"Ocean data tier: {_fmt(s.get('source_tier'))}."
+            )
+        elif intent == "YIELD_TREND_ANALYSIS":
+            # "Why has fish productivity declined?" -- answered the only
+            # honest way a stats-grounded system can: by comparing the
+            # live PFZ yield (and the SST/chlorophyll it's derived from)
+            # against this site's own recorded history for that same
+            # metric, and saying plainly when there isn't enough history
+            # yet to call it a decline at all.
+            yield_pct = p.get("yield_score_pct")
+            yield_stats = stats_store.trend("yield_score_pct", agent="pfz")
+            sst = s.get("sst_celsius")
+            chl = s.get("chlorophyll_mg_m3")
+            if yield_stats.get("count", 0) >= 3 and yield_pct is not None and yield_stats.get("avg"):
+                avg = yield_stats["avg"]
+                delta_pct = (yield_pct - avg) / avg * 100
+                if delta_pct <= -8:
+                    trend_clause = f"{abs(delta_pct):.0f}% below this zone's own {yield_stats['count']}-reading average of {avg:.1f}%"
+                    verdict = "a real decline against this site's own recorded history"
+                elif delta_pct >= 8:
+                    trend_clause = f"{abs(delta_pct):.0f}% above this zone's own {yield_stats['count']}-reading average of {avg:.1f}%"
+                    verdict = "actually above its own recent average -- not a decline"
+                else:
+                    trend_clause = f"consistent with this zone's own {yield_stats['count']}-reading average of {avg:.1f}%"
+                    verdict = "within its normal recorded range, not a meaningful decline"
+                txt = (
+                    f"Predicted yield at {_fmt(p.get('top_recommended_pfz'))} is {_fmt(yield_pct, '%')}, "
+                    f"{trend_clause} -- {verdict}. "
+                    f"Sea surface temperature is {_fmt(sst, ' degC')}{_trend_clause('sst_celsius', sst, ' degC', agent='satellite')} "
+                    f"and chlorophyll-a is {_fmt(chl, ' mg/m3')}{_trend_clause('chlorophyll_mg_m3', chl, ' mg/m3', agent='satellite')}, "
+                    "the two factors this system's PFZ ranking is built from."
+                )
+            else:
+                txt = (
+                    f"Predicted yield at {_fmt(p.get('top_recommended_pfz'))} is {_fmt(yield_pct, '%')}. "
+                    "Not enough recorded history on this zone yet to say whether that is a decline or within its "
+                    "normal range -- ORCA only compares against its own accumulated readings, and needs at least "
+                    "3 prior readings for this metric before it will call a trend either way."
+                )
         elif intent == "PFZ_RECOMMENDATION":
             yield_pct = p.get("yield_score_pct")
             txt = (
@@ -234,10 +315,20 @@ class NeuralSynthesisAgent:
         wind = _fmt(w.get("surface_wind_knots"), " kn")
         verdict = _fmt(w.get("clearance_verdict"))
         if intent == "WEATHER_SAFETY":
+            lightning = w.get("lightning_risk_pct")
+            # Same "any lightning/cyclone alert?" question a non-English
+            # speaker asks just as often -- keep the answer's substance
+            # (not just wave/wind) equivalent across every supported
+            # language rather than only enriching the English branch.
+            lightning_suffix = {
+                "hi": f" बिजली/तूफान जोखिम: {_fmt(lightning, '%')}।" if isinstance(lightning, (int, float)) else "",
+                "ta": f" மின்னல்/புயல் அபாயம்: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
+                "ml": f" ഇടിമിന്നൽ/കൊടുങ്കാറ്റ് സാധ്യത: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
+            }
             templates = {
-                "hi": f"समुद्री सलाह: लहर की ऊंचाई {wave} और हवा {wind} है। मौसम सुरक्षा स्थिति: {verdict}। सावधानी से यात्रा करें।",
-                "ta": f"கடல் ஆலோசனை: அலை உயரம் {wave}, காற்று {wind}. வானிலை பாதுகாப்பு நிலை: {verdict}. எச்சரிக்கையுடன் பயணம் செய்யவும்.",
-                "ml": f"കടൽ നിർദേശം: തിരമാല ഉയരം {wave}, കാറ്റ് {wind}. കാലാവസ്ഥാ സുരക്ഷാ നില: {verdict}. ജാഗ്രതയോടെ യാത്ര ചെയ്യുക.",
+                "hi": f"समुद्री सलाह: लहर की ऊंचाई {wave} और हवा {wind} है। मौसम सुरक्षा स्थिति: {verdict}।{lightning_suffix.get('hi', '')} सावधानी से यात्रा करें।",
+                "ta": f"கடல் ஆலோசனை: அலை உயரம் {wave}, காற்று {wind}. வானிலை பாதுகாப்பு நிலை: {verdict}.{lightning_suffix.get('ta', '')} எச்சரிக்கையுடன் பயணம் செய்யவும்.",
+                "ml": f"കടൽ നിർദേശം: തിരമാല ഉയരം {wave}, കാറ്റ് {wind}. കാലാവസ്ഥാ സുരക്ഷാ നില: {verdict}.{lightning_suffix.get('ml', '')} ജാഗ്രതയോടെ യാത്ര ചെയ്യുക.",
             }
             return templates.get(language, english_text)
         prefixes = {
