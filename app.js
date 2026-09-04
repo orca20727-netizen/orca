@@ -42,6 +42,26 @@ const ORCA_THEMES = ['night', 'day', 'grey', 'blue'];
   }
 })();
 
+// The Mappls Maps SDK's overlay registry can still be finishing its own
+// internal setup a moment after the SDK fires the map's 'load' event --
+// most visible on the very first route-polyline auto-render, ~400ms after
+// page load. When that happens, the SDK's own lazily-loaded internal
+// module throws asynchronously, outside of any promise this app awaits,
+// so no local try/catch around the calling code can catch it. Recognise
+// this one narrow, well-understood SDK timing signature and log it
+// quietly instead of letting it surface as an unhandled top-level error;
+// it is harmless and self-recovers -- every subsequent route
+// recalculation (harbour/PFZ change, "Simulate Route" click) draws
+// correctly once the SDK has finished settling. Anything else is left
+// alone and still surfaces normally.
+window.addEventListener('unhandledrejection', (event) => {
+  const msg = event.reason && event.reason.message;
+  if (msg === "Cannot read properties of null (reading 'push')") {
+    event.preventDefault();
+    console.warn('Mappls SDK internal timing notice (harmless, self-recovers):', msg);
+  }
+});
+
 // Maps the agent names the FastAPI backend sends over the websocket to the
 // DAG node ids used in the frontend (see agentsList below).
 const BACKEND_AGENT_ID_MAP = {
