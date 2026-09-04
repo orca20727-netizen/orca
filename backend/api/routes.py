@@ -206,11 +206,35 @@ async def refresh_live_feeds():
 
 @router.get("/api/live/vessels")
 async def live_vessels():
+    """Real AIS positions, backfilled with a clearly-tagged simulated fleet
+    for any port that currently has zero live coverage (see
+    ais_gateway.enrich_simulated_vessels). Every vessel in `payload` carries
+    `is_simulated` so the frontend never has to guess which is which; the
+    envelope's `live_vessel_count` / `simulated_vessel_count` say how the mix
+    breaks down without the frontend re-deriving it.
+    """
+    from ais_gateway import get_gateway_state, enrich_simulated_vessels
+
     snapshot = live_data.store.latest("vessel")
-    if snapshot:
-        return snapshot
-    from ais_gateway import get_gateway_state
-    return {"payload": [], "status": "NOT_CONFIGURED", "ais_gateway": get_gateway_state()}
+    live_payload = [{**vessel, "is_simulated": False} for vessel in (snapshot["payload"] if snapshot else [])]
+    live_ports = {vessel.get("nearest_port") for vessel in live_payload if vessel.get("nearest_port")}
+
+    simulated_payload = enrich_simulated_vessels(exclude_ports=live_ports)
+    combined = live_payload + simulated_payload
+
+    if not combined:
+        return {"payload": [], "status": "NOT_CONFIGURED", "ais_gateway": get_gateway_state()}
+
+    return {
+        "payload": combined,
+        "source": snapshot["source"] if live_payload and snapshot else "Simulated demo fleet (live AIS feed currently has zero coverage)",
+        "observed_at": snapshot.get("observed_at") if snapshot else None,
+        "ingested_at": snapshot.get("ingested_at") if snapshot else None,
+        "status": "LIVE" if live_payload else "SIMULATED_FALLBACK",
+        "live_vessel_count": len(live_payload),
+        "simulated_vessel_count": len(simulated_payload),
+        "ais_gateway": get_gateway_state(),
+    }
 
 
 @router.get("/api/live/pfz")
