@@ -576,3 +576,51 @@ body {
 .pulse-slow {
   animation: pulseSlow 3s ease-in-out infinite;
 }
+
+/* ============================================
+   Ambient Background (glass restyle, phase 7)
+   ============================================ */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient-dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--glass-border) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  background: radial-gradient(circle, var(--glow-accent-strong) 0%, transparent 70%);
+}
+
+.ambient-orb-1 {
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  left: -100px;
+}
+
+.ambient-orb-2 {
+  width: 360px;
+  height: 360px;
+  top: 35%;
+  right: -140px;
+  animation-delay: 2s;
+}
+
+.ambient-orb-3 {
+  width: 300px;
+  height: 300px;
+  bottom: -120px;
+  left: 25%;
+  animation-delay: 4s;
+}
