@@ -1340,7 +1340,7 @@ function renderVesselsOnMap() {
         ${vessel.is_simulated ? '<div class="mb-1 px-1.5 py-0.5 inline-block rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500">Simulated · no live AIS coverage here</div>' : ''}
         <div class="flex items-center justify-between mb-1">
           <span class="font-bold text-white text-xs">${vessel.name}</span>
-          <span class="text-[10px] font-mono px-1 rounded bg-slate-800 text-cyan-300 border border-slate-700">${vessel.id}</span>
+          <span class="text-[10px] font-mono px-1 rounded glass-chip text-cyan-300">${vessel.id}</span>
         </div>
         <div class="text-[11px] text-slate-400 mb-2">${vessel.type} · ${vessel.owner}</div>
         
@@ -1661,7 +1661,7 @@ function renderDAGNodes() {
             </span>
             <h4 class="font-bold text-slate-100 text-sm group-hover:text-cyan-300 transition">${agent.name}</h4>
           </div>
-          <span id="badge-lat-${agent.id}" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+          <span id="badge-lat-${agent.id}" class="text-[10px] font-mono px-1.5 py-0.5 rounded glass-chip text-slate-400">
             ${agent.latency}
           </span>
         </div>
