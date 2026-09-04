@@ -10,8 +10,14 @@ public URL before configuring the frontend.
 - Set the Dockerfile path to `Dockerfile`.
 - Add `FRONTEND_ORIGIN` after the frontend public URL is known.
 - Do **not** set `BACKEND_PORT`; Railway supplies `PORT` automatically.
-- Configure any required backend-only values such as `GROQ_API_KEY`,
-  `TELEMETRY_INGEST_TOKEN`, and external-feed credentials in Railway.
+- Configure any required backend-only values such as `TELEMETRY_INGEST_TOKEN`
+  and external-feed credentials in Railway.
+- Attach a Railway volume (e.g. mounted at `/data`) and set
+  `ORCA_STATS_DB_PATH` to a path under it (e.g. `/data/orca_stats.db`) so
+  the site's own accumulated stats ledger survives redeploys instead of
+  resetting each time. There is no external AI/LLM API to configure --
+  the advisory engine is rule-based and reasons only over this website's
+  own telemetry and stats history.
 
 The backend's health endpoint is `/api/health`.
 
