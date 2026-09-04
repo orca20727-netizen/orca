@@ -1,59 +1,39 @@
 """
-Neural Synthesis Agent.
+ORCA Stats Synthesis Agent.
 
 Turns the multi-agent telemetry dict (weather, satellite/ocean, PFZ
 ranking, IMBL/MPA geofencing, fleet, routing/ETA) plus the Supervisor's
-classified intent into a single natural-language advisory.
+classified intent into a single natural-language advisory -- entirely
+in-house, built from scratch on this website's own data.
 
-Two tiers, always both query-aware (never one canned paragraph regardless
-of intent):
+There is NO external AI/LLM API call anywhere in this module, or anywhere
+in this codebase: every sentence is generated from (a) the live reading
+collected for this request, and (b) the accumulated historical stats this
+same website has recorded from its own agents over time, via the
+persistent ledger in backend/stats_store.py. Reasoning is rule-based,
+branching on the same classified intent so a weather question gets a
+weather-focused answer, an IMBL question gets a boundary-focused answer,
+etc. -- never one canned paragraph regardless of what was asked.
 
-  1. LIVE (Groq/Llama): used whenever GROQ_API_KEY is set and the call
-     succeeds. The prompt hands the model every piece of telemetry
-     collected for this request and explicitly instructs it not to invent
-     numbers it wasn't given.
-  2. DETERMINISTIC FALLBACK: used whenever GROQ_API_KEY is missing, the
-     `groq` package isn't installed, the request times out, or the LLM
-     response is malformed/empty. Never a single fixed paragraph -- it
-     branches on the same classified intent so a weather question gets a
-     weather-focused answer, an IMBL question gets a boundary-focused
-     answer, etc.
+Where enough history has accumulated (at least 3 prior readings for that
+metric), the answer adds a clause comparing the live reading against the
+site's own recorded average -- e.g. "1.26 m (12% above the site's own
+41-reading average of 1.12 m)". With fewer than 3 stored readings (a
+freshly deployed instance, or a metric nobody has asked about yet) that
+clause is silently omitted rather than fabricated.
 
-`llm_engine` on the response always says plainly which tier actually
-produced the text -- never claims a live LLM response when the fallback
-ran, and never silently reuses stale wording across unrelated queries.
+`llm_engine` is kept as a response field name for frontend/API
+compatibility, but always reads "ORCA_STATS_ENGINE" now: there is only
+one engine, it never depends on any external network/API availability,
+and it never silently reuses stale wording across unrelated queries.
 """
 
-import asyncio
 import logging
-import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
-try:
-    from groq import Groq
-except ImportError:  # pragma: no cover - groq package not installed
-    Groq = None
+from stats_store import stats_store
 
 logger = logging.getLogger(__name__)
-
-GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
-GROQ_TIMEOUT_SEC = float(os.getenv("GROQ_TIMEOUT_SEC", "8"))
-
-SYSTEM_PROMPT = (
-    "You are the Neural Synthesis layer of ORCA INSIGHT, a maritime fishing "
-    "and voyage-safety advisory system for Indian coastal fishermen. You are "
-    "given ONLY the structured telemetry below, already computed by "
-    "specialist agents (satellite oceanography, weather/hazard, PFZ ranking, "
-    "IMBL/MPA geofencing, fleet density, route planning, ETA). "
-    "Use ONLY the supplied telemetry. Do not invent, estimate, or assume any "
-    "number, distance, coordinate, or status that is not explicitly present "
-    "below. If a piece of information the user asked about is unavailable in "
-    "the telemetry, say plainly that it is unavailable rather than guessing. "
-    "Directly answer the user's actual question first, then add only the "
-    "telemetry that supports that answer. Keep the reply concise (3-6 "
-    "sentences), in the requested response language, and end with one clear recommendation "
-    "such as PROCEED, PROCEED WITH CAUTION, or DO NOT PROCEED."
-)
 
 
 def _fmt(value: Any, unit: str = "", unavailable: str = "unavailable") -> str:
@@ -62,90 +42,37 @@ def _fmt(value: Any, unit: str = "", unavailable: str = "unavailable") -> str:
     return f"{value}{unit}"
 
 
-def _build_prompt(telemetry: Dict[str, Any], intent: str, response_language: str) -> str:
-    query = telemetry.get("query", "")
-    w = telemetry.get("weather", {}) or {}
-    s = telemetry.get("satellite", {}) or {}
-    p = telemetry.get("pfz", {}) or {}
-    g = telemetry.get("geofence", {}) or {}
-    f = telemetry.get("fleet", {}) or {}
-    e = telemetry.get("eta", {}) or {}
-    routing = e.get("routing", {}) or {}
-    context = telemetry.get("conversation_context", {}) or {}
-    history = context.get("history", [])[-6:]
-
-    lines = [
-        f"USER QUERY: {query!r}",
-        f"CLASSIFIED INTENT: {intent}",
-        f"RESPONSE LANGUAGE: {response_language} (write the final advisory in this language)",
-        f"CONTEXT RESOLVED PFZ: {_fmt(context.get('resolved_target_pfz'))}; carried forward: {_fmt(context.get('carried_forward'))}",
-        "RECENT CONVERSATION: " + " | ".join(f"{turn.get('role', 'user')}: {turn.get('text', '')}" for turn in history),
-        "",
-        "-- Ocean / Satellite Telemetry --",
-        f"SST: {_fmt(s.get('sst_celsius'), ' C')} (source: {_fmt(s.get('data_source', {}).get('sst') if isinstance(s.get('data_source'), dict) else None)})",
-        f"Chlorophyll: {_fmt(s.get('chlorophyll_mg_m3'), ' mg/m3')} ({_fmt(s.get('data_source', {}).get('chlorophyll') if isinstance(s.get('data_source'), dict) else None)})",
-        "",
-        "-- Weather / Hazard Telemetry --",
-        f"Significant wave height: {_fmt(w.get('significant_wave_height_m'), ' m')}",
-        f"Wind: {_fmt(w.get('surface_wind_knots'), ' kn')} {_fmt(w.get('wind_direction'), '')}",
-        f"Sea state (Douglas): {_fmt(w.get('sea_state_douglas'))}",
-        f"Weather safety score: {_fmt(w.get('safety_score'), '/100')}",
-        f"Weather clearance verdict: {_fmt(w.get('clearance_verdict'))}",
-        "",
-        "-- PFZ Ranking --",
-        f"Top recommended PFZ: {_fmt(p.get('top_recommended_pfz'))}",
-        f"Predicted yield: {_fmt(p.get('yield_score_pct'), '%')}",
-        f"Distance from vessel: {_fmt(p.get('distance_from_vessel_nm'), ' NM')}",
-        "",
-        "-- IMBL / MPA Geofencing --",
-        f"Nearest IMBL boundary: {_fmt(g.get('nearest_imbl_boundary'))} ({_fmt(g.get('nearest_imbl_country'))})",
-        f"Distance to IMBL: {_fmt(g.get('distance_to_imbl_nm'), ' NM')}",
-        f"IMBL status: {_fmt(g.get('imbl_status'))}",
-        f"MPA breach detected: {_fmt(g.get('mpa_breach_detected'))} ({_fmt(g.get('mpa_breached_name'))})",
-        "",
-        "-- Fleet --",
-        f"Vessels in target zone: {_fmt(f.get('vessels_in_target_zone'))}",
-        f"Overcrowding status: {_fmt(f.get('overcrowding_status'))}",
-        f"Fleet data source: {_fmt(f.get('data_source'))}",
-        "",
-        "-- Route & ETA --",
-        f"Route found: {_fmt(routing.get('route_found'))}",
-        f"Route distance: {_fmt(e.get('route_distance_nm'), ' NM')}",
-        f"Straight-line distance: {_fmt(routing.get('straight_line_distance_nm'), ' NM')}",
-        f"Detour: {_fmt(routing.get('detour_nm'), ' NM')} ({_fmt(routing.get('detour_percent'), '%')})",
-        f"Land avoidance active: {_fmt(routing.get('land_avoidance'))}",
-        f"MPAs avoided en route: {_fmt(routing.get('avoided_mpas'))}",
-        f"One-way ETA: {_fmt(e.get('one_way_eta_hours'), ' hours')}",
-        f"Estimated return: {_fmt(e.get('estimated_return_ist'))}",
-        f"Dusk safety verdict: {_fmt(e.get('dusk_safety_verdict'))}",
-    ]
-    return "\n".join(lines)
+def _trend_clause(metric: str, current: Optional[float], unit: str = "", agent: Optional[str] = None) -> str:
+    """Compares `current` against this website's own recorded history for
+    that metric (see stats_store.trend). Returns "" -- never a fabricated
+    comparison -- when there's no live value or fewer than 3 stored
+    readings to compare against."""
+    if current is None:
+        return ""
+    stats = stats_store.trend(metric, agent=agent)
+    if stats.get("count", 0) < 3:
+        return ""
+    avg = stats["avg"]
+    if not avg:
+        return ""
+    delta_pct = (current - avg) / avg * 100
+    if abs(delta_pct) < 8:
+        qualifier = "consistent with"
+    elif delta_pct > 0:
+        qualifier = f"{abs(delta_pct):.0f}% above"
+    else:
+        qualifier = f"{abs(delta_pct):.0f}% below"
+    return f" ({qualifier} the site's own {stats['count']}-reading average of {avg:.2f}{unit})"
 
 
 class NeuralSynthesisAgent:
+    """Name kept for backward compatibility with core.py's import and the
+    frontend's Agent DAG Visualizer labels. Nothing in this class calls
+    an external model -- it is a rule-based reasoning engine over this
+    website's own live telemetry and its own accumulated stats ledger."""
+
     def __init__(self):
-        self.name = "Neural Synthesis Agent (LLM)"
-        self.api_key = os.getenv("GROQ_API_KEY")
-        self._client = Groq(api_key=self.api_key) if (Groq is not None and self.api_key) else None
-
-    async def _call_groq(self, prompt: str) -> str:
-        """Runs the (synchronous) Groq SDK call off the event loop with a
-        hard timeout. Raises on any failure -- caller falls back to the
-        deterministic engine."""
-
-        def _sync_call() -> str:
-            completion = self._client.chat.completions.create(
-                model=GROQ_MODEL,
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": prompt},
-                ],
-                max_tokens=400,
-                temperature=0.3,
-            )
-            return completion.choices[0].message.content
-
-        return await asyncio.wait_for(asyncio.to_thread(_sync_call), timeout=GROQ_TIMEOUT_SEC)
+        self.name = "ORCA Stats Synthesis Agent (rule-based, no external AI)"
 
     async def synthesize(self, multi_agent_telemetry: Dict[str, Any]) -> Dict[str, Any]:
         intent = (multi_agent_telemetry.get("plan") or {}).get("intent")
@@ -161,28 +88,16 @@ class NeuralSynthesisAgent:
         response_language = language.get("response_code", "en")
         language_note = language.get("note")
 
-        if self._client is not None:
-            try:
-                prompt = _build_prompt(multi_agent_telemetry, intent, response_language)
-                text = await self._call_groq(prompt)
-                if text and text.strip():
-                    return {
-                        "advisory_text": text.strip(),
-                        "confidence_pct": 92,
-                        "citations": ["Open-Meteo", "ORCA Multi-Agent Telemetry", f"Groq/{GROQ_MODEL}"],
-                        "llm_engine": f"GROQ_LLAMA_LIVE ({GROQ_MODEL})",
-                        "intent": intent,
-                        "language": {"response_code": response_language, "note": language_note, "provenance": "QUERY_LANGUAGE_DETECTION"},
-                    }
-                logger.warning("Neural Synthesis: Groq returned an empty response -- using deterministic fallback")
-            except Exception as e:
-                logger.warning("Neural Synthesis: Groq call failed (%s) -- using deterministic fallback", e)
+        # Every served query is itself a stat: recording it here (not just
+        # the raw agent readings) is what lets /api/health and future
+        # features report "most-asked intents" from real usage.
+        stats_store.record_query(intent, response_language, multi_agent_telemetry.get("query", ""))
 
-        return self._deterministic_fallback(multi_agent_telemetry, intent, response_language, language_note)
+        return self._synthesize(multi_agent_telemetry, intent, response_language, language_note)
 
-    # -- Deterministic, query-aware fallback --------------------------------
+    # -- Rule-based, query-aware, stats-grounded synthesis -------------------
 
-    def _deterministic_fallback(self, t: Dict[str, Any], intent: str, response_language: str = "en", language_note: str | None = None) -> Dict[str, Any]:
+    def _synthesize(self, t: Dict[str, Any], intent: str, response_language: str = "en", language_note: Optional[str] = None) -> Dict[str, Any]:
         w = t.get("weather", {}) or {}
         p = t.get("pfz", {}) or {}
         g = t.get("geofence", {}) or {}
@@ -191,9 +106,11 @@ class NeuralSynthesisAgent:
         routing = e.get("routing", {}) or {}
 
         if intent == "WEATHER_SAFETY":
+            wave = w.get("significant_wave_height_m")
             txt = (
                 f"Sea state {_fmt(w.get('sea_state_douglas'))} (Douglas scale) with "
-                f"{_fmt(w.get('significant_wave_height_m'), ' m')} significant wave height and "
+                f"{_fmt(wave, ' m')} significant wave height"
+                f"{_trend_clause('significant_wave_height_m', wave, ' m', agent='weather')} and "
                 f"{_fmt(w.get('surface_wind_knots'), ' kn')} winds. "
                 f"Weather safety score is {_fmt(w.get('safety_score'), '/100')}. "
                 f"Weather clearance verdict: {_fmt(w.get('clearance_verdict'))}."
@@ -222,9 +139,11 @@ class NeuralSynthesisAgent:
             else:
                 txt = "MPA breach status is unavailable for this position -- geofencing telemetry did not return a result."
         elif intent == "FLEET_DENSITY":
+            vessels = f.get("vessels_in_target_zone")
             txt = (
-                f"{_fmt(f.get('vessels_in_target_zone'))} vessels are currently reported in the "
-                f"target zone, out of {_fmt(f.get('total_active_vessels'))} active vessels tracked "
+                f"{_fmt(vessels)} vessels are currently reported in the "
+                f"target zone{_trend_clause('vessels_in_target_zone', vessels, agent='fleet')}, "
+                f"out of {_fmt(f.get('total_active_vessels'))} active vessels tracked "
                 f"overall. Overcrowding status: {_fmt(f.get('overcrowding_status'))}. "
                 f"Fleet data source: {_fmt(f.get('data_source'))}."
             )
@@ -261,9 +180,10 @@ class NeuralSynthesisAgent:
             else:
                 txt = f"One-way ETA is {_fmt(e.get('one_way_eta_hours'), ' hours')}. Return-time verdict is unavailable."
         elif intent == "PFZ_RECOMMENDATION":
+            yield_pct = p.get("yield_score_pct")
             txt = (
                 f"Recommended PFZ is {_fmt(p.get('top_recommended_pfz'))} "
-                f"({_fmt(p.get('yield_score_pct'), '%')} predicted yield, "
+                f"({_fmt(yield_pct, '%')} predicted yield{_trend_clause('yield_score_pct', yield_pct, '%', agent='pfz')}, "
                 f"{_fmt(p.get('distance_from_vessel_nm'), ' NM')} from current position). "
                 f"Weather clearance verdict: {_fmt(w.get('clearance_verdict'))}."
             )
@@ -284,26 +204,28 @@ class NeuralSynthesisAgent:
                 f"One-way ETA is {_fmt(e.get('one_way_eta_hours'), ' hours')}; {dusk_clause}."
             )
 
-        localized = self._localize_fallback(t, intent, response_language, txt)
+        localized = self._localize(t, intent, response_language, txt)
         if language_note:
             localized = f"{language_note} {localized}"
+
+        readings_seen = stats_store.total_reading_count()
         return {
             "advisory_text": localized,
             "confidence_pct": 90,
-            "citations": ["Open-Meteo", "ORCA Multi-Agent Telemetry"],
-            "llm_engine": "DETERMINISTIC_FALLBACK (Groq unavailable or not configured)" if self._client is None
-            else "DETERMINISTIC_FALLBACK (Groq call failed or returned empty response)",
+            "citations": ["Open-Meteo", "ORCA Multi-Agent Telemetry", f"ORCA Stats Ledger ({readings_seen} readings recorded)"],
+            "llm_engine": f"ORCA_STATS_ENGINE (rule-based, {readings_seen} historical readings on file)",
             "intent": intent,
             "language": {"response_code": response_language, "note": language_note, "provenance": "QUERY_LANGUAGE_DETECTION"},
         }
 
     @staticmethod
-    def _localize_fallback(t: Dict[str, Any], intent: str, language: str, english_text: str) -> str:
+    def _localize(t: Dict[str, Any], intent: str, language: str, english_text: str) -> str:
         """Offline-native response for the most common safety queries.
 
         Numeric telemetry stays unchanged; only wording is localized. Other
-        intents retain the grounded English fallback rather than fabricating a
-        translation when no translation engine is configured.
+        intents retain the grounded English text rather than fabricating a
+        translation when no translation engine is configured -- this
+        system has never called out to a translation API either.
         """
         if language == "en":
             return english_text
