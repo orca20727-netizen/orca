@@ -447,6 +447,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   runStartupStep('setupNavigation', setupNavigation);
   runStartupStep('setupSlideFillButtons', setupSlideFillButtons);
   runStartupStep('setupHeaderScrollHide', setupHeaderScrollHide);
+  runStartupStep('setupScrollReveal', setupScrollReveal);
   runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
   runStartupStep('setupThemeSwitcher', setupThemeSwitcher);
   runStartupStep('setupMap', setupMap);
@@ -918,6 +919,30 @@ function setupHeaderScrollHide() {
       ticking = false;
     });
   }, { passive: true });
+}
+
+// Scroll-reveal entrance animation (UI/UX restyle, phase 6) -- purely decorative
+// and additive: observes elements carrying the .reveal class and adds .revealed
+// once each enters the viewport, then stops observing it. Does not touch any
+// existing state, ids, or classes JS elsewhere depends on. Elements without
+// IntersectionObserver support (or if none exist on the page) are revealed
+// immediately so content is never left permanently hidden.
+function setupScrollReveal() {
+  const targets = document.querySelectorAll('.reveal');
+  if (!targets.length) return;
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach(el => el.classList.add('revealed'));
+    return;
+  }
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  targets.forEach(el => observer.observe(el));
 }
 
 // Language Switcher
