@@ -128,10 +128,16 @@ class AISGateway:
         self._vessels: Dict[str, Dict[str, Any]] = {}
         self._last_publish = 0.0
         self._task: Optional[asyncio.Task] = None
-        self._connected_since = None
-        self._last_message_at = None
-        self._last_published_at = None
-        self._last_disconnect_reason = None
+        # Connection/data health, surfaced via get_state() so the frontend can
+        # tell "never configured" apart from "connected to AISstream.io but
+        # the provider isn't sending any position reports" -- the latter is a
+        # real, recurring failure mode of the free AISstream.io tier (documented
+        # provider-side outages) and previously looked identical to a config
+        # problem from the outside.
+        self._connected_since: Optional[str] = None
+        self._last_message_at: Optional[str] = None
+        self._last_published_at: Optional[str] = None
+        self._last_disconnect_reason: Optional[str] = None
 
     def start(self) -> asyncio.Task:
         self._task = asyncio.create_task(self._connect_forever())
@@ -144,7 +150,14 @@ class AISGateway:
                 await self._task
             except asyncio.CancelledError:
                 pass
+
     def get_state(self) -> Dict[str, Any]:
+        """Connection/data health for /api/live/vessels and /api/live/status.
+
+        `connected` true + `last_message_at` null/stale means the socket is
+        open but AISstream.io isn't actually delivering data -- most likely
+        a provider-side outage, not a local misconfiguration.
+        """
         return {
             "configured": True,
             "connected": self._connected_since is not None,
@@ -275,10 +288,51 @@ class AISGateway:
 
 
 _gateway: Optional[AISGateway] = None
+
+
 def get_gateway_state() -> Dict[str, Any]:
+    """AIS connection/data health for the API layer. See AISGateway.get_state."""
     if _gateway is None:
         return {"configured": False, "connected": False}
     return _gateway.get_state()
+
+
+def enrich_simulated_vessels(exclude_ports: Optional[set] = None) -> list:
+    """Load the curated demo fleet (data/simulated_vessels.json) and return
+    only the vessels whose nearest port is NOT already in `exclude_ports`.
+
+    AISstream.io is a community terrestrial-receiver network: real coverage
+    is only ever as good as wherever a volunteer happens to run a receiver,
+    so at any given moment most of the Indian coastline can have zero live
+    vessels while one port has several. This backfills the gap with a
+    clearly-tagged simulated fleet so the map/Fleet Monitor isn't empty
+    outside whatever port currently has live coverage -- every entry carries
+    `is_simulated: True` and an honest `owner` string so the frontend never
+    has to guess, and can never present it as real AIS traffic.
+    """
+    exclude_ports = exclude_ports or set()
+    path = os.path.join(os.path.dirname(__file__), "..", "data", "simulated_vessels.json")
+    try:
+        with open(path) as source:
+            vessels = json.load(source).get("vessels", [])
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        logger.warning("Simulated fleet unavailable (%s); no fallback vessels added", exc)
+        return []
+
+    enriched = []
+    for vessel in vessels:
+        coords = _valid_coordinate(vessel.get("lat"), vessel.get("lon"))
+        if coords is None:
+            continue
+        port, _district, _plat, _plon = min(PORTS, key=lambda item: _nm_between(coords[0], coords[1], item[2], item[3]))
+        if port in exclude_ports:
+            continue
+        entry = dict(vessel)
+        entry["is_simulated"] = True
+        entry["owner"] = "Simulated demo fleet (no live AIS coverage near this port)"
+        entry["nearest_port"] = port
+        enriched.append(entry)
+    return enriched
 
 
 def start_ais_gateway() -> Optional[asyncio.Task]:
