@@ -812,7 +812,7 @@ function setupNavigation() {
 
 function switchTab(tabId) {
   state.activeTab = tabId;
-  
+
   document.querySelectorAll('.tab-content').forEach(section => {
     section.classList.add('hidden');
   });
@@ -835,7 +835,10 @@ function switchTab(tabId) {
 
   if (tabId === 'map' && state.map) {
     setTimeout(() => {
-      state.map.invalidateSize();
+      // Mappls' vector engine has no documented invalidateSize() -- try its
+      // MapLibre-style resize() defensively so a tab-switch reflow still
+      // repaints the canvas correctly; never let this break tab switching.
+      try { state.map.resize(); } catch (err) { /* not available -- ignore */ }
     }, 200);
   }
 
@@ -983,11 +986,12 @@ function setupThemeSwitcher() {
     } catch (err) {
       console.warn('ORCA INSIGHT: could not persist theme preference:', err);
     }
-    // Leaflet renders its tile/popup panes with color values it read at
-    // creation time; nudge a resize so open popups and the base layer
-    // repaint with the new theme's colors.
+    // Nudge a resize so the map canvas and any open popups repaint with the
+    // new theme's colors.
     if (state.map) {
-      setTimeout(() => state.map.invalidateSize(), 50);
+      setTimeout(() => {
+        try { state.map.resize(); } catch (err) { /* not available -- ignore */ }
+      }, 50);
     }
   });
 }
@@ -1102,40 +1106,56 @@ function setupMap() {
   const mapContainer = document.getElementById('mapContainer');
   if (!mapContainer) return;
 
-  state.map = L.map('mapContainer', {
-    center: [12.0, 77.5],
-    zoom: 6,
-    zoomControl: true,
-    attributionControl: true
+  // Government of India-authorized basemap (Mappls / MapmyIndia) -- this
+  // replaces the previous Leaflet + OpenStreetMap stack entirely. Mappls
+  // has no plain XYZ tile layer that plugs into Leaflet, so every overlay
+  // below is rebuilt on Mappls' own Marker/Polygon/Polyline/Circle APIs
+  // instead of Leaflet's, tracked in plain arrays under state.mapLayers
+  // (Mappls has no Leaflet-style featureGroup) and cleared/rebuilt via
+  // clearMapLayerGroup() + the render*Layer() functions below.
+  if (typeof mappls === 'undefined' || !mappls.Map) {
+    console.warn('ORCA INSIGHT: Mappls SDK failed to load -- GIS map disabled.');
+    return;
+  }
+
+  state.map = new mappls.Map('mapContainer', {
+    center: { lat: 12.0, lng: 77.5 },
+    zoom: 6
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(state.map);
+  state.map.addListener('load', function () {
+    state.mapLayers.indiaBoundary = [];
+    state.mapLayers.pfz = [];
+    state.mapLayers.imbl = [];
+    state.mapLayers.mpas = [];
+    state.mapLayers.harbours = [];
+    state.mapLayers.vessels = [];
+    state.mapLayers.heatmap = [];
+    state.mapLayers.route = [];
 
-  // Official India boundary overlay (Survey of India depiction) -- drawn
-  // right on top of the base tiles so it visually corrects them, rather
-  // than trying to replace the whole basemap provider. Added first among
-  // the feature groups so operational layers (PFZ, vessels, etc.) still
-  // render above it.
-  state.mapLayers.indiaBoundary = L.featureGroup().addTo(state.map);
-  state.mapLayers.pfz = L.featureGroup().addTo(state.map);
-  state.mapLayers.imbl = L.featureGroup().addTo(state.map);
-  state.mapLayers.mpas = L.featureGroup().addTo(state.map);
-  state.mapLayers.harbours = L.featureGroup().addTo(state.map);
-  state.mapLayers.vessels = L.featureGroup().addTo(state.map);
-  state.mapLayers.heatmap = L.featureGroup().addTo(state.map);
-  state.mapLayers.route = L.featureGroup().addTo(state.map);
+    renderIndiaBoundaryLayer();
+    renderPFZLayers();
+    renderIMBLLayers();
+    renderMPALayers();
+    renderHarbourMarkers();
+    renderVesselsOnMap();
+    renderHeatmapLayers();
+    setupLayerToggles();
+  });
+}
 
-  renderIndiaBoundaryLayer();
-  renderPFZLayers();
-  renderIMBLLayers();
-  renderMPALayers();
-  renderHarbourMarkers();
-  renderVesselsOnMap();
-  renderHeatmapLayers();
-  setupLayerToggles();
+// Removes every Mappls layer object tracked under state.mapLayers[key] and
+// empties the array. Mappls has no Leaflet-style featureGroup.clearLayers(),
+// so each render*Layer() function below calls this first, then rebuilds
+// from scratch -- the same "clear then redraw" pattern the Leaflet version
+// used, just without a single container object to clear in one call.
+function clearMapLayerGroup(key) {
+  const group = state.mapLayers[key];
+  if (!Array.isArray(group) || !state.map) return;
+  group.forEach(layer => {
+    try { mappls.remove({ map: state.map, layer }); } catch (err) { /* already gone */ }
+  });
+  state.mapLayers[key] = [];
 }
 
 // Draws India's officially correct external boundary -- per the Survey of
@@ -1146,48 +1166,67 @@ function setupMap() {
 // Dept of State), Pakistan admin boundary data, and Natural Earth vectors;
 // see data/README or the ORCA_HANDOFF doc for the full source citation.
 function renderIndiaBoundaryLayer() {
-  if (!state.mapLayers.indiaBoundary || !state.indiaBoundary) return;
-  // Guarded: this is an optional cosmetic overlay. A malformed or missing
-  // boundary file (e.g. a 404 error body that still parses as JSON) must
-  // never be allowed to throw here and abort the rest of setupMap() --
-  // that exact failure mode previously took down the whole page's live
-  // data refresh (see renderSatelliteCards incident). Fail silently and
-  // leave the layer empty instead.
+  if (!state.map || !state.indiaBoundary) return;
+  // Guarded: this is an optional cosmetic overlay drawn on top of Mappls'
+  // own government-compliant vector basemap for extra visual emphasis. A
+  // malformed or missing boundary file (e.g. a 404 error body that still
+  // parses as JSON) must never be allowed to throw here and abort the rest
+  // of setupMap() -- that exact failure mode previously took down the
+  // whole page's live data refresh (see renderSatelliteCards incident).
+  // Fail silently and leave the layer empty instead.
   try {
-    state.mapLayers.indiaBoundary.clearLayers();
+    clearMapLayerGroup('indiaBoundary');
 
-    const layer = L.geoJSON(state.indiaBoundary, {
-      style: {
-        color: '#ff9933',
-        weight: 3,
-        opacity: 0.95,
-        fill: false
-      },
-      interactive: false
+    // Extract every ring/line from the boundary GeoJSON ourselves (rather
+    // than handing the raw FeatureCollection to mappls.addGeoJson(), whose
+    // own documentation is inconsistent about coordinate order) and draw
+    // each with mappls.Polyline, whose {lat,lng} path format is unambiguous.
+    const rings = [];
+    const collectGeometry = (geometry) => {
+      if (!geometry) return;
+      if (geometry.type === 'Polygon') {
+        geometry.coordinates.forEach(ring => rings.push(ring));
+      } else if (geometry.type === 'MultiPolygon') {
+        geometry.coordinates.forEach(poly => poly.forEach(ring => rings.push(ring)));
+      } else if (geometry.type === 'LineString') {
+        rings.push(geometry.coordinates);
+      } else if (geometry.type === 'MultiLineString') {
+        geometry.coordinates.forEach(line => rings.push(line));
+      }
+    };
+    const gj = state.indiaBoundary;
+    if (gj.type === 'FeatureCollection') gj.features.forEach(f => collectGeometry(f.geometry));
+    else if (gj.type === 'Feature') collectGeometry(gj.geometry);
+    else collectGeometry(gj);
+
+    rings.forEach(ring => {
+      const paths = ring.map(([lng, lat]) => ({ lat, lng }));
+      const line = new mappls.Polyline({
+        map: state.map,
+        paths,
+        strokeColor: '#ff9933',
+        strokeOpacity: 0.95,
+        strokeWeight: 3,
+        popupHtml: 'India — official boundary (Survey of India)',
+        popupOptions: true
+      });
+      state.mapLayers.indiaBoundary.push(line);
     });
-    layer.bindTooltip('India — official boundary (Survey of India)', { sticky: true });
-    state.mapLayers.indiaBoundary.addLayer(layer);
   } catch (err) {
     console.warn('India boundary overlay skipped (invalid/missing data):', err);
   }
 }
 
 function renderPFZLayers() {
-  if (!state.mapLayers.pfz) return;
-  state.mapLayers.pfz.clearLayers();
+  if (!state.map) return;
+  clearMapLayerGroup('pfz');
 
   state.pfzZones.forEach(zone => {
     const isHigh = zone.yield_rating.includes('HIGH');
     const color = isHigh ? '#10b981' : '#f59e0b';
     const fillColor = isHigh ? '#059669' : '#d97706';
 
-    const polygon = L.polygon(zone.bounds, {
-      color: color,
-      weight: 2,
-      fillColor: fillColor,
-      fillOpacity: 0.25,
-      dashArray: '4, 4'
-    });
+    const paths = zone.bounds.map(([lat, lng]) => ({ lat, lng }));
 
     const popupHtml = `
       <div class="p-2 min-w-[220px]">
@@ -1211,34 +1250,42 @@ function renderPFZLayers() {
       </div>
     `;
 
-    polygon.bindPopup(popupHtml);
-    state.mapLayers.pfz.addLayer(polygon);
+    const polygon = new mappls.Polygon({
+      map: state.map,
+      paths,
+      strokeColor: color,
+      strokeOpacity: 1,
+      strokeWeight: 2,
+      fillColor: fillColor,
+      fillOpacity: 0.25,
+      popupHtml,
+      popupOptions: true
+    });
+    state.mapLayers.pfz.push(polygon);
 
-    const labelIcon = L.divIcon({
-      className: 'bg-transparent',
-      html: `<div class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900/90 text-cyan-300 border border-cyan-500/40 whitespace-nowrap shadow-lg flex items-center gap-1">
+    const labelHtml = `<div class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900/90 text-cyan-300 border border-cyan-500/40 whitespace-nowrap shadow-lg flex items-center gap-1">
                <span class="w-1.5 h-1.5 rounded-full ${isHigh ? 'bg-emerald-400 animate-ping' : 'bg-amber-400'}"></span>
                ${zone.id} · ${zone.yield_rating}
-             </div>`,
-      iconSize: [80, 20],
-      iconAnchor: [40, 10]
+             </div>`;
+    const marker = new mappls.Marker({
+      map: state.map,
+      position: { lat: zone.center[0], lng: zone.center[1] },
+      html: labelHtml,
+      width: 80,
+      height: 20,
+      popupHtml,
+      popupOptions: true
     });
-    const marker = L.marker(zone.center, { icon: labelIcon });
-    marker.bindPopup(popupHtml);
-    state.mapLayers.pfz.addLayer(marker);
+    state.mapLayers.pfz.push(marker);
   });
 }
 
 function renderIMBLLayers() {
-  if (!state.mapLayers.imbl) return;
-  state.mapLayers.imbl.clearLayers();
+  if (!state.map) return;
+  clearMapLayerGroup('imbl');
 
   state.imblBoundaries.forEach(bound => {
-    const polyline = L.polyline(bound.coordinates, {
-      color: '#ef4444',
-      weight: 3,
-      dashArray: '6, 6'
-    });
+    const paths = bound.coordinates.map(([lat, lng]) => ({ lat, lng }));
 
     const popupHtml = `
       <div class="p-2">
@@ -1251,33 +1298,37 @@ function renderIMBLLayers() {
       </div>
     `;
 
-    polyline.bindPopup(popupHtml);
-    state.mapLayers.imbl.addLayer(polyline);
-
-    const bufferCoords = bound.coordinates.map(c => [c[0] + 0.08, c[1] + 0.08]);
-    const bufferPoly = L.polyline(bufferCoords, {
-      color: '#f59e0b',
-      weight: 1.5,
-      dashArray: '3, 6',
-      opacity: 0.7
+    const polyline = new mappls.Polyline({
+      map: state.map,
+      paths,
+      strokeColor: '#ef4444',
+      strokeWeight: 3,
+      popupHtml,
+      popupOptions: true
     });
-    bufferPoly.bindTooltip(`⚠️ ${bound.warning_distance_nm} NM IMBL Buffer Corridor`, { sticky: true });
-    state.mapLayers.imbl.addLayer(bufferPoly);
+    state.mapLayers.imbl.push(polyline);
+
+    const bufferPaths = bound.coordinates.map(c => ({ lat: c[0] + 0.08, lng: c[1] + 0.08 }));
+    const bufferPopupHtml = `⚠️ ${bound.warning_distance_nm} NM IMBL Buffer Corridor`;
+    const bufferPoly = new mappls.Polyline({
+      map: state.map,
+      paths: bufferPaths,
+      strokeColor: '#f59e0b',
+      strokeWeight: 1.5,
+      strokeOpacity: 0.7,
+      popupHtml: bufferPopupHtml,
+      popupOptions: true
+    });
+    state.mapLayers.imbl.push(bufferPoly);
   });
 }
 
 function renderMPALayers() {
-  if (!state.mapLayers.mpas) return;
-  state.mapLayers.mpas.clearLayers();
+  if (!state.map) return;
+  clearMapLayerGroup('mpas');
 
   state.mpas.forEach(mpa => {
-    const polygon = L.polygon(mpa.bounds, {
-      color: '#ec4899',
-      weight: 2,
-      fillColor: '#db2777',
-      fillOpacity: 0.2,
-      dashArray: '2, 4'
-    });
+    const paths = mpa.bounds.map(([lat, lng]) => ({ lat, lng }));
 
     const popupHtml = `
       <div class="p-2">
@@ -1289,26 +1340,30 @@ function renderMPALayers() {
       </div>
     `;
 
-    polygon.bindPopup(popupHtml);
-    state.mapLayers.mpas.addLayer(polygon);
+    const polygon = new mappls.Polygon({
+      map: state.map,
+      paths,
+      strokeColor: '#ec4899',
+      strokeOpacity: 1,
+      strokeWeight: 2,
+      fillColor: '#db2777',
+      fillOpacity: 0.2,
+      popupHtml,
+      popupOptions: true
+    });
+    state.mapLayers.mpas.push(polygon);
   });
 }
 
 function renderHarbourMarkers() {
-  if (!state.mapLayers.harbours) return;
-  state.mapLayers.harbours.clearLayers();
+  if (!state.map) return;
+  clearMapLayerGroup('harbours');
 
   state.harbours.forEach(hbr => {
-    const icon = L.divIcon({
-      className: 'bg-transparent',
-      html: `<div class="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/30 hover:scale-110 transition cursor-pointer">
+    const html = `<div class="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/30 hover:scale-110 transition cursor-pointer">
                ⚓
-             </div>`,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
-    });
+             </div>`;
 
-    const marker = L.marker(hbr.coordinates, { icon });
     const popupHtml = `
       <div class="p-2 min-w-[200px]">
         <div class="font-bold text-cyan-400 text-sm">${hbr.name}</div>
@@ -1324,14 +1379,24 @@ function renderHarbourMarkers() {
         </button>
       </div>
     `;
-    marker.bindPopup(popupHtml);
-    state.mapLayers.harbours.addLayer(marker);
+
+    const marker = new mappls.Marker({
+      map: state.map,
+      position: { lat: hbr.coordinates[0], lng: hbr.coordinates[1] },
+      html,
+      width: 32,
+      height: 32,
+      popupHtml,
+      popupOptions: true
+    });
+    state.mapLayers.harbours.push(marker);
   });
 }
 
 function renderVesselsOnMap() {
-  if (!state.mapLayers.vessels) return;
-  state.mapLayers.vessels.clearLayers();
+  if (!state.map) return;
+  clearMapLayerGroup('vessels');
+  state.activeVesselMarkers = {};
 
   state.vessels.forEach(vessel => {
     let colorClass = 'bg-emerald-500 text-slate-950';
@@ -1351,9 +1416,7 @@ function renderVesselsOnMap() {
     // AIS traffic at a glance, regardless of their status color.
     const simBorder = vessel.is_simulated ? 'border-dashed border-2 border-slate-200 opacity-80' : 'border border-ocean-700';
 
-    const icon = L.divIcon({
-      className: 'vessel-marker-icon',
-      html: `
+    const html = `
         <div class="relative flex items-center justify-center">
           <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md ${simBorder} ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
             ▲
@@ -1362,12 +1425,7 @@ function renderVesselsOnMap() {
                         ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' · SIM' : ''}
           </span>
         </div>
-      `,
-      iconSize: [24, 24],
-      iconAnchor: [12, 12]
-    });
-
-    const marker = L.marker([vessel.lat, vessel.lon], { icon });
+      `;
 
     const popupHtml = `
       <div class="p-2 min-w-[220px]">
@@ -1377,7 +1435,7 @@ function renderVesselsOnMap() {
           <span class="text-[10px] font-mono px-1 rounded glass-chip text-cyan-300">${vessel.id}</span>
         </div>
         <div class="text-[11px] text-slate-400 mb-2">${vessel.type} · ${vessel.owner}</div>
-        
+
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900 p-2 rounded border border-slate-700">
           <div><span class="text-slate-400">Speed:</span> <span class="text-cyan-400 font-bold">${vessel.speed_knots} kn</span></div>
           <div><span class="text-slate-400">Heading:</span> <span class="text-slate-200 font-semibold">${vessel.heading}°</span></div>
@@ -1385,14 +1443,23 @@ function renderVesselsOnMap() {
           <div><span class="text-slate-400">IMBL Dist:</span> <span class="${vessel.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${vessel.imbl_dist_nm} NM</span></div>
           <div><span class="text-slate-400">Status:</span> <span class="font-bold ${vessel.status.includes('ALERT') ? 'text-red-400' : 'text-emerald-400'}">${vessel.status}</span></div>
           <div><span class="text-slate-400">Fuel:</span> <span class="text-slate-200">${vessel.fuel_pct != null ? vessel.fuel_pct + '%' : 'N/A'}</span></div>
-          
+
         </div>
       </div>
     `;
 
-    marker.bindPopup(popupHtml);
-    state.mapLayers.vessels.addLayer(marker);
-    state.activeVesselMarkers[vessel.id] = marker;
+    const marker = new mappls.Marker({
+      map: state.map,
+      position: { lat: vessel.lat, lng: vessel.lon },
+      html,
+      width: 24,
+      height: 24,
+      popupHtml,
+      popupOptions: true
+    });
+
+    state.mapLayers.vessels.push(marker);
+    state.activeVesselMarkers[vessel.id] = { marker, popupHtml };
   });
 
   const mapVesselCounter = document.getElementById('mapActiveVessels');
@@ -1418,52 +1485,72 @@ function renderVesselsOnMap() {
   // Fit the GIS view to the actual incoming AIS coordinates so vessels near
   // Kochi, Mumbai, Chennai, Vizag, etc. are not hidden by a port-centred
   // default map view. Invalid coordinates are excluded at the backend.
+  // Computed manually (center + a span-based zoom) rather than via
+  // mappls.fitBounds(), whose bounds-array coordinate order is
+  // inconsistent across Mappls' own documentation.
   const livePoints = state.vessels
     .filter(v => Number.isFinite(Number(v.lat)) && Number.isFinite(Number(v.lon)))
     .map(v => [Number(v.lat), Number(v.lon)]);
   if (state.map && livePoints.length > 1 && !state.hasFittedLiveFleet) {
-    state.map.fitBounds(L.latLngBounds(livePoints), { padding: [36, 36], maxZoom: 7 });
+    const lats = livePoints.map(p => p[0]);
+    const lngs = livePoints.map(p => p[1]);
+    const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+    const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
+    const maxSpan = Math.max(Math.max(...lats) - Math.min(...lats), Math.max(...lngs) - Math.min(...lngs));
+    let zoom = 8;
+    if (maxSpan > 20) zoom = 4;
+    else if (maxSpan > 10) zoom = 5;
+    else if (maxSpan > 5) zoom = 6;
+    else if (maxSpan > 2) zoom = 7;
+    state.map.setCenter({ lat: centerLat, lng: centerLng });
+    state.map.setZoom(zoom);
     state.hasFittedLiveFleet = true;
   }
 }
 
 function renderHeatmapLayers() {
-  if (!state.mapLayers.heatmap) return;
-  state.mapLayers.heatmap.clearLayers();
+  if (!state.map) return;
+  clearMapLayerGroup('heatmap');
 
   state.pfzZones.forEach(zone => {
     const radiusMeters = 35000 + (zone.vessels_in_zone * 4000);
-    const circle = L.circle(zone.center, {
-      color: '#06b6d4',
+    const circle = new mappls.Circle({
+      map: state.map,
+      center: { lat: zone.center[0], lng: zone.center[1] },
+      radius: radiusMeters,
+      strokeColor: '#06b6d4',
+      strokeOpacity: 1,
+      strokeWeight: 1,
       fillColor: '#06b6d4',
-      fillOpacity: 0.12,
-      weight: 1,
-      radius: radiusMeters
+      fillOpacity: 0.12
     });
-    circle.bindTooltip(`🔥 High Fleet Density: ${zone.vessels_in_zone} vessels near ${zone.name}`, { sticky: true });
-    state.mapLayers.heatmap.addLayer(circle);
+    state.mapLayers.heatmap.push(circle);
   });
 }
 
 function setupLayerToggles() {
   const toggles = [
-    { id: 'layerPFZ', layer: state.mapLayers.pfz },
-    { id: 'layerIMBL', layer: state.mapLayers.imbl },
-    { id: 'layerMPA', layer: state.mapLayers.mpas },
-    { id: 'layerHarbours', layer: state.mapLayers.harbours },
-    { id: 'layerVessels', layer: state.mapLayers.vessels },
-    { id: 'layerHeatmap', layer: state.mapLayers.heatmap },
-    { id: 'layerIndiaBoundary', layer: state.mapLayers.indiaBoundary }
+    { id: 'layerPFZ', key: 'pfz', renderer: renderPFZLayers },
+    { id: 'layerIMBL', key: 'imbl', renderer: renderIMBLLayers },
+    { id: 'layerMPA', key: 'mpas', renderer: renderMPALayers },
+    { id: 'layerHarbours', key: 'harbours', renderer: renderHarbourMarkers },
+    { id: 'layerVessels', key: 'vessels', renderer: renderVesselsOnMap },
+    { id: 'layerHeatmap', key: 'heatmap', renderer: renderHeatmapLayers },
+    { id: 'layerIndiaBoundary', key: 'indiaBoundary', renderer: renderIndiaBoundaryLayer }
   ];
 
   toggles.forEach(t => {
     const el = document.getElementById(t.id);
     if (el) {
       el.addEventListener('change', (e) => {
+        // Mappls has no Leaflet-style map.addLayer()/removeLayer() for
+        // arbitrary marker/shape objects, so "off" clears the tracked
+        // group and "on" simply re-runs the same render*Layer() function
+        // every other refresh already uses to rebuild it from scratch.
         if (e.target.checked) {
-          state.map.addLayer(t.layer);
+          t.renderer();
         } else {
-          state.map.removeLayer(t.layer);
+          clearMapLayerGroup(t.key);
         }
       });
     }
@@ -1556,7 +1643,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
   }
   updateBackendStatusBadges();
 
-  if (state.mapLayers.route) state.mapLayers.route.clearLayers();
+  clearMapLayerGroup('route');
 
   if (!route) {
     // Backend unreachable -- do NOT draw a fabricated straight/midpoint
@@ -1606,23 +1693,16 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     }
   }
 
-  if (state.mapLayers.route) {
+  if (state.map) {
     // Draw EXACTLY the waypoints the backend A* router returned -- the
     // frontend never invents its own waypoints.
-    const waypoints = route.waypoints.map(p => [p.lat, p.lon]);
-
-    const routeLine = L.polyline(waypoints, {
-      color: '#06b6d4',
-      weight: 3.5,
-      dashArray: '8, 8',
-      opacity: 0.9
-    });
+    const paths = route.waypoints.map(p => ({ lat: p.lat, lng: p.lon }));
 
     const detourNote = route.detour_percent > 1
       ? ` · Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
       : '';
 
-    const routeTooltip = `
+    const routePopupHtml = `
       <div class="p-1 text-xs">
         <span class="font-bold text-cyan-400">Sea-Only A* Route (Land + MPA Avoidance)</span><br/>
         <span>${harbour.name} ➔ ${pfz.name}</span><br/>
@@ -1630,8 +1710,16 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
       </div>
     `;
 
-    routeLine.bindTooltip(routeTooltip, { sticky: true });
-    state.mapLayers.route.addLayer(routeLine);
+    const routeLine = new mappls.Polyline({
+      map: state.map,
+      paths,
+      strokeColor: '#06b6d4',
+      strokeWeight: 3.5,
+      strokeOpacity: 0.9,
+      popupHtml: routePopupHtml,
+      popupOptions: true
+    });
+    state.mapLayers.route.push(routeLine);
   }
 }
 
@@ -2972,12 +3060,13 @@ window.zoomToVessel = function(vesselId) {
   if (!vessel || !state.map) return;
 
   switchTab('map');
-  state.map.setView([vessel.lat, vessel.lon], 9, { animate: true });
+  state.map.setCenter({ lat: vessel.lat, lng: vessel.lon });
+  state.map.setZoom(9);
 
-  const marker = state.activeVesselMarkers[vesselId];
-  if (marker) {
+  const entry = state.activeVesselMarkers[vesselId];
+  if (entry) {
     setTimeout(() => {
-      marker.openPopup();
+      entry.marker.setPopup(entry.popupHtml, { openPopup: true });
     }, 400);
   }
 };
@@ -3102,7 +3191,7 @@ function startLiveVesselSimulation() {
     state.vessels.forEach(v => {
       const rad = (v.heading * Math.PI) / 180;
       const speedDeg = (v.speed_knots / 3600) * 0.04;
-      
+
       v.lat += Math.cos(rad) * speedDeg;
       v.lon += Math.sin(rad) * speedDeg;
 
@@ -3111,9 +3200,9 @@ function startLiveVesselSimulation() {
       if (v.lon < 66.0) v.heading = 90;
       if (v.lon > 88.0) v.heading = 270;
 
-      const marker = state.activeVesselMarkers[v.id];
-      if (marker) {
-        marker.setLatLng([v.lat, v.lon]);
+      const entry = state.activeVesselMarkers[v.id];
+      if (entry) {
+        entry.marker.setPosition({ lat: v.lat, lng: v.lon });
       }
     });
 
