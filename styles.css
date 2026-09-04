@@ -6,7 +6,7 @@
    --------------------------------------------------------------------------
    Four user-selectable themes (Night/Day/Grey/Blue), switched via a
    [data-theme] attribute on <html> (see setupThemeSwitcher() in app.js).
-   Every theme defines the same set of --ocean-*/--slate-*/--cyan-400/300
+   Every theme defines the same set of --ocean-*, --slate-*, --cyan-400/300
    variables; index.html's Tailwind config points bg-ocean-*, text-slate-*,
    bg-slate-*, border-slate-*, text-cyan-400 and text-cyan-300 at these
    variables, so switching themes re-colors the entire existing UI without
@@ -15,7 +15,7 @@
    button/badge shades) intentionally stay constant across themes so they
    keep meaning what they mean.
 
-   Each theme also now defines a parallel set of --glass-*/--glow-accent*
+   Each theme also now defines a parallel set of --glass-*, --glow-accent*
    tokens (UI/UX restyle, phase 1) so glassmorphic surfaces and accent
    glows can be themed the same way: rgba glass fills/borders tuned to
    that theme's own chrome, and a glow color tuned to that theme's own
@@ -179,7 +179,7 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Shared glass/motion tokens (theme-agnostic; per-theme rgba tints are
-     defined above alongside each theme's own --ocean-*/--cyan-* values) */
+     defined above alongside each theme's own --ocean-* and --cyan-* values) */
   --glass-blur: 20px;
   --radius-pill: 999px;
   --radius-lg: 1.25rem;
@@ -291,7 +291,7 @@ body {
   background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, rgba(15, 28, 52, 0.8) 100%);
 }
 
-/* Leaflet Map Overrides -- themed via the same --ocean-*/--slate-* variables
+/* Leaflet Map Overrides -- themed via the same --ocean-* and --slate-* variables
    as the rest of the app so map popups match whichever theme is active. */
 .leaflet-container {
   background: var(--ocean-950) !important;
