@@ -36,7 +36,7 @@ except ImportError:  # pragma: no cover - groq package not installed
 
 logger = logging.getLogger(__name__)
 
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 GROQ_TIMEOUT_SEC = float(os.getenv("GROQ_TIMEOUT_SEC", "8"))
 
 SYSTEM_PROMPT = (
