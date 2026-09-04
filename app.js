@@ -1,10 +1,10 @@
 /**
  * ORCA INSIGHT - Final Production Multi-Agent Marine Intelligence Platform
- * Smart India Hackathon 2026 Â· Problem Statement 26176 Â· ISRO (Dept. of Space)
+ * Smart India Hackathon 2026 · Problem Statement 26176 · ISRO (Dept. of Space)
  * Team SavioursX
  */
 
-// Backend Connection Config â points at the FastAPI service in /backend.
+// Backend Connection Config — points at the FastAPI service in /backend.
 // Auto-detects the backend host from the page's own hostname so a phone
 // on the same Wi-Fi (loading the frontend as http://<LAN-IP>:3000) reaches
 // the backend at http://<LAN-IP>:8000 instead of its own localhost, where
@@ -158,7 +158,7 @@ const state = {
 const translations = {
   en: {
     appTitle: "ORCA INSIGHT",
-    appSubtitle: "ISRO Collaborative Marine Intelligence Â· SIH 2026 PS 26176",
+    appSubtitle: "ISRO Collaborative Marine Intelligence · SIH 2026 PS 26176",
     teamName: "Team SavioursX",
     navHome: "Home",
     navChat: "AI Decision Studio",
@@ -203,142 +203,142 @@ const translations = {
     simulatedDisclaimer: "NOTE: Live AIS vessel positions are backfilled with a clearly-tagged simulated fleet where there's no receiver coverage yet. Satellite oceanography layers remain simulated for Smart India Hackathon 2026 demonstration."
   },
   hi: {
-    appTitle: "à¤à¤°à¥à¤à¤¾ à¤à¤¨à¤¸à¤¾à¤à¤ (ORCA INSIGHT)",
-    appSubtitle: "à¤à¤¸à¤°à¥ à¤¸à¤¹à¤¯à¥à¤à¤¾à¤¤à¥à¤®à¤ à¤¸à¤®à¥à¤¦à¥à¤°à¥ à¤¬à¥à¤¦à¥à¤§à¤¿à¤®à¤¤à¥à¤¤à¤¾ Â· SIH 2026 PS 26176",
-    teamName: "à¤à¥à¤® à¤¸à¥à¤µà¤¿à¤¯à¤°à¥à¤¸à¤à¤à¥à¤¸ (Team SavioursX)",
-    navHome: "à¤®à¥à¤à¥à¤¯ à¤ªà¥à¤·à¥à¤ ",
-    navChat: "à¤à¤à¤ à¤¨à¤¿à¤°à¥à¤£à¤¯ à¤à¥à¤à¤¦à¥à¤°",
-    navMap: "à¤à¥à¤à¤à¤à¤¸ à¤à¤®à¤¾à¤à¤¡ à¤®à¥à¤ª",
-    navDAG: "à¤à¤à¥à¤à¤ à¤¡à¥à¤à¤à¥ à¤µà¤¿à¤à¤¼à¥à¤à¤²à¤¾à¤à¤à¤¼à¤°",
-    navSafety: "à¤¸à¥à¤°à¤à¥à¤·à¤¾ à¤¬à¥à¤°à¥à¤®à¥à¤à¤°",
-    navFleet: "à¤¨à¤¾à¤µ à¤¬à¥à¤¡à¤¼à¤¾ à¤®à¥à¤¨à¤¿à¤à¤°",
-    navNavic: "à¤¨à¤¾à¤µà¤¿à¤ (NavIC) à¤à¥à¤ªà¥à¤à¤¸",
-    navBulletins: "à¤à¤§à¤¿à¤à¤¾à¤°à¤¿à¤ à¤¬à¥à¤²à¥à¤à¤¿à¤¨",
-    heroTitle: "à¤­à¤¾à¤°à¤¤à¥à¤¯ à¤®à¤¹à¤¾à¤¸à¤¾à¤à¤° à¤à¥ à¤²à¤¿à¤ à¤¸à¤¹à¤¯à¥à¤à¤¾à¤¤à¥à¤®à¤ à¤¸à¤®à¥à¤¦à¥à¤°à¥ à¤¬à¥à¤¦à¥à¤§à¤¿à¤®à¤¤à¥à¤¤à¤¾",
-    heroDesc: "à¤à¤¸à¤°à¥ à¤à¤¶à¤¨à¤¸à¥à¤-3, à¤à¤¨à¤¸à¥à¤-3à¤¡à¥à¤à¤° à¤à¤ªà¤à¥à¤°à¤¹ à¤¡à¥à¤à¤¾, à¤à¤à¤à¤®à¤¬à¥à¤à¤² à¤¸à¥à¤®à¤¾ à¤¸à¥à¤°à¤à¥à¤·à¤¾, à¤²à¤¾à¤à¤µ à¤¨à¤¾à¤µ à¤à¤¨à¤¤à¥à¤µ à¤à¤° à¤¸à¤à¥à¤ à¤à¤à¥à¤ à¤à¤¾ à¤µà¤¿à¤¶à¥à¤²à¥à¤·à¤£ à¤à¤° à¤®à¤à¥à¤à¤°à¥à¤ à¤à¥ à¤¸à¥à¤°à¤à¥à¤·à¤¿à¤¤ à¤à¤° à¤¸à¤®à¥à¤¦à¥à¤§ à¤¬à¤¨à¤¾à¤¤à¤¾ à¤¹à¥à¥¤",
-    ctaStudio: "à¤à¤à¤ à¤¨à¤¿à¤°à¥à¤£à¤¯ à¤à¥à¤à¤¦à¥à¤° à¤¶à¥à¤°à¥ à¤à¤°à¥à¤",
-    ctaMap: "à¤à¤®à¤¾à¤à¤¡ à¤®à¥à¤ª à¤à¥à¤²à¥à¤",
-    ctaFleet: "à¤¨à¤¾à¤µ à¤¬à¥à¤¡à¤¼à¤¾ à¤¦à¥à¤à¥à¤",
-    statsActiveVessels: "à¤¸à¤à¥à¤°à¤¿à¤¯ à¤¨à¤¾à¤µà¥à¤ à¤à¥à¤°à¥à¤ à¤à¥ à¤à¤à¤",
-    statsSatellites: "à¤à¤¸à¤°à¥ à¤à¤ªà¤à¥à¤°à¤¹ à¤¡à¥à¤à¤¾ à¤¸à¥à¤°à¥à¤¤",
-    statsPFZ: "à¤à¤à¥à¤ à¤à¤ªà¤ à¤®à¤¤à¥à¤¸à¥à¤¯ à¤à¥à¤·à¥à¤¤à¥à¤°",
-    statsIMBL: "à¤à¤à¤à¤®à¤¬à¥à¤à¤² à¤¸à¥à¤°à¤à¥à¤·à¤¿à¤¤ à¤¸à¥à¤®à¤¾ à¤à¥à¤·à¥à¤¤à¥à¤°",
-    chipPFZ: "à¤¨à¤¿à¤à¤à¤¤à¤® à¤à¤à¥à¤ à¤à¤ªà¤ à¤®à¤¤à¥à¤¸à¥à¤¯ à¤à¥à¤·à¥à¤¤à¥à¤° à¤à¥à¤à¥à¤",
-    chipSafety: "à¤¸à¤®à¥à¤¦à¥à¤° à¤¯à¤¾à¤¤à¥à¤°à¤¾ à¤¸à¥à¤°à¤à¥à¤·à¤¾ à¤à¤¾à¤à¤à¥à¤",
-    chipBorder: "à¤à¤à¤¤à¤°à¤°à¤¾à¤·à¥à¤à¥à¤°à¥à¤¯ à¤¸à¤®à¥à¤¦à¥à¤°à¥ à¤¸à¥à¤®à¤¾ à¤¦à¥à¤°à¥",
-    chipDensity: "à¤¨à¤¾à¤µ à¤à¤¨à¤¤à¥à¤µ à¤à¤° à¤­à¥à¤¡à¤¼ à¤à¤²à¤°à¥à¤",
-    chipETA: "à¤ªà¤¹à¥à¤à¤à¤¨à¥ à¤à¤¾ à¤¸à¤®à¤¯ (ETA) à¤à¤° à¤¸à¥à¤°à¤à¥à¤·à¤¿à¤¤ à¤µà¤¾à¤ªà¤¸à¥",
-    chatPlaceholder: "à¤à¤°à¥à¤à¤¾ à¤¸à¥ à¤ªà¥à¤à¥à¤ à¤¯à¤¾ à¤®à¤¾à¤à¤ à¤¦à¤¬à¤¾à¤à¤° à¤¬à¥à¤²à¥à¤...",
-    chatSend: "à¤ªà¥à¤à¥à¤",
-    routePlannerTitle: "à¤¯à¤¾à¤¤à¥à¤°à¤¾ à¤®à¤¾à¤°à¥à¤ à¤¸à¤¿à¤®à¥à¤¯à¥à¤²à¥à¤à¤° à¤à¤° à¤à¤à¥à¤",
-    originHarbour: "à¤ªà¥à¤°à¤¸à¥à¤¥à¤¾à¤¨ à¤¬à¤à¤¦à¤°à¤à¤¾à¤¹",
-    destinationPFZ: "à¤®à¤¤à¥à¤¸à¥à¤¯ à¤à¥à¤·à¥à¤¤à¥à¤° (PFZ)",
-    simulateRouteBtn: "à¤¸à¥à¤°à¤à¥à¤·à¤¿à¤¤ à¤®à¤¾à¤°à¥à¤ à¤à¤° à¤à¤à¥à¤ à¤à¤£à¤¨à¤¾ à¤à¤°à¥à¤",
-    distanceNM: "à¤®à¤¾à¤°à¥à¤ à¤¦à¥à¤°à¥ (à¤¸à¤®à¥à¤¦à¥à¤°à¥ à¤®à¥à¤²)",
-    liveETA: "à¤¸à¤à¥à¤ à¤ªà¤¹à¥à¤à¤à¤¨à¥ à¤à¤¾ à¤¸à¤®à¤¯ (ETA)",
-    returnDusk: "à¤¸à¥à¤°à¥à¤¯à¤¾à¤¸à¥à¤¤ à¤¸à¥ à¤ªà¤¹à¤²à¥ à¤¸à¥à¤°à¤à¥à¤·à¤¿à¤¤ à¤µà¤¾à¤ªà¤¸à¥",
-    sosButton: "à¤à¤ªà¤¾à¤¤à¤à¤¾à¤²à¥à¤¨ à¤à¤¸à¤à¤à¤¸ (SOS)",
-    clearanceSafe: "à¤¸à¤®à¥à¤¦à¥à¤° à¤¯à¤¾à¤¤à¥à¤°à¤¾ à¤à¥ à¤²à¤¿à¤ à¤¸à¥à¤°à¤à¥à¤·à¤¿à¤¤",
-    clearanceCaution: "à¤¸à¤¾à¤µà¤§à¤¾à¤¨à¥à¤ªà¥à¤°à¥à¤µà¤ à¤à¤à¥ à¤¬à¤¢à¤¼à¥à¤",
-    clearanceUnsafe: "à¤à¤¸à¥à¤°à¤à¥à¤·à¤¿à¤¤: à¤¸à¤®à¥à¤¦à¥à¤° à¤®à¥à¤ à¤¨ à¤à¤¾à¤à¤",
-    waveHeight: "à¤²à¤¹à¤°à¥à¤ à¤à¥ à¤à¤à¤à¤¾à¤",
-    windSpeed: "à¤¹à¤µà¤¾ à¤à¥ à¤à¤¤à¤¿",
-    seaState: "à¤¸à¤®à¥à¤¦à¥à¤° à¤à¥ à¤¸à¥à¤¥à¤¿à¤¤à¤¿ (à¤¡à¤à¤²à¤¸)",
-    lightningRisk: "à¤¬à¤¿à¤à¤²à¥ à¤à¤° à¤¤à¥à¤«à¤¾à¤¨ à¤à¤¾ à¤à¥à¤à¤¿à¤®",
-    vesselTableTitle: "à¤²à¤¾à¤à¤µ à¤¤à¤à¥à¤¯ à¤¬à¥à¤¡à¤¼à¤¾ à¤à¥à¤²à¥à¤®à¥à¤à¥à¤°à¥ (à¤²à¤¾à¤à¤µ à¤à¤à¤à¤à¤¸ + à¤¸à¤¿à¤®à¥à¤¯à¥à¤²à¥à¤à¥à¤¡)",
-    simulatedDisclaimer: "à¤¨à¥à¤: à¤à¤¿à¤¨ à¤à¥à¤·à¥à¤¤à¥à¤°à¥à¤ à¤®à¥à¤ à¤à¤­à¥ à¤°à¤¿à¤¸à¥à¤µà¤° à¤à¤µà¤°à¥à¤ à¤¨à¤¹à¥à¤ à¤¹à¥, à¤µà¤¹à¤¾à¤ à¤²à¤¾à¤à¤µ à¤à¤à¤à¤à¤¸ à¤¨à¤¾à¤µ à¤¸à¥à¤¥à¤¿à¤¤à¤¿à¤¯à¥à¤ à¤à¥ à¤¸à¥à¤ªà¤·à¥à¤ à¤°à¥à¤ª à¤¸à¥ à¤à¤¿à¤¹à¥à¤¨à¤¿à¤¤ à¤¸à¤¿à¤®à¥à¤¯à¥à¤²à¥à¤à¥à¤¡ à¤¬à¥à¤¡à¤¼à¥ à¤¸à¥ à¤ªà¥à¤°à¤¾ à¤à¤¿à¤¯à¤¾ à¤à¤¾à¤¤à¤¾ à¤¹à¥à¥¤ à¤à¤ªà¤à¥à¤°à¤¹ à¤¸à¤®à¥à¤¦à¥à¤° à¤µà¤¿à¤à¥à¤à¤¾à¤¨ à¤¡à¥à¤à¤¾ à¤à¤¸à¤à¤à¤à¤ 2026 à¤ªà¥à¤°à¤¦à¤°à¥à¤¶à¤¨ à¤à¥ à¤²à¤¿à¤ à¤¸à¤¿à¤®à¥à¤¯à¥à¤²à¥à¤à¥à¤¡ à¤¹à¥à¥¤"
+    appTitle: "ओर्का इनसाइट (ORCA INSIGHT)",
+    appSubtitle: "इसरो सहयोगात्मक समुद्री बुद्धिमत्ता · SIH 2026 PS 26176",
+    teamName: "टीम सेवियर्सएक्स (Team SavioursX)",
+    navHome: "मुख्य पृष्ठ",
+    navChat: "एआई निर्णय केंद्र",
+    navMap: "जीआईएस कमांड मैप",
+    navDAG: "एजेंट डीएजी विज़ुअलाइज़र",
+    navSafety: "सुरक्षा बैरोमीटर",
+    navFleet: "नाव बेड़ा मॉनिटर",
+    navNavic: "नाविक (NavIC) जीपीएस",
+    navBulletins: "आधिकारिक बुलेटिन",
+    heroTitle: "भारतीय महासागर के लिए सहयोगात्मक समुद्री बुद्धिमत्ता",
+    heroDesc: "इसरो ओशनसैट-3, इनसैट-3डीआर उपग्रह डेटा, आईएमबीएल सीमा सुरक्षा, लाइव नाव घनत्व और सटीक ईटीए का विश्लेषण कर मछुआरों को सुरक्षित और समृद्ध बनाता है।",
+    ctaStudio: "एआई निर्णय केंद्र शुरू करें",
+    ctaMap: "कमांड मैप खोलें",
+    ctaFleet: "नाव बेड़ा देखें",
+    statsActiveVessels: "सक्रिय नावें ट्रैक की गईं",
+    statsSatellites: "इसरो उपग्रह डेटा स्रोत",
+    statsPFZ: "उच्च उपज मत्स्य क्षेत्र",
+    statsIMBL: "आईएमबीएल सुरक्षित सीमा क्षेत्र",
+    chipPFZ: "निकटतम उच्च उपज मत्स्य क्षेत्र खोजें",
+    chipSafety: "समुद्र यात्रा सुरक्षा जांचें",
+    chipBorder: "अंतरराष्ट्रीय समुद्री सीमा दूरी",
+    chipDensity: "नाव घनत्व और भीड़ अलर्ट",
+    chipETA: "पहुंचने का समय (ETA) और सुरक्षित वापसी",
+    chatPlaceholder: "ओर्का से पूछें या माइक दबाकर बोलें...",
+    chatSend: "पूछें",
+    routePlannerTitle: "यात्रा मार्ग सिम्युलेटर और ईटीए",
+    originHarbour: "प्रस्थान बंदरगाह",
+    destinationPFZ: "मत्स्य क्षेत्र (PFZ)",
+    simulateRouteBtn: "सुरक्षित मार्ग और ईटीए गणना करें",
+    distanceNM: "मार्ग दूरी (समुद्री मील)",
+    liveETA: "सटीक पहुंचने का समय (ETA)",
+    returnDusk: "सूर्यास्त से पहले सुरक्षित वापसी",
+    sosButton: "आपातकालीन एसओएस (SOS)",
+    clearanceSafe: "समुद्र यात्रा के लिए सुरक्षित",
+    clearanceCaution: "सावधानीपूर्वक आगे बढ़ें",
+    clearanceUnsafe: "असुरक्षित: समुद्र में न जाएं",
+    waveHeight: "लहरों की ऊंचाई",
+    windSpeed: "हवा की गति",
+    seaState: "समुद्र की स्थिति (डगलस)",
+    lightningRisk: "बिजली और तूफान का जोखिम",
+    vesselTableTitle: "लाइव तटीय बेड़ा टेलीमेट्री (लाइव एआईएस + सिम्युलेटेड)",
+    simulatedDisclaimer: "नोट: जिन क्षेत्रों में अभी रिसीवर कवरेज नहीं है, वहाँ लाइव एआईएस नाव स्थितियों को स्पष्ट रूप से चिह्नित सिम्युलेटेड बेड़े से पूरा किया जाता है। उपग्रह समुद्र विज्ञान डेटा एसआईएच 2026 प्रदर्शन के लिए सिम्युलेटेड है।"
   },
   ta: {
-    appTitle: "à®à®°à¯à®à®¾ à®à®©à¯à®à¯à®à¯ (ORCA INSIGHT)",
-    appSubtitle: "à®à®¸à¯à®°à¯ à®à¯à®à¯à®à¯ à®à®à®²à¯à®à®¾à®°à¯ à®¨à¯à®£à¯à®£à®±à®¿à®µà¯ Â· SIH 2026 PS 26176",
-    teamName: "à®à¯à®®à¯ à®à¯à®µà®¿à®¯à®°à¯à®¸à¯à®à®à¯à®¸à¯ (Team SavioursX)",
-    navHome: "à®®à¯à®à®ªà¯à®ªà¯",
-    navChat: "AI à®®à¯à®à®¿à®µà¯à®à¯à®à¯à®à¯à®®à¯ à®®à¯à®¯à®®à¯",
-    navMap: "GIS à®à®à¯à®à®³à¯ à®µà®°à¯à®ªà®à®®à¯",
-    navDAG: "à®à®à¯à®©à¯à®à¯ DAG à®à®¾à®à¯à®à®¿à®ªà¯à®ªà®à¯à®¤à¯à®¤à®¿",
-    navSafety: "à®ªà®¾à®¤à¯à®à®¾à®ªà¯à®ªà¯ à®à®³à®µà¯à®à¯à®²à¯",
-    navFleet: "à®ªà®à®à¯à®à®³à¯ à®à®£à¯à®à®¾à®£à®¿à®ªà¯à®ªà¯",
-    navNavic: "à®¨à®¾à®µà®¿à®à¯ (NavIC) à®à®¿à®ªà®¿à®à®¸à¯",
-    navBulletins: "à®à®¤à®¿à®à®¾à®°à®ªà¯à®ªà¯à®°à¯à®µ à®à®±à®¿à®µà®¿à®ªà¯à®ªà¯à®à®³à¯",
-    heroTitle: "à®à®¨à¯à®¤à®¿à®¯à®ªà¯ à®ªà¯à®°à¯à®à¯à®à®à®²à¯à®à¯à®à®¾à®© à®à¯à®à¯à®à¯ à®à®à®²à¯à®à®¾à®°à¯ à®¨à¯à®£à¯à®£à®±à®¿à®µà¯",
-    heroDesc: "à®à®¸à¯à®°à¯ à®à®·à®©à¯à®à®¾à®à¯-3, à®à®©à¯à®à®¾à®à¯-3à®à®¿à®à®°à¯ à®à¯à®¯à®±à¯à®à¯à®à¯à®à¯à®³à¯ à®¤à®°à®µà¯, à®à®°à¯à®µà®¤à¯à® à®à®²à¯à®²à¯à®à¯ à®à¯à®à¯, à®ªà®à®à¯à®à®³à®¿à®©à¯ à®à®à®°à¯à®¤à¯à®¤à®¿ à®®à®±à¯à®±à¯à®®à¯ à®µà®°à¯à®à¯ à®¨à¯à®°à®¤à¯à®¤à¯ à®ªà®à¯à®ªà¯à®ªà®¾à®¯à¯à®µà¯ à®à¯à®¯à¯à®¤à¯ à®®à¯à®©à®µà®°à¯à®à®³à¯à®à¯à®à¯ à®µà®´à®¿à®à®¾à®à¯à®à¯à®à®¿à®±à®¤à¯.",
-    ctaStudio: "AI à®®à¯à®à®¿à®µà¯à®à¯à®à¯à®à¯à®®à¯ à®®à¯à®¯à®®à¯",
-    ctaMap: "à®à®à¯à®à®³à¯ à®µà®°à¯à®ªà®à®®à¯",
-    ctaFleet: "à®ªà®à®à¯ à®à®£à¯à®à®¾à®£à®¿à®ªà¯à®ªà¯",
-    statsActiveVessels: "à®à®£à¯à®à®¾à®£à®¿à®à¯à®à®ªà¯à®ªà®à¯à®®à¯ à®ªà®à®à¯à®à®³à¯",
-    statsSatellites: "à®à®¸à¯à®°à¯ à®à¯à®¯à®±à¯à®à¯à®à¯à®à¯à®³à¯à®à®³à¯",
-    statsPFZ: "à®®à¯à®©à¯à®ªà®¿à®à®¿ à®®à®£à¯à®à®²à®à¯à®à®³à¯ (PFZ)",
-    statsIMBL: "à®à®²à¯à®²à¯à®ªà¯ à®ªà®¾à®¤à¯à®à®¾à®ªà¯à®ªà¯ à®®à®£à¯à®à®²à®à¯à®à®³à¯",
-    chipPFZ: "à®à®°à¯à®à®¿à®²à¯à®³à¯à®³ à®à®¤à®¿à® à®®à¯à®©à¯à®µà®³ à®ªà®à¯à®¤à®¿",
-    chipSafety: "à®à®à®²à¯ à®ªà®¯à®£ à®ªà®¾à®¤à¯à®à®¾à®ªà¯à®ªà¯ à®à®°à®¿à®ªà®¾à®°à¯à®ªà¯à®ªà¯",
-    chipBorder: "à®à®°à¯à®µà®¤à¯à® à®à®²à¯à®²à¯ à®¤à¯à®°à®®à¯",
-    chipDensity: "à®ªà®à®à¯ à®¨à¯à®°à®¿à®à®²à¯ à®à®à¯à®à®°à®¿à®à¯à®à¯",
-    chipETA: "à®ªà®¯à®£ à®¨à¯à®°à®®à¯ à®®à®±à¯à®±à¯à®®à¯ à®¤à®¿à®°à¯à®®à¯à®ªà¯à®®à¯ à®¨à¯à®°à®®à¯",
-    chatPlaceholder: "à®à®°à¯à®à®¾à®µà®¿à®à®®à¯ à®à¯à®³à¯à®à¯à®à®³à¯ à®à®²à¯à®²à®¤à¯ à®®à¯à®à¯ à®à®´à¯à®¤à¯à®¤à®¿ à®ªà¯à®à¯à®à¯à®à®³à¯...",
-    chatSend: "à®à¯à®à¯à®à®µà¯à®®à¯",
-    routePlannerTitle: "à®ªà®¾à®¤à¯à®à®¾à®ªà¯à®ªà®¾à®© à®µà®´à®¿à®¤à¯à®¤à®à®®à¯ à®®à®±à¯à®±à¯à®®à¯ ETA",
-    originHarbour: "à®ªà¯à®±à®ªà¯à®ªà®à¯à®®à¯ à®¤à¯à®±à¯à®®à¯à®à®®à¯",
-    destinationPFZ: "à®à®²à®à¯à®à¯ à®®à¯à®©à¯à®ªà®¿à®à®¿ à®ªà®à¯à®¤à®¿",
-    simulateRouteBtn: "à®µà®´à®¿à®¤à¯à®¤à®à®¤à¯à®¤à¯ à®à®£à®à¯à®à®¿à®à¯à®à¯à®à®³à¯",
-    distanceNM: "à®¤à¯à®²à¯à®µà¯ (à®à®à®²à¯ à®®à¯à®²à¯)",
-    liveETA: "à®ªà®¯à®£ à®¨à¯à®°à®®à¯ (Live ETA)",
-    returnDusk: "à®à®°à®µà¯à®à¯à®à¯à®³à¯ à®¤à®¿à®°à¯à®®à¯à®ªà¯à®¤à®²à¯ à®ªà®¾à®¤à¯à®à®¾à®ªà¯à®ªà¯",
-    sosButton: "à®à®µà®à®° à®à®¤à®µà®¿ (SOS)",
-    clearanceSafe: "à®à®à®²à¯ à®ªà®¯à®£à®®à¯ à®ªà®¾à®¤à¯à®à®¾à®ªà¯à®ªà®¾à®©à®¤à¯",
-    clearanceCaution: "à®à®à¯à®à®°à®¿à®à¯à®à¯à®¯à¯à®à®©à¯ à®à¯à®²à¯à®²à®µà¯à®®à¯",
-    clearanceUnsafe: "à®à®ªà®¤à¯à®¤à¯: à®à®à®²à¯à®à¯à®à¯ à®à¯à®²à¯à®² à®µà¯à®£à¯à®à®¾à®®à¯",
-    waveHeight: "à®à®²à¯à®à®³à®¿à®©à¯ à®à®¯à®°à®®à¯",
-    windSpeed: "à®à®¾à®±à¯à®±à®¿à®©à¯ à®µà¯à®à®®à¯",
-    seaState: "à®à®à®²à¯ à®¨à®¿à®²à¯",
-    lightningRisk: "à®®à®¿à®©à¯à®©à®²à¯ à®®à®±à¯à®±à¯à®®à¯ à®ªà¯à®¯à®²à¯ à®à®ªà®¤à¯à®¤à¯",
-    vesselTableTitle: "à®¨à¯à®°à®à®¿ à®ªà®à®à¯ à®¤à¯à®²à¯à®¤à¯à®¤à¯à®à®°à¯à®ªà¯ à®¤à®°à®µà¯",
-    simulatedDisclaimer: "à®à¯à®±à®¿à®ªà¯à®ªà¯: à®µà®°à®µà¯à®±à¯à®ªà®¿ (receiver) à®à®µà®°à¯à®à¯ à®à®²à¯à®²à®¾à®¤ à®ªà®à¯à®¤à®¿à®à®³à®¿à®²à¯ à®²à¯à®µà¯ AIS à®ªà®à®à¯ à®¨à®¿à®²à¯à®à®³à¯, à®¤à¯à®³à®¿à®µà®¾à®à®à¯ à®à¯à®±à®¿à®à¯à®à®ªà¯à®ªà®à¯à® à®à®¿à®®à¯à®²à¯à®à¯à®à®à¯ à®à®à®±à¯à®ªà®à¯à®¯à®¾à®²à¯ à®¨à®¿à®°à®ªà¯à®ªà®ªà¯à®ªà®à¯à®à®¿à®©à¯à®±à®©. à®à¯à®¯à®±à¯à®à¯à®à¯à®à¯à®³à¯ à®à®à®²à¯ à®¤à®°à®µà¯ SIH 2026 à®µà®¿à®³à®à¯à®à®à¯à®à®¾à®à¯à®à®¿à®à¯à®à®¾à® à®à®¿à®®à¯à®²à¯à®à¯ à®à¯à®¯à¯à®¯à®ªà¯à®ªà®à¯à®à®¤à®¾à®à®µà¯ à®à®³à¯à®³à®¤à¯."
+    appTitle: "ஆர்கா இன்சைட் (ORCA INSIGHT)",
+    appSubtitle: "இஸ்ரோ கூட்டு கடல்சார் நுண்ணறிவு · SIH 2026 PS 26176",
+    teamName: "டீம் சேவியர்ஸ்எக்ஸ் (Team SavioursX)",
+    navHome: "முகப்பு",
+    navChat: "AI முடிவெடுக்கும் மையம்",
+    navMap: "GIS கட்டளை வரைபடம்",
+    navDAG: "ஏஜென்ட் DAG காட்சிப்படுத்தி",
+    navSafety: "பாதுகாப்பு அளவுகோல்",
+    navFleet: "படகுகள் கண்காணிப்பு",
+    navNavic: "நாவிக் (NavIC) ஜிபிஎஸ்",
+    navBulletins: "அதிகாரப்பூர்வ அறிவிப்புகள்",
+    heroTitle: "இந்தியப் பெருங்கடலுக்கான கூட்டு கடல்சார் நுண்ணறிவு",
+    heroDesc: "இஸ்ரோ ஓஷன்சாட்-3, இன்சாட்-3டிஆர் செயற்கைக்கோள் தரவு, சர்வதேச எல்லைக் கோடு, படகுகளின் அடர்த்தி மற்றும் வருகை நேரத்தை பகுப்பாய்வு செய்து மீனவர்களுக்கு வழிகாட்டுகிறது.",
+    ctaStudio: "AI முடிவெடுக்கும் மையம்",
+    ctaMap: "கட்டளை வரைபடம்",
+    ctaFleet: "படகு கண்காணிப்பு",
+    statsActiveVessels: "கண்காணிக்கப்படும் படகுகள்",
+    statsSatellites: "இஸ்ரோ செயற்கைக்கோள்கள்",
+    statsPFZ: "மீன்பிடி மண்டலங்கள் (PFZ)",
+    statsIMBL: "எல்லைப் பாதுகாப்பு மண்டலங்கள்",
+    chipPFZ: "அருகிலுள்ள அதிக மீன்வள பகுதி",
+    chipSafety: "கடல் பயண பாதுகாப்பு சரிபார்ப்பு",
+    chipBorder: "சர்வதேச எல்லை தூரம்",
+    chipDensity: "படகு நெரிசல் எச்சரிக்கை",
+    chipETA: "பயண நேரம் மற்றும் திரும்பும் நேரம்",
+    chatPlaceholder: "ஆர்காவிடம் கேளுங்கள் அல்லது மைக் அழுத்தி பேசுங்கள்...",
+    chatSend: "கேட்கவும்",
+    routePlannerTitle: "பாதுகாப்பான வழித்தடம் மற்றும் ETA",
+    originHarbour: "புறப்படும் துறைமுகம்",
+    destinationPFZ: "இலக்கு மீன்பிடி பகுதி",
+    simulateRouteBtn: "வழித்தடத்தை கணக்கிடுங்கள்",
+    distanceNM: "தொலைவு (கடல் மைல்)",
+    liveETA: "பயண நேரம் (Live ETA)",
+    returnDusk: "இரவுக்குள் திரும்புதல் பாதுகாப்பு",
+    sosButton: "அவசர உதவி (SOS)",
+    clearanceSafe: "கடல் பயணம் பாதுகாப்பானது",
+    clearanceCaution: "எச்சரிக்கையுடன் செல்லவும்",
+    clearanceUnsafe: "ஆபத்து: கடலுக்கு செல்ல வேண்டாம்",
+    waveHeight: "அலைகளின் உயரம்",
+    windSpeed: "காற்றின் வேகம்",
+    seaState: "கடல் நிலை",
+    lightningRisk: "மின்னல் மற்றும் புயல் ஆபத்து",
+    vesselTableTitle: "நேரடி படகு தொலைத்தொடர்பு தரவு",
+    simulatedDisclaimer: "குறிப்பு: வரவேற்பி (receiver) கவரேஜ் இல்லாத பகுதிகளில் லைவ் AIS படகு நிலைகள், தெளிவாகக் குறிக்கப்பட்ட சிமுலேட்டட் கடற்படையால் நிரப்பப்படுகின்றன. செயற்கைக்கோள் கடல் தரவு SIH 2026 விளக்கக்காட்சிக்காக சிமுலேட் செய்யப்பட்டதாகவே உள்ளது."
   },
   ml: {
-    appTitle: "à´àµ¼à´àµà´ à´àµ»à´¸àµà´±àµà´±àµ (ORCA INSIGHT)",
-    appSubtitle: "à´.à´à´¸àµ.à´àµ¼.à´ à´¸à´®àµà´¦àµà´° à´°à´¹à´¸àµà´¯à´¾à´¨àµà´µàµà´·à´£à´ Â· SIH 2026 PS 26176",
-    teamName: "à´àµà´ à´¸àµà´µàµà´¯àµà´´àµà´¸àµà´à´àµà´¸àµ (Team SavioursX)",
-    navHome: "à´¹àµà´",
-    navChat: "à´.à´ à´¡à´¿à´¸à´¿à´·àµ» à´¸àµà´±àµà´±àµà´¡à´¿à´¯àµ",
-    navMap: "à´à´¿.à´.à´à´¸àµ à´à´®à´¾àµ»à´¡àµ à´®à´¾à´ªàµà´ªàµ",
-    navDAG: "à´à´à´¨àµà´±àµ à´¡à´¿.à´.à´à´¿ à´±àµà´¸à´£à´¿à´à´àµ",
-    navSafety: "à´¸àµà´°à´àµà´·à´¾ à´®à´¾à´¨à´¦à´£àµà´¡à´àµà´àµ¾",
-    navFleet: "à´¬àµà´àµà´àµ à´«àµà´²àµà´±àµà´±àµ à´®àµà´£à´¿à´±àµà´±àµ¼",
-    navNavic: "à´¨à´¾à´µà´¿à´àµ (NavIC) à´à´¿.à´ªà´¿.à´à´¸àµ",
-    navBulletins: "à´¬àµà´³àµà´³à´±àµà´±à´¿à´¨àµà´àµ¾",
-    heroTitle: "à´à´¨àµà´¤àµà´¯àµ» à´¸à´®àµà´¦àµà´°à´¤àµà´¤à´¿à´¨à´¾à´¯àµà´³àµà´³ à´¸à´®àµà´ªàµàµ¼à´£àµà´£ à´.à´ à´¸à´¹à´¾à´¯à´",
-    heroDesc: "à´.à´à´¸àµ.à´àµ¼.à´ à´à´·àµà´¯àµ»à´¸à´¾à´±àµà´±àµ-3, à´àµ»à´¸à´¾à´±àµà´±àµ-3à´¡à´¿à´àµ¼ à´à´ªà´àµà´°à´¹ à´µà´¿à´µà´°à´àµà´àµ¾, à´¸à´®àµà´¦àµà´°à´¾à´¤à´¿àµ¼à´¤àµà´¤à´¿ (IMBL), à´®à´¤àµà´¸àµà´¯à´¸à´¾à´¨àµà´¨à´¿à´§àµà´¯ à´®àµà´à´²à´àµ¾ (PFZ), à´¤à´¤àµà´¸à´®à´¯ à´¬àµà´àµà´àµ à´µà´¿à´µà´°à´àµà´àµ¾ à´à´¨àµà´¨à´¿à´µ à´²à´­àµà´¯à´®à´¾à´àµà´àµà´¨àµà´¨àµ.",
-    ctaStudio: "à´.à´ à´¸àµà´±àµà´±àµà´¡à´¿à´¯àµ à´¤àµà´±à´àµà´àµà´",
-    ctaMap: "à´à´®à´¾àµ»à´¡àµ à´®à´¾à´ªàµà´ªàµ à´¤àµà´±à´àµà´àµà´",
-    ctaFleet: "à´«àµà´²àµà´±àµà´±àµ à´®àµà´£à´¿à´±àµà´±àµ¼",
-    statsActiveVessels: "à´¨à´¿à´°àµà´àµà´·à´¿à´àµà´àµà´¨àµà´¨ à´¬àµà´àµà´àµà´àµ¾",
-    statsSatellites: "à´à´ªà´àµà´°à´¹à´àµà´àµ¾",
-    statsPFZ: "à´®à´¤àµà´¸àµà´¯à´²à´­àµà´¯à´¤à´¾ à´®àµà´à´²à´àµ¾",
-    statsIMBL: "à´à´¤à´¿àµ¼à´¤àµà´¤à´¿ à´¨à´¿à´°àµà´àµà´·à´£ à´®àµà´à´²à´àµ¾",
-    chipPFZ: "à´à´±àµà´±à´µàµà´ à´à´àµà´¤àµà´¤àµà´³àµà´³ PFZ à´à´£àµà´àµà´¤àµà´¤àµà´",
-    chipSafety: "à´à´àµ½ à´¯à´¾à´¤àµà´° à´¸àµà´°à´àµà´·à´¾ à´ªà´°à´¿à´¶àµà´§à´¨",
-    chipBorder: "à´¸à´®àµà´¦àµà´°à´¾à´¤à´¿àµ¼à´¤àµà´¤à´¿ à´¦àµà´° à´ªà´°à´¿à´¶àµà´§à´¨",
-    chipDensity: "à´¬àµà´àµà´àµ à´¸à´¾à´¨àµà´¦àµà´°à´¤à´¾ à´®àµà´¨àµà´¨à´±à´¿à´¯à´¿à´ªàµà´ªàµ",
-    chipETA: "à´¯à´¾à´¤àµà´°à´¾ à´¸à´®à´¯à´µàµà´ à´¤à´¿à´°à´¿à´àµà´àµà´µà´°à´µàµà´",
-    chatPlaceholder: "à´àµà´¦à´¿à´àµà´àµ à´à´²àµà´²àµà´àµà´à´¿àµ½ à´®àµà´àµà´àµ à´à´®àµ¼à´¤àµà´¤à´¿ à´¸à´à´¸à´¾à´°à´¿à´àµà´àµ...",
-    chatSend: "à´àµà´¦à´¿à´àµà´àµà´",
-    routePlannerTitle: "à´±àµà´àµà´àµ à´¸à´¿à´®àµà´²àµà´±àµà´±à´±àµà´ à´¯à´¾à´¤àµà´°à´¾à´¸à´®à´¯à´µàµà´",
-    originHarbour: "à´ªàµà´±à´ªàµà´ªàµà´àµà´¨àµà´¨ à´¤àµà´±à´®àµà´à´",
-    destinationPFZ: "à´²à´àµà´·àµà´¯à´¸àµà´¥à´¾à´¨à´ (PFZ)",
-    simulateRouteBtn: "à´±àµà´àµà´àµ à´à´£à´àµà´à´¾à´àµà´àµà´",
-    distanceNM: "à´¦àµà´°à´ (à´¨àµà´àµà´à´¿à´àµà´àµ½ à´®àµàµ½)",
-    liveETA: "à´¯à´¾à´¤àµà´°à´¾ à´¸à´®à´¯à´ (ETA)",
-    returnDusk: "à´¸àµà´°àµà´¯à´¾à´¸àµà´¤à´®à´¯à´¤àµà´¤à´¿à´¨àµ à´®àµàµ»à´ªàµà´³àµà´³ à´¤à´¿à´°à´¿à´àµà´àµà´µà´°à´µàµ",
-    sosButton: "à´à´à´¿à´¯à´¨àµà´¤à´¿à´° à´¸à´¹à´¾à´¯à´ (SOS)",
-    clearanceSafe: "à´à´à´²à´¿àµ½ à´ªàµà´à´¾àµ» à´¸àµà´°à´àµà´·à´¿à´¤à´",
-    clearanceCaution: "à´à´¾à´àµà´°à´¤ à´ªà´¾à´²à´¿à´àµà´àµà´",
-    clearanceUnsafe: "à´à´ªà´à´à´à´°à´: à´ªàµà´à´°àµà´¤àµ",
-    waveHeight: "à´¤à´¿à´°à´®à´¾à´²à´¯àµà´àµ à´à´¯à´°à´",
-    windSpeed: "à´à´¾à´±àµà´±à´¿à´¨àµà´±àµ à´µàµà´à´¤",
-    seaState: "à´à´àµ½ à´à´µà´¸àµà´¥",
-    lightningRisk: "à´®à´¿à´¨àµà´¨àµ½ à´¸à´¾à´§àµà´¯à´¤",
-    vesselTableTitle: "à´¤à´¤àµà´¸à´®à´¯ à´¬àµà´àµà´àµ à´µà´¿à´µà´°à´àµà´àµ¾ (AIS)",
-    simulatedDisclaimer: "à´¶àµà´°à´¦àµà´§à´¿à´àµà´àµà´: à´¨à´¿à´²à´µà´¿àµ½ à´±à´¿à´¸àµà´µàµ¼ à´à´µà´±àµà´àµ à´à´²àµà´²à´¾à´¤àµà´¤ à´¸àµà´¥à´²à´àµà´à´³à´¿àµ½ à´²àµà´µàµ AIS à´¬àµà´àµà´àµ à´¸àµà´¥à´¾à´¨à´àµà´àµ¾, à´µàµà´¯à´àµà´¤à´®à´¾à´¯à´¿ à´à´à´¯à´¾à´³à´ªàµà´ªàµà´àµà´¤àµà´¤à´¿à´¯ à´¸à´¿à´®àµà´²àµà´±àµà´±à´¡àµ à´à´ªàµà´ªà´²àµà´àµ¾ à´à´ªà´¯àµà´à´¿à´àµà´àµ à´ªàµà´°à´¿à´ªàµà´ªà´¿à´àµà´àµà´¨àµà´¨àµ. à´à´ªà´àµà´°à´¹ à´¸à´®àµà´¦àµà´° à´µà´¿à´µà´°à´àµà´àµ¾ SIH 2026 à´à´µà´¤à´°à´£à´¤àµà´¤à´¿à´¨à´¾à´¯à´¿ à´¸à´¿à´®àµà´²àµà´±àµà´±àµ à´àµà´¯àµà´¤à´¤àµ à´¤à´¨àµà´¨àµà´¯à´¾à´£àµ."
+    appTitle: "ഓർക്ക ഇൻസൈറ്റ് (ORCA INSIGHT)",
+    appSubtitle: "ഐ.എസ്.ആർ.ഒ സമുദ്ര രഹസ്യാന്വേഷണം · SIH 2026 PS 26176",
+    teamName: "ടീം സേവ്യേഴ്സ്എക്സ് (Team SavioursX)",
+    navHome: "ഹോം",
+    navChat: "എ.ഐ ഡിസിഷൻ സ്റ്റുഡിയോ",
+    navMap: "ജി.ഐ.എസ് കമാൻഡ് മാപ്പ്",
+    navDAG: "ഏജന്റ് ഡി.എ.ജി റീസണിംഗ്",
+    navSafety: "സുരക്ഷാ മാനദണ്ഡങ്ങൾ",
+    navFleet: "ബോട്ട് ഫ്ലീറ്റ് മോണിറ്റർ",
+    navNavic: "നാവിക് (NavIC) ജി.പി.എസ്",
+    navBulletins: "ബുള്ളറ്റിനുകൾ",
+    heroTitle: "ഇന്ത്യൻ സമുദ്രത്തിനായുള്ള സമ്പൂർണ്ണ എ.ഐ സഹായം",
+    heroDesc: "ഐ.എസ്.ആർ.ഒ ഓഷ്യൻസാറ്റ്-3, ഇൻസാറ്റ്-3ഡിആർ ഉപഗ്രഹ വിവരങ്ങൾ, സമുദ്രാതിർത്തി (IMBL), മത്സ്യസാന്നിധ്യ മേഖലകൾ (PFZ), തത്സമയ ബോട്ട് വിവരങ്ങൾ എന്നിവ ലഭ്യമാക്കുന്നു.",
+    ctaStudio: "എ.ഐ സ്റ്റുഡിയോ തുറക്കുക",
+    ctaMap: "കമാൻഡ് മാപ്പ് തുറക്കുക",
+    ctaFleet: "ഫ്ലീറ്റ് മോണിറ്റർ",
+    statsActiveVessels: "നിരീക്ഷിക്കുന്ന ബോട്ടുകൾ",
+    statsSatellites: "ഉപഗ്രഹങ്ങൾ",
+    statsPFZ: "മത്സ്യലഭ്യതാ മേഖലകൾ",
+    statsIMBL: "അതിർത്തി നിരീക്ഷണ മേഖലകൾ",
+    chipPFZ: "ഏറ്റവും അടുത്തുള്ള PFZ കണ്ടെത്തുക",
+    chipSafety: "കടൽ യാത്ര സുരക്ഷാ പരിശോധന",
+    chipBorder: "സമുദ്രാതിർത്തി ദൂര പരിശോധന",
+    chipDensity: "ബോട്ട് സാന്ദ്രതാ മുന്നറിയിപ്പ്",
+    chipETA: "യാത്രാ സമയവും തിരിച്ചുവരവും",
+    chatPlaceholder: "ചോദിക്കൂ അല്ലെങ്കിൽ മൈക്ക് അമർത്തി സംസാരിക്കൂ...",
+    chatSend: "ചോദിക്കുക",
+    routePlannerTitle: "റൂട്ട് സിമുലേറ്ററും യാത്രാസമയവും",
+    originHarbour: "പുറപ്പെടുന്ന തുറമുഖം",
+    destinationPFZ: "ലക്ഷ്യസ്ഥാനം (PFZ)",
+    simulateRouteBtn: "റൂട്ട് കണക്കാക്കുക",
+    distanceNM: "ദൂരം (നോട്ടിക്കൽ മൈൽ)",
+    liveETA: "യാത്രാ സമയം (ETA)",
+    returnDusk: "സൂര്യാസ്തമയത്തിന് മുൻപുള്ള തിരിച്ചുവരവ്",
+    sosButton: "അടിയന്തിര സഹായം (SOS)",
+    clearanceSafe: "കടലിൽ പോകാൻ സുരക്ഷിതം",
+    clearanceCaution: "ജാഗ്രത പാലിക്കുക",
+    clearanceUnsafe: "അപകടകരം: പോകരുത്",
+    waveHeight: "തിരമാലയുടെ ഉയരം",
+    windSpeed: "കാറ്റിന്റെ വേഗത",
+    seaState: "കടൽ അവസ്ഥ",
+    lightningRisk: "മിന്നൽ സാധ്യത",
+    vesselTableTitle: "തത്സമയ ബോട്ട് വിവരങ്ങൾ (AIS)",
+    simulatedDisclaimer: "ശ്രദ്ധിക്കുക: നിലവിൽ റിസീവർ കവറേജ് ഇല്ലാത്ത സ്ഥലങ്ങളിൽ ലൈവ് AIS ബോട്ട് സ്ഥാനങ്ങൾ, വ്യക്തമായി അടയാളപ്പെടുത്തിയ സിമുലേറ്റഡ് കപ്പലുകൾ ഉപയോഗിച്ച് പൂരിപ്പിക്കുന്നു. ഉപഗ്രഹ സമുദ്ര വിവരങ്ങൾ SIH 2026 അവതരണത്തിനായി സിമുലേറ്റ് ചെയ്തതു തന്നെയാണ്."
   }
 };
 
@@ -507,7 +507,7 @@ async function checkBackendHealth() {
 function updateBackendStatusBadges() {
   const onlineHtml = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> LIVE FASTAPI BACKEND CONNECTED`;
   const onlineClass = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-[11px] font-mono";
-  const offlineHtml = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> BACKEND OFFLINE Â· LOCAL SIMULATION MODE`;
+  const offlineHtml = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> BACKEND OFFLINE · LOCAL SIMULATION MODE`;
   const offlineClass = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-950/60 border border-amber-500/40 text-amber-300 text-[11px] font-mono";
 
   ['backendStatusBadge', 'dagBackendStatusBadge'].forEach(id => {
@@ -571,7 +571,7 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
     el.style.background = '#0c4a6e';
     el.style.color = '#e0f2fe';
     const liveText = liveCount ? `${liveCount} live AIS vessel${liveCount === 1 ? '' : 's'}` : 'no live AIS vessels right now';
-    el.textContent = `â¹ Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
+    el.textContent = `ℹ Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
     return;
   }
 
@@ -582,12 +582,12 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
     if (!gatewayState.configured) {
       detail = 'Live AIS vessel feed is not configured on this deployment.';
     } else if (gatewayState.connected) {
-      detail = 'Connected to the AIS provider (AISstream.io), but it isnât sending vessel data right now â likely a provider-side outage, not a local fault.';
+      detail = 'Connected to the AIS provider (AISstream.io), but it isn’t sending vessel data right now — likely a provider-side outage, not a local fault.';
     } else {
       detail = 'Disconnected from the AIS provider (AISstream.io); reconnecting automatically.';
     }
   }
-  el.textContent = 'â  ' + detail;
+  el.textContent = '⚠ ' + detail;
 }
 
 // Populates the home tab's IMBL Border Proximity Alert card from real
@@ -624,7 +624,7 @@ function updateImblAlertBox() {
   if (isAlert) {
     const simTag = closest.is_simulated ? ' (simulated)' : '';
     box.className = 'text-xs text-red-200 leading-relaxed';
-    box.innerHTML = `<strong>${closest.id} (${closest.name})</strong> is operating at <strong>${closest.imbl_dist_nm} NM</strong> from the IndiaâSri Lanka IMBL${simTag}. Automated warning dispatched.`;
+    box.innerHTML = `<strong>${closest.id} (${closest.name})</strong> is operating at <strong>${closest.imbl_dist_nm} NM</strong> from the India–Sri Lanka IMBL${simTag}. Automated warning dispatched.`;
   } else if (closest) {
     box.className = 'text-xs text-emerald-200 leading-relaxed';
     box.innerHTML = `No vessels currently within the ${IMBL_WARNING_DISTANCE_NM} NM IMBL warning distance. Nearest tracked vessel: <strong>${closest.imbl_dist_nm} NM</strong> away.`;
@@ -736,9 +736,9 @@ function evaluateLocalHazards() {
   const wave = state.liveMarine.waveHeight;
   const wind = state.liveMarine.windSpeed;
   const localCandidates = [
-    wave >= 2.5 && { key: 'LOCAL_HIGH_WAVES', severity: 'WARNING', title: 'High waves â local simulation', message: `${wave.toFixed(2)}m exceeds the 2.5m caution threshold. Source: browser Open-Meteo telemetry.` },
-    wind >= 25 && { key: 'LOCAL_HIGH_WIND', severity: 'WARNING', title: 'High wind â local simulation', message: `${wind.toFixed(1)} kn exceeds the 25 kn caution threshold. Source: browser Open-Meteo telemetry.` },
-    state.liveMarine.lightningRisk >= 50 && { key: 'LOCAL_LIGHTNING', severity: 'CRITICAL', title: 'Lightning risk â local simulation', message: `Lightning proxy is ${state.liveMarine.lightningRisk}%. Source: browser Open-Meteo telemetry.` }
+    wave >= 2.5 && { key: 'LOCAL_HIGH_WAVES', severity: 'WARNING', title: 'High waves — local simulation', message: `${wave.toFixed(2)}m exceeds the 2.5m caution threshold. Source: browser Open-Meteo telemetry.` },
+    wind >= 25 && { key: 'LOCAL_HIGH_WIND', severity: 'WARNING', title: 'High wind — local simulation', message: `${wind.toFixed(1)} kn exceeds the 25 kn caution threshold. Source: browser Open-Meteo telemetry.` },
+    state.liveMarine.lightningRisk >= 50 && { key: 'LOCAL_LIGHTNING', severity: 'CRITICAL', title: 'Lightning risk — local simulation', message: `Lightning proxy is ${state.liveMarine.lightningRisk}%. Source: browser Open-Meteo telemetry.` }
   ].filter(Boolean);
   localCandidates.forEach(alert => {
     if (!state.localAlertKeys.has(alert.key)) {
@@ -842,7 +842,7 @@ function switchTab(tabId) {
 }
 
 // Slide Fill Button (liquid hover-fill effect)
-// Faithful vanilla CSS/JS recreation of the Originkit "Slide Fill Button" â
+// Faithful vanilla CSS/JS recreation of the Originkit "Slide Fill Button" —
 // the real component's source is paywalled inside Framer and not publicly
 // retrievable, so this reproduces the documented effect from scratch.
 function setupSlideFillButtons() {
@@ -984,7 +984,7 @@ function updateLiveClock() {
   const now = new Date();
   const istStr = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: false });
   const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-  clockEl.innerHTML = `<span class="text-cyan-400 font-mono font-semibold">${istStr} IST</span> Â· <span class="text-slate-400 font-mono">${dateStr}</span>`;
+  clockEl.innerHTML = `<span class="text-cyan-400 font-mono font-semibold">${istStr} IST</span> · <span class="text-slate-400 font-mono">${dateStr}</span>`;
 }
 
 // Web Speech API Voice Input (Speech-to-Text / STT)
@@ -1131,7 +1131,7 @@ function renderIndiaBoundaryLayer() {
       },
       interactive: false
     });
-    layer.bindTooltip('India â official boundary (Survey of India)', { sticky: true });
+    layer.bindTooltip('India — official boundary (Survey of India)', { sticky: true });
     state.mapLayers.indiaBoundary.addLayer(layer);
   } catch (err) {
     console.warn('India boundary overlay skipped (invalid/missing data):', err);
@@ -1163,8 +1163,8 @@ function renderPFZLayers() {
         </div>
         <p class="text-xs text-slate-300 mb-2">${zone.advisory_notes}</p>
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900/80 p-1.5 rounded border border-slate-700">
-          <div><span class="text-slate-400">SST:</span> <span class="text-slate-200 font-semibold">${zone.sst_celsius}Â°C</span></div>
-          <div><span class="text-slate-400">Chlorophyll:</span> <span class="text-slate-200 font-semibold">${zone.chlorophyll_mg_m3} mg/mÂ³</span></div>
+          <div><span class="text-slate-400">SST:</span> <span class="text-slate-200 font-semibold">${zone.sst_celsius}°C</span></div>
+          <div><span class="text-slate-400">Chlorophyll:</span> <span class="text-slate-200 font-semibold">${zone.chlorophyll_mg_m3} mg/m³</span></div>
           <div><span class="text-slate-400">Depth:</span> <span class="text-slate-200 font-semibold">${zone.depth_m} m</span></div>
           <div><span class="text-slate-400">Vessels:</span> <span class="text-cyan-400 font-bold">${zone.vessels_in_zone} Active</span></div>
         </div>
@@ -1172,7 +1172,7 @@ function renderPFZLayers() {
           <span class="font-semibold text-slate-300">Target Species:</span> ${zone.dominant_species.join(', ')}
         </div>
         <button onclick="selectPFZForRouting('${zone.id}')" class="mt-2 w-full py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-semibold transition">
-          Simulate Route Here â
+          Simulate Route Here ➔
         </button>
       </div>
     `;
@@ -1184,7 +1184,7 @@ function renderPFZLayers() {
       className: 'bg-transparent',
       html: `<div class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900/90 text-cyan-300 border border-cyan-500/40 whitespace-nowrap shadow-lg flex items-center gap-1">
                <span class="w-1.5 h-1.5 rounded-full ${isHigh ? 'bg-emerald-400 animate-ping' : 'bg-amber-400'}"></span>
-               ${zone.id} Â· ${zone.yield_rating}
+               ${zone.id} · ${zone.yield_rating}
              </div>`,
       iconSize: [80, 20],
       iconAnchor: [40, 10]
@@ -1227,7 +1227,7 @@ function renderIMBLLayers() {
       dashArray: '3, 6',
       opacity: 0.7
     });
-    bufferPoly.bindTooltip(`â ï¸ ${bound.warning_distance_nm} NM IMBL Buffer Corridor`, { sticky: true });
+    bufferPoly.bindTooltip(`⚠️ ${bound.warning_distance_nm} NM IMBL Buffer Corridor`, { sticky: true });
     state.mapLayers.imbl.addLayer(bufferPoly);
   });
 }
@@ -1247,7 +1247,7 @@ function renderMPALayers() {
 
     const popupHtml = `
       <div class="p-2">
-        <span class="text-xs font-bold text-pink-400">ð¡ï¸ ${mpa.name}</span>
+        <span class="text-xs font-bold text-pink-400">🛡️ ${mpa.name}</span>
         <div class="text-[11px] bg-pink-950/60 border border-pink-700/50 text-pink-200 px-1.5 py-0.5 rounded my-1 font-semibold">
           RESTRICTED ECO-RESERVE
         </div>
@@ -1268,7 +1268,7 @@ function renderHarbourMarkers() {
     const icon = L.divIcon({
       className: 'bg-transparent',
       html: `<div class="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/30 hover:scale-110 transition cursor-pointer">
-               â
+               ⚓
              </div>`,
       iconSize: [32, 32],
       iconAnchor: [16, 16]
@@ -1286,7 +1286,7 @@ function renderHarbourMarkers() {
           <div><span class="text-slate-400">Ice Plant:</span> <span class="text-emerald-400 font-semibold">Active</span></div>
         </div>
         <button onclick="selectHarbourForRouting('${hbr.id}')" class="mt-2 w-full py-1 bg-teal-600 hover:bg-teal-500 text-white rounded text-xs font-semibold transition">
-          Set as Origin Harbour â
+          Set as Origin Harbour ⚓
         </button>
       </div>
     `;
@@ -1322,10 +1322,10 @@ function renderVesselsOnMap() {
       html: `
         <div class="relative flex items-center justify-center">
           <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md ${simBorder} ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
-            â²
+            ▲
           </div>
           <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-slate-950/80 px-1 rounded text-slate-300 border border-slate-800 pointer-events-none">
-                        ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' Â· SIM' : ''}
+                        ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' · SIM' : ''}
           </span>
         </div>
       `,
@@ -1337,16 +1337,16 @@ function renderVesselsOnMap() {
 
     const popupHtml = `
       <div class="p-2 min-w-[220px]">
-        ${vessel.is_simulated ? '<div class="mb-1 px-1.5 py-0.5 inline-block rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500">Simulated Â· no live AIS coverage here</div>' : ''}
+        ${vessel.is_simulated ? '<div class="mb-1 px-1.5 py-0.5 inline-block rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500">Simulated · no live AIS coverage here</div>' : ''}
         <div class="flex items-center justify-between mb-1">
           <span class="font-bold text-white text-xs">${vessel.name}</span>
           <span class="text-[10px] font-mono px-1 rounded bg-slate-800 text-cyan-300 border border-slate-700">${vessel.id}</span>
         </div>
-        <div class="text-[11px] text-slate-400 mb-2">${vessel.type} Â· ${vessel.owner}</div>
+        <div class="text-[11px] text-slate-400 mb-2">${vessel.type} · ${vessel.owner}</div>
         
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900 p-2 rounded border border-slate-700">
           <div><span class="text-slate-400">Speed:</span> <span class="text-cyan-400 font-bold">${vessel.speed_knots} kn</span></div>
-          <div><span class="text-slate-400">Heading:</span> <span class="text-slate-200 font-semibold">${vessel.heading}Â°</span></div>
+          <div><span class="text-slate-400">Heading:</span> <span class="text-slate-200 font-semibold">${vessel.heading}°</span></div>
           <div><span class="text-slate-400">Zone:</span> <span class="text-slate-200 font-semibold">${vessel.zone}</span></div>
           <div><span class="text-slate-400">IMBL Dist:</span> <span class="${vessel.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${vessel.imbl_dist_nm} NM</span></div>
           <div><span class="text-slate-400">Status:</span> <span class="font-bold ${vessel.status.includes('ALERT') ? 'text-red-400' : 'text-emerald-400'}">${vessel.status}</span></div>
@@ -1364,7 +1364,7 @@ function renderVesselsOnMap() {
   const mapVesselCounter = document.getElementById('mapActiveVessels');
   if (mapVesselCounter) {
     mapVesselCounter.textContent = state.simulatedVesselCount
-      ? `${state.vessels.length} Active Vessels (${state.liveVesselCount} live Â· ${state.simulatedVesselCount} simulated)`
+      ? `${state.vessels.length} Active Vessels (${state.liveVesselCount} live · ${state.simulatedVesselCount} simulated)`
       : `${state.vessels.length} Active Vessels`;
   }
 
@@ -1406,7 +1406,7 @@ function renderHeatmapLayers() {
       weight: 1,
       radius: radiusMeters
     });
-    circle.bindTooltip(`ð¥ High Fleet Density: ${zone.vessels_in_zone} vessels near ${zone.name}`, { sticky: true });
+    circle.bindTooltip(`🔥 High Fleet Density: ${zone.vessels_in_zone} vessels near ${zone.name}`, { sticky: true });
     state.mapLayers.heatmap.addLayer(circle);
   });
 }
@@ -1453,7 +1453,7 @@ function setupRoutePlanner() {
   }
 
   if (pfzSelect && state.pfzZones.length > 0) {
-    pfzSelect.innerHTML = state.pfzZones.map(p => `<option value="${p.id}">${p.name} Â· ${p.yield_rating} Yield (${p.yield_score_pct}%)</option>`).join('');
+    pfzSelect.innerHTML = state.pfzZones.map(p => `<option value="${p.id}">${p.name} · ${p.yield_rating} Yield (${p.yield_score_pct}%)</option>`).join('');
     pfzSelect.value = state.selectedPFZ;
     pfzSelect.addEventListener('change', (e) => {
       state.selectedPFZ = e.target.value;
@@ -1516,7 +1516,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     route = await fetchRouteFromBackend(harbourId, pfzId);
     state.backendOnline = true;
   } catch (err) {
-    console.log('ORCA backend unreachable â cannot compute a routed distance.', err.message || err);
+    console.log('ORCA backend unreachable — cannot compute a routed distance.', err.message || err);
     state.backendOnline = false;
     route = null;
   }
@@ -1527,22 +1527,22 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
   if (!route) {
     // Backend unreachable -- do NOT draw a fabricated straight/midpoint
     // line and do NOT display a distance/ETA that wasn't actually routed.
-    if (distEl) distEl.textContent = 'â';
-    if (etaEl) etaEl.textContent = 'â';
-    if (speedEl) speedEl.textContent = 'â';
+    if (distEl) distEl.textContent = '—';
+    if (etaEl) etaEl.textContent = '—';
+    if (speedEl) speedEl.textContent = '—';
     if (duskEl) {
-      duskEl.innerHTML = `<span class="text-slate-400 font-bold">â  ROUTE UNAVAILABLE:</span> ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.`;
+      duskEl.innerHTML = `<span class="text-slate-400 font-bold">⚠ ROUTE UNAVAILABLE:</span> ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.`;
       duskEl.className = "p-2.5 rounded-lg text-xs bg-slate-800/60 border border-slate-600/40 text-slate-300";
     }
     return;
   }
 
   if (!route.route_found) {
-    if (distEl) distEl.textContent = 'â';
-    if (etaEl) etaEl.textContent = 'â';
-    if (speedEl) speedEl.textContent = 'â';
+    if (distEl) distEl.textContent = '—';
+    if (etaEl) etaEl.textContent = '—';
+    if (speedEl) speedEl.textContent = '—';
     if (duskEl) {
-      duskEl.innerHTML = `<span class="text-red-400 font-bold">â NO SAFE MARITIME ROUTE FOUND:</span> ${route.detail || route.reason || 'The router could not find a path avoiding land and Marine Protected Areas for this harbour/PFZ pair.'}`;
+      duskEl.innerHTML = `<span class="text-red-400 font-bold">✕ NO SAFE MARITIME ROUTE FOUND:</span> ${route.detail || route.reason || 'The router could not find a path avoiding land and Marine Protected Areas for this harbour/PFZ pair.'}`;
       duskEl.className = "p-2.5 rounded-lg text-xs bg-red-950/60 border border-red-500/40 text-red-200";
     }
     return;
@@ -1559,15 +1559,15 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
   if (speedEl) {
     speedEl.textContent = route.effective_speed_knots != null
       ? `${route.effective_speed_knots} kn (Wave-adjusted)`
-      : 'â';
+      : '—';
   }
 
   if (duskEl) {
     if (isReturnSafe) {
-      duskEl.innerHTML = `<span class="text-emerald-400 font-bold">â SAFE RETURN:</span> Expected harbour arrival by <span class="font-mono text-white">${route.estimated_return_ist || 'â'}</span> (Before 18:30 IST dusk).`;
+      duskEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ SAFE RETURN:</span> Expected harbour arrival by <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Before 18:30 IST dusk).`;
       duskEl.className = "p-2.5 rounded-lg text-xs bg-emerald-950/60 border border-emerald-500/40 text-emerald-200";
     } else {
-      duskEl.innerHTML = `<span class="text-amber-400 font-bold">â ï¸ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono text-white">${route.estimated_return_ist || 'â'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
+      duskEl.innerHTML = `<span class="text-amber-400 font-bold">⚠️ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
       duskEl.className = "p-2.5 rounded-lg text-xs bg-amber-950/60 border border-amber-500/40 text-amber-200";
     }
   }
@@ -1585,14 +1585,14 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     });
 
     const detourNote = route.detour_percent > 1
-      ? ` Â· Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
+      ? ` · Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
       : '';
 
     const routeTooltip = `
       <div class="p-1 text-xs">
         <span class="font-bold text-cyan-400">Sea-Only A* Route (Land + MPA Avoidance)</span><br/>
-        <span>${harbour.name} â ${pfz.name}</span><br/>
-        <span>Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> Â· ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}</span>
+        <span>${harbour.name} ➔ ${pfz.name}</span><br/>
+        <span>Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> · ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}</span>
       </div>
     `;
 
@@ -1674,7 +1674,7 @@ function renderDAGNodes() {
             <span id="status-dot-${agent.id}" class="w-2 h-2 rounded-full bg-slate-500"></span>
             <span id="status-text-${agent.id}" class="capitalize">Idle</span>
           </span>
-          <span class="text-cyan-400 text-xs font-medium group-hover:translate-x-0.5 transition">Inspect â</span>
+          <span class="text-cyan-400 text-xs font-medium group-hover:translate-x-0.5 transition">Inspect ➔</span>
         </div>
       </div>
     `;
@@ -1694,7 +1694,7 @@ window.inspectDAGNode = function(agentId) {
 
   if (titleEl) titleEl.textContent = agent.name;
   if (roleEl) roleEl.textContent = agent.role;
-  if (latencyEl) latencyEl.textContent = `Execution Latency: ${agent.latency} Â· Subtasks Verified`;
+  if (latencyEl) latencyEl.textContent = `Execution Latency: ${agent.latency} · Subtasks Verified`;
   if (jsonEl) jsonEl.textContent = JSON.stringify(agent.sampleOutput, null, 2);
 
   if (modal) modal.classList.remove('hidden');
@@ -1740,7 +1740,7 @@ function setDAGNodeSkipped(agentId, reason) {
   const textEl = document.getElementById(`status-text-${agentId}`);
   if (nodeEl) nodeEl.classList.add('opacity-45', 'grayscale');
   if (dotEl) dotEl.className = "w-2 h-2 rounded-full bg-slate-500";
-  if (textEl) textEl.textContent = "Not invoked â intent did not require it";
+  if (textEl) textEl.textContent = "Not invoked — intent did not require it";
   const agentDef = agentsList.find(a => a.id === agentId);
   if (agentDef) agentDef.sampleOutput = { status: 'SKIPPED', reason };
 }
@@ -1826,7 +1826,7 @@ function runFullDAGPipelineSimulationLive() {
         state.isSimulatingDAG = false;
         if (runBtn) {
           runBtn.disabled = false;
-          runBtn.innerHTML = `â Pipeline Executed via Live Backend Â· Run Again`;
+          runBtn.innerHTML = `✓ Pipeline Executed via Live Backend · Run Again`;
         }
         try { ws.close(); } catch (e) { /* noop */ }
         return;
@@ -1837,7 +1837,7 @@ function runFullDAGPipelineSimulationLive() {
         state.isSimulatingDAG = false;
         if (runBtn) {
           runBtn.disabled = false;
-          runBtn.innerHTML = `â¶ Run Live Pipeline Simulation`;
+          runBtn.innerHTML = `▶ Run Live Pipeline Simulation`;
         }
         try { ws.close(); } catch (e) { /* noop */ }
       }
@@ -1885,7 +1885,7 @@ async function runFullDAGPipelineSimulationOffline() {
   state.isSimulatingDAG = false;
   if (runBtn) {
     runBtn.disabled = false;
-    runBtn.innerHTML = `â Pipeline Executed (Local Simulation) Â· Run Again`;
+    runBtn.innerHTML = `✓ Pipeline Executed (Local Simulation) · Run Again`;
   }
 }
 
@@ -1993,7 +1993,7 @@ async function handleChatQuery(queryText) {
     syncDetectedLanguage(advisory.language);
     state.backendOnline = true;
   } catch (err) {
-    console.log('ORCA backend unreachable â falling back to local grounded simulation.', err.message || err);
+    console.log('ORCA backend unreachable — falling back to local grounded simulation.', err.message || err);
     state.backendOnline = false;
     await new Promise(r => setTimeout(r, 500));
     advisory = generateAgentAdvisory(queryText);
@@ -2024,10 +2024,10 @@ async function handleChatQuery(queryText) {
           </div>
           <div class="flex items-center gap-2">
             <button onclick="playAudioText('${encodeURIComponent(advisory.plainText)}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-600 text-xs flex items-center gap-1.5 transition">
-              <span class="text-xs">ð</span> Listen (TTS)
+              <span class="text-xs">🔊</span> Listen (TTS)
             </button>
             <button onclick="copyAdvisoryMSS()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-600 text-xs flex items-center gap-1 transition">
-              <span>ð¡</span> NavIC MSS Code
+              <span>📡</span> NavIC MSS Code
             </button>
           </div>
         </div>
@@ -2057,8 +2057,8 @@ async function handleChatQuery(queryText) {
 
         <details class="group mt-3 pt-2 border-t border-slate-800/80">
           <summary class="text-xs text-slate-400 hover:text-cyan-400 cursor-pointer flex items-center justify-between font-mono">
-            <span>ð View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)</span>
-            <span class="text-[10px] text-slate-500 group-open:rotate-180 transition">â¼</span>
+            <span>🔍 View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)</span>
+            <span class="text-[10px] text-slate-500 group-open:rotate-180 transition">▼</span>
           </summary>
           <div class="mt-3 space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono">
             ${advisory.agentSteps.map(step => `
@@ -2121,30 +2121,30 @@ function buildAdvisoryFromBackend(data, query) {
   const etaHours = eta.one_way_eta_hours;
   const etaLabel = (typeof etaHours === 'number')
     ? `${Math.floor(etaHours)}h ${Math.round((etaHours % 1) * 60)}m`
-    : 'â';
+    : '—';
   const imblClearance = (typeof geo.distance_to_imbl_nm === 'number')
     ? `${geo.distance_to_imbl_nm} NM (${geo.imbl_status || 'Status Unknown'})`
-    : 'â';
+    : '—';
 
   const agentSteps = [
     { agent: "Master Supervisor", trace: `Intent classified as ${t.plan?.intent || 'N/A'}. ${(t.plan?.subtasks || []).length} subtasks dispatched.`, latency: "live" },
-    { agent: "Satellite Oceanography", trace: `SST ${satellite.sst_celsius ?? 'â'}Â°C Â· Chlorophyll ${satellite.chlorophyll_mg_m3 ?? 'â'} mg/mÂ³ via ${(satellite.source_satellites || []).join(', ') || 'ISRO feeds'}.`, latency: "live" },
-    { agent: "Weather & Hazard", trace: `SWH ${weather.significant_wave_height_m ?? 'â'}m, wind ${weather.surface_wind_knots ?? 'â'}kn. Safety score ${weather.safety_score ?? 'â'}/100 (${weather.clearance_verdict ?? 'â'}).`, latency: "live" },
-    { agent: "Ocean Analytics PFZ", trace: `Top zone ${zone} Â· predicted yield ${pfz.yield_score_pct ?? 'â'}%.`, latency: "live" },
-    { agent: "Geofencing & Routing", trace: `Nearest IMBL: ${geo.nearest_imbl_country ?? 'â'} at ${geo.distance_to_imbl_nm ?? 'â'} NM (${geo.imbl_status ?? 'â'}).`, latency: "live" },
-    { agent: "Fleet & Traffic", trace: `${fleet.total_active_vessels ?? 'â'} active vessels Â· ${fleet.vessels_in_target_zone ?? 'â'} in target zone (${fleet.overcrowding_status ?? 'â'}).`, latency: "live" },
-    { agent: "ETA & Voyage Safety", trace: `One-way ETA ${eta.one_way_eta_hours ?? 'â'}h at ${eta.effective_speed_knots ?? 'â'}kn. Return ${eta.estimated_return_ist ?? 'â'} â ${eta.dusk_safety_verdict ?? 'â'}.`, latency: "live" },
-    { agent: "Neural Synthesis", trace: `Advisory generated via ${adv.llm_engine || 'grounded engine'} with ${adv.confidence_pct ?? 'â'}% confidence.`, latency: "live" }
+    { agent: "Satellite Oceanography", trace: `SST ${satellite.sst_celsius ?? '—'}°C · Chlorophyll ${satellite.chlorophyll_mg_m3 ?? '—'} mg/m³ via ${(satellite.source_satellites || []).join(', ') || 'ISRO feeds'}.`, latency: "live" },
+    { agent: "Weather & Hazard", trace: `SWH ${weather.significant_wave_height_m ?? '—'}m, wind ${weather.surface_wind_knots ?? '—'}kn. Safety score ${weather.safety_score ?? '—'}/100 (${weather.clearance_verdict ?? '—'}).`, latency: "live" },
+    { agent: "Ocean Analytics PFZ", trace: `Top zone ${zone} · predicted yield ${pfz.yield_score_pct ?? '—'}%.`, latency: "live" },
+    { agent: "Geofencing & Routing", trace: `Nearest IMBL: ${geo.nearest_imbl_country ?? '—'} at ${geo.distance_to_imbl_nm ?? '—'} NM (${geo.imbl_status ?? '—'}).`, latency: "live" },
+    { agent: "Fleet & Traffic", trace: `${fleet.total_active_vessels ?? '—'} active vessels · ${fleet.vessels_in_target_zone ?? '—'} in target zone (${fleet.overcrowding_status ?? '—'}).`, latency: "live" },
+    { agent: "ETA & Voyage Safety", trace: `One-way ETA ${eta.one_way_eta_hours ?? '—'}h at ${eta.effective_speed_knots ?? '—'}kn. Return ${eta.estimated_return_ist ?? '—'} — ${eta.dusk_safety_verdict ?? '—'}.`, latency: "live" },
+    { agent: "Neural Synthesis", trace: `Advisory generated via ${adv.llm_engine || 'grounded engine'} with ${adv.confidence_pct ?? '—'}% confidence.`, latency: "live" }
   ];
 
   return {
     confidence: adv.confidence_pct ?? 90,
-    metrics: { zone, eta: etaLabel, vesselCount: fleet.total_active_vessels ?? 'â', imblClearance },
+    metrics: { zone, eta: etaLabel, vesselCount: fleet.total_active_vessels ?? '—', imblClearance },
     plainText: adv.advisory_text || 'The ORCA INSIGHT backend generated an advisory but returned no text.',
-    formattedHtml: `<p><strong class="text-emerald-400">â Live Multi-Agent Advisory</strong> <span class="text-[10px] text-slate-500 font-mono">(${adv.llm_engine || 'Grounded Engine'})</span></p>
+    formattedHtml: `<p><strong class="text-emerald-400">✓ Live Multi-Agent Advisory</strong> <span class="text-[10px] text-slate-500 font-mono">(${adv.llm_engine || 'Grounded Engine'})</span></p>
       <p class="mt-2 text-slate-300">${adv.advisory_text || ''}</p>
-      <p class="mt-2 text-[11px] font-mono ${chlorophyllSource.includes('ESTIMATED') ? 'text-amber-300' : 'text-slate-500'}">Ocean source tier: ${oceanTier} Â· Chlorophyll: ${chlorophyllSource}</p>
-      <p class="mt-2 text-[11px] text-slate-500">Citations: ${(adv.citations || []).join(', ') || 'â'}</p>`,
+      <p class="mt-2 text-[11px] font-mono ${chlorophyllSource.includes('ESTIMATED') ? 'text-amber-300' : 'text-slate-500'}">Ocean source tier: ${oceanTier} · Chlorophyll: ${chlorophyllSource}</p>
+      <p class="mt-2 text-[11px] text-slate-500">Citations: ${(adv.citations || []).join(', ') || '—'}</p>`,
     agentSteps,
     language
   };
@@ -2152,7 +2152,7 @@ function buildAdvisoryFromBackend(data, query) {
 
 function languageBadgeLabel(language) {
   const code = language?.response_code || 'en';
-  const names = { en: 'English', hi: 'à¤¹à¤¿à¤¨à¥à¤¦à¥', ta: 'à®¤à®®à®¿à®´à¯', ml: 'à´®à´²à´¯à´¾à´³à´' };
+  const names = { en: 'English', hi: 'हिन्दी', ta: 'தமிழ்', ml: 'മലയാളം' };
   return `Detected: ${names[code] || 'English'}`;
 }
 
@@ -2179,14 +2179,14 @@ function syncDetectedLanguage(language) {
 // to be live when it is actually simulated" requirement.
 function generateAgentAdvisory(query) {
   const q = query.toLowerCase();
-  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1">â  OFFLINE ADVISORY ENGINE â ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.</p>`;
+  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1">⚠ OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.</p>`;
 
-  if (q.includes('border') || q.includes('imbl') || q.includes('sri lanka') || q.includes('pakistan') || q.includes('à¤¸à¥à¤®à¤¾') || q.includes('à®à®²à¯à®²à¯')) {
+  if (q.includes('border') || q.includes('imbl') || q.includes('sri lanka') || q.includes('pakistan') || q.includes('सीमा') || q.includes('எல்லை')) {
     return {
       confidence: 60,
       metrics: { zone: "Palk Strait & Rameswaram", eta: "1h 45m (simulated)", vesselCount: 7, imblClearance: "SIMULATED ~2-4 NM" },
       plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Vessels in the Palk Strait / Gulf of Mannar area are typically within a few Nautical Miles of the India-Sri Lanka IMBL boundary. Maintain a westward heading and keep VHF transponders active on Channel 16. Reconnect to the ORCA backend for an actual measured distance to the boundary.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400">â ï¸ IMBL Geofencing Advisory (Simulated Offline Estimate):</strong></p>
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400">⚠️ IMBL Geofencing Advisory (Simulated Offline Estimate):</strong></p>
         <p class="mt-1">Without a live backend connection, exact vessel-to-boundary distances cannot be measured. As a general precaution near Palk Strait Sector 4, maintain a westward heading toward Mandapam.</p>
         <p class="mt-2 text-slate-300">This is a generic offline safety reminder, not a measured geofence reading. Reconnect to ORCA backend for a real distance-to-IMBL calculation.</p>`,
       agentSteps: [
@@ -2196,12 +2196,12 @@ function generateAgentAdvisory(query) {
     };
   }
 
-  if (q.includes('density') || q.includes('count') || q.includes('overcrowd') || q.includes('how many') || q.includes('à¤à¤¨à¤¤à¥à¤µ') || q.includes('à®à®à®°à¯à®¤à¯à®¤à®¿')) {
+  if (q.includes('density') || q.includes('count') || q.includes('overcrowd') || q.includes('how many') || q.includes('घनत्व') || q.includes('அடர்த்தி')) {
     return {
       confidence: 55,
-      metrics: { zone: "PFZ-01 & Wadge Bank", eta: "â (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
+      metrics: { zone: "PFZ-01 & Wadge Bank", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
       plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Live vessel counts cannot be retrieved without a backend connection. Historically, Wadge Bank and Kochi Deep Offshore see moderate fishing traffic. Reconnect to the ORCA backend for an actual fleet-density reading from the vessel dataset.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400">ð¢ Fleet Density (Offline â Simulated Placeholder):</strong></p>
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400">🚢 Fleet Density (Offline — Simulated Placeholder):</strong></p>
         <p class="mt-1">The Fleet & Traffic Agent's live vessel dataset is not reachable right now, so an exact in-zone vessel count is unavailable.</p>
         <ul class="list-disc list-inside mt-2 space-y-1 text-slate-300">
           <li>Reconnect to the ORCA backend for a real per-zone vessel count and overcrowding verdict.</li>
@@ -2216,9 +2216,9 @@ function generateAgentAdvisory(query) {
   const liveWave = state.liveMarine.waveHeight.toFixed(2);
   return {
     confidence: 55,
-    metrics: { zone: "PFZ-01 (Kochi Deep) â simulated", eta: "â (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
+    metrics: { zone: "PFZ-01 (Kochi Deep) — simulated", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
     plainText: `OFFLINE ADVISORY (backend unreachable): ORCA's multi-agent backend could not be reached, so this answer is a generic, non-live placeholder rather than a grounded reading. Your browser's own Open-Meteo widget reports significant wave height around ${liveWave}m, but PFZ ranking, route distance, ETA, and fleet counts all require the backend and are not shown here. Reconnect to the ORCA backend for a real advisory.`,
-    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400">â  Offline Placeholder Advisory</strong></p>
+    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400">⚠ Offline Placeholder Advisory</strong></p>
       <p class="mt-1">The ORCA multi-agent backend (satellite, weather, PFZ ranking, geofencing, fleet, routing, and Neural Synthesis) is currently unreachable. Client-side, this browser last saw a wave height of <strong>${liveWave}m</strong> from Open-Meteo, but every other figure requires the backend.</p>
       <p class="mt-2 text-slate-300"><strong>No PFZ recommendation, route, ETA, or fleet count is shown</strong> because those would have to be invented rather than computed. Reconnect to the ORCA backend for a full grounded advisory.</p>`,
     agentSteps: [
@@ -2292,7 +2292,7 @@ function updateTTSButtons(isPlaying) {
       `;
       ttsBtn.classList.add('bg-cyan-600', 'text-white');
     } else {
-      ttsBtn.innerHTML = `<span>ð Listen Audio Advisory</span>`;
+      ttsBtn.innerHTML = `<span>🔊 Listen Audio Advisory</span>`;
       ttsBtn.classList.remove('bg-cyan-600', 'text-white');
     }
   }
@@ -2354,19 +2354,19 @@ function togglePositionTracking(button) {
     navigator.geolocation.clearWatch(state.positionWatchId);
     state.positionWatchId = null;
     button.textContent = 'Track my position';
-    setGeofenceTrackingStatus('Tracking off Â· no position is being requested');
+    setGeofenceTrackingStatus('Tracking off · no position is being requested');
     return;
   }
   if (!navigator.geolocation) {
     setGeofenceTrackingStatus('Geolocation is not supported by this browser. Use simulated vessel movement for the demo.', 'text-amber-300');
     return;
   }
-  setGeofenceTrackingStatus('Requesting device-location permissionâ¦', 'text-cyan-300');
+  setGeofenceTrackingStatus('Requesting device-location permission…', 'text-cyan-300');
   state.positionWatchId = navigator.geolocation.watchPosition(
     position => {
       checkGeofenceAt(position.coords.latitude, position.coords.longitude, 'DEVICE_GEOLOCATION');
       button.textContent = 'Stop tracking';
-      setGeofenceTrackingStatus(`Live device tracking Â· accuracy Â±${Math.round(position.coords.accuracy)}m Â· not stored`, 'text-emerald-300');
+      setGeofenceTrackingStatus(`Live device tracking · accuracy ±${Math.round(position.coords.accuracy)}m · not stored`, 'text-emerald-300');
     },
     error => {
       state.positionWatchId = null;
@@ -2392,7 +2392,7 @@ async function checkGeofenceAt(lat, lon, source) {
   } catch (error) {
     // In Local Simulation no client-side boundary geometry is available, so
     // explicitly avoid inventing a distance or a boundary-crossing claim.
-    setGeofenceTrackingStatus('Backend unavailable â exact geofence distance cannot be evaluated in local simulation.', 'text-amber-300');
+    setGeofenceTrackingStatus('Backend unavailable — exact geofence distance cannot be evaluated in local simulation.', 'text-amber-300');
     return null;
   }
 }
@@ -2413,7 +2413,7 @@ function toggleGeofenceSimulation(button) {
   const advance = () => {
     const [lat, lon] = path[index];
     checkGeofenceAt(lat, lon, 'SIMULATED_VESSEL_DEMO');
-    setGeofenceTrackingStatus(`Simulated vessel movement Â· point ${index + 1}/${path.length} Â· ${lat.toFixed(2)}, ${lon.toFixed(2)}`, 'text-amber-300');
+    setGeofenceTrackingStatus(`Simulated vessel movement · point ${index + 1}/${path.length} · ${lat.toFixed(2)}, ${lon.toFixed(2)}`, 'text-amber-300');
     index += 1;
     if (index >= path.length) {
       clearInterval(state.simulatedGeofenceInterval);
@@ -2495,8 +2495,8 @@ function renderNavICSatelliteList() {
         <span class="text-white font-bold">${sat.id} (PRN ${sat.prn})</span>
       </div>
       <div class="flex items-center gap-3 text-slate-400 text-[11px]">
-        <span>Az: ${sat.az}Â°</span>
-        <span>El: ${sat.el}Â°</span>
+        <span>Az: ${sat.az}°</span>
+        <span>El: ${sat.el}°</span>
         <span class="text-cyan-400 font-bold">${sat.snr} dB-Hz</span>
       </div>
     </div>
@@ -2546,7 +2546,7 @@ function renderSatelliteCards() {
       <div class="flex items-start justify-between gap-2 mb-2">
         <div>
           <h4 class="font-bold text-slate-100 text-sm">${sat.name}</h4>
-          <span class="text-[10px] font-mono text-slate-400">NORAD: ${sat.norad_id} Â· ${sat.orbit_type}</span>
+          <span class="text-[10px] font-mono text-slate-400">NORAD: ${sat.norad_id} · ${sat.orbit_type}</span>
         </div>
         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
@@ -2618,7 +2618,7 @@ function updateMapHUD() {
   }
   if (clearanceEl && state.liveMarine.clearanceVerdict) {
     const verdict = state.liveMarine.clearanceVerdict;
-    const score = state.liveMarine.safetyScore ?? 'â';
+    const score = state.liveMarine.safetyScore ?? '—';
     clearanceEl.textContent = `${verdict} (${score}/100)`;
     const colorClass = verdict === 'SAFE' ? 'text-emerald-400'
       : verdict === 'CAUTION' ? 'text-amber-400'
@@ -2638,10 +2638,10 @@ function updateSafetyIndexCard(weather) {
 
   const verdict = weather.clearance_verdict || 'SAFE';
   const theme = {
-    SAFE: { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: 'â' },
-    CAUTION: { color: 'amber', label: 'PROCEED WITH CAUTION', icon: 'â ' },
-    UNSAFE: { color: 'rose', label: 'UNSAFE â DO NOT VENTURE', icon: 'â' }
-  }[verdict] || { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: 'â' };
+    SAFE: { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' },
+    CAUTION: { color: 'amber', label: 'PROCEED WITH CAUTION', icon: '⚠' },
+    UNSAFE: { color: 'rose', label: 'UNSAFE — DO NOT VENTURE', icon: '✕' }
+  }[verdict] || { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' };
 
   const colorClasses = {
     emerald: { card: 'from-emerald-950/80 border-emerald-500/50', dot: 'bg-emerald-400', text: 'text-emerald-400', ring: 'border-emerald-400', glow: 'shadow-emerald-500/30' },
@@ -2651,7 +2651,7 @@ function updateSafetyIndexCard(weather) {
   const c = colorClasses[theme.color];
 
   if (scoreEl) {
-    scoreEl.textContent = weather.safety_score ?? 'â';
+    scoreEl.textContent = weather.safety_score ?? '—';
     scoreEl.className = `text-3xl sm:text-4xl font-black ${c.text} font-mono`;
   }
   if (verdictEl) verdictEl.textContent = theme.label;
@@ -2718,7 +2718,7 @@ function seaStateFromSwh(h) {
 // forecast API for wind/cloud cover), so the trend line is real history
 // from the moment the tab loads instead of starting empty. If either
 // request fails, state.safetyTrend simply stays empty and the sparkline
-// falls back to plotting the live reading alone â never a fake number.
+// falls back to plotting the live reading alone — never a fake number.
 async function fetchSafetyTrendHistory(lat, lon) {
   try {
     const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&hourly=wave_height&past_days=1&forecast_days=1&timezone=Asia%2FKolkata`;
@@ -2799,7 +2799,7 @@ function renderTrendSparklines() {
 }
 
 // Appends the latest live reading to the real 24h history fetched from
-// Open-Meteo. Every plotted point is a genuine measurement â when no
+// Open-Meteo. Every plotted point is a genuine measurement — when no
 // history has loaded yet, this just plots the single live value twice so
 // the sparkline still renders instead of showing invented history.
 function appendLivePoint(history, liveValue) {
@@ -2867,7 +2867,7 @@ function renderFleetDistributionChart() {
   const totalEl = document.getElementById('fleetTotalActive');
   if (totalEl) {
     totalEl.textContent = state.simulatedVesselCount
-      ? `${state.vessels.length} (${state.liveVesselCount} live Â· ${state.simulatedVesselCount} sim)`
+      ? `${state.vessels.length} (${state.liveVesselCount} live · ${state.simulatedVesselCount} sim)`
       : state.vessels.length;
   }
 }
@@ -2899,12 +2899,12 @@ function renderVesselsTable(filteredList = null) {
         <td class="py-2.5 px-3 text-xs text-white font-medium">${v.name}</td>
         <td class="py-2.5 px-3 text-xs text-slate-400">${v.type}</td>
         <td class="py-2.5 px-3 text-xs text-slate-300">${v.zone}</td>
-        <td class="py-2.5 px-3 font-mono text-xs text-slate-200">${v.speed_knots} kn / ${v.heading}Â°</td>
+        <td class="py-2.5 px-3 font-mono text-xs text-slate-200">${v.speed_knots} kn / ${v.heading}°</td>
         <td class="py-2.5 px-3 font-mono text-xs ${v.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${v.imbl_dist_nm} NM</td>
         <td class="py-2.5 px-3">${statusBadge}${simTag}</td>
         <td class="py-2.5 px-3 text-right">
           <button onclick="zoomToVessel('${v.id}')" class="px-2 py-1 bg-slate-800 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[11px] font-medium transition">
-            Locate â
+            Locate ➔
           </button>
         </td>
       </tr>
@@ -2996,7 +2996,7 @@ function renderBulletinsList(filterSeverity = 'ALL') {
         <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
           <span class="text-slate-400">Source: <strong class="text-slate-300">${b.source}</strong></span>
           <button onclick="playAudioText('${encodeURIComponent(b.title + '. ' + b.summary)}')" class="text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 transition">
-            <span>ð</span> Listen Bulletin
+            <span>🔊</span> Listen Bulletin
           </button>
         </div>
       </div>
@@ -3053,7 +3053,7 @@ function triggerDistressBeacon() {
           406 MHz SAS&R BEACON TRANSMITTING TO ISRO & COAST GUARD MRCC
         </div>
         <p>Distress packet relayed via INSAT-3DR SAS&R receiver. Maritime Rescue Coordination Centre (MRCC Chennai/Mumbai) alerted on VHF Ch 16.</p>
-        <p class="font-mono text-xs text-slate-300">GPS Coordinates: 09Â°52'N, 75Â°33'E Â· Vessel ID: IND-KL-001 (Matsya Vardhini 4)</p>
+        <p class="font-mono text-xs text-slate-300">GPS Coordinates: 09°52'N, 75°33'E · Vessel ID: IND-KL-001 (Matsya Vardhini 4)</p>
       </div>
     `;
   }
