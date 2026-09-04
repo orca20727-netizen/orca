@@ -164,7 +164,7 @@ def test_health_endpoint_reports_subsystems():
     body = res.json()
     assert body["status"] == "HEALTHY"
     assert "subsystems" in body
-    assert "groq_llm" in body["subsystems"]
+    assert "stats_engine" in body["subsystems"]
 
 
 def test_alerts_endpoint_returns_provenanced_alert_list():
