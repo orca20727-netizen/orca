@@ -51,6 +51,7 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
     "WEATHER_SAFETY": [
         "weather", "wave", "wind", "storm", "sea state", "safe today",
         "is the sea safe", "rough sea", "cyclone", "rain",
+        "tide", "tidal", "high tide", "low tide", "lightning", "thunderstorm",
     ],
     "PFZ_RECOMMENDATION": [
         "pfz", "fishing zone", "best zone", "which zone", "where should i fish",
@@ -63,7 +64,7 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "ROUTE_PLANNING": ["मार्ग", "रास्ता", "सुरक्षित रास्ता"],
         "ETA_RETURN": ["वापस", "कितना समय", "सूर्यास्त"],
         "FLEET_DENSITY": ["कितनी नाव", "नावों", "भीड़"],
-        "WEATHER_SAFETY": ["मौसम", "लहर", "हवा", "तूफान", "चक्रवात"],
+        "WEATHER_SAFETY": ["मौसम", "लहर", "हवा", "तूफान", "चक्रवात", "ज्वार", "बिजली"],
         "PFZ_RECOMMENDATION": ["मछली पकड़ने का क्षेत्र", "पीएफजेड", "सबसे अच्छा क्षेत्र"],
     },
     "ta": {
@@ -72,7 +73,7 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "ROUTE_PLANNING": ["வழி", "பாதுகாப்பான வழி", "பாதை"],
         "ETA_RETURN": ["திரும்ப", "எவ்வளவு நேரம்", "சூரிய அஸ்தமனம்"],
         "FLEET_DENSITY": ["எத்தனை படகுகள்", "படகுகள்", "நெரிசல்"],
-        "WEATHER_SAFETY": ["வானிலை", "அலை", "காற்று", "புயல்", "சூறாவளி"],
+        "WEATHER_SAFETY": ["வானிலை", "அலை", "காற்று", "புயல்", "சூறாவளி", "ஓதம்", "மின்னல்"],
         "PFZ_RECOMMENDATION": ["மீன்பிடி பகுதி", "பிஎப்இசட்", "சிறந்த பகுதி"],
     },
     "ml": {
@@ -81,7 +82,7 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "ROUTE_PLANNING": ["വഴി", "സുരക്ഷിത വഴി", "പാത"],
         "ETA_RETURN": ["തിരികെ", "എത്ര സമയം", "സൂര്യാസ്തമയം"],
         "FLEET_DENSITY": ["എത്ര ബോട്ടുകൾ", "ബോട്ടുകൾ", "തിരക്ക്"],
-        "WEATHER_SAFETY": ["കാലാവസ്ഥ", "തിര", "കാറ്റ്", "കൊടുങ്കാറ്റ്"],
+        "WEATHER_SAFETY": ["കാലാവസ്ഥ", "തിര", "കാറ്റ്", "കൊടുങ്കാറ്റ്", "വേലിയേറ്റം", "ഇടിമിന്നൽ"],
         "PFZ_RECOMMENDATION": ["മത്സ്യബന്ധന മേഖല", "പി എഫ് ഇസഡ്", "മികച്ച മേഖല"],
     },
 }
