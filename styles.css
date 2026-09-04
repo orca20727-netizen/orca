@@ -1,28 +1,138 @@
 /* ORCA INSIGHT - Modern High-Contrast Oceanic Design System */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+/* ==========================================================================
+   Theme system
+   --------------------------------------------------------------------------
+   Four user-selectable themes (Night/Day/Grey/Blue), switched via a
+   [data-theme] attribute on <html> (see setupThemeSwitcher() in app.js).
+   Every theme defines the same set of --ocean-*/--slate-*/--cyan-400/300
+   variables; index.html's Tailwind config points bg-ocean-*, text-slate-*,
+   bg-slate-*, border-slate-*, text-cyan-400 and text-cyan-300 at these
+   variables, so switching themes re-colors the entire existing UI without
+   any change to the markup or the JS that renders it. Semantic status
+   colors (emerald/amber/red = safe/warn/danger, and the cyan-500/600
+   button/badge shades) intentionally stay constant across themes so they
+   keep meaning what they mean.
+   ========================================================================== */
+
+:root,
+[data-theme="night"] {
+  /* Night (default) -- the original deep-ocean navy look. */
+  --ocean-950: #060c18;
+  --ocean-900: #0b1426;
+  --ocean-850: #0f1c34;
+  --ocean-800: #152545;
+  --ocean-700: #1e3155;
+
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+
+  --cyan-400: #22d3ee;
+  --cyan-300: #67e8f9;
+}
+
+[data-theme="day"] {
+  /* Day -- light chrome. text-slate-* is inverted (100<->900, 200<->800,
+     etc.) so existing "light text on dark chrome" markup becomes "dark
+     text on light chrome" automatically. cyan-400/300 are darkened here
+     only, since the default pale cyan is unreadable as text on a light
+     background (it's fine everywhere else because it's normally used on
+     dark chrome or inside its own tinted badge background). */
+  --ocean-950: #eef2f6;
+  --ocean-900: #ffffff;
+  --ocean-850: #ffffff;
+  --ocean-800: #eef2f6;
+  --ocean-700: #d7dee6;
+
+  --slate-900: #f1f5f9;
+  --slate-800: #e2e8f0;
+  --slate-700: #cbd5e1;
+  --slate-600: #94a3b8;
+  --slate-500: #64748b;
+  --slate-400: #475569;
+  --slate-300: #334155;
+  --slate-200: #1e293b;
+  --slate-100: #0f172a;
+
+  --cyan-400: #0e7490;
+  --cyan-300: #0891b2;
+}
+
+[data-theme="grey"] {
+  /* Grey -- a neutral, achromatic dark mode (no navy tint), for anyone who
+     prefers a true dark-grey chrome over Night's blue-tinted one. */
+  --ocean-950: #0a0a0c;
+  --ocean-900: #131316;
+  --ocean-850: #1a1a1e;
+  --ocean-800: #232327;
+  --ocean-700: #323236;
+
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+
+  --cyan-400: #22d3ee;
+  --cyan-300: #67e8f9;
+}
+
+[data-theme="blue"] {
+  /* Blue -- a deeper, more saturated blue chrome than Night's navy. */
+  --ocean-950: #020817;
+  --ocean-900: #071233;
+  --ocean-850: #0a1a44;
+  --ocean-800: #102454;
+  --ocean-700: #1b3568;
+
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+
+  --cyan-400: #22d3ee;
+  --cyan-300: #67e8f9;
+}
+
 :root {
-  --bg-primary: #060c18;
-  --bg-secondary: #0b1426;
-  --bg-card: #0f1c34;
-  --bg-card-hover: #152545;
-  --border-color: #1e3155;
+  --bg-primary: var(--ocean-950);
+  --bg-secondary: var(--ocean-900);
+  --bg-card: var(--ocean-850);
+  --bg-card-hover: var(--ocean-800);
+  --border-color: var(--ocean-700);
   --border-focus: #06b6d4;
-  
+
   --cyan-glow: rgba(6, 182, 212, 0.4);
   --cyan-primary: #06b6d4;
   --cyan-light: #67e8f9;
   --teal-primary: #14b8a6;
-  
+
   --emerald-safe: #10b981;
   --amber-warn: #f59e0b;
   --red-danger: #ef4444;
   --blue-info: #3b82f6;
-  
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-  
+
+  --text-main: var(--slate-100);
+  --text-muted: var(--slate-400);
+  --text-dim: var(--slate-500);
+
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
@@ -131,23 +241,24 @@ body {
   background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, rgba(15, 28, 52, 0.8) 100%);
 }
 
-/* Leaflet Map Overrides */
+/* Leaflet Map Overrides -- themed via the same --ocean-*/--slate-* variables
+   as the rest of the app so map popups match whichever theme is active. */
 .leaflet-container {
-  background: #060d19 !important;
+  background: var(--ocean-950) !important;
   font-family: var(--font-sans) !important;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #0f1c34 !important;
-  color: #f1f5f9 !important;
-  border: 1px solid #1e3155 !important;
+  background: var(--ocean-850) !important;
+  color: var(--slate-100) !important;
+  border: 1px solid var(--ocean-700) !important;
   border-radius: 8px !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(6, 182, 212, 0.3) !important;
 }
 
 .leaflet-popup-tip {
-  background: #0f1c34 !important;
-  border: 1px solid #1e3155 !important;
+  background: var(--ocean-850) !important;
+  border: 1px solid var(--ocean-700) !important;
 }
 
 .vessel-marker-icon {
