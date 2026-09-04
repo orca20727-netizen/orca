@@ -489,3 +489,22 @@ body {
   border-color: var(--cyan-primary);
   box-shadow: var(--glass-shadow), 0 0 24px var(--glow-accent-strong);
 }
+
+/* ============================================
+   Buttons, Badges & Inputs (glass restyle, phase 4)
+   ============================================ */
+.glass-chip {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+.glow-btn {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.glow-btn:hover {
+  box-shadow: 0 0 20px var(--glow-accent-strong);
+  transform: translateY(-2px);
+}
