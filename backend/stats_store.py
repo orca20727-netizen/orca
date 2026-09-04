@@ -136,7 +136,7 @@ class StatsStore:
         with _lock:
             values = [r[0] for r in self._conn.execute(query, params).fetchall()]
         if not values:
-        return {"count": 0}
+            return {"count": 0}
         return {
             "count": len(values),
             "latest": values[0],
