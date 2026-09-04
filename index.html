@@ -29,12 +29,31 @@
       theme: {
         extend: {
           colors: {
+            // Themeable: these resolve through CSS variables set per
+            // [data-theme] in styles.css, so every existing bg-ocean-*/
+            // text-slate-*/bg-slate-*/border-slate-* class re-themes
+            // automatically -- no markup changes needed.
             ocean: {
-              950: '#060c18',
-              900: '#0b1426',
-              850: '#0f1c34',
-              800: '#152545',
-              700: '#1e3155'
+              950: 'var(--ocean-950)',
+              900: 'var(--ocean-900)',
+              850: 'var(--ocean-850)',
+              800: 'var(--ocean-800)',
+              700: 'var(--ocean-700)'
+            },
+            slate: {
+              900: 'var(--slate-900)',
+              800: 'var(--slate-800)',
+              700: 'var(--slate-700)',
+              600: 'var(--slate-600)',
+              500: 'var(--slate-500)',
+              400: 'var(--slate-400)',
+              300: 'var(--slate-300)',
+              200: 'var(--slate-200)',
+              100: 'var(--slate-100)'
+            },
+            cyan: {
+              400: 'var(--cyan-400)',
+              300: 'var(--cyan-300)'
             },
             marine: {
               cyan: '#06b6d4',
@@ -102,6 +121,14 @@
         <option value="hi">हिन्दी (Hindi)</option>
         <option value="ta">தமிழ் (Tamil)</option>
         <option value="ml">മലയാളം (Malayalam)</option>
+      </select>
+
+      <!-- Theme Selector -->
+      <select id="themeSelect" title="Theme" class="bg-ocean-850 border border-ocean-700 hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
+        <option value="night">🌙 Night</option>
+        <option value="day">☀️ Day</option>
+        <option value="grey">◐ Grey</option>
+        <option value="blue">🔵 Blue</option>
       </select>
 
       <!-- High-Visibility SOS Button -->
@@ -683,13 +710,13 @@
             </div>
           </div>
 
-          <div class="p-5 rounded-xl bg-red-950/40 border border-red-500/50 space-y-3 shadow-lg">
+          <div id="imblAlertCard" class="p-5 rounded-xl bg-red-950/40 border border-red-500/50 space-y-3 shadow-lg transition-colors">
             <div class="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wider">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+              <span id="imblAlertDot" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
               IMBL Border Proximity Alert
             </div>
-            <p class="text-xs text-red-200 leading-relaxed">
-              <strong>IND-TN-001 (Murugan Thunai 7)</strong> is operating at <strong>1.8 NM</strong> from Sri Lanka IMBL in Palk Strait. Automated warning dispatched.
+            <p id="imblAlertBox" class="text-xs text-red-200 leading-relaxed">
+              No vessel telemetry available yet.
             </p>
           </div>
 
