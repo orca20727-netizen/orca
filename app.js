@@ -446,6 +446,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   runStartupStep('setupNavigation', setupNavigation);
   runStartupStep('setupSlideFillButtons', setupSlideFillButtons);
+  runStartupStep('setupHeaderScrollHide', setupHeaderScrollHide);
   runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
   runStartupStep('setupThemeSwitcher', setupThemeSwitcher);
   runStartupStep('setupMap', setupMap);
@@ -890,6 +891,33 @@ function setupSlideFillButtons() {
     submerged.style.height = btn.offsetHeight + 'px';
     window.__sfbResizeObserver.observe(btn);
   });
+}
+
+// Header hide-on-scroll (UI/UX restyle, phase 2) -- purely decorative and
+// additive: toggles a CSS class on <header> based on scroll direction, does
+// not touch any existing state, ids, or classes JS elsewhere depends on.
+function setupHeaderScrollHide() {
+  const header = document.querySelector('header');
+  if (!header) return;
+  let lastY = window.scrollY;
+  let ticking = false;
+  const THRESHOLD = 12;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const currentY = window.scrollY;
+      if (Math.abs(currentY - lastY) > THRESHOLD) {
+        if (currentY > lastY && currentY > 80) {
+          header.classList.add('header-hidden');
+        } else {
+          header.classList.remove('header-hidden');
+        }
+        lastY = currentY;
+      }
+      ticking = false;
+    });
+  }, { passive: true });
 }
 
 // Language Switcher
