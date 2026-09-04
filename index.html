@@ -111,12 +111,12 @@
       </div>
 
       <!-- Live Clock -->
-      <div id="liveClock" class="hidden md:flex items-center text-xs px-3 py-1.5 rounded-lg bg-ocean-850 border border-ocean-700">
+      <div id="liveClock" class="hidden md:flex items-center text-xs px-3 py-1.5 rounded-lg glass-chip">
         <!-- populated by JS -->
       </div>
 
       <!-- Language Selector -->
-      <select id="langSelect" class="bg-ocean-850 border border-ocean-700 hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
+      <select id="langSelect" class="glass-chip hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
         <option value="en">English (EN)</option>
         <option value="hi">हिन्दी (Hindi)</option>
         <option value="ta">தமிழ் (Tamil)</option>
@@ -124,7 +124,7 @@
       </select>
 
       <!-- Theme Selector -->
-      <select id="themeSelect" title="Theme" class="bg-ocean-850 border border-ocean-700 hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
+      <select id="themeSelect" title="Theme" class="glass-chip hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
         <option value="night">🌙 Night</option>
         <option value="day">☀️ Day</option>
         <option value="grey">◐ Grey</option>
@@ -198,7 +198,7 @@
           </p>
 
           <div class="flex flex-wrap gap-3 pt-2">
-            <button onclick="switchTab('chat')" class="sfb-btn px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
+            <button onclick="switchTab('chat')" class="sfb-btn glow-btn px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
               <span>🤖</span> <span data-i18n="ctaStudio">Launch AI Decision Studio</span>
             </button>
             <button onclick="switchTab('map')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-white font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
@@ -379,7 +379,7 @@
 
             <input id="chatInput" type="text" data-i18n-placeholder="chatPlaceholder" placeholder="Ask ORCA (or click microphone to speak)..." class="flex-1 bg-transparent px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none font-sans">
             
-            <button id="btnSendChat" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1">
+            <button id="btnSendChat" class="glow-btn px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1">
               <span data-i18n="chatSend">Ask Agents</span> <span>➔</span>
             </button>
           </div>
@@ -391,19 +391,19 @@
           <div class="p-4 rounded-xl glass-card space-y-3">
             <h4 class="font-bold text-xs uppercase tracking-wider text-cyan-400">Live Ocean Telemetry</h4>
             <div class="space-y-2 text-xs">
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Current Sea Clearance:</span>
                 <span class="text-emerald-400 font-bold">SAFE (88/100)</span>
               </div>
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Significant Waves:</span>
                 <span id="marineWaveVal" class="text-cyan-300 font-mono font-bold">1.25 m</span>
               </div>
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Surface Wind:</span>
                 <span id="marineWindVal" class="text-slate-200 font-mono font-bold">14.2 kn</span>
               </div>
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Active Vessels:</span>
                 <span id="dagPanelVesselCount" class="text-amber-300 font-bold">35 Tracked</span>
               </div>
@@ -480,15 +480,15 @@
           <div class="space-y-3 text-xs">
             <div>
               <label class="block text-slate-400 mb-1" data-i18n="originHarbour">Origin Fishing Harbour</label>
-              <select id="routeOriginSelect" class="w-full bg-ocean-850 border border-ocean-700 rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
+              <select id="routeOriginSelect" class="w-full glass-chip rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
             </div>
 
             <div>
               <label class="block text-slate-400 mb-1" data-i18n="destinationPFZ">Destination PFZ Zone</label>
-              <select id="routePFZSelect" class="w-full bg-ocean-850 border border-ocean-700 rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
+              <select id="routePFZSelect" class="w-full glass-chip rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
             </div>
 
-            <button id="btnSimulateRoute" class="w-full py-2 bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold rounded-lg transition shadow-md" data-i18n="simulateRouteBtn">
+            <button id="btnSimulateRoute" class="glow-btn w-full py-2 bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold rounded-lg transition shadow-md" data-i18n="simulateRouteBtn">
               Simulate Safe Route & ETA
             </button>
           </div>
@@ -564,7 +564,7 @@
               <button id="btnDAGZoomReset" class="px-2.5 py-1 text-slate-400 hover:text-white text-xs border-l border-ocean-700 transition">Reset</button>
             </div>
 
-            <button id="btnRunDAGSimulation" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition">
+            <button id="btnRunDAGSimulation" class="glow-btn px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition">
               ▶ Run Live Pipeline Simulation
             </button>
           </div>
@@ -732,8 +732,8 @@
             </div>
 
             <div class="flex items-center gap-2">
-              <input id="vesselSearchInput" type="text" placeholder="Search vessel name or ID..." class="bg-ocean-850 border border-ocean-700 rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400">
-              <select id="vesselStatusFilter" class="bg-ocean-850 border border-ocean-700 rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none">
+              <input id="vesselSearchInput" type="text" placeholder="Search vessel name or ID..." class="glass-chip rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400">
+              <select id="vesselStatusFilter" class="glass-chip rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none">
                 <option value="ALL">All Statuses</option>
                 <option value="FISHING">Safe Fishing</option>
                 <option value="TRANSIT">In Transit</option>
