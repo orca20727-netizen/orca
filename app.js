@@ -930,8 +930,9 @@ function setupHeaderScrollHide() {
 function setupScrollReveal() {
   const targets = document.querySelectorAll('.reveal');
   if (!targets.length) return;
+  const revealAll = () => targets.forEach(el => el.classList.add('revealed'));
   if (!('IntersectionObserver' in window)) {
-    targets.forEach(el => el.classList.add('revealed'));
+    revealAll();
     return;
   }
   const observer = new IntersectionObserver((entries, obs) => {
@@ -943,6 +944,14 @@ function setupScrollReveal() {
     });
   }, { threshold: 0.1 });
   targets.forEach(el => observer.observe(el));
+  // Safety net: some browsers/contexts (e.g. a page that loads in a
+  // background/inactive tab) throttle or defer IntersectionObserver
+  // callbacks indefinitely. Never leave content permanently invisible --
+  // force-reveal anything still unrevealed after a short grace period.
+  setTimeout(() => {
+    revealAll();
+    observer.disconnect();
+  }, 1200);
 }
 
 // Language Switcher
