@@ -22,6 +22,7 @@ from live_data import live_data
 from data_source_registry import data_source_registry
 from alert_service import alert_service
 from geofence_alerts import GEOFENCE_WARNING_NM, geofence_alert_for
+from stats_store import stats_store
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -36,11 +37,39 @@ async def health_check():
         "problem_statement": "PS 26176 (ISRO)",
         "active_agents": 8,
         "subsystems": {
-            "groq_llm": "CONFIGURED" if os.getenv("GROQ_API_KEY") else "NOT_CONFIGURED (deterministic fallback only)",
+            "stats_engine": f"ACTIVE ({stats_store.total_reading_count()} readings recorded, no external AI)",
             "pfz_dataset": "LOADED" if not core.pfz_agent._using_fallback else "FALLBACK_SNAPSHOT",
             "fleet_dataset": "LOADED" if core.fleet_agent._load_error is None else "FALLBACK_SNAPSHOT",
             "mpa_dataset": f"LOADED ({len(core.MPAS)} zones)" if core.MPAS else "UNAVAILABLE (routing without MPA avoidance)",
             "land_mask": f"LOADED ({len(core.LAND_POLYGONS)} polygons)" if core.LAND_POLYGONS else "UNAVAILABLE (routing without land avoidance)",
+        },
+    }
+
+
+@router.get("/api/stats")
+async def get_stats():
+    """Everything this website's own persistent stats ledger has
+    accumulated so far -- the exact data backend/agents/synthesis_agent.py
+    reasons over for every advisory. No external AI/API is involved
+    anywhere in collecting this data or in answering this endpoint."""
+    tracked_metrics = (
+        ("weather", "significant_wave_height_m"),
+        ("weather", "surface_wind_knots"),
+        ("weather", "safety_score"),
+        ("satellite", "sst_celsius"),
+        ("satellite", "chlorophyll_mg_m3"),
+        ("pfz", "yield_score_pct"),
+        ("pfz", "distance_from_vessel_nm"),
+        ("fleet", "vessels_in_target_zone"),
+        ("eta", "one_way_eta_hours"),
+        ("eta", "route_distance_nm"),
+    )
+    return {
+        "total_readings_recorded": stats_store.total_reading_count(),
+        "total_queries_served": stats_store.total_query_count(),
+        "most_asked_intents": stats_store.popular_intents(),
+        "metric_trends_24h": {
+            f"{agent}.{metric}": stats_store.trend(metric, agent=agent) for agent, metric in tracked_metrics
         },
     }
 
