@@ -80,15 +80,23 @@ const state = {
   browserNotificationsEnabled: false,
   localAlertKeys: new Set(),
   map: null,
+  // Initialized as empty arrays (not null) so any render*Layer() call that
+  // races ahead of the Mappls map's async 'load' event (e.g. the route
+  // planner's setTimeout auto-run, or a telemetry refresh firing early)
+  // finds a safe, already-iterable array instead of crashing on
+  // `.push()`/`.forEach()` against null. state.map itself is what actually
+  // gates whether markers can be added (see the `if (!state.map) return;`
+  // guard at the top of each render function) -- these arrays just track
+  // what's currently drawn, so there's no reason for them to start as null.
   mapLayers: {
-    pfz: null,
-    imbl: null,
-    mpas: null,
-    harbours: null,
-    vessels: null,
-    heatmap: null,
-    route: null,
-    indiaBoundary: null
+    pfz: [],
+    imbl: [],
+    mpas: [],
+    harbours: [],
+    vessels: [],
+    heatmap: [],
+    route: [],
+    indiaBoundary: []
   },
   indiaBoundary: null,
   selectedHarbour: 'HBR-KOC',
