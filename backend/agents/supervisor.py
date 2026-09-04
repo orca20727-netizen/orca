@@ -9,13 +9,13 @@ fixed agent set regardless of what was actually asked.
 Classification is a deterministic, rule-based, multi-signal classifier
 (weighted keyword/phrase groups per intent, evaluated in a fixed priority
 order so a more specific intent -- e.g. an IMBL boundary question -- wins
-over a more generic one -- e.g. general voyage safety) -- see section 4 of
-the project brief: "Use a deterministic intent classifier first. If Groq is
-available, optionally use LLM classification as a second layer, but never
-make the system unusable without the API key." Only the deterministic
-layer is implemented for now; the synthesis agent is the one that talks to
-Groq (for language generation, not intent routing), so the system never
-depends on network/API availability just to figure out what was asked.
+over a more generic one -- e.g. general voyage safety). There is no
+external AI/LLM API anywhere in this system any more: the synthesis agent
+(backend/agents/synthesis_agent.py) that consumes this classification is
+also fully rule-based, reasoning only over this website's own live
+telemetry and its own accumulated stats ledger (backend/stats_store.py),
+so nothing here -- classification or synthesis -- ever depends on
+external network/API availability.
 """
 
 from typing import Any, Dict, List
