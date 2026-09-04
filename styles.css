@@ -437,6 +437,15 @@ body {
   .sfb-fill {
     transition-duration: 0.01ms;
   }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .float-slow,
+  .pulse-slow {
+    animation: none !important;
+  }
 }
 
 /* ============================================
@@ -518,4 +527,52 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+}
+
+/* ============================================
+   Motion (glass restyle, phase 6)
+   ============================================ */
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal.revealed {
+  animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.pulse-slow {
+  animation: pulseSlow 3s ease-in-out infinite;
 }
