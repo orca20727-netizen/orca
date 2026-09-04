@@ -26,6 +26,22 @@ const BACKEND_CONFIG = {
   wsBase: window.ORCA_WS_BASE || `${ORCA_BACKEND_WS_PROTOCOL}://${ORCA_BACKEND_HOST}:8000`
 };
 
+// Theme system: applied immediately, before DOMContentLoaded, so the page
+// never flashes the default Night theme before switching to a saved
+// preference. Must match the [data-theme="..."] blocks in styles.css;
+// setupThemeSwitcher() below only wires up the <select> to this.
+const ORCA_THEMES = ['night', 'day', 'grey', 'blue'];
+(function applyStoredThemeEarly() {
+  try {
+    const saved = localStorage.getItem('orca-theme');
+    document.documentElement.setAttribute('data-theme', ORCA_THEMES.includes(saved) ? saved : 'night');
+  } catch (err) {
+    // Storage can be unavailable (private browsing, disabled cookies) --
+    // fall back to the default theme rather than breaking startup.
+    document.documentElement.setAttribute('data-theme', 'night');
+  }
+})();
+
 // Maps the agent names the FastAPI backend sends over the websocket to the
 // DAG node ids used in the frontend (see agentsList below).
 const BACKEND_AGENT_ID_MAP = {
@@ -184,7 +200,7 @@ const translations = {
     seaState: "Douglas Sea State",
     lightningRisk: "Lightning & Squall Risk",
     vesselTableTitle: "Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)",
-    simulatedDisclaimer: "DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Smart India Hackathon 2026 judging demonstration."
+    simulatedDisclaimer: "NOTE: Live AIS vessel positions are backfilled with a clearly-tagged simulated fleet where there's no receiver coverage yet. Satellite oceanography layers remain simulated for Smart India Hackathon 2026 demonstration."
   },
   hi: {
     appTitle: "ओर्का इनसाइट (ORCA INSIGHT)",
@@ -230,7 +246,7 @@ const translations = {
     seaState: "समुद्र की स्थिति (डगलस)",
     lightningRisk: "बिजली और तूफान का जोखिम",
     vesselTableTitle: "लाइव तटीय बेड़ा टेलीमेट्री (लाइव एआईएस + सिम्युलेटेड)",
-    simulatedDisclaimer: "अस्वीकरण: उपग्रह डेटा और नाव की स्थितियां एसआईएच 2026 के लिए सिम्युलेटेड हैं।"
+    simulatedDisclaimer: "नोट: जिन क्षेत्रों में अभी रिसीवर कवरेज नहीं है, वहाँ लाइव एआईएस नाव स्थितियों को स्पष्ट रूप से चिह्नित सिम्युलेटेड बेड़े से पूरा किया जाता है। उपग्रह समुद्र विज्ञान डेटा एसआईएच 2026 प्रदर्शन के लिए सिम्युलेटेड है।"
   },
   ta: {
     appTitle: "ஆர்கா இன்சைட் (ORCA INSIGHT)",
@@ -276,7 +292,7 @@ const translations = {
     seaState: "கடல் நிலை",
     lightningRisk: "மின்னல் மற்றும் புயல் ஆபத்து",
     vesselTableTitle: "நேரடி படகு தொலைத்தொடர்பு தரவு",
-    simulatedDisclaimer: "குறிப்பு: செயற்கைக்கோள் மற்றும் படகு தரவுகள் SIH 2026 மாதிரி நோக்கத்திற்காக உருவாக்கப்பட்டது."
+    simulatedDisclaimer: "குறிப்பு: வரவேற்பி (receiver) கவரேஜ் இல்லாத பகுதிகளில் லைவ் AIS படகு நிலைகள், தெளிவாகக் குறிக்கப்பட்ட சிமுலேட்டட் கடற்படையால் நிரப்பப்படுகின்றன. செயற்கைக்கோள் கடல் தரவு SIH 2026 விளக்கக்காட்சிக்காக சிமுலேட் செய்யப்பட்டதாகவே உள்ளது."
   },
   ml: {
     appTitle: "ഓർക്ക ഇൻസൈറ്റ് (ORCA INSIGHT)",
@@ -322,7 +338,7 @@ const translations = {
     seaState: "കടൽ അവസ്ഥ",
     lightningRisk: "മിന്നൽ സാധ്യത",
     vesselTableTitle: "തത്സമയ ബോട്ട് വിവരങ്ങൾ (AIS)",
-    simulatedDisclaimer: "ശ്രദ്ധിക്കുക: ഉപഗ്രഹ-ബോട്ട് വിവരങ്ങൾ SIH 2026 അവതരണത്തിനായി സിമുലേറ്റ് ചെയ്തതാണ്."
+    simulatedDisclaimer: "ശ്രദ്ധിക്കുക: നിലവിൽ റിസീവർ കവറേജ് ഇല്ലാത്ത സ്ഥലങ്ങളിൽ ലൈവ് AIS ബോട്ട് സ്ഥാനങ്ങൾ, വ്യക്തമായി അടയാളപ്പെടുത്തിയ സിമുലേറ്റഡ് കപ്പലുകൾ ഉപയോഗിച്ച് പൂരിപ്പിക്കുന്നു. ഉപഗ്രഹ സമുദ്ര വിവരങ്ങൾ SIH 2026 അവതരണത്തിനായി സിമുലേറ്റ് ചെയ്തതു തന്നെയാണ്."
   }
 };
 
@@ -430,6 +446,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   runStartupStep('setupNavigation', setupNavigation);
   runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
+  runStartupStep('setupThemeSwitcher', setupThemeSwitcher);
   runStartupStep('setupMap', setupMap);
   runStartupStep('setupChatbot', setupChatbot);
   runStartupStep('setupSpeechRecognition', setupSpeechRecognition);
@@ -524,6 +541,7 @@ async function refreshExternalTelemetry() {
     renderVesselsOnMap();
     renderVesselsTable();
     renderFleetDistributionChart();
+    updateImblAlertBox();
   } catch (err) {
     console.warn('External telemetry refresh unavailable; retaining last known data.', err);
   }
@@ -568,6 +586,50 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
     }
   }
   el.textContent = '⚠ ' + detail;
+}
+
+// Populates the home tab's IMBL Border Proximity Alert card from real
+// vessel telemetry instead of a fixed, hardcoded example vessel/distance.
+// Shows the closest tracked vessel to the India-Sri Lanka maritime boundary
+// when one is inside the warning distance, and an honest "no alerts"
+// message otherwise -- it never fabricates a vessel or distance that isn't
+// actually in state.vessels.
+const IMBL_WARNING_DISTANCE_NM = 10;
+function updateImblAlertBox() {
+  const box = document.getElementById('imblAlertBox');
+  if (!box) return;
+  const card = document.getElementById('imblAlertCard');
+  const dot = document.getElementById('imblAlertDot');
+
+  const candidates = state.vessels.filter(v => typeof v.imbl_dist_nm === 'number');
+  const closest = candidates.length
+    ? candidates.reduce((a, b) => (b.imbl_dist_nm < a.imbl_dist_nm ? b : a))
+    : null;
+  const isAlert = !!(closest && closest.imbl_dist_nm <= IMBL_WARNING_DISTANCE_NM);
+
+  if (card) {
+    card.classList.toggle('bg-red-950/40', isAlert);
+    card.classList.toggle('border-red-500/50', isAlert);
+    card.classList.toggle('bg-emerald-950/30', !isAlert);
+    card.classList.toggle('border-emerald-600/30', !isAlert);
+  }
+  if (dot) {
+    dot.classList.toggle('bg-red-500', isAlert);
+    dot.classList.toggle('animate-ping', isAlert);
+    dot.classList.toggle('bg-emerald-500', !isAlert);
+  }
+
+  if (isAlert) {
+    const simTag = closest.is_simulated ? ' (simulated)' : '';
+    box.className = 'text-xs text-red-200 leading-relaxed';
+    box.innerHTML = `<strong>${closest.id} (${closest.name})</strong> is operating at <strong>${closest.imbl_dist_nm} NM</strong> from the India–Sri Lanka IMBL${simTag}. Automated warning dispatched.`;
+  } else if (closest) {
+    box.className = 'text-xs text-emerald-200 leading-relaxed';
+    box.innerHTML = `No vessels currently within the ${IMBL_WARNING_DISTANCE_NM} NM IMBL warning distance. Nearest tracked vessel: <strong>${closest.imbl_dist_nm} NM</strong> away.`;
+  } else {
+    box.className = 'text-xs text-slate-400 leading-relaxed';
+    box.innerHTML = 'No vessel telemetry available yet.';
+  }
 }
 
 // Live Open-Meteo Marine API Integration
@@ -785,6 +847,32 @@ function setupLanguageSwitcher() {
     state.currentLang = e.target.value;
     state.languageOverride = true;
     applyLanguage(state.currentLang);
+  });
+}
+
+// Theme Switcher (Night/Day/Grey/Blue) -- purely presentational: swaps a
+// data-theme attribute that styles.css keys off of, so none of the data
+// fetching or rendering logic in this file is touched by a theme change.
+function setupThemeSwitcher() {
+  const themeSelect = document.getElementById('themeSelect');
+  if (!themeSelect) return;
+
+  themeSelect.value = document.documentElement.getAttribute('data-theme') || 'night';
+
+  themeSelect.addEventListener('change', (e) => {
+    const theme = ORCA_THEMES.includes(e.target.value) ? e.target.value : 'night';
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('orca-theme', theme);
+    } catch (err) {
+      console.warn('ORCA INSIGHT: could not persist theme preference:', err);
+    }
+    // Leaflet renders its tile/popup panes with color values it read at
+    // creation time; nudge a resize so open popups and the base layer
+    // repaint with the new theme's colors.
+    if (state.map) {
+      setTimeout(() => state.map.invalidateSize(), 50);
+    }
   });
 }
 
