@@ -7,15 +7,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    volumes:
+      # Persists the site's own stats ledger (backend/stats_store.py)
+      # across container restarts in local dev, the same way the Railway
+      # volume does in production.
+      - orca_stats_data:/app/backend/data
     environment:
       # docker compose substitutes these from a .env file in this same
       # directory (copy .env.example -> .env) or from the host shell's
       # environment; the :- defaults below mean it also runs correctly
       # with no .env file present at all. No secrets are baked into the
       # image itself -- everything here is passed in at container start.
-      - GROQ_API_KEY=${GROQ_API_KEY:-}
-      - GROQ_MODEL=${GROQ_MODEL:-llama-3.3-70b-versatile}
-      - GROQ_TIMEOUT_SEC=${GROQ_TIMEOUT_SEC:-8}
+      # There is no external AI/LLM call anywhere in this system -- the
+      # advisory engine is rule-based, reasoning over this website's own
+      # accumulated stats ledger (see backend/stats_store.py).
+      - ORCA_STATS_DB_PATH=${ORCA_STATS_DB_PATH:-/app/backend/data/orca_stats.db}
       - BACKEND_HOST=0.0.0.0
       - BACKEND_PORT=8000
       # "*" here is fine for local/LAN demo use (no auth/cookies on any
@@ -49,3 +55,6 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+
+volumes:
+  orca_stats_data:
