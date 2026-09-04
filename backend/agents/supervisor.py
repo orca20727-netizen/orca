@@ -1,7 +1,7 @@
 """
 Master Supervisor / DAG Planner.
 
-Classifies a natural-language voyage query into one of eight intents and
+Classifies a natural-language voyage query into one of ten intents and
 dynamically selects which downstream agents are relevant to it, instead of
 always running (and always synthesizing an answer from) the exact same
 fixed agent set regardless of what was actually asked.
@@ -53,6 +53,20 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "is the sea safe", "rough sea", "cyclone", "rain",
         "tide", "tidal", "high tide", "low tide", "lightning", "thunderstorm",
     ],
+    # Evidence-based diagnostics -- "why is this zone underperforming" --
+    # checked before the generic PFZ_RECOMMENDATION ("which zone should I
+    # fish") so a decline/diagnostic question gets a trend-comparison
+    # answer instead of a plain recommendation.
+    "YIELD_TREND_ANALYSIS": [
+        "declined", "decline", "productivity", "gone down", "dropped",
+        "why has", "why is the catch", "catch is down", "less fish",
+        "fewer fish", "yield has fallen", "why has fish", "falling catch",
+    ],
+    "OCEAN_CONDITIONS": [
+        "chlorophyll", "sea surface temperature", "thermal front",
+        "ocean colour", "ocean color", "phytoplankton", "algal bloom",
+        "favorable sea surface", "sst",
+    ],
     "PFZ_RECOMMENDATION": [
         "pfz", "fishing zone", "best zone", "which zone", "where should i fish",
         "fishing ground", "predicted yield", "which fishing",
@@ -65,6 +79,11 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "ETA_RETURN": ["वापस", "कितना समय", "सूर्यास्त"],
         "FLEET_DENSITY": ["कितनी नाव", "नावों", "भीड़"],
         "WEATHER_SAFETY": ["मौसम", "लहर", "हवा", "तूफान", "चक्रवात", "ज्वार", "बिजली"],
+        # Best-effort keyword coverage (not professionally reviewed
+        # translations), matching the style of the other language blocks
+        # in this file.
+        "YIELD_TREND_ANALYSIS": ["उत्पादकता", "घट गई", "कम मछली", "पकड़ कम"],
+        "OCEAN_CONDITIONS": ["क्लोरोफिल", "सतह का तापमान", "समुद्र का तापमान"],
         "PFZ_RECOMMENDATION": ["मछली पकड़ने का क्षेत्र", "पीएफजेड", "सबसे अच्छा क्षेत्र"],
     },
     "ta": {
@@ -74,6 +93,8 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "ETA_RETURN": ["திரும்ப", "எவ்வளவு நேரம்", "சூரிய அஸ்தமனம்"],
         "FLEET_DENSITY": ["எத்தனை படகுகள்", "படகுகள்", "நெரிசல்"],
         "WEATHER_SAFETY": ["வானிலை", "அலை", "காற்று", "புயல்", "சூறாவளி", "ஓதம்", "மின்னல்"],
+        "YIELD_TREND_ANALYSIS": ["உற்பத்தி குறைந்தது", "மீன் குறைவு", "ஏன் குறைந்தது"],
+        "OCEAN_CONDITIONS": ["குளோரோபில்", "கடல் மேற்பரப்பு வெப்பநிலை"],
         "PFZ_RECOMMENDATION": ["மீன்பிடி பகுதி", "பிஎப்இசட்", "சிறந்த பகுதி"],
     },
     "ml": {
@@ -83,6 +104,8 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "ETA_RETURN": ["തിരികെ", "എത്ര സമയം", "സൂര്യാസ്തമയം"],
         "FLEET_DENSITY": ["എത്ര ബോട്ടുകൾ", "ബോട്ടുകൾ", "തിരക്ക്"],
         "WEATHER_SAFETY": ["കാലാവസ്ഥ", "തിര", "കാറ്റ്", "കൊടുങ്കാറ്റ്", "വേലിയേറ്റം", "ഇടിമിന്നൽ"],
+        "YIELD_TREND_ANALYSIS": ["ഉൽപാദനക്ഷമത കുറഞ്ഞു", "മീൻ കുറവ്"],
+        "OCEAN_CONDITIONS": ["ക്ലോറോഫിൽ", "സമുദ്രോപരിതല താപനില"],
         "PFZ_RECOMMENDATION": ["മത്സ്യബന്ധന മേഖല", "പി എഫ് ഇസഡ്", "മികച്ച മേഖല"],
     },
 }
@@ -101,6 +124,8 @@ INTENT_RELEVANT_AGENTS: Dict[str, List[str]] = {
     "FLEET_DENSITY": ["fleet"],
     "ROUTE_PLANNING": ["eta", "geofence", "weather"],
     "ETA_RETURN": ["eta", "weather"],
+    "YIELD_TREND_ANALYSIS": ["satellite", "pfz", "weather"],
+    "OCEAN_CONDITIONS": ["satellite", "pfz"],
     "GENERAL_VOYAGE_SAFETY": ["weather", "pfz", "fleet", "eta"],
 }
 
@@ -122,7 +147,7 @@ _SUBTASK_LIBRARY = {
 
 def classify_intent(query: str, language_code: str = "en") -> str:
     """Deterministic, rule-based intent classification. Returns one of the
-    eight supported intents; never raises, never requires network access."""
+    ten supported intents; never raises, never requires network access."""
     q = query.lower()
     signals_by_intent = INTENT_SIGNALS_BY_LANG.get(language_code, INTENT_SIGNALS_BY_LANG["en"])
     for intent in INTENT_SIGNALS_BY_LANG["en"]:
