@@ -1702,32 +1702,43 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
   }
 
   if (state.map) {
-    // Draw EXACTLY the waypoints the backend A* router returned -- the
-    // frontend never invents its own waypoints.
-    const paths = route.waypoints.map(p => ({ lat: p.lat, lng: p.lon }));
+    try {
+      // Draw EXACTLY the waypoints the backend A* router returned -- the
+      // frontend never invents its own waypoints.
+      const paths = route.waypoints.map(p => ({ lat: p.lat, lng: p.lon }));
 
-    const detourNote = route.detour_percent > 1
-      ? ` · Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
-      : '';
+      const detourNote = route.detour_percent > 1
+        ? ` · Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
+        : '';
 
-    const routePopupHtml = `
-      <div class="p-1 text-xs">
-        <span class="font-bold text-cyan-400">Sea-Only A* Route (Land + MPA Avoidance)</span><br/>
-        <span>${harbour.name} ➔ ${pfz.name}</span><br/>
-        <span>Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> · ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}</span>
-      </div>
-    `;
+      const routePopupHtml = `
+        <div class="p-1 text-xs">
+          <span class="font-bold text-cyan-400">Sea-Only A* Route (Land + MPA Avoidance)</span><br/>
+          <span>${harbour.name} ➔ ${pfz.name}</span><br/>
+          <span>Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> · ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}</span>
+        </div>
+      `;
 
-    const routeLine = new mappls.Polyline({
-      map: state.map,
-      paths,
-      strokeColor: '#06b6d4',
-      strokeWeight: 3.5,
-      strokeOpacity: 0.9,
-      popupHtml: routePopupHtml,
-      popupOptions: true
-    });
-    state.mapLayers.route.push(routeLine);
+      const routeLine = new mappls.Polyline({
+        map: state.map,
+        paths,
+        strokeColor: '#06b6d4',
+        strokeWeight: 3.5,
+        strokeOpacity: 0.9,
+        popupHtml: routePopupHtml,
+        popupOptions: true
+      });
+      if (!Array.isArray(state.mapLayers.route)) state.mapLayers.route = [];
+      state.mapLayers.route.push(routeLine);
+    } catch (err) {
+      // The Mappls SDK can still be settling its internal canvas/layer
+      // state a moment after its own 'load' event fires -- most visible
+      // on the very first auto-render, ~400ms after page load. Never let
+      // that surface as an unhandled promise rejection; the next route
+      // recalculation (harbour/PFZ change, "Simulate Route" click) draws
+      // the polyline normally once the SDK has settled.
+      console.warn('Route polyline draw skipped (map still initializing):', err.message || err);
+    }
   }
 }
 
