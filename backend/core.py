@@ -26,6 +26,7 @@ from constants import DEFAULT_HARBOUR_ID, DEFAULT_PFZ_ID
 from language import detect_query_language
 from session_store import session_store
 from data_source_registry import data_source_registry
+from stats_store import stats_store
 
 logger = logging.getLogger(__name__)
 
@@ -80,12 +81,6 @@ PFZ_ZONES = _load_pfz_zones()
 MPAS = _load_mpas()
 LAND_POLYGONS = _load_land_polygons()
 
-# A single shared RoutePlanner instance, loaded once from the same MPA and
-# land-mask data used everywhere else. Both the ETA agent (used by the
-# /api/advisory/synthesize pipeline) and the standalone /api/route endpoint
-# are handed this exact instance, so the frontend and the advisory pipeline
-# can never disagree about a route -- there is only one routing engine and
-# one copy of the underlying geography.
 # A single shared RoutePlanner instance, loaded once from the same MPA and
 # land-mask data used everywhere else. Both the ETA agent (used by the
 # /api/advisory/synthesize pipeline) and the standalone /api/route endpoint
@@ -222,6 +217,25 @@ async def run_pipeline(query: str, origin_harbour: str, target_pfz: str, respons
     })
     sat_data, weather_data, pfz_data = results["satellite"], results["weather"], results["pfz"]
     geo_data, fleet_data, eta_data = results["geofence"], results["fleet"], results["eta"]
+
+    # Record every completed (non-skipped, non-degraded) agent reading into
+    # the site's own persistent stats ledger. This is the "continuously
+    # stored" historical data backend/agents/synthesis_agent.py's trend
+    # clauses compare each new live reading against -- there is no external
+    # AI/API involved anywhere in this pipeline, only this website's own
+    # accumulated numbers.
+    def _record(agent_key: str, data: Dict[str, Any], numeric_fields: Tuple[str, ...]) -> None:
+        if data.get("status") in ("SKIPPED", "DEGRADED_AGENT_FAILURE"):
+            return
+        metrics = {field: data.get(field) for field in numeric_fields if isinstance(data.get(field), (int, float))}
+        if metrics:
+            stats_store.record_reading(agent_key, target_pfz, metrics)
+
+    _record("weather", weather_data, ("significant_wave_height_m", "surface_wind_knots", "safety_score"))
+    _record("satellite", sat_data, ("sst_celsius", "chlorophyll_mg_m3"))
+    _record("pfz", pfz_data, ("yield_score_pct", "distance_from_vessel_nm"))
+    _record("fleet", fleet_data, ("vessels_in_target_zone",))
+    _record("eta", eta_data, ("one_way_eta_hours", "route_distance_nm"))
 
     return {
         "plan": plan,
