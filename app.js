@@ -417,9 +417,9 @@ const agentsList = [
   },
   {
     id: "synthesis_agent",
-    name: "Neural Synthesis Agent (LLM)",
-    role: "Aggregates multi-agent telemetry into an authoritative, grounded natural-language advisory with citation tags and TTS.",
-    sensors: ["Groq Llama-3 / Grounded Neural Engine", "Web Speech Synthesizer"],
+    name: "Neural Synthesis Agent (Stats-Driven)",
+    role: "Aggregates multi-agent telemetry into an authoritative, grounded natural-language advisory with citation tags and TTS -- entirely rule-based, reasoning over this site's own live telemetry and its own accumulated stats ledger. No external AI/LLM API is used.",
+    sensors: ["ORCA Stats Reasoning Engine (Rule-Based)", "Web Speech Synthesizer"],
     latency: "52ms",
     status: "idle",
     sampleOutput: { advisory_generated: true, confidence_pct: 96, citations: ["Oceansat-3 OCM-3", "INSAT-3DR", "INCOIS PFZ-01", "Coast Guard VTS"], tts_ready: true }
