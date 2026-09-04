@@ -168,6 +168,11 @@ async def run_pipeline(query: str, origin_harbour: str, target_pfz: str, respons
     origin_harbour, target_pfz = context["origin_harbour"], context["target_pfz"]
     origin_lat, origin_lon = harbour_coords(origin_harbour)
     dest_lat, dest_lon = pfz_coords(target_pfz)
+    # The actual zone this request is about -- used so satellite/weather
+    # readings and the Synthesis Agent's location label reflect the
+    # requested/resolved target zone, not always the fixed origin harbour.
+    target_zone_meta = PFZ_ZONES.get(target_pfz) or {}
+    target_pfz_label = f"{target_pfz} ({target_zone_meta['name']})" if target_zone_meta.get("name") else target_pfz
 
     language = detect_query_language(query)
     if response_language:
@@ -184,8 +189,15 @@ async def run_pipeline(query: str, origin_harbour: str, target_pfz: str, respons
     results: Dict[str, Dict[str, Any]] = {key: _skipped_agent("Not invoked for this query — intent did not require it") for key in _AGENT_KEYS}
 
     calls = {
-        "satellite": lambda: safe_call("Satellite Oceanography", lambda: satellite_agent.fetch_oceanography(lat=origin_lat, lon=origin_lon)),
-        "weather": lambda: safe_call("Weather & Hazard", lambda: weather_agent.evaluate_hazard(lat=origin_lat, lon=origin_lon)),
+        # Satellite/weather are evaluated at the resolved TARGET zone's
+        # coordinates (dest_lat/dest_lon), not the origin harbour -- a
+        # question about a specific PFZ zone's conditions must actually
+        # reflect that zone, not wherever the vessel happens to depart
+        # from. `region` is passed explicitly so the label matches the
+        # coordinates actually queried instead of the satellite agent's
+        # own hardcoded default.
+        "satellite": lambda: safe_call("Satellite Oceanography", lambda: satellite_agent.fetch_oceanography(region=target_zone_meta.get("region", target_pfz), lat=dest_lat, lon=dest_lon)),
+        "weather": lambda: safe_call("Weather & Hazard", lambda: weather_agent.evaluate_hazard(lat=dest_lat, lon=dest_lon)),
         "pfz": lambda: safe_call("Ocean Analytics PFZ", lambda: pfz_agent.rank_pfz_zones(vessel_lat=origin_lat, vessel_lon=origin_lon)),
         "geofence": lambda: safe_call("Geofencing & Routing", lambda: geofence_agent.check_geofences(lat=dest_lat, lon=dest_lon)),
         "fleet": lambda: safe_call("Fleet & Traffic", lambda: fleet_agent.analyze_fleet(pfz_id=target_pfz)),
@@ -261,6 +273,8 @@ async def run_pipeline(query: str, origin_harbour: str, target_pfz: str, respons
         "query": query,
         "language": language,
         "active_alerts": active_alerts,
+        "target_pfz_label": target_pfz_label,
+        "target_pfz_id": target_pfz,
         "conversation_context": {"session_id": session_id, "history": context["history"], "carried_forward": context["carried_forward"], "resolved_origin_harbour": origin_harbour, "resolved_target_pfz": target_pfz},
         "source_provenance": {
             "ocean": {"tier": sat_data.get("source_tier"), "data_source": sat_data.get("data_source"), "registry": data_source_registry.for_dataset("ocean_sst_weather")},
