@@ -82,6 +82,7 @@ was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
 
 <!-- Custom Styles -->
 <link rel="stylesheet" href="styles.css">
+  <script src="beyond-horizon-bg.js"></script>
 
 <!-- Wave Grid background: make sure the ambient layer always fills the
      viewport and sits behind everything, however styles.css already
@@ -94,7 +95,7 @@ was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
     overflow: hidden;
     pointer-events: none;
   }
-  #waveGridBg {
+  #beyondHorizonHost {
     width: 100%;
     height: 100%;
   }
@@ -102,11 +103,11 @@ was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
 </head>
 <body class="bg-ocean-950 text-slate-100 flex flex-col min-h-screen">
 
-<!-- Ambient background: interactive Wave Grid (WebGL), fixed behind all
-content (z-index: -1). The inner div overrides pointer-events so the
-ripple effect responds to mouse/touch. -->
+<!-- Ambient background: BeyondHorizon WebGL sunrise glow, fixed behind all
+content (z-index: -1). pointer-events:auto on the inner div only, so the
+hover/parallax reacts to the mouse without blocking clicks on the UI above it. -->
 <div class="ambient-bg" aria-hidden="true">
-  <div id="beyondHorizonHost" class="ambient-webgl"></div>
+<div id="beyondHorizonHost" style="position:absolute; inset:0; pointer-events:auto;"></div>
 </div>
 
 <!-- TOP HEADER -->
@@ -916,23 +917,18 @@ DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Sm
 <script src="config.js"></script>
 <script src="app.js"></script>
 
-<!-- Wave Grid ambient background -->
-<script type="module">
-  import { createWaveGrid } from "./wavegrid.js";
-
-  const bg = document.getElementById("waveGridBg");
-  if (bg) {
-    createWaveGrid(bg, {
-      base: "#04101c",
-      crest: "#22d3ee",
-      grid: 16,
-      gap: 3,
-      amplitude: 12,
-      waveSpeed: 5,
-      trail: 10,
-      tilt: 5,
-      shadows: false,
-      sizePercent: 220,
+<!-- BeyondHorizon ambient background -->
+<script>
+  const bhHost = document.getElementById("beyondHorizonHost");
+  if (bhHost && window.BeyondHorizon) {
+    window.BeyondHorizon.mount(bhHost, {
+      background: "#04101c",   // matches your old wavegrid "base" color
+      midColor: "#22d3ee",     // matches your old wavegrid "crest" color
+      deepColor: "#0b2a3f",
+      brightness: 2,
+      haze: 3,
+      speed: 1,
+      fit: 50
     });
   }
 </script>
