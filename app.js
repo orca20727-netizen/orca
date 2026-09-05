@@ -26,42 +26,6 @@ const BACKEND_CONFIG = {
   wsBase: window.ORCA_WS_BASE || `${ORCA_BACKEND_WS_PROTOCOL}://${ORCA_BACKEND_HOST}:8000`
 };
 
-// Theme system: applied immediately, before DOMContentLoaded, so the page
-// never flashes the default Night theme before switching to a saved
-// preference. Must match the [data-theme="..."] blocks in styles.css;
-// setupThemeSwitcher() below only wires up the <select> to this.
-const ORCA_THEMES = ['night', 'day', 'grey', 'blue'];
-(function applyStoredThemeEarly() {
-  try {
-    const saved = localStorage.getItem('orca-theme');
-    document.documentElement.setAttribute('data-theme', ORCA_THEMES.includes(saved) ? saved : 'night');
-  } catch (err) {
-    // Storage can be unavailable (private browsing, disabled cookies) --
-    // fall back to the default theme rather than breaking startup.
-    document.documentElement.setAttribute('data-theme', 'night');
-  }
-})();
-
-// The Mappls Maps SDK's overlay registry can still be finishing its own
-// internal setup a moment after the SDK fires the map's 'load' event --
-// most visible on the very first route-polyline auto-render, ~400ms after
-// page load. When that happens, the SDK's own lazily-loaded internal
-// module throws asynchronously, outside of any promise this app awaits,
-// so no local try/catch around the calling code can catch it. Recognise
-// this one narrow, well-understood SDK timing signature and log it
-// quietly instead of letting it surface as an unhandled top-level error;
-// it is harmless and self-recovers -- every subsequent route
-// recalculation (harbour/PFZ change, "Simulate Route" click) draws
-// correctly once the SDK has finished settling. Anything else is left
-// alone and still surfaces normally.
-window.addEventListener('unhandledrejection', (event) => {
-  const msg = event.reason && event.reason.message;
-  if (msg === "Cannot read properties of null (reading 'push')") {
-    event.preventDefault();
-    console.warn('Mappls SDK internal timing notice (harmless, self-recovers):', msg);
-  }
-});
-
 // Maps the agent names the FastAPI backend sends over the websocket to the
 // DAG node ids used in the frontend (see agentsList below).
 const BACKEND_AGENT_ID_MAP = {
@@ -86,8 +50,6 @@ const state = {
   // as if they were real vessels. It stays empty until the backend receives
   // a valid AIS/GPS snapshot.
   usesLiveVessels: true,
-  liveVesselCount: 0,
-  simulatedVesselCount: 0,
   latestChatQuery: "Is it safe to sail to PFZ-01 from Kochi today?",
   satellites: [],
   pfzZones: [],
@@ -100,25 +62,15 @@ const state = {
   browserNotificationsEnabled: false,
   localAlertKeys: new Set(),
   map: null,
-  // Initialized as empty arrays (not null) so any render*Layer() call that
-  // races ahead of the Mappls map's async 'load' event (e.g. the route
-  // planner's setTimeout auto-run, or a telemetry refresh firing early)
-  // finds a safe, already-iterable array instead of crashing on
-  // `.push()`/`.forEach()` against null. state.map itself is what actually
-  // gates whether markers can be added (see the `if (!state.map) return;`
-  // guard at the top of each render function) -- these arrays just track
-  // what's currently drawn, so there's no reason for them to start as null.
   mapLayers: {
-    pfz: [],
-    imbl: [],
-    mpas: [],
-    harbours: [],
-    vessels: [],
-    heatmap: [],
-    route: [],
-    indiaBoundary: []
+    pfz: null,
+    imbl: null,
+    mpas: null,
+    harbours: null,
+    vessels: null,
+    heatmap: null,
+    route: null
   },
-  indiaBoundary: null,
   selectedHarbour: 'HBR-KOC',
   selectedPFZ: 'PFZ-01',
   activeVesselMarkers: {},
@@ -133,25 +85,13 @@ const state = {
   sosActive: false,
   
   // Real Marine Telemetry from Open-Meteo
-    liveMarine: {
-    waveHeight: 1.25,
-    windSpeed: 14.2,
-    seaState: 3,
-    lightningRisk: 8,
+  liveMarine: {
+    waveHeight: null,
+    windSpeed: null,
+    seaState: null,
+    lightningRisk: null,
     isLiveFeed: false,
     lastFetchTime: null
-  },
-
-  // Real past-24h hourly history for the Safety Barometer sparklines,
-  // seeded from Open-Meteo's own historical hourly data (see
-  // fetchSafetyTrendHistory). Left empty until that fetch succeeds; the
-  // sparklines fall back to the live reading alone rather than inventing
-  // history when it hasn't loaded yet.
-  safetyTrend: {
-    wave: [],
-    wind: [],
-    sea: [],
-    lightning: []
   },
 
   // Voice Recognition (STT)
@@ -227,8 +167,8 @@ const translations = {
     windSpeed: "Surface Wind Speed",
     seaState: "Douglas Sea State",
     lightningRisk: "Lightning & Squall Risk",
-    vesselTableTitle: "Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)",
-    simulatedDisclaimer: "NOTE: Live AIS vessel positions are backfilled with a clearly-tagged simulated fleet where there's no receiver coverage yet. Satellite oceanography layers remain simulated for Smart India Hackathon 2026 demonstration."
+    vesselTableTitle: "Live Coastal Fleet Telemetry (Simulated AIS)",
+    simulatedDisclaimer: "DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Smart India Hackathon 2026 judging demonstration."
   },
   hi: {
     appTitle: "ओर्का इनसाइट (ORCA INSIGHT)",
@@ -273,8 +213,8 @@ const translations = {
     windSpeed: "हवा की गति",
     seaState: "समुद्र की स्थिति (डगलस)",
     lightningRisk: "बिजली और तूफान का जोखिम",
-    vesselTableTitle: "लाइव तटीय बेड़ा टेलीमेट्री (लाइव एआईएस + सिम्युलेटेड)",
-    simulatedDisclaimer: "नोट: जिन क्षेत्रों में अभी रिसीवर कवरेज नहीं है, वहाँ लाइव एआईएस नाव स्थितियों को स्पष्ट रूप से चिह्नित सिम्युलेटेड बेड़े से पूरा किया जाता है। उपग्रह समुद्र विज्ञान डेटा एसआईएच 2026 प्रदर्शन के लिए सिम्युलेटेड है।"
+    vesselTableTitle: "लाइव तटीय बेड़ा टेलीमेट्री (सिम्युलेटेड एआईएस)",
+    simulatedDisclaimer: "अस्वीकरण: उपग्रह डेटा और नाव की स्थितियां एसआईएच 2026 के लिए सिम्युलेटेड हैं।"
   },
   ta: {
     appTitle: "ஆர்கா இன்சைட் (ORCA INSIGHT)",
@@ -320,7 +260,7 @@ const translations = {
     seaState: "கடல் நிலை",
     lightningRisk: "மின்னல் மற்றும் புயல் ஆபத்து",
     vesselTableTitle: "நேரடி படகு தொலைத்தொடர்பு தரவு",
-    simulatedDisclaimer: "குறிப்பு: வரவேற்பி (receiver) கவரேஜ் இல்லாத பகுதிகளில் லைவ் AIS படகு நிலைகள், தெளிவாகக் குறிக்கப்பட்ட சிமுலேட்டட் கடற்படையால் நிரப்பப்படுகின்றன. செயற்கைக்கோள் கடல் தரவு SIH 2026 விளக்கக்காட்சிக்காக சிமுலேட் செய்யப்பட்டதாகவே உள்ளது."
+    simulatedDisclaimer: "குறிப்பு: செயற்கைக்கோள் மற்றும் படகு தரவுகள் SIH 2026 மாதிரி நோக்கத்திற்காக உருவாக்கப்பட்டது."
   },
   ml: {
     appTitle: "ഓർക്ക ഇൻസൈറ്റ് (ORCA INSIGHT)",
@@ -366,9 +306,21 @@ const translations = {
     seaState: "കടൽ അവസ്ഥ",
     lightningRisk: "മിന്നൽ സാധ്യത",
     vesselTableTitle: "തത്സമയ ബോട്ട് വിവരങ്ങൾ (AIS)",
-    simulatedDisclaimer: "ശ്രദ്ധിക്കുക: നിലവിൽ റിസീവർ കവറേജ് ഇല്ലാത്ത സ്ഥലങ്ങളിൽ ലൈവ് AIS ബോട്ട് സ്ഥാനങ്ങൾ, വ്യക്തമായി അടയാളപ്പെടുത്തിയ സിമുലേറ്റഡ് കപ്പലുകൾ ഉപയോഗിച്ച് പൂരിപ്പിക്കുന്നു. ഉപഗ്രഹ സമുദ്ര വിവരങ്ങൾ SIH 2026 അവതരണത്തിനായി സിമുലേറ്റ് ചെയ്തതു തന്നെയാണ്."
+    simulatedDisclaimer: "ശ്രദ്ധിക്കുക: ഉപഗ്രഹ-ബോട്ട് വിവരങ്ങൾ SIH 2026 അവതരണത്തിനായി സിമുലേറ്റ് ചെയ്തതാണ്."
   }
 };
+
+// Additional Indian regional languages requested by the problem statement.
+// Missing specialist terms deliberately fall back to English rather than
+// showing a broken/blank interface.
+Object.assign(translations, {
+  te: { appTitle: 'ఓర్కా ఇన్‌సైట్', navHome: 'హోమ్', navChat: 'ఏఐ నిర్ణయ కేంద్రం', navMap: 'జీఐఎస్ కమాండ్ మ్యాప్', navDAG: 'ఏజెంట్ డీఏజీ', navSafety: 'భద్రతా సూచిక', navFleet: 'నౌకా పర్యవేక్షణ', navNavic: 'నావిక్ జీపీఎస్', navBulletins: 'సలహా ప్రకటనలు', ctaStudio: 'ఏఐ నిర్ణయ కేంద్రం తెరవండి', ctaMap: 'జీఐఎస్ మ్యాప్ తెరవండి', ctaFleet: 'నౌకలను చూడండి', sosButton: 'అత్యవసర SOS', chatSend: 'ఏజెంట్లను అడగండి' },
+  kn: { appTitle: 'ಓರ್ಕಾ ಇನ್‌ಸೈಟ್', navHome: 'ಮುಖಪುಟ', navChat: 'ಎಐ ನಿರ್ಧಾರ ಕೇಂದ್ರ', navMap: 'ಜಿಐಎಸ್ ಕಮಾಂಡ್ ಮ್ಯಾಪ್', navDAG: 'ಏಜೆಂಟ್ ಡಿಎಜಿ', navSafety: 'ಸುರಕ್ಷತಾ ಮಾಪಕ', navFleet: 'ನೌಕಾ ಮೇಲ್ವಿಚಾರಣೆ', navNavic: 'ನಾವಿಕ್ ಜಿಪಿಎಸ್', navBulletins: 'ಸಲಹಾ ಪ್ರಕಟಣೆಗಳು', ctaStudio: 'ಎಐ ನಿರ್ಧಾರ ಕೇಂದ್ರ ತೆರೆಯಿರಿ', ctaMap: 'ಜಿಐಎಸ್ ಮ್ಯಾಪ್ ತೆರೆಯಿರಿ', ctaFleet: 'ನೌಕೆಗಳನ್ನು ನೋಡಿ', sosButton: 'ತುರ್ತು SOS', chatSend: 'ಏಜೆಂಟ್‌ಗಳನ್ನು ಕೇಳಿ' },
+  bn: { appTitle: 'ওআরসিএ ইনসাইট', navHome: 'হোম', navChat: 'এআই সিদ্ধান্ত কেন্দ্র', navMap: 'জিআইএস কমান্ড ম্যাপ', navDAG: 'এজেন্ট ডিএজি', navSafety: 'নিরাপত্তা সূচক', navFleet: 'জাহাজ পর্যবেক্ষণ', navNavic: 'নাভিক জিপিএস', navBulletins: 'সতর্কতা বিজ্ঞপ্তি', ctaStudio: 'এআই সিদ্ধান্ত কেন্দ্র খুলুন', ctaMap: 'জিআইএস ম্যাপ খুলুন', ctaFleet: 'জাহাজ দেখুন', sosButton: 'জরুরি SOS', chatSend: 'এজেন্টদের জিজ্ঞাসা করুন' },
+  or: { appTitle: 'ଓର୍କା ଇନସାଇଟ୍', navHome: 'ମୂଳପୃଷ୍ଠା', navChat: 'ଏଆଇ ନିଷ୍ପତ୍ତି କେନ୍ଦ୍ର', navMap: 'ଜିଆଇଏସ୍ କମାଣ୍ଡ ମାନଚିତ୍ର', navSafety: 'ସୁରକ୍ଷା ସୂଚକ', navFleet: 'ଜାହାଜ ନିରୀକ୍ଷଣ', navNavic: 'ନାଭିକ ଜିପିଏସ୍', navBulletins: 'ପରାମର୍ଶ ବୁଲେଟିନ୍', sosButton: 'ଜରୁରୀ SOS', chatSend: 'ଏଜେଣ୍ଟଙ୍କୁ ପଚାରନ୍ତୁ' },
+  mr: { appTitle: 'ओआरसीए इनसाइट', navHome: 'मुख्यपृष्ठ', navChat: 'एआय निर्णय केंद्र', navMap: 'जीआयएस कमांड नकाशा', navSafety: 'सुरक्षा मापक', navFleet: 'नौका निरीक्षण', navNavic: 'नाविक जीपीएस', navBulletins: 'सल्ला सूचना', sosButton: 'आपत्कालीन SOS', chatSend: 'एजंटना विचारा' },
+  gu: { appTitle: 'ઓઆરસીએ ઇનસાઇટ', navHome: 'મુખ્ય પૃષ્ઠ', navChat: 'એઆઈ નિર્ણય કેન્દ્ર', navMap: 'જીઆઈએસ કમાન્ડ નકશો', navSafety: 'સલામતી માપક', navFleet: 'જહાજ નિરીક્ષણ', navNavic: 'નાવિક જીપીએસ', navBulletins: 'સલાહ બુલેટિન', sosButton: 'તાત્કાલિક SOS', chatSend: 'એજન્ટોને પૂછો' }
+});
 
 // 8 Multi-Agent Definitions
 const agentsList = [
@@ -437,70 +389,51 @@ const agentsList = [
   },
   {
     id: "synthesis_agent",
-    name: "Neural Synthesis Agent (Stats-Driven)",
-    role: "Aggregates multi-agent telemetry into an authoritative, grounded natural-language advisory with citation tags and TTS -- entirely rule-based, reasoning over this site's own live telemetry and its own accumulated stats ledger. No external AI/LLM API is used.",
-    sensors: ["ORCA Stats Reasoning Engine (Rule-Based)", "Web Speech Synthesizer"],
+    name: "Neural Synthesis Agent (LLM)",
+    role: "Aggregates multi-agent telemetry into an authoritative, grounded natural-language advisory with citation tags and TTS.",
+    sensors: ["Groq Llama-3 / Grounded Neural Engine", "Web Speech Synthesizer"],
     latency: "52ms",
     status: "idle",
     sampleOutput: { advisory_generated: true, confidence_pct: 96, citations: ["Oceansat-3 OCM-3", "INSAT-3DR", "INCOIS PFZ-01", "Coast Guard VTS"], tts_ready: true }
   }
 ];
 
-// Runs one startup step in isolation. Every step used to run back-to-back
-// with no guard, which meant a single throwing step (e.g. an invalid
-// GeoJSON layer, or a missing function) silently aborted every step after
-// it -- including the Safety Barometer refresh and Fleet Monitor's live
-// vessel polling, leaving the whole page frozen on stale placeholder
-// values with no visible error. A broken feature must never again be able
-// to take the rest of the dashboard down with it.
-function runStartupStep(label, fn) {
-  try {
-    return fn();
-  } catch (err) {
-    console.error(`ORCA INSIGHT: startup step "${label}" failed and was skipped:`, err);
-    return null;
-  }
-}
-
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
-  runStartupStep('registerServiceWorker', registerServiceWorker);
-  runStartupStep('checkBackendHealth', checkBackendHealth);
-  setInterval(() => runStartupStep('checkBackendHealth', checkBackendHealth), 15000); // re-check periodically in case the backend starts later
-  try {
-    await loadInitialData();
-  } catch (err) {
-    console.error('ORCA INSIGHT: loadInitialData failed:', err);
-  }
-  runStartupStep('setupNavigation', setupNavigation);
-  runStartupStep('setupSlideFillButtons', setupSlideFillButtons);
-  runStartupStep('setupHeaderScrollHide', setupHeaderScrollHide);
-  runStartupStep('setupScrollReveal', setupScrollReveal);
-  runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
-  runStartupStep('setupThemeSwitcher', setupThemeSwitcher);
-  runStartupStep('setupMap', setupMap);
-  runStartupStep('setupChatbot', setupChatbot);
-  runStartupStep('setupSpeechRecognition', setupSpeechRecognition);
-  runStartupStep('setupDAGVisualizer', setupDAGVisualizer);
-  runStartupStep('setupRoutePlanner', setupRoutePlanner);
-  runStartupStep('setupFleetMonitor', setupFleetMonitor);
-  runStartupStep('setupSafetyBarometer', setupSafetyBarometer);
-  runStartupStep('setupNavICTelemetry', setupNavICTelemetry);
-  runStartupStep('setupGeofenceTracking', setupGeofenceTracking);
-  runStartupStep('setupBulletins', setupBulletins);
-  runStartupStep('setupProactiveAlerts', setupProactiveAlerts);
-  runStartupStep('setupSOSModal', setupSOSModal);
-  runStartupStep('setupMSSCodeGenerator', setupMSSCodeGenerator);
-  runStartupStep('startLiveVesselSimulation', startLiveVesselSimulation);
-  runStartupStep('updateLiveClock', updateLiveClock);
+  registerServiceWorker();
+  checkBackendHealth();
+  setInterval(checkBackendHealth, 15000); // re-check periodically in case the backend starts later
+  await loadInitialData();
+  setupNavigation();
+  setupLanguageSwitcher();
+  setupMap();
+  setupChatbot();
+  setupSpeechRecognition();
+  setupDAGVisualizer();
+  setupRoutePlanner();
+  setupFleetMonitor();
+  setupSafetyBarometer();
+  setupNavICTelemetry();
+  setupGeofenceTracking();
+  setupBulletins();
+  setupProactiveAlerts();
+  setupSOSModal();
+  setupMSSCodeGenerator();
+  startLiveVesselSimulation();
+  updateLiveClock();
   setInterval(updateLiveClock, 1000);
 
   // Fetch real Open-Meteo Marine Data for default Kochi Harbour
-  runStartupStep('fetchLiveMarineTelemetry', () => fetchLiveMarineTelemetry(9.93, 76.26));
-  runStartupStep('refreshExternalTelemetry', refreshExternalTelemetry);
+  fetchLiveMarineTelemetry(9.93, 76.26);
+  setInterval(() => {
+    const harbour = state.harbours.find(h => h.id === state.selectedHarbour);
+    const [lat, lon] = harbour?.coordinates || [9.93, 76.26];
+    fetchLiveMarineTelemetry(lat, lon);
+  }, 60000);
+  refreshExternalTelemetry();
   // Match the live AIS publisher cadence so the Fleet Monitor shows a new
   // server snapshot within one polling cycle.
-  setInterval(() => runStartupStep('refreshExternalTelemetry', refreshExternalTelemetry), 10000);
+  setInterval(refreshExternalTelemetry, 10000);
 });
 
 // Live deployments intentionally do not install an offline service worker:
@@ -549,117 +482,24 @@ function updateBackendStatusBadges() {
 
 // Pull server-validated AIS/GPS snapshots when an operator has configured a
 // real feed. The browser never calls satellite/AIS providers directly, so
-// provider credentials stay on the backend. The backend backfills any port
-// with zero live coverage using a clearly-tagged simulated fleet (see
-// backend ais_gateway.enrich_simulated_vessels) -- every vessel arrives with
-// an explicit `is_simulated` flag, so the frontend never has to guess and
-// never presents simulated data as real AIS traffic.
+// provider credentials stay on the backend. Fleet rendering remains empty
+// until a live snapshot exists; simulated vessels are never used here.
 async function refreshExternalTelemetry() {
   if (!(await checkBackendHealth())) return;
   try {
     const res = await fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/live/vessels`, {}, 5000);
     if (!res.ok) return;
     const snapshot = await res.json();
-    if ((snapshot.status !== 'LIVE' && snapshot.status !== 'SIMULATED_FALLBACK') || !Array.isArray(snapshot.payload) || !snapshot.payload.length) {
-      updateAisFeedBanner(snapshot.status, snapshot.ais_gateway);
-      return;
-    }
-    updateAisFeedBanner(snapshot.status, snapshot.ais_gateway, snapshot.live_vessel_count, snapshot.simulated_vessel_count);
+    // The backend keeps the bundled demo fleet available when AISStream has
+    // no coverage, so the dashboard is usable without mislabelling it as AIS.
+    if (!['LIVE', 'DEMO'].includes(snapshot.status) || !Array.isArray(snapshot.payload) || !snapshot.payload.length) return;
     state.vessels = snapshot.payload;
-    state.liveVesselCount = snapshot.live_vessel_count ?? snapshot.payload.filter(v => !v.is_simulated).length;
-    state.simulatedVesselCount = snapshot.simulated_vessel_count ?? snapshot.payload.filter(v => v.is_simulated).length;
     state.usesLiveVessels = true;
     renderVesselsOnMap();
     renderVesselsTable();
     renderFleetDistributionChart();
-    updateImblAlertBox();
   } catch (err) {
     console.warn('External telemetry refresh unavailable; retaining last known data.', err);
-  }
-}
-
-function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
-  const id = 'aisFeedStatusBanner';
-  let el = document.getElementById(id);
-
-  // LIVE with no simulated backfill needed -- nothing to explain, remove any banner.
-  if (status === 'LIVE' && !simulatedCount) {
-    if (el) el.remove();
-    return;
-  }
-
-  if (!el) {
-    el = document.createElement('div');
-    el.id = id;
-    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:2147483000;font:600 12px/1.5 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center;box-shadow:0 -2px 8px rgba(0,0,0,.35);';
-    document.body.appendChild(el);
-  }
-
-  // Blended live + simulated coverage: informational, not an error/warning.
-  if ((status === 'LIVE' || status === 'SIMULATED_FALLBACK') && simulatedCount) {
-    el.style.background = '#0c4a6e';
-    el.style.color = '#e0f2fe';
-    const liveText = liveCount ? `${liveCount} live AIS vessel${liveCount === 1 ? '' : 's'}` : 'no live AIS vessels right now';
-    el.textContent = `ℹ Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
-    return;
-  }
-
-  el.style.background = '#78350f';
-  el.style.color = '#fef3c7';
-  let detail = 'Live AIS vessel feed unavailable -- showing 0 vessels.';
-  if (gatewayState) {
-    if (!gatewayState.configured) {
-      detail = 'Live AIS vessel feed is not configured on this deployment.';
-    } else if (gatewayState.connected) {
-      detail = 'Connected to the AIS provider (AISstream.io), but it isn’t sending vessel data right now — likely a provider-side outage, not a local fault.';
-    } else {
-      detail = 'Disconnected from the AIS provider (AISstream.io); reconnecting automatically.';
-    }
-  }
-  el.textContent = '⚠ ' + detail;
-}
-
-// Populates the home tab's IMBL Border Proximity Alert card from real
-// vessel telemetry instead of a fixed, hardcoded example vessel/distance.
-// Shows the closest tracked vessel to the India-Sri Lanka maritime boundary
-// when one is inside the warning distance, and an honest "no alerts"
-// message otherwise -- it never fabricates a vessel or distance that isn't
-// actually in state.vessels.
-const IMBL_WARNING_DISTANCE_NM = 10;
-function updateImblAlertBox() {
-  const box = document.getElementById('imblAlertBox');
-  if (!box) return;
-  const card = document.getElementById('imblAlertCard');
-  const dot = document.getElementById('imblAlertDot');
-
-  const candidates = state.vessels.filter(v => typeof v.imbl_dist_nm === 'number');
-  const closest = candidates.length
-    ? candidates.reduce((a, b) => (b.imbl_dist_nm < a.imbl_dist_nm ? b : a))
-    : null;
-  const isAlert = !!(closest && closest.imbl_dist_nm <= IMBL_WARNING_DISTANCE_NM);
-
-  if (card) {
-    card.classList.toggle('bg-red-950/40', isAlert);
-    card.classList.toggle('border-red-500/50', isAlert);
-    card.classList.toggle('bg-emerald-950/30', !isAlert);
-    card.classList.toggle('border-emerald-600/30', !isAlert);
-  }
-  if (dot) {
-    dot.classList.toggle('bg-red-500', isAlert);
-    dot.classList.toggle('animate-ping', isAlert);
-    dot.classList.toggle('bg-emerald-500', !isAlert);
-  }
-
-  if (isAlert) {
-    const simTag = closest.is_simulated ? ' (simulated)' : '';
-    box.className = 'text-xs text-red-200 leading-relaxed';
-    box.innerHTML = `<strong>${closest.id} (${closest.name})</strong> is operating at <strong>${closest.imbl_dist_nm} NM</strong> from the India–Sri Lanka IMBL${simTag}. Automated warning dispatched.`;
-  } else if (closest) {
-    box.className = 'text-xs text-emerald-200 leading-relaxed';
-    box.innerHTML = `No vessels currently within the ${IMBL_WARNING_DISTANCE_NM} NM IMBL warning distance. Nearest tracked vessel: <strong>${closest.imbl_dist_nm} NM</strong> away.`;
-  } else {
-    box.className = 'text-xs text-slate-400 leading-relaxed';
-    box.innerHTML = 'No vessel telemetry available yet.';
   }
 }
 
@@ -667,13 +507,15 @@ function updateImblAlertBox() {
 async function fetchLiveMarineTelemetry(lat, lon) {
   const badgeEl = document.getElementById('apiLiveBadge');
   try {
-    const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height,wave_direction,wave_period&hourly=wave_height&timezone=Asia%2FKolkata`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Network response error");
-    const data = await res.json();
+    const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height,wave_direction,wave_period&timezone=Asia%2FKolkata`;
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=wind_speed_10m&wind_speed_unit=ms&timezone=Asia%2FKolkata`;
+    const [marineRes, weatherRes] = await Promise.all([fetch(marineUrl), fetch(weatherUrl)]);
+    if (!marineRes.ok || !weatherRes.ok) throw new Error("Live marine weather request failed");
+    const [data, weather] = await Promise.all([marineRes.json(), weatherRes.json()]);
 
-    if (data && data.current) {
-      state.liveMarine.waveHeight = data.current.wave_height || 1.25;
+    if (data?.current && weather?.current && Number.isFinite(data.current.wave_height) && Number.isFinite(weather.current.wind_speed_10m)) {
+      state.liveMarine.waveHeight = data.current.wave_height;
+      state.liveMarine.windSpeed = weather.current.wind_speed_10m * 1.94384;
       state.liveMarine.isLiveFeed = true;
       state.liveMarine.lastFetchTime = new Date().toLocaleTimeString();
 
@@ -688,15 +530,18 @@ async function fetchLiveMarineTelemetry(lat, lon) {
         badgeEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-mono";
       }
 
-      // Update Safety Barometer Tiles
+      // Update all live telemetry tiles from this same observation.
       updateSafetyMetricsUI();
+      renderTrendSparklines();
     }
   } catch (err) {
-    console.log("Open-Meteo Marine API running in cached offline mode", err);
+    console.warn("Live Open-Meteo telemetry unavailable", err);
+    state.liveMarine.isLiveFeed = false;
     if (badgeEl) {
-      badgeEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400"></span> TELEMETRY ACTIVE (CACHED SATELLITE ARCHIVE)`;
-      badgeEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 text-xs font-mono";
+      badgeEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> LIVE WEATHER TEMPORARILY UNAVAILABLE`;
+      badgeEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-950/60 border border-amber-500/40 text-amber-300 text-xs font-mono";
     }
+    updateSafetyMetricsUI();
   }
 }
 
@@ -704,10 +549,22 @@ function updateSafetyMetricsUI() {
   const waveVal = document.getElementById('marineWaveVal');
   const windVal = document.getElementById('marineWindVal');
   const seaVal = document.getElementById('marineSeaVal');
+  const clearanceVal = document.getElementById('marineClearanceVal');
+  const hasLiveReading = state.liveMarine.isLiveFeed && Number.isFinite(state.liveMarine.waveHeight) && Number.isFinite(state.liveMarine.windSpeed);
   
-  if (waveVal) waveVal.textContent = `${state.liveMarine.waveHeight.toFixed(2)} m`;
-  if (windVal) windVal.textContent = `${state.liveMarine.windSpeed.toFixed(1)} kn`;
-  if (seaVal) seaVal.textContent = `State ${state.liveMarine.seaState}`;
+  if (waveVal) waveVal.textContent = hasLiveReading ? `${state.liveMarine.waveHeight.toFixed(2)} m` : '—';
+  if (windVal) windVal.textContent = hasLiveReading ? `${state.liveMarine.windSpeed.toFixed(1)} kn` : '—';
+  if (seaVal) seaVal.textContent = hasLiveReading ? `State ${state.liveMarine.seaState}` : '—';
+  if (!clearanceVal) return;
+  if (!hasLiveReading) {
+    clearanceVal.textContent = 'AWAITING LIVE FEED';
+    clearanceVal.className = 'text-amber-300 font-bold';
+    return;
+  }
+  const score = Math.max(0, Math.min(100, Math.round(100 - state.liveMarine.waveHeight * 18 - state.liveMarine.windSpeed * 1.2)));
+  const label = score >= 75 ? 'SAFE' : score >= 50 ? 'CAUTION' : 'UNSAFE';
+  clearanceVal.textContent = `${label} (${score}/100)`;
+  clearanceVal.className = `${label === 'SAFE' ? 'text-emerald-400' : label === 'CAUTION' ? 'text-amber-300' : 'text-red-400'} font-bold`;
 }
 
 // Proactive alerts use the backend stream when available. Local Simulation
@@ -792,20 +649,14 @@ function showHazardAlert(alert, allowBrowserNotification) {
 // Load JSON Datasets
 async function loadInitialData() {
   try {
-    const [satRes, pfzRes, imblRes, mpaRes, hbrRes, vesRes, bulRes, indiaRes] = await Promise.all([
+    const [satRes, pfzRes, imblRes, mpaRes, hbrRes, vesRes, bulRes] = await Promise.all([
       fetch('data/satellites.json').then(r => r.json()),
       fetch('data/pfz_zones.json').then(r => r.json()),
       fetch('data/imbl_boundaries.json').then(r => r.json()),
       fetch('data/mpas.json').then(r => r.json()),
       fetch('data/harbours.json').then(r => r.json()),
       fetch('data/simulated_vessels.json').then(r => r.json()),
-      fetch('data/bulletins.json').then(r => r.json()),
-      // Official India boundary (per Survey of India, including J&K/Ladakh
-      // and Aksai Chin as depicted in India's own government maps), sourced
-      // from datameet/maps (CC-0), simplified from 10.7MB to ~150KB with
-      // turf.simplify at a 0.01-degree tolerance -- plenty precise for a
-      // national-scale reference overlay, not a street-level navigation aid.
-      fetch('data/india_boundary.geojson').then(r => r.ok ? r.json() : null).catch(() => null)
+      fetch('data/bulletins.json').then(r => r.json())
     ]);
 
     state.satellites = satRes.satellites || [];
@@ -813,7 +664,6 @@ async function loadInitialData() {
     state.imblBoundaries = imblRes.boundaries || [];
     state.mpas = mpaRes.mpas || [];
     state.harbours = hbrRes.harbours || [];
-    state.indiaBoundary = indiaRes || null;
     // Keep the file available for offline demo assets, but do not display its
     // simulated vessels in the live fleet/map UI. Only /api/live/vessels can
     // populate state.vessels.
@@ -840,7 +690,7 @@ function setupNavigation() {
 
 function switchTab(tabId) {
   state.activeTab = tabId;
-
+  
   document.querySelectorAll('.tab-content').forEach(section => {
     section.classList.add('hidden');
   });
@@ -858,131 +708,15 @@ function switchTab(tabId) {
       btn.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
       btn.classList.add('text-slate-400', 'border-transparent');
     }
-    btn.classList.toggle('sfb-active', btn.getAttribute('data-nav-target') === tabId);
   });
 
   if (tabId === 'map' && state.map) {
     setTimeout(() => {
-      // Mappls' vector engine has no documented invalidateSize() -- try its
-      // MapLibre-style resize() defensively so a tab-switch reflow still
-      // repaints the canvas correctly; never let this break tab switching.
-      try { state.map.resize(); } catch (err) { /* not available -- ignore */ }
+      state.map.invalidateSize();
     }, 200);
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Slide Fill Button (liquid hover-fill effect)
-// Faithful vanilla CSS/JS recreation of the Originkit "Slide Fill Button" —
-// the real component's source is paywalled inside Framer and not publicly
-// retrievable, so this reproduces the documented effect from scratch.
-function setupSlideFillButtons() {
-  const buttons = document.querySelectorAll('.sfb-btn:not(.sfb-enhanced)');
-  if (!buttons.length) return;
-
-  if (!window.__sfbResizeObserver) {
-    window.__sfbResizeObserver = new ResizeObserver(entries => {
-      entries.forEach(entry => {
-        const btn = entry.target;
-        const submerged = btn.querySelector('.sfb-inner--submerged');
-        if (submerged) submerged.style.height = btn.offsetHeight + 'px';
-      });
-    });
-  }
-
-  buttons.forEach(btn => {
-    const cs = getComputedStyle(btn);
-
-    const baseInner = document.createElement('span');
-    baseInner.className = 'sfb-inner';
-    while (btn.firstChild) baseInner.appendChild(btn.firstChild);
-
-    const content = document.createElement('span');
-    content.className = 'sfb-content';
-    content.appendChild(baseInner);
-
-    const fill = document.createElement('span');
-    fill.className = 'sfb-fill';
-    fill.setAttribute('aria-hidden', 'true');
-    const submerged = baseInner.cloneNode(true);
-    submerged.classList.add('sfb-inner--submerged');
-    fill.appendChild(submerged);
-
-    btn.appendChild(content);
-    btn.appendChild(fill);
-    btn.classList.add('sfb-enhanced');
-
-    [baseInner, submerged].forEach(inner => {
-      inner.style.display = cs.display.includes('flex') ? cs.display : 'flex';
-      inner.style.alignItems = cs.alignItems;
-      inner.style.justifyContent = cs.justifyContent;
-      inner.style.gap = cs.gap;
-    });
-
-    submerged.style.height = btn.offsetHeight + 'px';
-    window.__sfbResizeObserver.observe(btn);
-  });
-}
-
-// Header hide-on-scroll (UI/UX restyle, phase 2) -- purely decorative and
-// additive: toggles a CSS class on <header> based on scroll direction, does
-// not touch any existing state, ids, or classes JS elsewhere depends on.
-function setupHeaderScrollHide() {
-  const header = document.querySelector('header');
-  if (!header) return;
-  let lastY = window.scrollY;
-  let ticking = false;
-  const THRESHOLD = 12;
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const currentY = window.scrollY;
-      if (Math.abs(currentY - lastY) > THRESHOLD) {
-        if (currentY > lastY && currentY > 80) {
-          header.classList.add('header-hidden');
-        } else {
-          header.classList.remove('header-hidden');
-        }
-        lastY = currentY;
-      }
-      ticking = false;
-    });
-  }, { passive: true });
-}
-
-// Scroll-reveal entrance animation (UI/UX restyle, phase 6) -- purely decorative
-// and additive: observes elements carrying the .reveal class and adds .revealed
-// once each enters the viewport, then stops observing it. Does not touch any
-// existing state, ids, or classes JS elsewhere depends on. Elements without
-// IntersectionObserver support (or if none exist on the page) are revealed
-// immediately so content is never left permanently hidden.
-function setupScrollReveal() {
-  const targets = document.querySelectorAll('.reveal');
-  if (!targets.length) return;
-  const revealAll = () => targets.forEach(el => el.classList.add('revealed'));
-  if (!('IntersectionObserver' in window)) {
-    revealAll();
-    return;
-  }
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  targets.forEach(el => observer.observe(el));
-  // Safety net: some browsers/contexts (e.g. a page that loads in a
-  // background/inactive tab) throttle or defer IntersectionObserver
-  // callbacks indefinitely. Never leave content permanently invisible --
-  // force-reveal anything still unrevealed after a short grace period.
-  setTimeout(() => {
-    revealAll();
-    observer.disconnect();
-  }, 1200);
 }
 
 // Language Switcher
@@ -997,35 +731,8 @@ function setupLanguageSwitcher() {
   });
 }
 
-// Theme Switcher (Night/Day/Grey/Blue) -- purely presentational: swaps a
-// data-theme attribute that styles.css keys off of, so none of the data
-// fetching or rendering logic in this file is touched by a theme change.
-function setupThemeSwitcher() {
-  const themeSelect = document.getElementById('themeSelect');
-  if (!themeSelect) return;
-
-  themeSelect.value = document.documentElement.getAttribute('data-theme') || 'night';
-
-  themeSelect.addEventListener('change', (e) => {
-    const theme = ORCA_THEMES.includes(e.target.value) ? e.target.value : 'night';
-    document.documentElement.setAttribute('data-theme', theme);
-    try {
-      localStorage.setItem('orca-theme', theme);
-    } catch (err) {
-      console.warn('ORCA INSIGHT: could not persist theme preference:', err);
-    }
-    // Nudge a resize so the map canvas and any open popups repaint with the
-    // new theme's colors.
-    if (state.map) {
-      setTimeout(() => {
-        try { state.map.resize(); } catch (err) { /* not available -- ignore */ }
-      }, 50);
-    }
-  });
-}
-
 function applyLanguage(lang) {
-  const t = translations[lang] || translations.en;
+  const t = { ...translations.en, ...(translations[lang] || {}) };
   
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -1134,127 +841,51 @@ function setupMap() {
   const mapContainer = document.getElementById('mapContainer');
   if (!mapContainer) return;
 
-  // Government of India-authorized basemap (Mappls / MapmyIndia) -- this
-  // replaces the previous Leaflet + OpenStreetMap stack entirely. Mappls
-  // has no plain XYZ tile layer that plugs into Leaflet, so every overlay
-  // below is rebuilt on Mappls' own Marker/Polygon/Polyline/Circle APIs
-  // instead of Leaflet's, tracked in plain arrays under state.mapLayers
-  // (Mappls has no Leaflet-style featureGroup) and cleared/rebuilt via
-  // clearMapLayerGroup() + the render*Layer() functions below.
-  if (typeof mappls === 'undefined' || !mappls.Map) {
-    console.warn('ORCA INSIGHT: Mappls SDK failed to load -- GIS map disabled.');
-    return;
-  }
-
-  state.map = new mappls.Map('mapContainer', {
-    center: { lat: 12.0, lng: 77.5 },
-    zoom: 6
+  state.map = L.map('mapContainer', {
+    center: [12.0, 77.5],
+    zoom: 6,
+    zoomControl: true,
+    attributionControl: true
   });
 
-  state.map.addListener('load', function () {
-    state.mapLayers.indiaBoundary = [];
-    state.mapLayers.pfz = [];
-    state.mapLayers.imbl = [];
-    state.mapLayers.mpas = [];
-    state.mapLayers.harbours = [];
-    state.mapLayers.vessels = [];
-    state.mapLayers.heatmap = [];
-    state.mapLayers.route = [];
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(state.map);
 
-    renderIndiaBoundaryLayer();
-    renderPFZLayers();
-    renderIMBLLayers();
-    renderMPALayers();
-    renderHarbourMarkers();
-    renderVesselsOnMap();
-    renderHeatmapLayers();
-    setupLayerToggles();
-  });
-}
+  state.mapLayers.pfz = L.featureGroup().addTo(state.map);
+  state.mapLayers.imbl = L.featureGroup().addTo(state.map);
+  state.mapLayers.mpas = L.featureGroup().addTo(state.map);
+  state.mapLayers.harbours = L.featureGroup().addTo(state.map);
+  state.mapLayers.vessels = L.featureGroup().addTo(state.map);
+  state.mapLayers.heatmap = L.featureGroup().addTo(state.map);
+  state.mapLayers.route = L.featureGroup().addTo(state.map);
 
-// Removes every Mappls layer object tracked under state.mapLayers[key] and
-// empties the array. Mappls has no Leaflet-style featureGroup.clearLayers(),
-// so each render*Layer() function below calls this first, then rebuilds
-// from scratch -- the same "clear then redraw" pattern the Leaflet version
-// used, just without a single container object to clear in one call.
-function clearMapLayerGroup(key) {
-  const group = state.mapLayers[key];
-  if (!Array.isArray(group) || !state.map) return;
-  group.forEach(layer => {
-    try { mappls.remove({ map: state.map, layer }); } catch (err) { /* already gone */ }
-  });
-  state.mapLayers[key] = [];
-}
-
-// Draws India's officially correct external boundary -- per the Survey of
-// India's depiction (Jammu & Kashmir/Ladakh, Aksai Chin, and the China/
-// Pakistan-disputed sectors shown as Indian territory, no dotted/disputed
-// lines) -- as a bold outline on top of the base map. Source: data/
-// india_boundary.geojson, compiled by datameet/maps (CC-0) from LSIB (US
-// Dept of State), Pakistan admin boundary data, and Natural Earth vectors;
-// see data/README or the ORCA_HANDOFF doc for the full source citation.
-function renderIndiaBoundaryLayer() {
-  if (!state.map || !state.indiaBoundary) return;
-  // Guarded: this is an optional cosmetic overlay drawn on top of Mappls'
-  // own government-compliant vector basemap for extra visual emphasis. A
-  // malformed or missing boundary file (e.g. a 404 error body that still
-  // parses as JSON) must never be allowed to throw here and abort the rest
-  // of setupMap() -- that exact failure mode previously took down the
-  // whole page's live data refresh (see renderSatelliteCards incident).
-  // Fail silently and leave the layer empty instead.
-  try {
-    clearMapLayerGroup('indiaBoundary');
-
-    // Extract every ring/line from the boundary GeoJSON ourselves (rather
-    // than handing the raw FeatureCollection to mappls.addGeoJson(), whose
-    // own documentation is inconsistent about coordinate order) and draw
-    // each with mappls.Polyline, whose {lat,lng} path format is unambiguous.
-    const rings = [];
-    const collectGeometry = (geometry) => {
-      if (!geometry) return;
-      if (geometry.type === 'Polygon') {
-        geometry.coordinates.forEach(ring => rings.push(ring));
-      } else if (geometry.type === 'MultiPolygon') {
-        geometry.coordinates.forEach(poly => poly.forEach(ring => rings.push(ring)));
-      } else if (geometry.type === 'LineString') {
-        rings.push(geometry.coordinates);
-      } else if (geometry.type === 'MultiLineString') {
-        geometry.coordinates.forEach(line => rings.push(line));
-      }
-    };
-    const gj = state.indiaBoundary;
-    if (gj.type === 'FeatureCollection') gj.features.forEach(f => collectGeometry(f.geometry));
-    else if (gj.type === 'Feature') collectGeometry(gj.geometry);
-    else collectGeometry(gj);
-
-    rings.forEach(ring => {
-      const paths = ring.map(([lng, lat]) => ({ lat, lng }));
-      const line = new mappls.Polyline({
-        map: state.map,
-        paths,
-        strokeColor: '#ff9933',
-        strokeOpacity: 0.95,
-        strokeWeight: 3,
-        popupHtml: 'India — official boundary (Survey of India)',
-        popupOptions: true
-      });
-      state.mapLayers.indiaBoundary.push(line);
-    });
-  } catch (err) {
-    console.warn('India boundary overlay skipped (invalid/missing data):', err);
-  }
+  renderPFZLayers();
+  renderIMBLLayers();
+  renderMPALayers();
+  renderHarbourMarkers();
+  renderVesselsOnMap();
+  renderHeatmapLayers();
+  setupLayerToggles();
 }
 
 function renderPFZLayers() {
-  if (!state.map) return;
-  clearMapLayerGroup('pfz');
+  if (!state.mapLayers.pfz) return;
+  state.mapLayers.pfz.clearLayers();
 
   state.pfzZones.forEach(zone => {
     const isHigh = zone.yield_rating.includes('HIGH');
     const color = isHigh ? '#10b981' : '#f59e0b';
     const fillColor = isHigh ? '#059669' : '#d97706';
 
-    const paths = zone.bounds.map(([lat, lng]) => ({ lat, lng }));
+    const polygon = L.polygon(zone.bounds, {
+      color: color,
+      weight: 2,
+      fillColor: fillColor,
+      fillOpacity: 0.25,
+      dashArray: '4, 4'
+    });
 
     const popupHtml = `
       <div class="p-2 min-w-[220px]">
@@ -1278,42 +909,34 @@ function renderPFZLayers() {
       </div>
     `;
 
-    const polygon = new mappls.Polygon({
-      map: state.map,
-      paths,
-      strokeColor: color,
-      strokeOpacity: 1,
-      strokeWeight: 2,
-      fillColor: fillColor,
-      fillOpacity: 0.25,
-      popupHtml,
-      popupOptions: true
-    });
-    state.mapLayers.pfz.push(polygon);
+    polygon.bindPopup(popupHtml);
+    state.mapLayers.pfz.addLayer(polygon);
 
-    const labelHtml = `<div class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900/90 text-cyan-300 border border-cyan-500/40 whitespace-nowrap shadow-lg flex items-center gap-1">
+    const labelIcon = L.divIcon({
+      className: 'bg-transparent',
+      html: `<div class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900/90 text-cyan-300 border border-cyan-500/40 whitespace-nowrap shadow-lg flex items-center gap-1">
                <span class="w-1.5 h-1.5 rounded-full ${isHigh ? 'bg-emerald-400 animate-ping' : 'bg-amber-400'}"></span>
                ${zone.id} · ${zone.yield_rating}
-             </div>`;
-    const marker = new mappls.Marker({
-      map: state.map,
-      position: { lat: zone.center[0], lng: zone.center[1] },
-      html: labelHtml,
-      width: 80,
-      height: 20,
-      popupHtml,
-      popupOptions: true
+             </div>`,
+      iconSize: [80, 20],
+      iconAnchor: [40, 10]
     });
-    state.mapLayers.pfz.push(marker);
+    const marker = L.marker(zone.center, { icon: labelIcon });
+    marker.bindPopup(popupHtml);
+    state.mapLayers.pfz.addLayer(marker);
   });
 }
 
 function renderIMBLLayers() {
-  if (!state.map) return;
-  clearMapLayerGroup('imbl');
+  if (!state.mapLayers.imbl) return;
+  state.mapLayers.imbl.clearLayers();
 
   state.imblBoundaries.forEach(bound => {
-    const paths = bound.coordinates.map(([lat, lng]) => ({ lat, lng }));
+    const polyline = L.polyline(bound.coordinates, {
+      color: '#ef4444',
+      weight: 3,
+      dashArray: '6, 6'
+    });
 
     const popupHtml = `
       <div class="p-2">
@@ -1326,37 +949,33 @@ function renderIMBLLayers() {
       </div>
     `;
 
-    const polyline = new mappls.Polyline({
-      map: state.map,
-      paths,
-      strokeColor: '#ef4444',
-      strokeWeight: 3,
-      popupHtml,
-      popupOptions: true
-    });
-    state.mapLayers.imbl.push(polyline);
+    polyline.bindPopup(popupHtml);
+    state.mapLayers.imbl.addLayer(polyline);
 
-    const bufferPaths = bound.coordinates.map(c => ({ lat: c[0] + 0.08, lng: c[1] + 0.08 }));
-    const bufferPopupHtml = `⚠️ ${bound.warning_distance_nm} NM IMBL Buffer Corridor`;
-    const bufferPoly = new mappls.Polyline({
-      map: state.map,
-      paths: bufferPaths,
-      strokeColor: '#f59e0b',
-      strokeWeight: 1.5,
-      strokeOpacity: 0.7,
-      popupHtml: bufferPopupHtml,
-      popupOptions: true
+    const bufferCoords = bound.coordinates.map(c => [c[0] + 0.08, c[1] + 0.08]);
+    const bufferPoly = L.polyline(bufferCoords, {
+      color: '#f59e0b',
+      weight: 1.5,
+      dashArray: '3, 6',
+      opacity: 0.7
     });
-    state.mapLayers.imbl.push(bufferPoly);
+    bufferPoly.bindTooltip(`⚠️ ${bound.warning_distance_nm} NM IMBL Buffer Corridor`, { sticky: true });
+    state.mapLayers.imbl.addLayer(bufferPoly);
   });
 }
 
 function renderMPALayers() {
-  if (!state.map) return;
-  clearMapLayerGroup('mpas');
+  if (!state.mapLayers.mpas) return;
+  state.mapLayers.mpas.clearLayers();
 
   state.mpas.forEach(mpa => {
-    const paths = mpa.bounds.map(([lat, lng]) => ({ lat, lng }));
+    const polygon = L.polygon(mpa.bounds, {
+      color: '#ec4899',
+      weight: 2,
+      fillColor: '#db2777',
+      fillOpacity: 0.2,
+      dashArray: '2, 4'
+    });
 
     const popupHtml = `
       <div class="p-2">
@@ -1368,30 +987,26 @@ function renderMPALayers() {
       </div>
     `;
 
-    const polygon = new mappls.Polygon({
-      map: state.map,
-      paths,
-      strokeColor: '#ec4899',
-      strokeOpacity: 1,
-      strokeWeight: 2,
-      fillColor: '#db2777',
-      fillOpacity: 0.2,
-      popupHtml,
-      popupOptions: true
-    });
-    state.mapLayers.mpas.push(polygon);
+    polygon.bindPopup(popupHtml);
+    state.mapLayers.mpas.addLayer(polygon);
   });
 }
 
 function renderHarbourMarkers() {
-  if (!state.map) return;
-  clearMapLayerGroup('harbours');
+  if (!state.mapLayers.harbours) return;
+  state.mapLayers.harbours.clearLayers();
 
   state.harbours.forEach(hbr => {
-    const html = `<div class="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/30 hover:scale-110 transition cursor-pointer">
+    const icon = L.divIcon({
+      className: 'bg-transparent',
+      html: `<div class="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/30 hover:scale-110 transition cursor-pointer">
                ⚓
-             </div>`;
+             </div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
+    });
 
+    const marker = L.marker(hbr.coordinates, { icon });
     const popupHtml = `
       <div class="p-2 min-w-[200px]">
         <div class="font-bold text-cyan-400 text-sm">${hbr.name}</div>
@@ -1407,24 +1022,14 @@ function renderHarbourMarkers() {
         </button>
       </div>
     `;
-
-    const marker = new mappls.Marker({
-      map: state.map,
-      position: { lat: hbr.coordinates[0], lng: hbr.coordinates[1] },
-      html,
-      width: 32,
-      height: 32,
-      popupHtml,
-      popupOptions: true
-    });
-    state.mapLayers.harbours.push(marker);
+    marker.bindPopup(popupHtml);
+    state.mapLayers.harbours.addLayer(marker);
   });
 }
 
 function renderVesselsOnMap() {
-  if (!state.map) return;
-  clearMapLayerGroup('vessels');
-  state.activeVesselMarkers = {};
+  if (!state.mapLayers.vessels) return;
+  state.mapLayers.vessels.clearLayers();
 
   state.vessels.forEach(vessel => {
     let colorClass = 'bg-emerald-500 text-slate-950';
@@ -1439,62 +1044,51 @@ function renderVesselsOnMap() {
       colorClass = 'bg-cyan-500 text-slate-950';
     }
 
-    // Simulated fill-in vessels get a visibly different marker (dashed
-    // outline, hollow center, "SIM" tag) so they're never mistaken for real
-    // AIS traffic at a glance, regardless of their status color.
-    const simBorder = vessel.is_simulated ? 'border-dashed border-2 border-slate-200 opacity-80' : 'border border-ocean-700';
-
-    const html = `
+    const icon = L.divIcon({
+      className: 'vessel-marker-icon',
+      html: `
         <div class="relative flex items-center justify-center">
-          <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md ${simBorder} ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
+          <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md border border-slate-900 ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
             ▲
           </div>
           <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-slate-950/80 px-1 rounded text-slate-300 border border-slate-800 pointer-events-none">
-                        ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' · SIM' : ''}
+            ${vessel.id.split('-').slice(1).join('-')}
           </span>
         </div>
-      `;
+      `,
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+
+    const marker = L.marker([vessel.lat, vessel.lon], { icon });
 
     const popupHtml = `
       <div class="p-2 min-w-[220px]">
-        ${vessel.is_simulated ? '<div class="mb-1 px-1.5 py-0.5 inline-block rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500">Simulated · no live AIS coverage here</div>' : ''}
         <div class="flex items-center justify-between mb-1">
           <span class="font-bold text-white text-xs">${vessel.name}</span>
-          <span class="text-[10px] font-mono px-1 rounded glass-chip text-cyan-300">${vessel.id}</span>
+          <span class="text-[10px] font-mono px-1 rounded bg-slate-800 text-cyan-300 border border-slate-700">${vessel.id}</span>
         </div>
         <div class="text-[11px] text-slate-400 mb-2">${vessel.type} · ${vessel.owner}</div>
-
+        
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900 p-2 rounded border border-slate-700">
           <div><span class="text-slate-400">Speed:</span> <span class="text-cyan-400 font-bold">${vessel.speed_knots} kn</span></div>
           <div><span class="text-slate-400">Heading:</span> <span class="text-slate-200 font-semibold">${vessel.heading}°</span></div>
           <div><span class="text-slate-400">Zone:</span> <span class="text-slate-200 font-semibold">${vessel.zone}</span></div>
           <div><span class="text-slate-400">IMBL Dist:</span> <span class="${vessel.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${vessel.imbl_dist_nm} NM</span></div>
           <div><span class="text-slate-400">Status:</span> <span class="font-bold ${vessel.status.includes('ALERT') ? 'text-red-400' : 'text-emerald-400'}">${vessel.status}</span></div>
-          <div><span class="text-slate-400">Fuel:</span> <span class="text-slate-200">${vessel.fuel_pct != null ? vessel.fuel_pct + '%' : 'N/A'}</span></div>
-
+          <div><span class="text-slate-400">Fuel:</span> <span class="text-slate-200">${vessel.fuel_pct}%</span></div>
         </div>
       </div>
     `;
 
-    const marker = new mappls.Marker({
-      map: state.map,
-      position: { lat: vessel.lat, lng: vessel.lon },
-      html,
-      width: 24,
-      height: 24,
-      popupHtml,
-      popupOptions: true
-    });
-
-    state.mapLayers.vessels.push(marker);
-    state.activeVesselMarkers[vessel.id] = { marker, popupHtml };
+    marker.bindPopup(popupHtml);
+    state.mapLayers.vessels.addLayer(marker);
+    state.activeVesselMarkers[vessel.id] = marker;
   });
 
   const mapVesselCounter = document.getElementById('mapActiveVessels');
   if (mapVesselCounter) {
-    mapVesselCounter.textContent = state.simulatedVesselCount
-      ? `${state.vessels.length} Active Vessels (${state.liveVesselCount} live · ${state.simulatedVesselCount} simulated)`
-      : `${state.vessels.length} Active Vessels`;
+    mapVesselCounter.textContent = `${state.vessels.length} Active Vessels`;
   }
 
   // These two live outside the map tab (home KPI card + DAG side panel)
@@ -1513,72 +1107,51 @@ function renderVesselsOnMap() {
   // Fit the GIS view to the actual incoming AIS coordinates so vessels near
   // Kochi, Mumbai, Chennai, Vizag, etc. are not hidden by a port-centred
   // default map view. Invalid coordinates are excluded at the backend.
-  // Computed manually (center + a span-based zoom) rather than via
-  // mappls.fitBounds(), whose bounds-array coordinate order is
-  // inconsistent across Mappls' own documentation.
   const livePoints = state.vessels
     .filter(v => Number.isFinite(Number(v.lat)) && Number.isFinite(Number(v.lon)))
     .map(v => [Number(v.lat), Number(v.lon)]);
   if (state.map && livePoints.length > 1 && !state.hasFittedLiveFleet) {
-    const lats = livePoints.map(p => p[0]);
-    const lngs = livePoints.map(p => p[1]);
-    const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
-    const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
-    const maxSpan = Math.max(Math.max(...lats) - Math.min(...lats), Math.max(...lngs) - Math.min(...lngs));
-    let zoom = 8;
-    if (maxSpan > 20) zoom = 4;
-    else if (maxSpan > 10) zoom = 5;
-    else if (maxSpan > 5) zoom = 6;
-    else if (maxSpan > 2) zoom = 7;
-    state.map.setCenter({ lat: centerLat, lng: centerLng });
-    state.map.setZoom(zoom);
+    state.map.fitBounds(L.latLngBounds(livePoints), { padding: [36, 36], maxZoom: 7 });
     state.hasFittedLiveFleet = true;
   }
 }
 
 function renderHeatmapLayers() {
-  if (!state.map) return;
-  clearMapLayerGroup('heatmap');
+  if (!state.mapLayers.heatmap) return;
+  state.mapLayers.heatmap.clearLayers();
 
   state.pfzZones.forEach(zone => {
     const radiusMeters = 35000 + (zone.vessels_in_zone * 4000);
-    const circle = new mappls.Circle({
-      map: state.map,
-      center: { lat: zone.center[0], lng: zone.center[1] },
-      radius: radiusMeters,
-      strokeColor: '#06b6d4',
-      strokeOpacity: 1,
-      strokeWeight: 1,
+    const circle = L.circle(zone.center, {
+      color: '#06b6d4',
       fillColor: '#06b6d4',
-      fillOpacity: 0.12
+      fillOpacity: 0.12,
+      weight: 1,
+      radius: radiusMeters
     });
-    state.mapLayers.heatmap.push(circle);
+    circle.bindTooltip(`🔥 High Fleet Density: ${zone.vessels_in_zone} vessels near ${zone.name}`, { sticky: true });
+    state.mapLayers.heatmap.addLayer(circle);
   });
 }
 
 function setupLayerToggles() {
   const toggles = [
-    { id: 'layerPFZ', key: 'pfz', renderer: renderPFZLayers },
-    { id: 'layerIMBL', key: 'imbl', renderer: renderIMBLLayers },
-    { id: 'layerMPA', key: 'mpas', renderer: renderMPALayers },
-    { id: 'layerHarbours', key: 'harbours', renderer: renderHarbourMarkers },
-    { id: 'layerVessels', key: 'vessels', renderer: renderVesselsOnMap },
-    { id: 'layerHeatmap', key: 'heatmap', renderer: renderHeatmapLayers },
-    { id: 'layerIndiaBoundary', key: 'indiaBoundary', renderer: renderIndiaBoundaryLayer }
+    { id: 'layerPFZ', layer: state.mapLayers.pfz },
+    { id: 'layerIMBL', layer: state.mapLayers.imbl },
+    { id: 'layerMPA', layer: state.mapLayers.mpas },
+    { id: 'layerHarbours', layer: state.mapLayers.harbours },
+    { id: 'layerVessels', layer: state.mapLayers.vessels },
+    { id: 'layerHeatmap', layer: state.mapLayers.heatmap }
   ];
 
   toggles.forEach(t => {
     const el = document.getElementById(t.id);
     if (el) {
       el.addEventListener('change', (e) => {
-        // Mappls has no Leaflet-style map.addLayer()/removeLayer() for
-        // arbitrary marker/shape objects, so "off" clears the tracked
-        // group and "on" simply re-runs the same render*Layer() function
-        // every other refresh already uses to rebuild it from scratch.
         if (e.target.checked) {
-          t.renderer();
+          state.map.addLayer(t.layer);
         } else {
-          clearMapLayerGroup(t.key);
+          state.map.removeLayer(t.layer);
         }
       });
     }
@@ -1597,7 +1170,7 @@ function setupRoutePlanner() {
     harbourSelect.addEventListener('change', (e) => {
       state.selectedHarbour = e.target.value;
       const hbr = state.harbours.find(h => h.id === e.target.value);
-      if (hbr) {         fetchLiveMarineTelemetry(hbr.coordinates[0], hbr.coordinates[1]);         fetchSafetyTrendHistory(hbr.coordinates[0], hbr.coordinates[1]).then(() => renderTrendSparklines());         refreshSafetyBarometer(hbr.coordinates[0], hbr.coordinates[1]);       }
+      if (hbr) fetchLiveMarineTelemetry(hbr.coordinates[0], hbr.coordinates[1]);
     });
   }
 
@@ -1671,7 +1244,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
   }
   updateBackendStatusBadges();
 
-  clearMapLayerGroup('route');
+  if (state.mapLayers.route) state.mapLayers.route.clearLayers();
 
   if (!route) {
     // Backend unreachable -- do NOT draw a fabricated straight/midpoint
@@ -1705,11 +1278,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
 
   if (distEl) distEl.textContent = `${distNM.toFixed(1)} NM`;
   if (etaEl) etaEl.textContent = `${etaHoursFloor}h ${etaMinutes}m (One-Way)`;
-  if (speedEl) {
-    speedEl.textContent = route.effective_speed_knots != null
-      ? `${route.effective_speed_knots} kn (Wave-adjusted)`
-      : '—';
-  }
+  if (speedEl) speedEl.textContent = `A* routed · ${route.route_source || 'A_STAR'}`;
 
   if (duskEl) {
     if (isReturnSafe) {
@@ -1721,44 +1290,32 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     }
   }
 
-  if (state.map) {
-    try {
-      // Draw EXACTLY the waypoints the backend A* router returned -- the
-      // frontend never invents its own waypoints.
-      const paths = route.waypoints.map(p => ({ lat: p.lat, lng: p.lon }));
+  if (state.mapLayers.route) {
+    // Draw EXACTLY the waypoints the backend A* router returned -- the
+    // frontend never invents its own waypoints.
+    const waypoints = route.waypoints.map(p => [p.lat, p.lon]);
 
-      const detourNote = route.detour_percent > 1
-        ? ` · Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
-        : '';
+    const routeLine = L.polyline(waypoints, {
+      color: '#06b6d4',
+      weight: 3.5,
+      dashArray: '8, 8',
+      opacity: 0.9
+    });
 
-      const routePopupHtml = `
-        <div class="p-1 text-xs">
-          <span class="font-bold text-cyan-400">Sea-Only A* Route (Land + MPA Avoidance)</span><br/>
-          <span>${harbour.name} ➔ ${pfz.name}</span><br/>
-          <span>Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> · ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}</span>
-        </div>
-      `;
+    const detourNote = route.detour_percent > 1
+      ? ` · Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
+      : '';
 
-      const routeLine = new mappls.Polyline({
-        map: state.map,
-        paths,
-        strokeColor: '#06b6d4',
-        strokeWeight: 3.5,
-        strokeOpacity: 0.9,
-        popupHtml: routePopupHtml,
-        popupOptions: true
-      });
-      if (!Array.isArray(state.mapLayers.route)) state.mapLayers.route = [];
-      state.mapLayers.route.push(routeLine);
-    } catch (err) {
-      // The Mappls SDK can still be settling its internal canvas/layer
-      // state a moment after its own 'load' event fires -- most visible
-      // on the very first auto-render, ~400ms after page load. Never let
-      // that surface as an unhandled promise rejection; the next route
-      // recalculation (harbour/PFZ change, "Simulate Route" click) draws
-      // the polyline normally once the SDK has settled.
-      console.warn('Route polyline draw skipped (map still initializing):', err.message || err);
-    }
+    const routeTooltip = `
+      <div class="p-1 text-xs">
+        <span class="font-bold text-cyan-400">Sea-Only A* Route (Land + MPA Avoidance)</span><br/>
+        <span>${harbour.name} ➔ ${pfz.name}</span><br/>
+        <span>Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> · ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}</span>
+      </div>
+    `;
+
+    routeLine.bindTooltip(routeTooltip, { sticky: true });
+    state.mapLayers.route.addLayer(routeLine);
   }
 }
 
@@ -1814,7 +1371,7 @@ function renderDAGNodes() {
 
   dagContainer.innerHTML = agentsList.map((agent, idx) => {
     return `
-      <div id="dag-node-${agent.id}" onclick="inspectDAGNode('${agent.id}')" class="relative group p-4 rounded-xl glass-card glass-card-interactive cursor-pointer">
+      <div id="dag-node-${agent.id}" onclick="inspectDAGNode('${agent.id}')" class="relative group p-4 rounded-xl bg-slate-900/90 border border-slate-700/70 hover:border-cyan-500/70 hover:bg-slate-800/90 transition-all duration-300 cursor-pointer shadow-lg">
         <div class="flex items-start justify-between gap-2 mb-2">
           <div class="flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-mono text-xs font-bold flex items-center justify-center border border-cyan-500/40">
@@ -1822,7 +1379,7 @@ function renderDAGNodes() {
             </span>
             <h4 class="font-bold text-slate-100 text-sm group-hover:text-cyan-300 transition">${agent.name}</h4>
           </div>
-          <span id="badge-lat-${agent.id}" class="text-[10px] font-mono px-1.5 py-0.5 rounded glass-chip text-slate-400">
+          <span id="badge-lat-${agent.id}" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
             ${agent.latency}
           </span>
         </div>
@@ -2223,7 +1780,7 @@ async function handleChatQuery(queryText) {
           </summary>
           <div class="mt-3 space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono">
             ${advisory.agentSteps.map(step => `
-              <div class="flex items-start justify-between border-b border-ocean-700 pb-1.5 last:border-0">
+              <div class="flex items-start justify-between border-b border-slate-900 pb-1.5 last:border-0">
                 <div>
                   <span class="text-cyan-400 font-semibold">[${step.agent}]</span>
                   <p class="text-slate-300 text-[11px] mt-0.5">${step.trace}</p>
@@ -2374,7 +1931,7 @@ function generateAgentAdvisory(query) {
     };
   }
 
-  const liveWave = state.liveMarine.waveHeight.toFixed(2);
+  const liveWave = Number.isFinite(state.liveMarine.waveHeight) ? state.liveMarine.waveHeight.toFixed(2) : 'unavailable';
   return {
     confidence: 55,
     metrics: { zone: "PFZ-01 (Kochi Deep) — simulated", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
@@ -2667,8 +2224,10 @@ function renderNavICSatelliteList() {
 // Low-Bandwidth NavIC MSS / SMS Code Generator
 function setupMSSCodeGenerator() {
   window.copyAdvisoryMSS = function() {
-    const liveWave = state.liveMarine.waveHeight.toFixed(1);
-    const mssCode = `ORCA#KL01#SST28.4#W${liveWave}M#CLR:SAFE(88)#RET1645#CH16`;
+    const liveWave = Number.isFinite(state.liveMarine.waveHeight) ? state.liveMarine.waveHeight.toFixed(1) : 'NA';
+    const wind = Number.isFinite(state.liveMarine.windSpeed) ? state.liveMarine.windSpeed.toFixed(0) : 'NA';
+    const clearance = document.getElementById('marineClearanceVal')?.textContent?.replace(/\s+/g, '') || 'PENDING';
+    const mssCode = `ORCA#KL01#W${liveWave}M#WND${wind}KN#CLR:${clearance}#CH16`;
     navigator.clipboard.writeText(mssCode).then(() => {
       alert(`Copied NavIC MSS / SMS 120-char Satellite Emergency Code:\n\n${mssCode}`);
     });
@@ -2676,26 +2235,9 @@ function setupMSSCodeGenerator() {
 }
 
 // Safety Barometer & Sparklines
-// Safety Barometer & Sparklines
-//
-// The score card, condition tiles, and sparklines are all driven from the
-// backend's real WeatherHazardAgent (GET /api/weather), which computes a
-// genuine safety_score/clearance_verdict from live Open-Meteo wave/wind
-// data. Nothing here invents a number: if a fetch fails, the UI simply
-// keeps showing the last known-good values instead of a fabricated one.
 function setupSafetyBarometer() {
   renderSatelliteCards();
   renderTrendSparklines();
-
-  const hbr = state.harbours.find(h => h.id === state.selectedHarbour);
-  const lat = hbr ? hbr.coordinates[0] : 9.93;
-  const lon = hbr ? hbr.coordinates[1] : 76.26;
-
-  fetchSafetyTrendHistory(lat, lon).then(() => renderTrendSparklines());
-  refreshSafetyBarometer(lat, lon);
-  // Open-Meteo's underlying models don't update faster than hourly, so a
-  // 5-minute poll is frequent enough to feel live without hammering it.
-  setInterval(() => refreshSafetyBarometer(lat, lon), 5 * 60 * 1000);
 }
 
 function renderSatelliteCards() {
@@ -2733,240 +2275,15 @@ function renderSatelliteCards() {
     </div>
   `).join('');
 }
-// Pulls the backend's real hazard score and applies it to the Safety Index
-// card and the 4 condition tiles.
-async function refreshSafetyBarometer(lat, lon) {
-  try {
-    const res = await fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/weather?lat=${lat}&lon=${lon}`, {}, 6000);
-    if (!res.ok) throw new Error(`Weather agent responded with ${res.status}`);
-    const weather = await res.json();
-
-    updateSafetyIndexCard(weather);
-
-    state.liveMarine.waveHeight = weather.significant_wave_height_m;
-    state.liveMarine.windSpeed = weather.surface_wind_knots;
-    state.liveMarine.windDirection = weather.wind_direction;
-    state.liveMarine.seaState = weather.sea_state_douglas;
-    state.liveMarine.lightningRisk = weather.lightning_risk_pct;
-    state.liveMarine.safetyScore = weather.safety_score;
-    state.liveMarine.clearanceVerdict = weather.clearance_verdict;
-    state.liveMarine.isLiveFeed = weather.data_source?.wave_height === 'LIVE_OPEN_METEO_MARINE';
-
-    updateMapHUD();
-
-    renderTrendSparklines();
-  } catch (err) {
-    console.log('Safety Barometer live refresh failed, keeping last known values', err);
-  }
-}
-
-// Keeps the GIS Command Map's bottom info bar (wave/wind/clearance) in
-// sync with the same live weather reading the Safety Barometer uses --
-// this bar used to be static hardcoded text and never changed.
-function updateMapHUD() {
-  const waveEl = document.getElementById('mapHudWave');
-  const windEl = document.getElementById('mapHudWind');
-  const clearanceEl = document.getElementById('mapHudClearance');
-  if (!waveEl && !windEl && !clearanceEl) return;
-
-  if (waveEl && state.liveMarine.waveHeight != null) {
-    waveEl.textContent = `${state.liveMarine.waveHeight} m`;
-  }
-  if (windEl && state.liveMarine.windSpeed != null) {
-    const dir = state.liveMarine.windDirection || '';
-    const dirAbbrev = dir ? ` ${dir[0]}` : '';
-    windEl.textContent = `${state.liveMarine.windSpeed} kn${dirAbbrev}`;
-  }
-  if (clearanceEl && state.liveMarine.clearanceVerdict) {
-    const verdict = state.liveMarine.clearanceVerdict;
-    const score = state.liveMarine.safetyScore ?? '—';
-    clearanceEl.textContent = `${verdict} (${score}/100)`;
-    const colorClass = verdict === 'SAFE' ? 'text-emerald-400'
-      : verdict === 'CAUTION' ? 'text-amber-400'
-      : 'text-rose-400';
-    clearanceEl.className = `font-bold ${colorClass}`;
-  }
-}
-
-// Applies a /api/weather response to the score card + 4 condition tiles.
-function updateSafetyIndexCard(weather) {
-  const scoreEl = document.getElementById('safetyIndexScore');
-  const verdictEl = document.getElementById('safetyVerdictText');
-  const descEl = document.getElementById('safetyVerdictDesc');
-  const cardEl = document.getElementById('safetyVerdictCard');
-  const dotEl = document.getElementById('safetyPulseDot');
-  const ringEl = document.getElementById('safetyIndexRing');
-
-  const verdict = weather.clearance_verdict || 'SAFE';
-  const theme = {
-    SAFE: { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' },
-    CAUTION: { color: 'amber', label: 'PROCEED WITH CAUTION', icon: '⚠' },
-    UNSAFE: { color: 'rose', label: 'UNSAFE — DO NOT VENTURE', icon: '✕' }
-  }[verdict] || { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' };
-
-  const colorClasses = {
-    emerald: { card: 'from-emerald-950/80 border-emerald-500/50', dot: 'bg-emerald-400', text: 'text-emerald-400', ring: 'border-emerald-400', glow: 'shadow-emerald-500/30' },
-    amber: { card: 'from-amber-950/80 border-amber-500/50', dot: 'bg-amber-400', text: 'text-amber-400', ring: 'border-amber-400', glow: 'shadow-amber-500/30' },
-    rose: { card: 'from-rose-950/80 border-rose-500/50', dot: 'bg-rose-400', text: 'text-rose-400', ring: 'border-rose-400', glow: 'shadow-rose-500/30' }
-  };
-  const c = colorClasses[theme.color];
-
-  if (scoreEl) {
-    scoreEl.textContent = weather.safety_score ?? '—';
-    scoreEl.className = `text-3xl sm:text-4xl font-black ${c.text} font-mono`;
-  }
-  if (verdictEl) verdictEl.textContent = theme.label;
-  if (descEl) {
-    descEl.textContent = `Live Open-Meteo marine telemetry places significant wave height at ${weather.significant_wave_height_m}m and surface wind at ${weather.surface_wind_knots}kn near your selected harbour, giving a computed safety score of ${weather.safety_score}/100.`;
-  }
-  if (cardEl) {
-    cardEl.className = `p-6 rounded-2xl bg-gradient-to-r ${c.card} via-ocean-900 to-ocean-900 border shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6`;
-  }
-  if (dotEl) dotEl.className = `w-3 h-3 rounded-full ${c.dot} animate-ping`;
-  if (ringEl) {
-    ringEl.className = `w-14 h-14 rounded-full border-4 ${c.ring} flex items-center justify-center text-2xl ${c.text} font-bold shadow-lg ${c.glow}`;
-    ringEl.textContent = theme.icon;
-  }
-
-  const waveVal = document.getElementById('safetyTileWaveVal');
-  const waveBand = document.getElementById('safetyTileWaveBand');
-  if (waveVal) waveVal.textContent = `${weather.significant_wave_height_m} m`;
-  if (waveBand) waveBand.textContent = waveBandLabel(weather.significant_wave_height_m);
-
-  const windVal = document.getElementById('safetyTileWindVal');
-  const windBand = document.getElementById('safetyTileWindBand');
-  if (windVal) windVal.textContent = `${weather.surface_wind_knots} kn`;
-  if (windBand) windBand.textContent = `${weather.wind_direction || 'Westerly'} Breeze`;
-
-  const seaVal = document.getElementById('marineSeaVal');
-  const seaBand = document.getElementById('safetyTileSeaBand');
-  if (seaVal) seaVal.textContent = `State ${weather.sea_state_douglas}`;
-  if (seaBand) seaBand.textContent = seaStateLabel(weather.sea_state_douglas);
-
-  const lightVal = document.getElementById('safetyTileLightningVal');
-  const lightBand = document.getElementById('safetyTileLightningBand');
-  const lightPct = weather.lightning_risk_pct;
-  if (lightVal) lightVal.textContent = `${lightPct}% ${lightPct < 20 ? 'Low' : lightPct < 50 ? 'Moderate' : 'High'}`;
-  if (lightBand) lightBand.textContent = lightningBandLabel(lightPct);
-}
-
-function waveBandLabel(h) {
-  if (h < 0.5) return 'Calm (< 0.5m)';
-  if (h < 1.25) return 'Slight (0.5 - 1.25m)';
-  if (h < 2.5) return 'Moderate (1.25 - 2.5m)';
-  return 'Rough (> 2.5m)';
-}
-
-function seaStateLabel(seaState) {
-  return { 1: 'Calm', 2: 'Slight', 3: 'Slight to Moderate', 4: 'Moderate to Rough' }[seaState] || 'Unknown';
-}
-
-function lightningBandLabel(pct) {
-  if (pct < 20) return 'Safe Atmospheric Profile';
-  if (pct < 50) return 'Elevated Convective Risk';
-  return 'Severe Squall Warning';
-}
-
-function seaStateFromSwh(h) {
-  if (h < 0.5) return 1;
-  if (h < 1.25) return 2;
-  if (h < 2.5) return 3;
-  return 4;
-}
-
-// Seeds the Safety Barometer sparklines with genuine past-24h hourly
-// readings pulled directly from Open-Meteo (marine API for wave height,
-// forecast API for wind/cloud cover), so the trend line is real history
-// from the moment the tab loads instead of starting empty. If either
-// request fails, state.safetyTrend simply stays empty and the sparkline
-// falls back to plotting the live reading alone — never a fake number.
-async function fetchSafetyTrendHistory(lat, lon) {
-  try {
-    const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&hourly=wave_height&past_days=1&forecast_days=1&timezone=Asia%2FKolkata`;
-    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=wind_speed_10m,cloud_cover,weather_code&wind_speed_unit=kn&past_days=1&forecast_days=1&timezone=Asia%2FKolkata`;
-
-    const [marineRes, forecastRes] = await Promise.all([
-      fetchWithTimeout(marineUrl, {}, 8000),
-      fetchWithTimeout(forecastUrl, {}, 8000)
-    ]);
-    if (!marineRes.ok || !forecastRes.ok) throw new Error('Open-Meteo history request failed');
-
-    const marine = await marineRes.json();
-    const forecast = await forecastRes.json();
-
-    const findNowIndex = (times) => {
-      if (!Array.isArray(times) || times.length === 0) return -1;
-      const nowMs = Date.now();
-      let idx = -1;
-      for (let i = 0; i < times.length; i++) {
-        if (new Date(times[i]).getTime() <= nowMs) idx = i;
-        else break;
-      }
-      return idx;
-    };
-
-    const last12 = (arr, idx) => {
-      if (!Array.isArray(arr) || idx < 0) return null;
-      const start = Math.max(0, idx - 11);
-      const slice = arr.slice(start, idx + 1).filter(v => typeof v === 'number');
-      return slice.length >= 2 ? slice : null;
-    };
-
-    const waveTimes = (marine.hourly && marine.hourly.time) || [];
-    const waveHeights = (marine.hourly && marine.hourly.wave_height) || [];
-    const wIdx = findNowIndex(waveTimes);
-    const waveTrend = last12(waveHeights, wIdx);
-    if (waveTrend) {
-      state.safetyTrend.wave = waveTrend;
-      state.safetyTrend.sea = waveTrend.map(seaStateFromSwh);
-    }
-
-    const fTimes = (forecast.hourly && forecast.hourly.time) || [];
-    const windSpeeds = (forecast.hourly && forecast.hourly.wind_speed_10m) || [];
-    const cloudCover = (forecast.hourly && forecast.hourly.cloud_cover) || [];
-    const weatherCodes = (forecast.hourly && forecast.hourly.weather_code) || [];
-    const fIdx = findNowIndex(fTimes);
-
-    const windTrend = last12(windSpeeds, fIdx);
-    if (windTrend) state.safetyTrend.wind = windTrend;
-
-    if (fIdx >= 0) {
-      const start = Math.max(0, fIdx - 11);
-      const lightTrend = [];
-      for (let i = start; i <= fIdx; i++) {
-        if ([95, 96, 99].includes(weatherCodes[i])) lightTrend.push(55);
-        else if (typeof cloudCover[i] === 'number') lightTrend.push(Math.min(30, Math.round(cloudCover[i] * 0.3)));
-        else lightTrend.push(state.liveMarine.lightningRisk);
-      }
-      if (lightTrend.length >= 2) state.safetyTrend.lightning = lightTrend;
-    }
-  } catch (err) {
-    console.log('Safety Barometer 24h history unavailable, using live-only trend', err);
-  }
-}
 
 function renderTrendSparklines() {
-  const wavePoints = appendLivePoint(state.safetyTrend.wave, state.liveMarine.waveHeight);
-  drawSVGSparkline('sparklineWave', wavePoints, '#06b6d4');
-
-  const windPoints = appendLivePoint(state.safetyTrend.wind, state.liveMarine.windSpeed);
-  drawSVGSparkline('sparklineWind', windPoints, '#3b82f6');
-
-  const seaPoints = appendLivePoint(state.safetyTrend.sea, state.liveMarine.seaState);
-  drawSVGSparkline('sparklineSea', seaPoints, '#10b981');
-
-  const lightPoints = appendLivePoint(state.safetyTrend.lightning, state.liveMarine.lightningRisk);
-  drawSVGSparkline('sparklineLightning', lightPoints, '#f59e0b');
-}
-
-// Appends the latest live reading to the real 24h history fetched from
-// Open-Meteo. Every plotted point is a genuine measurement — when no
-// history has loaded yet, this just plots the single live value twice so
-// the sparkline still renders instead of showing invented history.
-function appendLivePoint(history, liveValue) {
-  const base = Array.isArray(history) && history.length >= 2 ? history.slice() : [liveValue];
-  const points = base.concat([liveValue]);
-  return points.length >= 2 ? points : [liveValue, liveValue];
+  // A historical-looking line is misleading when the dashboard has only one
+  // current observation.  Draw a compact live indicator instead.
+  const current = (value) => Number.isFinite(value) ? [value, value] : [];
+  drawSVGSparkline('sparklineWave', current(state.liveMarine.waveHeight), '#06b6d4');
+  drawSVGSparkline('sparklineWind', current(state.liveMarine.windSpeed), '#3b82f6');
+  drawSVGSparkline('sparklineSea', current(state.liveMarine.seaState), '#10b981');
+  drawSVGSparkline('sparklineLightning', current(state.liveMarine.lightningRisk), '#f59e0b');
 }
 
 function drawSVGSparkline(elementId, dataPoints, strokeColor) {
@@ -3026,11 +2343,7 @@ function renderFleetDistributionChart() {
   }).join('');
 
   const totalEl = document.getElementById('fleetTotalActive');
-  if (totalEl) {
-    totalEl.textContent = state.simulatedVesselCount
-      ? `${state.vessels.length} (${state.liveVesselCount} live · ${state.simulatedVesselCount} sim)`
-      : state.vessels.length;
-  }
+  if (totalEl) totalEl.textContent = state.vessels.length;
 }
 
 function renderVesselsTable(filteredList = null) {
@@ -3048,21 +2361,16 @@ function renderVesselsTable(filteredList = null) {
     } else if (v.status === 'TRANSIT') {
       statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300">IN TRANSIT</span>`;
     }
-    // Simulated fill-in vessels always carry their own tag alongside the
-    // status badge, so a scan of the table never mistakes one for real AIS.
-    const simTag = v.is_simulated
-      ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500" title="Simulated -- no live AIS coverage near this port">SIM</span>`
-      : '';
 
     return `
-      <tr class="border-b border-slate-800 hover:bg-slate-800/50 transition ${v.is_simulated ? 'opacity-80' : ''}">
+      <tr class="border-b border-slate-800 hover:bg-slate-800/50 transition">
         <td class="py-2.5 px-3 font-mono text-cyan-400 text-xs font-bold">${v.id}</td>
         <td class="py-2.5 px-3 text-xs text-white font-medium">${v.name}</td>
         <td class="py-2.5 px-3 text-xs text-slate-400">${v.type}</td>
         <td class="py-2.5 px-3 text-xs text-slate-300">${v.zone}</td>
         <td class="py-2.5 px-3 font-mono text-xs text-slate-200">${v.speed_knots} kn / ${v.heading}°</td>
         <td class="py-2.5 px-3 font-mono text-xs ${v.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${v.imbl_dist_nm} NM</td>
-        <td class="py-2.5 px-3">${statusBadge}${simTag}</td>
+        <td class="py-2.5 px-3">${statusBadge}</td>
         <td class="py-2.5 px-3 text-right">
           <button onclick="zoomToVessel('${v.id}')" class="px-2 py-1 bg-slate-800 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[11px] font-medium transition">
             Locate ➔
@@ -3099,13 +2407,12 @@ window.zoomToVessel = function(vesselId) {
   if (!vessel || !state.map) return;
 
   switchTab('map');
-  state.map.setCenter({ lat: vessel.lat, lng: vessel.lon });
-  state.map.setZoom(9);
+  state.map.setView([vessel.lat, vessel.lon], 9, { animate: true });
 
-  const entry = state.activeVesselMarkers[vesselId];
-  if (entry) {
+  const marker = state.activeVesselMarkers[vesselId];
+  if (marker) {
     setTimeout(() => {
-      entry.marker.setPopup(entry.popupHtml, { openPopup: true });
+      marker.openPopup();
     }, 400);
   }
 };
@@ -3230,7 +2537,7 @@ function startLiveVesselSimulation() {
     state.vessels.forEach(v => {
       const rad = (v.heading * Math.PI) / 180;
       const speedDeg = (v.speed_knots / 3600) * 0.04;
-
+      
       v.lat += Math.cos(rad) * speedDeg;
       v.lon += Math.sin(rad) * speedDeg;
 
@@ -3239,9 +2546,9 @@ function startLiveVesselSimulation() {
       if (v.lon < 66.0) v.heading = 90;
       if (v.lon > 88.0) v.heading = 270;
 
-      const entry = state.activeVesselMarkers[v.id];
-      if (entry) {
-        entry.marker.setPosition({ lat: v.lat, lng: v.lon });
+      const marker = state.activeVesselMarkers[v.id];
+      if (marker) {
+        marker.setLatLng([v.lat, v.lon]);
       }
     });
 
