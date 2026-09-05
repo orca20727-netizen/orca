@@ -210,13 +210,13 @@
 
           <div class="flex flex-wrap gap-3 pt-2 reveal">
             <button onclick="switchTab('chat')" class="sfb-btn glow-btn px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
-              <span>🤖</span> <span data-i18n="ctaStudio">Launch AI Decision Studio</span>
+              <span></span> <span data-i18n="ctaStudio">Launch AI Decision Studio</span>
             </button>
             <button onclick="switchTab('map')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-white font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
-              <span>🗺️</span> <span data-i18n="ctaMap">Open GIS Command Map</span>
+              <span></span> <span data-i18n="ctaMap">Open GIS Command Map</span>
             </button>
             <button onclick="switchTab('fleet')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-cyan-300 font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
-              <span>🚢</span> <span data-i18n="ctaFleet">Inspect Fleet Monitor</span>
+              <span></span> <span data-i18n="ctaFleet">Inspect Fleet Monitor</span>
             </button>
           </div>
         </div>
@@ -310,7 +310,7 @@
           <div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 class="font-bold text-white text-base flex items-center gap-2">
-                <span>🤖</span> AI Decision Studio & Multi-Agent Chatbot
+                <span></span> AI Decision Studio & Multi-Agent Chatbot
               </h3>
               <p class="text-xs text-slate-400 mt-0.5">
                 Powered by collaborative agents reasoning over Oceansat-3, INSAT-3DR, and coastal geofencing
@@ -321,7 +321,7 @@
                 <span class="w-2 h-2 rounded-full bg-slate-500"></span> Checking backend...
               </span>
               <button id="btnTTSPlay" class="px-3 py-1.5 rounded-lg bg-ocean-800 hover:bg-ocean-700 text-cyan-300 border border-ocean-600 text-xs font-semibold transition flex items-center gap-1.5">
-                <span>🔊</span> Listen Audio Advisory
+                <span></span> Listen Audio Advisory
               </button>
               <button id="btnNewConversation" class="px-3 py-1.5 rounded-lg bg-ocean-800 hover:bg-ocean-700 text-slate-300 border border-ocean-600 text-xs font-semibold transition">
                 New Conversation
@@ -332,19 +332,19 @@
           <!-- Quick Action Chips -->
           <div class="flex flex-wrap gap-2">
             <button data-chat-prompt="Find the nearest high-yield PFZ fishing zone from Kochi Harbour with catch potential and species." class="px-3 py-1.5 rounded-lg bg-ocean-850 hover:bg-ocean-800 text-xs font-medium text-cyan-300 border border-ocean-700 hover:border-cyan-500/50 transition flex items-center gap-1.5">
-              <span>🐟</span> <span data-i18n="chipPFZ">Find Nearest High-Yield PFZ</span>
+              <span></span> <span data-i18n="chipPFZ">Find Nearest High-Yield PFZ</span>
             </button>
             <button data-chat-prompt="Check Sea-Venture Clearance score, significant wave height, and wind hazard for today." class="px-3 py-1.5 rounded-lg bg-ocean-850 hover:bg-ocean-800 text-xs font-medium text-emerald-300 border border-ocean-700 hover:border-emerald-500/50 transition flex items-center gap-1.5">
-              <span>🛡️</span> <span data-i18n="chipSafety">Check Sea-Venture Clearance</span>
+              <span></span> <span data-i18n="chipSafety">Check Sea-Venture Clearance</span>
             </button>
             <button data-chat-prompt="Check distance to India-Sri Lanka IMBL border and list vessels in the 2 NM danger zone." class="px-3 py-1.5 rounded-lg bg-ocean-850 hover:bg-ocean-800 text-xs font-medium text-red-300 border border-ocean-700 hover:border-red-500/50 transition flex items-center gap-1.5">
-              <span>⚠️</span> <span data-i18n="chipBorder">IMBL Border Distance Check</span>
+              <span></span> <span data-i18n="chipBorder">IMBL Border Distance Check</span>
             </button>
             <button data-chat-prompt="What is the current vessel count and density distribution across Wadge Bank and Kochi Deep?" class="px-3 py-1.5 rounded-lg bg-ocean-850 hover:bg-ocean-800 text-xs font-medium text-amber-300 border border-ocean-700 hover:border-amber-500/50 transition flex items-center gap-1.5">
-              <span>🚢</span> <span data-i18n="chipDensity">Vessel Density & Overcrowding</span>
+              <span></span> <span data-i18n="chipDensity">Vessel Density & Overcrowding</span>
             </button>
             <button data-chat-prompt="Calculate transit ETA from Kochi to PFZ-01 and verify if round-trip returns safely before 18:30 dusk." class="px-3 py-1.5 rounded-lg bg-ocean-850 hover:bg-ocean-800 text-xs font-medium text-teal-300 border border-ocean-700 hover:border-teal-500/50 transition flex items-center gap-1.5">
-              <span>⏱️</span> <span data-i18n="chipETA">Calculate ETA & Safe Return Time</span>
+              <span></span> <span data-i18n="chipETA">Calculate ETA & Safe Return Time</span>
             </button>
           </div>
 
@@ -438,7 +438,7 @@
       <div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 class="font-bold text-white text-sm flex items-center gap-2">
-            <span>🗺️</span> GIS Command Map · Indian Coastal Waters
+            <span></span> GIS Command Map · Indian Coastal Waters
           </h3>
           <p class="text-[11px] text-slate-400">
             Interactive high-contrast nautical map with real-time satellite PFZs, IMBL boundary corridors, and AIS vessel tracks.
@@ -483,7 +483,7 @@
         <div class="lg:col-span-1 p-5 rounded-xl glass-card space-y-4">
           <div class="border-b border-ocean-700 pb-2">
             <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-1.5 text-cyan-400">
-              <span>⏱️</span> <span data-i18n="routePlannerTitle">Voyage Route Simulator & Sea-State ETA</span>
+              <span></span> <span data-i18n="routePlannerTitle">Voyage Route Simulator & Sea-State ETA</span>
             </h4>
             <p class="text-[11px] text-slate-400 mt-1">A*-style path avoiding MPAs and border hazards</p>
           </div>
@@ -591,7 +591,7 @@
         </div>
 
         <div class="p-3 rounded-xl bg-ocean-950 border border-ocean-700 text-xs text-slate-400 flex items-center justify-between">
-          <span>💡 <em>Click any agent card to inspect its raw telemetry input, internal algorithms, and JSON data output.</em></span>
+          <span> <em>Click any agent card to inspect its raw telemetry input, internal algorithms, and JSON data output.</em></span>
           <span class="font-mono text-cyan-400">Orchestrator: LangGraph / Async Agent Core</span>
         </div>
       </div>
