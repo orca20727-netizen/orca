@@ -10,7 +10,8 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 COPY backend/ backend/
 COPY ais_gateway.py backend/ais_gateway.py
 COPY data/data/ data/
-COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js static/
+COPY index-2.html static/index.html
+COPY app.js styles.css sw.js manifest.json config.js live-overrides.js static/
 
 EXPOSE 8000
 
