@@ -117,11 +117,11 @@
       "name": "Murugan Thunai 7",
       "type": "Trawler",
       "lat": 9.28,
-      "lon": 79.22,
+      "lon": 79.32,
       "heading": 110,
       "speed_knots": 5.2,
       "zone": "Palk Strait Buffer",
-      "imbl_dist_nm": 1.8,
+      "imbl_dist_nm": 1.86,
       "status": "BORDER_ALERT",
       "owner": "Rameswaram Port",
       "fuel_pct": 58
