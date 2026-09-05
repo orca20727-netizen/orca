@@ -2828,6 +2828,10 @@ function updateSafetyIndexCard(weather) {
     ringEl.className = `w-14 h-14 rounded-full border-4 ${c.ring} flex items-center justify-center text-2xl ${c.text} font-bold shadow-lg ${c.glow}`;
     ringEl.textContent = theme.icon;
   }
+  if (chatClearanceEl) {
+  chatClearanceEl.textContent = `${weather.clearance_verdict} (${weather.safety_score}/100)`;
+  chatClearanceEl.className = `${c.text} font-bold`;
+}
 
   const waveVal = document.getElementById('safetyTileWaveVal');
   const waveBand = document.getElementById('safetyTileWaveBand');
