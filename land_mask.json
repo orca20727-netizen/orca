@@ -1,5 +1,5 @@
 {
-  "source": "SIMPLIFIED_APPROXIMATION (hand-authored coastline outline for demo-grade land-avoidance routing -- NOT surveyed GIS/hydrographic data, NOT for real navigation)",
+  "source": "SIMPLIFIED_APPROXIMATION (hand-authored coastline outline for demo-grade land-avoidance routing -- NOT surveyed GIS/hydrographic data, NOT for real navigation; the Tamil Nadu east coast stretch from Rameswaram to Puducherry was corrected against Natural Earth 1:50m coastline data on 2026-09-04 after it was found to cut a ~15km-wide strip of real coastal land off as open water, letting the route planner draw paths straight through the Point Calimere / Nagapattinam / Chidambaram coastline)",
   "description": "Coarse closed polygons approximating the Indian subcontinent mainland and Sri Lanka, used only to keep the A* route planner's waypoints from crossing land. Coordinates are [lat, lon] pairs. Replace with an authoritative coastline dataset (e.g. Natural Earth / GSHHG) before any non-demo use.",
   "land_polygons": [
     {
@@ -127,36 +127,164 @@
           78.62
         ],
         [
-          9.28,
-          79.1
+          9.105,
+          78.421
         ],
         [
-          9.28,
-          79.28
+          9.269,
+          78.98
         ],
         [
-          9.85,
-          79.05
+          9.256,
+          79.213
         ],
         [
-          10.36,
-          79.7
+          9.192,
+          79.411
         ],
         [
-          11.0,
-          79.72
+          9.252,
+          79.356
         ],
         [
-          11.7,
-          79.7
+          9.285,
+          79.275
         ],
         [
-          12.4,
-          79.88
+          9.309,
+          79.107
         ],
         [
-          13.08,
-          80.15
+          9.333,
+          79.02
+        ],
+        [
+          9.394,
+          78.953
+        ],
+        [
+          9.453,
+          78.919
+        ],
+        [
+          9.566,
+          78.94
+        ],
+        [
+          9.683,
+          78.996
+        ],
+        [
+          10.035,
+          79.258
+        ],
+        [
+          10.175,
+          79.254
+        ],
+        [
+          10.257,
+          79.315
+        ],
+        [
+          10.306,
+          79.391
+        ],
+        [
+          10.33,
+          79.532
+        ],
+        [
+          10.312,
+          79.589
+        ],
+        [
+          10.3,
+          79.667
+        ],
+        [
+          10.304,
+          79.757
+        ],
+        [
+          10.323,
+          79.838
+        ],
+        [
+          10.769,
+          79.85
+        ],
+        [
+          11.197,
+          79.849
+        ],
+        [
+          11.269,
+          79.835
+        ],
+        [
+          11.339,
+          79.799
+        ],
+        [
+          11.313,
+          79.693
+        ],
+        [
+          11.371,
+          79.749
+        ],
+        [
+          11.447,
+          79.793
+        ],
+        [
+          11.575,
+          79.754
+        ],
+        [
+          11.69,
+          79.771
+        ],
+        [
+          11.989,
+          79.858
+        ],
+        [
+          12.235,
+          79.982
+        ],
+        [
+          12.296,
+          80.038
+        ],
+        [
+          12.452,
+          80.143
+        ],
+        [
+          12.69,
+          80.229
+        ],
+        [
+          13.361,
+          80.342
+        ],
+        [
+          13.437,
+          80.29
+        ],
+        [
+          13.529,
+          80.114
+        ],
+        [
+          13.521,
+          80.266
+        ],
+        [
+          13.485,
+          80.307
         ],
         [
           14.45,
