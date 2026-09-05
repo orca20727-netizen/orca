@@ -29,12 +29,31 @@
       theme: {
         extend: {
           colors: {
+            // Themeable: these resolve through CSS variables set per
+            // [data-theme] in styles.css, so every existing bg-ocean-*/
+            // text-slate-*/bg-slate-*/border-slate-* class re-themes
+            // automatically -- no markup changes needed.
             ocean: {
-              950: '#060c18',
-              900: '#0b1426',
-              850: '#0f1c34',
-              800: '#152545',
-              700: '#1e3155'
+              950: 'var(--ocean-950)',
+              900: 'var(--ocean-900)',
+              850: 'var(--ocean-850)',
+              800: 'var(--ocean-800)',
+              700: 'var(--ocean-700)'
+            },
+            slate: {
+              900: 'var(--slate-900)',
+              800: 'var(--slate-800)',
+              700: 'var(--slate-700)',
+              600: 'var(--slate-600)',
+              500: 'var(--slate-500)',
+              400: 'var(--slate-400)',
+              300: 'var(--slate-300)',
+              200: 'var(--slate-200)',
+              100: 'var(--slate-100)'
+            },
+            cyan: {
+              400: 'var(--cyan-400)',
+              300: 'var(--cyan-300)'
             },
             marine: {
               cyan: '#06b6d4',
@@ -49,23 +68,34 @@
     }
   </script>
 
-  <!-- Leaflet CSS & JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Mappls (MapmyIndia) Web Maps JS SDK -- Government of India-authorized
+       basemap. Replaces Leaflet + OpenStreetMap entirely: Mappls has no
+       plain XYZ tile layer that plugs into Leaflet, so app.js's map code
+       was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
+  <script src="https://sdk.mappls.com/map/sdk/web?v=3.0&access_token=mnxypxvjwhjexkllncpgvjrhkfacvjcjnjfa"></script>
 
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-ocean-950 text-slate-100 flex flex-col min-h-screen">
 
+  <!-- Ambient background: subtle dot-grid + floating glow orbs (UI/UX restyle, phase 7).
+       Purely decorative, fixed behind all content (z-index: -1), pointer-events: none. -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-dot-grid pulse-slow"></div>
+    <div class="ambient-orb ambient-orb-1 float-slow"></div>
+    <div class="ambient-orb ambient-orb-2 float-slow"></div>
+    <div class="ambient-orb ambient-orb-3 float-slow"></div>
+  </div>
+
   <!-- TOP HEADER -->
-  <header class="sticky top-0 z-50 bg-ocean-900/90 backdrop-blur-md border-b border-ocean-700/60 px-4 lg:px-8 py-3 flex items-center justify-between shadow-2xl">
+  <header class="sticky top-0 z-50 glass-header px-4 lg:px-8 py-3 flex items-center justify-between transition-transform duration-300">
     
     <!-- Brand Logo -->
     <div class="flex items-center gap-3">
       <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/30">
         ⚓
-        <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 border-2 border-ocean-950 animate-ping"></span>
+        <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 border-2 border-ocean-700 animate-ping"></span>
       </div>
       <div>
         <div class="flex items-center gap-2">
@@ -92,22 +122,24 @@
       </div>
 
       <!-- Live Clock -->
-      <div id="liveClock" class="hidden md:flex items-center text-xs px-3 py-1.5 rounded-lg bg-ocean-850 border border-ocean-700">
+      <div id="liveClock" class="hidden md:flex items-center text-xs px-3 py-1.5 rounded-lg glass-chip">
         <!-- populated by JS -->
       </div>
 
       <!-- Language Selector -->
-      <select id="langSelect" class="bg-ocean-850 border border-ocean-700 hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
+      <select id="langSelect" class="glass-chip hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
         <option value="en">English (EN)</option>
         <option value="hi">हिन्दी (Hindi)</option>
         <option value="ta">தமிழ் (Tamil)</option>
         <option value="ml">മലയാളം (Malayalam)</option>
-        <option value="te">తెలుగు (Telugu)</option>
-        <option value="kn">ಕನ್ನಡ (Kannada)</option>
-        <option value="bn">বাংলা (Bengali)</option>
-        <option value="or">ଓଡ଼ିଆ (Odia)</option>
-        <option value="mr">मराठी (Marathi)</option>
-        <option value="gu">ગુજરાતી (Gujarati)</option>
+      </select>
+
+      <!-- Theme Selector -->
+      <select id="themeSelect" title="Theme" class="glass-chip hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
+        <option value="night">🌙 Night</option>
+        <option value="day">☀️ Day</option>
+        <option value="grey">◐ Grey</option>
+        <option value="blue">🔵 Blue</option>
       </select>
 
       <!-- High-Visibility SOS Button -->
@@ -120,30 +152,30 @@
   </header>
 
   <!-- SECONDARY NAVIGATION BAR -->
-  <nav class="bg-ocean-900 border-b border-ocean-700/40 px-4 lg:px-8 py-2 overflow-x-auto">
+  <nav class="glass-nav px-4 lg:px-8 py-2 overflow-x-auto">
     <div class="flex items-center gap-1 sm:gap-2 min-w-max">
-      <button data-nav-target="home" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5 bg-cyan-500/20 text-cyan-400 border-cyan-500/50">
+      <button data-nav-target="home" class="sfb-btn sfb-active px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5 bg-cyan-500/20 text-cyan-400 border-cyan-500/50">
         <span>🏠</span> <span data-i18n="navHome">Home</span>
       </button>
-      <button data-nav-target="chat" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+      <button data-nav-target="chat" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
         <span>🤖</span> <span data-i18n="navChat">AI Decision Studio</span>
       </button>
-      <button data-nav-target="map" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+      <button data-nav-target="map" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
         <span>🗺️</span> <span data-i18n="navMap">GIS Command Map</span>
       </button>
-      <button data-nav-target="dag" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+      <button data-nav-target="dag" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
         <span>🕸️</span> <span data-i18n="navDAG">Agent DAG Visualizer</span>
       </button>
-      <button data-nav-target="safety" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+      <button data-nav-target="safety" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
         <span>🛡️</span> <span data-i18n="navSafety">Safety Barometer</span>
       </button>
-      <button data-nav-target="fleet" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+      <button data-nav-target="fleet" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
         <span>🚢</span> <span data-i18n="navFleet">Fleet Monitor</span>
       </button>
-      <button data-nav-target="navic" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+      <button data-nav-target="navic" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
         <span>🛰️</span> <span data-i18n="navNavic">NavIC GPS Bridge</span>
       </button>
-      <button data-nav-target="bulletins" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+      <button data-nav-target="bulletins" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
         <span>📢</span> <span data-i18n="navBulletins">Advisory Bulletins</span>
       </button>
     </div>
@@ -162,28 +194,28 @@
         <div class="absolute -right-16 -top-16 w-96 h-96 rounded-full bg-cyan-500/10 filter blur-3xl pointer-events-none"></div>
         <div class="absolute -left-16 -bottom-16 w-96 h-96 rounded-full bg-teal-500/10 filter blur-3xl pointer-events-none"></div>
         
-        <div class="relative z-10 max-w-3xl space-y-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold">
+        <div class="relative z-10 max-w-3xl space-y-4 stagger-children">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold reveal">
             <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
             Smart India Hackathon 2026 · PS 26176 · ISRO Dept. of Space
           </div>
           
-          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight" data-i18n="heroTitle">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white text-gradient leading-tight reveal" data-i18n="heroTitle">
             Collaborative Marine Intelligence for the Indian Ocean
           </h2>
           
-          <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-normal" data-i18n="heroDesc">
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-normal reveal" data-i18n="heroDesc">
             Reasoning over ISRO Oceansat-3, INSAT-3DR satellite oceanography, IMBL geofencing, real-time fleet density, and voyage ETA to empower India's coastal fishing community.
           </p>
 
-          <div class="flex flex-wrap gap-3 pt-2">
-            <button onclick="switchTab('chat')" class="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
+          <div class="flex flex-wrap gap-3 pt-2 reveal">
+            <button onclick="switchTab('chat')" class="sfb-btn glow-btn px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
               <span>🤖</span> <span data-i18n="ctaStudio">Launch AI Decision Studio</span>
             </button>
-            <button onclick="switchTab('map')" class="px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-white font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
+            <button onclick="switchTab('map')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-white font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
               <span>🗺️</span> <span data-i18n="ctaMap">Open GIS Command Map</span>
             </button>
-            <button onclick="switchTab('fleet')" class="px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-cyan-300 font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
+            <button onclick="switchTab('fleet')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-cyan-300 font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
               <span>🚢</span> <span data-i18n="ctaFleet">Inspect Fleet Monitor</span>
             </button>
           </div>
@@ -192,7 +224,7 @@
 
       <!-- Constellation & Fleet KPI Counters -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg">
+        <div class="p-5 rounded-xl glass-card">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-slate-400 font-medium" data-i18n="statsActiveVessels">Active Vessels Tracked</span>
             <span class="text-cyan-400 text-base">🚢</span>
@@ -201,7 +233,7 @@
           <span class="text-[11px] text-emerald-400 mt-1 block">Simulated AIS fleet</span>
         </div>
 
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg">
+        <div class="p-5 rounded-xl glass-card">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-slate-400 font-medium" data-i18n="statsSatellites">ISRO Satellite Feeds</span>
             <span class="text-cyan-400 text-base">🛰️</span>
@@ -210,7 +242,7 @@
           <span class="text-[11px] text-slate-400 mt-1 block">Oceansat-3, INSAT-3DR, Sentinel-3</span>
         </div>
 
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg">
+        <div class="p-5 rounded-xl glass-card">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-slate-400 font-medium" data-i18n="statsPFZ">High-Yield Fishing Zones</span>
             <span class="text-cyan-400 text-base">🐟</span>
@@ -219,7 +251,7 @@
           <span class="text-[11px] text-slate-400 mt-1 block">Wadge Bank, Kochi, Veraval...</span>
         </div>
 
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg">
+        <div class="p-5 rounded-xl glass-card">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-slate-400 font-medium" data-i18n="statsIMBL">IMBL Geofenced Sectors</span>
             <span class="text-red-400 text-base">🛡️</span>
@@ -231,7 +263,7 @@
 
       <!-- Feature Highlight Pillars -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="p-6 rounded-xl bg-ocean-900/80 border border-ocean-700/80 space-y-3">
+        <div class="p-6 rounded-xl glass-card space-y-3">
           <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg font-bold border border-cyan-500/30">
             🕸️
           </div>
@@ -241,7 +273,7 @@
           </p>
         </div>
 
-        <div class="p-6 rounded-xl bg-ocean-900/80 border border-ocean-700/80 space-y-3">
+        <div class="p-6 rounded-xl glass-card space-y-3">
           <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-lg font-bold border border-teal-500/30">
             ⏱️
           </div>
@@ -251,7 +283,7 @@
           </p>
         </div>
 
-        <div class="p-6 rounded-xl bg-ocean-900/80 border border-ocean-700/80 space-y-3">
+        <div class="p-6 rounded-xl glass-card space-y-3">
           <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold border border-emerald-500/30">
             📡
           </div>
@@ -275,7 +307,7 @@
         <div class="flex-1 space-y-4">
           
           <!-- Header Card -->
-          <div class="p-4 rounded-xl bg-ocean-900 border border-ocean-700/80 flex flex-wrap items-center justify-between gap-3">
+          <div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 class="font-bold text-white text-base flex items-center gap-2">
                 <span>🤖</span> AI Decision Studio & Multi-Agent Chatbot
@@ -317,7 +349,7 @@
           </div>
 
           <!-- Messages Container -->
-          <div id="chatMessages" class="p-4 sm:p-6 rounded-xl bg-ocean-900 border border-ocean-700/80 min-h-[420px] max-h-[580px] overflow-y-auto space-y-4">
+          <div id="chatMessages" class="p-4 sm:p-6 rounded-xl glass-card min-h-[420px] max-h-[580px] overflow-y-auto space-y-4">
             
             <div class="flex items-start gap-3">
               <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg">
@@ -347,7 +379,7 @@
           </div>
 
           <!-- Chat Input Bar with Microphone STT -->
-          <div class="flex items-center gap-2 p-2 rounded-xl bg-ocean-900 border border-ocean-700 focus-within:border-cyan-500 shadow-xl transition">
+          <div class="flex items-center gap-2 p-2 rounded-xl glass-card focus-within:border-cyan-500 transition">
             
             <button id="btnVoiceInput" title="Speak Query (Speech-to-Text)" class="p-2.5 rounded-lg bg-ocean-800 hover:bg-cyan-600 text-cyan-300 hover:text-white transition flex items-center justify-center shadow-md">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -358,7 +390,7 @@
 
             <input id="chatInput" type="text" data-i18n-placeholder="chatPlaceholder" placeholder="Ask ORCA (or click microphone to speak)..." class="flex-1 bg-transparent px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none font-sans">
             
-            <button id="btnSendChat" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1">
+            <button id="btnSendChat" class="glow-btn px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1">
               <span data-i18n="chatSend">Ask Agents</span> <span>➔</span>
             </button>
           </div>
@@ -367,24 +399,24 @@
 
         <!-- Sidebar Telemetry Quick Cards -->
         <div class="w-full lg:w-80 space-y-4">
-          <div class="p-4 rounded-xl bg-ocean-900 border border-ocean-700/80 space-y-3">
+          <div class="p-4 rounded-xl glass-card space-y-3">
             <h4 class="font-bold text-xs uppercase tracking-wider text-cyan-400">Live Ocean Telemetry</h4>
             <div class="space-y-2 text-xs">
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Current Sea Clearance:</span>
-                <span id="marineClearanceVal" class="text-amber-300 font-bold">AWAITING LIVE FEED</span>
+                <span class="text-emerald-400 font-bold">SAFE (88/100)</span>
               </div>
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Significant Waves:</span>
-                <span id="marineWaveVal" class="text-cyan-300 font-mono font-bold">—</span>
+                <span id="marineWaveVal" class="text-cyan-300 font-mono font-bold">1.25 m</span>
               </div>
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Surface Wind:</span>
-                <span id="marineWindVal" class="text-slate-200 font-mono font-bold">—</span>
+                <span id="marineWindVal" class="text-slate-200 font-mono font-bold">14.2 kn</span>
               </div>
-              <div class="flex justify-between p-2 rounded bg-ocean-850 border border-ocean-700">
+              <div class="flex justify-between p-2 rounded glass-chip">
                 <span class="text-slate-400">Active Vessels:</span>
-                <span id="dagPanelVesselCount" class="text-amber-300 font-bold">Awaiting feed</span>
+                <span id="dagPanelVesselCount" class="text-amber-300 font-bold">35 Tracked</span>
               </div>
             </div>
             <button onclick="switchTab('dag')" class="w-full py-2 bg-ocean-800 hover:bg-ocean-700 text-cyan-300 rounded-lg text-xs font-semibold transition border border-ocean-600">
@@ -403,7 +435,7 @@
     <section id="tab-map" class="tab-content hidden space-y-4">
       
       <!-- Top Map Controls & Layer Switcher -->
-      <div class="p-4 rounded-xl bg-ocean-900 border border-ocean-700/80 flex flex-wrap items-center justify-between gap-3 shadow-lg">
+      <div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 class="font-bold text-white text-sm flex items-center gap-2">
             <span>🗺️</span> GIS Command Map · Indian Coastal Waters
@@ -438,13 +470,17 @@
             <input type="checkbox" id="layerHeatmap" checked class="rounded bg-ocean-800 border-ocean-600 text-amber-500 focus:ring-0">
             <span>Density Heatmap</span>
           </label>
+          <label class="flex items-center gap-1.5 cursor-pointer font-medium" style="color:#ff9933;">
+            <input type="checkbox" id="layerIndiaBoundary" checked class="rounded bg-ocean-800 border-ocean-600 focus:ring-0" style="accent-color:#ff9933;">
+            <span>India Boundary (Survey of India)</span>
+          </label>
         </div>
       </div>
 
       <!-- Main Map & Route Simulator Panel Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
         
-        <div class="lg:col-span-1 p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 space-y-4 shadow-xl">
+        <div class="lg:col-span-1 p-5 rounded-xl glass-card space-y-4">
           <div class="border-b border-ocean-700 pb-2">
             <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-1.5 text-cyan-400">
               <span>⏱️</span> <span data-i18n="routePlannerTitle">Voyage Route Simulator & Sea-State ETA</span>
@@ -455,15 +491,15 @@
           <div class="space-y-3 text-xs">
             <div>
               <label class="block text-slate-400 mb-1" data-i18n="originHarbour">Origin Fishing Harbour</label>
-              <select id="routeOriginSelect" class="w-full bg-ocean-850 border border-ocean-700 rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
+              <select id="routeOriginSelect" class="w-full glass-chip rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
             </div>
 
             <div>
               <label class="block text-slate-400 mb-1" data-i18n="destinationPFZ">Destination PFZ Zone</label>
-              <select id="routePFZSelect" class="w-full bg-ocean-850 border border-ocean-700 rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
+              <select id="routePFZSelect" class="w-full glass-chip rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
             </div>
 
-            <button id="btnSimulateRoute" class="w-full py-2 bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold rounded-lg transition shadow-md" data-i18n="simulateRouteBtn">
+            <button id="btnSimulateRoute" class="glow-btn w-full py-2 bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold rounded-lg transition shadow-md" data-i18n="simulateRouteBtn">
               Simulate Safe Route & ETA
             </button>
           </div>
@@ -494,9 +530,9 @@
           
           <div class="absolute bottom-3 left-3 right-3 z-20 bg-ocean-950/90 backdrop-blur-md border border-ocean-700/80 rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div class="flex items-center gap-4">
-              <div><span class="text-slate-400">Wave Height:</span> <span class="text-cyan-400 font-bold">1.25 m</span></div>
-              <div><span class="text-slate-400">Wind:</span> <span class="text-slate-200 font-bold">14.2 kn W</span></div>
-              <div><span class="text-slate-400">Clearance:</span> <span class="text-emerald-400 font-bold">SAFE (88/100)</span></div>
+              <div><span class="text-slate-400">Wave Height:</span> <span id="mapHudWave" class="text-cyan-400 font-bold">1.25 m</span></div>
+              <div><span class="text-slate-400">Wind:</span> <span id="mapHudWind" class="text-slate-200 font-bold">14.2 kn W</span></div>
+              <div><span class="text-slate-400">Clearance:</span> <span id="mapHudClearance" class="text-emerald-400 font-bold">SAFE (88/100)</span></div>
             </div>
             <div id="mapActiveVessels" class="text-amber-300 font-bold">
               35 Active Vessels
@@ -513,7 +549,7 @@
     <!-- ==================================================== -->
     <section id="tab-dag" class="tab-content hidden space-y-6">
       
-      <div class="p-6 rounded-2xl bg-ocean-900 border border-ocean-700/80 space-y-4 shadow-2xl">
+      <div class="p-6 rounded-2xl glass-card space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700/80 pb-4">
           <div>
             <div class="flex items-center gap-2">
@@ -536,17 +572,17 @@
             <div class="flex items-center bg-ocean-950 border border-ocean-700 rounded-lg p-1">
               <button id="btnDAGZoomIn" class="px-2.5 py-1 text-slate-300 hover:text-white font-bold text-xs transition">+</button>
               <button id="btnDAGZoomOut" class="px-2.5 py-1 text-slate-300 hover:text-white font-bold text-xs transition">-</button>
-              <button id="btnDAGZoomReset" class="px-2.5 py-1 text-slate-400 hover:text-white text-xs border-l border-ocean-800 transition">Reset</button>
+              <button id="btnDAGZoomReset" class="px-2.5 py-1 text-slate-400 hover:text-white text-xs border-l border-ocean-700 transition">Reset</button>
             </div>
 
-            <button id="btnRunDAGSimulation" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition">
+            <button id="btnRunDAGSimulation" class="glow-btn px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition">
               ▶ Run Live Pipeline Simulation
             </button>
           </div>
         </div>
 
         <!-- Dynamic DAG Canvas Container -->
-        <div class="dag-canvas-container p-6 rounded-xl border border-ocean-800 overflow-hidden relative">
+        <div class="dag-canvas-container p-6 rounded-xl border border-ocean-700 overflow-hidden relative">
           <div id="dagCanvasInner" class="transition-transform duration-300 origin-top-left">
             <div id="dagNodesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
               <!-- Populated by JS -->
@@ -554,7 +590,7 @@
           </div>
         </div>
 
-        <div class="p-3 rounded-xl bg-ocean-950 border border-ocean-800 text-xs text-slate-400 flex items-center justify-between">
+        <div class="p-3 rounded-xl bg-ocean-950 border border-ocean-700 text-xs text-slate-400 flex items-center justify-between">
           <span>💡 <em>Click any agent card to inspect its raw telemetry input, internal algorithms, and JSON data output.</em></span>
           <span class="font-mono text-cyan-400">Orchestrator: LangGraph / Async Agent Core</span>
         </div>
@@ -565,19 +601,19 @@
     <!-- ==================================================== -->
     <!-- 5. SAFETY BAROMETER SECTION -->
     <!-- ==================================================== -->
-    <section id="tab-safety" class="tab-content hidden space-y-6">
-      
+        <section id="tab-safety" class="tab-content hidden space-y-6">
+
       <!-- Sea-Venture Clearance Verdict Card -->
-      <div class="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-ocean-900 to-ocean-900 border border-emerald-500/50 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div id="safetyVerdictCard" class="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-ocean-900 to-ocean-900 border border-emerald-500/50 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="space-y-2 max-w-xl">
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+            <span id="safetyPulseDot" class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
             <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">Official Maritime Clearance</span>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white" data-i18n="clearanceSafe">
+          <h2 id="safetyVerdictText" class="text-2xl sm:text-3xl font-extrabold text-white">
             SAFE FOR SEA VENTURE
           </h2>
-          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          <p id="safetyVerdictDesc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
             All satellite oceanography indicators (Oceansat-3 SSTM thermal fronts, Sentinel-3 wave altimetry) confirm favorable fishing conditions along Kerala, Karnataka, and Tamil Nadu coastal waters.
           </p>
         </div>
@@ -585,9 +621,9 @@
         <div class="flex items-center gap-4 bg-ocean-950/90 p-4 rounded-xl border border-emerald-500/40">
           <div class="text-right">
             <span class="text-xs text-slate-400 block font-mono">Safety Index</span>
-            <span class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono">88<span class="text-lg text-slate-400 font-normal">/100</span></span>
+            <span id="safetyIndexScore" class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono">88</span><span class="text-lg text-slate-400 font-normal">/100</span>
           </div>
-          <div class="w-14 h-14 rounded-full border-4 border-emerald-400 flex items-center justify-center text-2xl text-emerald-400 font-bold shadow-lg shadow-emerald-500/30">
+          <div id="safetyIndexRing" class="w-14 h-14 rounded-full border-4 border-emerald-400 flex items-center justify-center text-2xl text-emerald-400 font-bold shadow-lg shadow-emerald-500/30">
             ✓
           </div>
         </div>
@@ -595,64 +631,64 @@
 
       <!-- 4 Condition Tiles with 24-Hour Sparklines -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg space-y-2">
+
+        <div class="p-5 rounded-xl glass-card space-y-2">
           <div class="flex justify-between items-start">
             <span class="text-xs text-slate-400 font-medium" data-i18n="waveHeight">Significant Wave Height</span>
-            <span class="text-cyan-400 text-xs font-mono font-bold">1.25 m</span>
+            <span id="safetyTileWaveVal" class="text-cyan-400 text-xs font-mono font-bold">1.25 m</span>
           </div>
-          <div class="text-xl font-bold text-white">Moderate (1.1 - 1.4m)</div>
+          <div id="safetyTileWaveBand" class="text-xl font-bold text-white">Moderate (1.25 - 2.5m)</div>
           <div class="pt-2">
-            <div class="text-[10px] text-slate-400 mb-1 font-mono">24h SWH Trend (Open-Meteo / Sentinel-3)</div>
+            <div class="text-[10px] text-slate-400 mb-1 font-mono">24h SWH Trend (Open-Meteo)</div>
             <div id="sparklineWave"></div>
           </div>
         </div>
 
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg space-y-2">
+        <div class="p-5 rounded-xl glass-card space-y-2">
           <div class="flex justify-between items-start">
             <span class="text-xs text-slate-400 font-medium" data-i18n="windSpeed">Surface Wind Speed</span>
-            <span class="text-blue-400 text-xs font-mono font-bold">14.2 kn</span>
+            <span id="safetyTileWindVal" class="text-blue-400 text-xs font-mono font-bold">14.2 kn</span>
           </div>
-          <div class="text-xl font-bold text-white">Westerly Breeze</div>
+          <div id="safetyTileWindBand" class="text-xl font-bold text-white">Westerly Breeze</div>
           <div class="pt-2">
-            <div class="text-[10px] text-slate-400 mb-1 font-mono">24h Wind Vector (Scatterometer)</div>
+            <div class="text-[10px] text-slate-400 mb-1 font-mono">24h Wind Trend (Open-Meteo)</div>
             <div id="sparklineWind"></div>
           </div>
         </div>
 
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg space-y-2">
+        <div class="p-5 rounded-xl glass-card space-y-2">
           <div class="flex justify-between items-start">
             <span class="text-xs text-slate-400 font-medium" data-i18n="seaState">Douglas Sea State</span>
             <span id="marineSeaVal" class="text-emerald-400 text-xs font-mono font-bold">State 3</span>
           </div>
-          <div class="text-xl font-bold text-white">Slight to Moderate</div>
+          <div id="safetyTileSeaBand" class="text-xl font-bold text-white">Slight to Moderate</div>
           <div class="pt-2">
             <div class="text-[10px] text-slate-400 mb-1 font-mono">24h Sea State Index</div>
             <div id="sparklineSea"></div>
           </div>
         </div>
 
-        <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 shadow-lg space-y-2">
+        <div class="p-5 rounded-xl glass-card space-y-2">
           <div class="flex justify-between items-start">
             <span class="text-xs text-slate-400 font-medium" data-i18n="lightningRisk">Lightning & Squall Risk</span>
-            <span class="text-amber-400 text-xs font-mono font-bold">8% Low</span>
+            <span id="safetyTileLightningVal" class="text-amber-400 text-xs font-mono font-bold">8% Low</span>
           </div>
-          <div class="text-xl font-bold text-white">Safe Atmospheric Profile</div>
+          <div id="safetyTileLightningBand" class="text-xl font-bold text-white">Safe Atmospheric Profile</div>
           <div class="pt-2">
-            <div class="text-[10px] text-slate-400 mb-1 font-mono">24h Convective Risk (INSAT-3DR)</div>
+            <div class="text-[10px] text-slate-400 mb-1 font-mono">24h Convective Risk (Open-Meteo cloud cover proxy)</div>
             <div id="sparklineLightning"></div>
           </div>
         </div>
 
       </div>
 
-      <!-- Live Satellite Health Telemetry Cards -->
+      <!-- Satellite Constellation Reference Cards -->
       <div class="space-y-3">
         <div class="flex items-center justify-between">
           <h3 class="text-base font-bold text-white flex items-center gap-2">
             <span>🛰️</span> ISRO & International Oceanographic Satellite Constellation
           </h3>
-          <span class="text-xs font-mono text-cyan-400">Telemetry Frequency: 30s</span>
+          <span class="text-xs font-mono text-cyan-400">Static reference data (not live telemetry)</span>
         </div>
         <div id="satelliteCardsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Populated by JS -->
@@ -670,7 +706,7 @@
         
         <div class="lg:col-span-1 space-y-4">
           
-          <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 space-y-3 shadow-lg">
+          <div class="p-5 rounded-xl glass-card space-y-3">
             <div class="flex items-center justify-between">
               <h4 class="font-bold text-white text-xs uppercase tracking-wider text-cyan-400">Total Active Vessels</h4>
               <span id="fleetTotalActive" class="text-2xl font-black text-white font-mono">35</span>
@@ -678,37 +714,37 @@
             <p class="text-[11px] text-slate-400">Vessels currently broadcasting AIS transponder signals</p>
           </div>
 
-          <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 space-y-4 shadow-lg">
+          <div class="p-5 rounded-xl glass-card space-y-4">
             <h4 class="font-bold text-white text-xs uppercase tracking-wider text-cyan-400">Vessel Distribution per Zone</h4>
             <div id="zoneDistributionBars" class="space-y-3">
               <!-- Populated by JS -->
             </div>
           </div>
 
-          <div class="p-5 rounded-xl bg-red-950/40 border border-red-500/50 space-y-3 shadow-lg">
+          <div id="imblAlertCard" class="p-5 rounded-xl bg-red-950/40 border border-red-500/50 space-y-3 shadow-lg transition-colors">
             <div class="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wider">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+              <span id="imblAlertDot" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
               IMBL Border Proximity Alert
             </div>
-            <p class="text-xs text-red-200 leading-relaxed">
-              <strong>IND-TN-001 (Murugan Thunai 7)</strong> is operating at <strong>1.8 NM</strong> from Sri Lanka IMBL in Palk Strait. Automated warning dispatched.
+            <p id="imblAlertBox" class="text-xs text-red-200 leading-relaxed">
+              No vessel telemetry available yet.
             </p>
           </div>
 
         </div>
 
-        <div class="lg:col-span-2 p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 space-y-4 shadow-xl">
+        <div class="lg:col-span-2 p-5 rounded-xl glass-card space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700 pb-3">
             <div>
               <h4 class="font-bold text-white text-sm" data-i18n="vesselTableTitle">
-                Live Coastal Fleet Telemetry (Simulated AIS)
+                Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)
               </h4>
-              <p class="text-[11px] text-slate-400">Position updates synchronized with ARGOS-4 / AIS receivers</p>
+              <p class="text-[11px] text-slate-400">Live AIS positions from AISstream.io, backfilled with a clearly-tagged simulated fleet (see "SIM" badge) wherever there's currently no live receiver coverage</p>
             </div>
 
             <div class="flex items-center gap-2">
-              <input id="vesselSearchInput" type="text" placeholder="Search vessel name or ID..." class="bg-ocean-850 border border-ocean-700 rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400">
-              <select id="vesselStatusFilter" class="bg-ocean-850 border border-ocean-700 rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none">
+              <input id="vesselSearchInput" type="text" placeholder="Search vessel name or ID..." class="glass-chip rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400">
+              <select id="vesselStatusFilter" class="glass-chip rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none">
                 <option value="ALL">All Statuses</option>
                 <option value="FISHING">Safe Fishing</option>
                 <option value="TRANSIT">In Transit</option>
@@ -750,7 +786,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Left: NavIC Skyplot & Signal Meters -->
-        <div class="lg:col-span-1 p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 space-y-4 shadow-xl">
+        <div class="lg:col-span-1 p-5 rounded-xl glass-card space-y-4">
           <div class="flex items-center justify-between border-b border-ocean-700 pb-3">
             <div>
               <h4 class="font-bold text-white text-sm flex items-center gap-2">
@@ -764,7 +800,7 @@
           </div>
 
           <!-- Polar Skyplot Canvas -->
-          <div class="flex items-center justify-center p-2 rounded-xl skyplot-grid border border-ocean-800">
+          <div class="flex items-center justify-center p-2 rounded-xl skyplot-grid border border-ocean-700">
             <canvas id="navicSkyplotCanvas" width="260" height="260"></canvas>
           </div>
 
@@ -780,7 +816,7 @@
         <!-- Right: NMEA-0183 Serial Console & Geofencing Monitor -->
         <div class="lg:col-span-2 space-y-4">
           
-          <div class="p-5 rounded-xl bg-ocean-900 border border-ocean-700/80 space-y-3 shadow-xl">
+          <div class="p-5 rounded-xl glass-card space-y-3">
             <div class="flex items-center justify-between">
               <h4 class="font-bold text-white text-sm flex items-center gap-2">
                 <span>💻</span> Live NMEA-0183 Hardware Stream ($GNGGA / $GNRMC)
@@ -788,25 +824,25 @@
               <span class="text-xs font-mono text-cyan-400">Baud Rate: 9600 bps · 1 Hz Feed</span>
             </div>
             
-            <pre id="nmeaLiveConsole" class="p-4 rounded-xl bg-ocean-950 border border-ocean-800 text-xs font-mono text-emerald-400 overflow-x-auto h-[130px]"></pre>
+            <pre id="nmeaLiveConsole" class="p-4 rounded-xl bg-ocean-950 border border-ocean-700 text-xs font-mono text-emerald-400 overflow-x-auto h-[130px]"></pre>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="p-4 rounded-xl bg-ocean-900 border border-ocean-700 text-xs space-y-1">
+            <div class="p-4 rounded-xl glass-card text-xs space-y-1">
               <span class="text-slate-400 block font-mono">DOP Precision</span>
               <span class="text-lg font-bold text-white font-mono">HDOP 1.05 (Excellent)</span>
             </div>
-            <div class="p-4 rounded-xl bg-ocean-900 border border-ocean-700 text-xs space-y-1">
+            <div class="p-4 rounded-xl glass-card text-xs space-y-1">
               <span class="text-slate-400 block font-mono">Differential Fix</span>
               <span class="text-lg font-bold text-emerald-400 font-mono">NavIC DGPS Active</span>
             </div>
-            <div class="p-4 rounded-xl bg-ocean-900 border border-ocean-700 text-xs space-y-1">
+            <div class="p-4 rounded-xl glass-card text-xs space-y-1">
               <span class="text-slate-400 block font-mono">Border Alert Hardware</span>
               <span class="text-lg font-bold text-cyan-300 font-mono">Buzzer Armed</span>
             </div>
           </div>
 
-          <div class="p-4 rounded-xl bg-ocean-900 border border-ocean-700 text-xs space-y-3">
+          <div class="p-4 rounded-xl glass-card text-xs space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h4 class="font-bold text-white">Live position geofencing</h4>
@@ -831,7 +867,7 @@
     <!-- ==================================================== -->
     <section id="tab-bulletins" class="tab-content hidden space-y-6">
       
-      <div class="p-6 rounded-2xl bg-ocean-900 border border-ocean-700/80 space-y-4 shadow-2xl">
+      <div class="p-6 rounded-2xl glass-card space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700 pb-4">
           <div>
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
@@ -866,7 +902,7 @@
 
   <!-- SOS EMERGENCY MODAL -->
   <div id="sosModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-ocean-900 border-2 border-red-500 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+    <div class="glass-card-strong border-2 border-red-500 rounded-2xl max-w-lg w-full p-6 space-y-5">
       
       <div class="flex items-center justify-between border-b border-red-500/40 pb-3">
         <div class="flex items-center gap-2 text-red-400 font-extrabold text-lg">
@@ -899,7 +935,7 @@
 
   <!-- DAG NODE INSPECTOR MODAL -->
   <div id="dagInspectorModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-ocean-900 border border-cyan-500/60 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+    <div class="glass-card-strong border border-cyan-500/60 rounded-2xl max-w-2xl w-full p-6 space-y-4">
       
       <div class="flex items-center justify-between border-b border-ocean-700 pb-3">
         <div>
@@ -914,7 +950,7 @@
           <span id="inspectorLatency" class="text-emerald-400 font-semibold">Latency: 24ms</span>
           <span class="text-slate-500">Live JSON Payload</span>
         </div>
-        <pre id="inspectorRawJSON" class="p-4 rounded-xl bg-ocean-950 border border-ocean-800 text-xs font-mono text-cyan-300 overflow-x-auto max-h-[300px]"></pre>
+        <pre id="inspectorRawJSON" class="p-4 rounded-xl bg-ocean-950 border border-ocean-700 text-xs font-mono text-cyan-300 overflow-x-auto max-h-[300px]"></pre>
       </div>
 
       <div class="pt-2 text-right">
