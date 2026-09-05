@@ -21,59 +21,62 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="ORCA INSIGHT">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    <script type="importmap">
-  {
-   "imports": {
+ <!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Import map so wavegrid.js can `import * as THREE from "three"` -->
+<script type="importmap">
+{
+  "imports": {
     "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
-   }
- }
+  }
+}
 </script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            // Themeable: these resolve through CSS variables set per
-            // [data-theme] in styles.css, so every existing bg-ocean-*/
-            // text-slate-*/bg-slate-*/border-slate-* class re-themes
-            // automatically -- no markup changes needed.
-            ocean: {
-              950: 'var(--ocean-950)',
-              900: 'var(--ocean-900)',
-              850: 'var(--ocean-850)',
-              800: 'var(--ocean-800)',
-              700: 'var(--ocean-700)'
-            },
-            slate: {
-              900: 'var(--slate-900)',
-              800: 'var(--slate-800)',
-              700: 'var(--slate-700)',
-              600: 'var(--slate-600)',
-              500: 'var(--slate-500)',
-              400: 'var(--slate-400)',
-              300: 'var(--slate-300)',
-              200: 'var(--slate-200)',
-              100: 'var(--slate-100)'
-            },
-            cyan: {
-              400: 'var(--cyan-400)',
-              300: 'var(--cyan-300)'
-            },
-            marine: {
-              cyan: '#06b6d4',
-              teal: '#14b8a6',
-              emerald: '#10b981',
-              amber: '#f59e0b',
-              danger: '#ef4444'
-            }
-          }
+
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        // Themeable: these resolve through CSS variables set per
+        // [data-theme] in styles.css, so every existing bg-ocean-*/
+        // text-slate-*/bg-slate-*/border-slate-* class re-themes
+        // automatically -- no markup changes needed.
+        ocean: {
+          950: 'var(--ocean-950)',
+          900: 'var(--ocean-900)',
+          850: 'var(--ocean-850)',
+          800: 'var(--ocean-800)',
+          700: 'var(--ocean-700)'
+        },
+        slate: {
+          900: 'var(--slate-900)',
+          800: 'var(--slate-800)',
+          700: 'var(--slate-700)',
+          600: 'var(--slate-600)',
+          500: 'var(--slate-500)',
+          400: 'var(--slate-400)',
+          300: 'var(--slate-300)',
+          200: 'var(--slate-200)',
+          100: 'var(--slate-100)'
+        },
+        cyan: {
+          400: 'var(--cyan-400)',
+          300: 'var(--cyan-300)'
+        },
+        marine: {
+          cyan: '#06b6d4',
+          teal: '#14b8a6',
+          emerald: '#10b981',
+          amber: '#f59e0b',
+          danger: '#ef4444'
         }
       }
     }
-  </script>
+  }
+}
+</script>
   
 
   <!-- Mappls (MapmyIndia) Web Maps JS SDK -- Government of India-authorized
