@@ -2796,6 +2796,7 @@ function updateSafetyIndexCard(weather) {
   const cardEl = document.getElementById('safetyVerdictCard');
   const dotEl = document.getElementById('safetyPulseDot');
   const ringEl = document.getElementById('safetyIndexRing');
+  const chatClearanceEl = document.getElementById('chatSeaClearanceVal');
 
   const verdict = weather.clearance_verdict || 'SAFE';
   const theme = {
