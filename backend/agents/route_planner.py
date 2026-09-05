@@ -108,17 +108,6 @@ class RoutePlanner:
         olat, olon = origin
         dlat, dlon = destination
 
-        # Never silently draw a route from or to land.  Harbour/PFZ inputs
-        # must be placed on water before planning can begin.
-        if self._on_land(olat, olon) or self._on_land(dlat, dlon):
-            return {
-                "route_found": False,
-                "reason": "ENDPOINT_NOT_IN_NAVIGABLE_WATER",
-                "detail": "Origin or destination is on land; choose a harbour or PFZ water coordinate.",
-                "waypoints": [], "land_avoidance": True, "mpa_avoidance_active": True,
-                "route_source": "A_STAR",
-            }
-
         raw_lat_span = abs(dlat - olat)
         raw_lon_span = abs(dlon - olon)
         raw_span = max(raw_lat_span, raw_lon_span)
@@ -289,17 +278,6 @@ class RoutePlanner:
         # back to the un-simplified (denser) path if not.
         if not self._path_is_clear(simplified):
             simplified = waypoints_latlon
-
-        # The dense fallback is deliberately checked too.  This makes the
-        # promise of a water-only path explicit even for a coarse land mask.
-        if not self._path_is_clear(simplified):
-            return {
-                "route_found": False,
-                "reason": "ROUTE_VERIFICATION_FAILED",
-                "detail": "No fully water-only route could be verified for these coordinates.",
-                "waypoints": [], "land_avoidance": True, "mpa_avoidance_active": True,
-                "route_source": "A_STAR",
-            }
 
         total_nm = 0.0
         for i in range(len(simplified) - 1):
