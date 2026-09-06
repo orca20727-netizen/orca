@@ -2806,9 +2806,9 @@ function updateSafetyIndexCard(weather) {
   }[verdict] || { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' };
 
   const colorClasses = {
-    emerald: { card: 'from-emerald-950/80 border-emerald-500/50', dot: 'bg-emerald-400', text: 'text-emerald-400', ring: 'border-emerald-400', glow: 'shadow-emerald-500/30' },
-    amber: { card: 'from-amber-950/80 border-amber-500/50', dot: 'bg-amber-400', text: 'text-amber-400', ring: 'border-amber-400', glow: 'shadow-amber-500/30' },
-    rose: { card: 'from-rose-950/80 border-rose-500/50', dot: 'bg-rose-400', text: 'text-rose-400', ring: 'border-rose-400', glow: 'shadow-rose-500/30' }
+    emerald: { border: 'border-emerald-500', dot: 'bg-emerald-400', text: 'text-emerald-400', ring: 'border-emerald-400', glow: 'shadow-emerald-500/30' },
+    amber: { border: 'border-amber-500', dot: 'bg-amber-400', text: 'text-amber-400', ring: 'border-amber-400', glow: 'shadow-amber-500/30' },
+    rose: { border: 'border-rose-500', dot: 'bg-rose-400', text: 'text-rose-400', ring: 'border-rose-400', glow: 'shadow-rose-500/30' }
   };
   const c = colorClasses[theme.color];
 
@@ -2816,12 +2816,15 @@ function updateSafetyIndexCard(weather) {
     scoreEl.textContent = weather.safety_score ?? '—';
     scoreEl.className = `text-3xl sm:text-4xl font-black ${c.text} font-mono`;
   }
-  if (verdictEl) verdictEl.textContent = theme.label;
+  if (verdictEl) {
+    verdictEl.textContent = theme.label;
+    verdictEl.className = `text-2xl sm:text-3xl font-extrabold ${c.text}`;
+  }
   if (descEl) {
     descEl.textContent = `Live Open-Meteo marine telemetry places significant wave height at ${weather.significant_wave_height_m}m and surface wind at ${weather.surface_wind_knots}kn near your selected harbour, giving a computed safety score of ${weather.safety_score}/100.`;
   }
   if (cardEl) {
-    cardEl.className = `p-6 rounded-2xl bg-gradient-to-r ${c.card} via-ocean-900 to-ocean-900 border shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6`;
+    cardEl.className = `p-6 rounded-2xl glass-card border-l-4 ${c.border} shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6`;
   }
   if (dotEl) dotEl.className = `w-3 h-3 rounded-full ${c.dot} animate-ping`;
   if (ringEl) {
@@ -3062,7 +3065,7 @@ function renderVesselsTable(filteredList = null) {
     return `
       <tr class="border-b border-slate-800 hover:bg-slate-800/50 transition ${v.is_simulated ? 'opacity-80' : ''}">
         <td class="py-2.5 px-3 font-mono text-cyan-400 text-xs font-bold">${v.id}</td>
-        <td class="py-2.5 px-3 text-xs text-[text-[#00008B]] font-medium">${v.name}</td>
+        <td class="py-2.5 px-3 text-xs text-[#00FFFF] font-medium">${v.name}</td>
         <td class="py-2.5 px-3 text-xs text-slate-400">${v.type}</td>
         <td class="py-2.5 px-3 text-xs text-slate-300">${v.zone}</td>
         <td class="py-2.5 px-3 font-mono text-xs text-slate-200">${v.speed_knots} kn / ${v.heading}°</td>
