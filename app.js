@@ -3045,13 +3045,13 @@ function renderVesselsTable(filteredList = null) {
   const list = filteredList || state.vessels;
 
   tbody.innerHTML = list.map(v => {
-    let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">SAFE FISHING</span>`;
+    let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#006A4E]">SAFE FISHING</span>`;
     if (v.status === 'BORDER_ALERT') {
-      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-300 animate-pulse">BORDER ALERT</span>`;
+      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#7E3517] animate-pulse">BORDER ALERT</span>`;
     } else if (v.status === 'BORDER_WARNING') {
-      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">BORDER WARN</span>`;
+      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#B8860B]">BORDER WARN</span>`;
     } else if (v.status === 'TRANSIT') {
-      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300">IN TRANSIT</span>`;
+      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-cyan-300">IN TRANSIT</span>`;
     }
     // Simulated fill-in vessels always carry their own tag alongside the
     // status badge, so a scan of the table never mistakes one for real AIS.
@@ -3062,11 +3062,11 @@ function renderVesselsTable(filteredList = null) {
     return `
       <tr class="border-b border-slate-800 hover:bg-slate-800/50 transition ${v.is_simulated ? 'opacity-80' : ''}">
         <td class="py-2.5 px-3 font-mono text-cyan-400 text-xs font-bold">${v.id}</td>
-        <td class="py-2.5 px-3 text-xs text-white font-medium">${v.name}</td>
+        <td class="py-2.5 px-3 text-xs text-[#00FFFF] font-medium">${v.name}</td>
         <td class="py-2.5 px-3 text-xs text-slate-400">${v.type}</td>
         <td class="py-2.5 px-3 text-xs text-slate-300">${v.zone}</td>
         <td class="py-2.5 px-3 font-mono text-xs text-slate-200">${v.speed_knots} kn / ${v.heading}°</td>
-        <td class="py-2.5 px-3 font-mono text-xs ${v.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${v.imbl_dist_nm} NM</td>
+        <td class="py-2.5 px-3 font-mono text-xs ${v.imbl_dist_nm < 5 ? 'text-[#7E3517] font-bold' : 'text-[#006A4E]'}">${v.imbl_dist_nm} NM</td>
         <td class="py-2.5 px-3">${statusBadge}${simTag}</td>
         <td class="py-2.5 px-3 text-right">
           <button onclick="zoomToVessel('${v.id}')" class="px-2 py-1 bg-slate-800 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[11px] font-medium transition">
