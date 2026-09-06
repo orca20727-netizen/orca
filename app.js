@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('ORCA INSIGHT: loadInitialData failed:', err);
   }
   runStartupStep('setupNavigation', setupNavigation);
-  runStartupStep('setupSlideFillButtons', setupSlideFillButtons);
+  runStartupStep('setupLiquidGlassButtons', setupLiquidGlassButtons);
   runStartupStep('setupHeaderScrollHide', setupHeaderScrollHide);
   runStartupStep('setupScrollReveal', setupScrollReveal);
   runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
@@ -873,55 +873,45 @@ function switchTab(tabId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Slide Fill Button (liquid hover-fill effect)
-// Faithful vanilla CSS/JS recreation of the Originkit "Slide Fill Button" —
-// the real component's source is paywalled inside Framer and not publicly
-// retrievable, so this reproduces the documented effect from scratch.
-function setupSlideFillButtons() {
+// Liquid Glass Button
+// Vanilla CSS/JS recreation of the Originkit "Liquid Glass Button" recipe:
+// a blurred glass face with a gradient edge stroke and an internal light
+// that tracks the pointer. Replaces the old wave/water hover-fill effect
+// while keeping the same .sfb-btn markup contract (data-nav-target,
+// sfb-active, etc.) so nothing else in the app has to change.
+function setupLiquidGlassButtons() {
   const buttons = document.querySelectorAll('.sfb-btn:not(.sfb-enhanced)');
   if (!buttons.length) return;
 
-  if (!window.__sfbResizeObserver) {
-    window.__sfbResizeObserver = new ResizeObserver(entries => {
-      entries.forEach(entry => {
-        const btn = entry.target;
-        const submerged = btn.querySelector('.sfb-inner--submerged');
-        if (submerged) submerged.style.height = btn.offsetHeight + 'px';
-      });
-    });
-  }
-
   buttons.forEach(btn => {
-    const cs = getComputedStyle(btn);
-
-    const baseInner = document.createElement('span');
-    baseInner.className = 'sfb-inner';
-    while (btn.firstChild) baseInner.appendChild(btn.firstChild);
-
     const content = document.createElement('span');
     content.className = 'sfb-content';
-    content.appendChild(baseInner);
+    while (btn.firstChild) content.appendChild(btn.firstChild);
 
-    const fill = document.createElement('span');
-    fill.className = 'sfb-fill';
-    fill.setAttribute('aria-hidden', 'true');
-    const submerged = baseInner.cloneNode(true);
-    submerged.classList.add('sfb-inner--submerged');
-    fill.appendChild(submerged);
+    const light = document.createElement('span');
+    light.className = 'sfb-light';
+    light.setAttribute('aria-hidden', 'true');
 
+    const ring = document.createElement('span');
+    ring.className = 'sfb-ring';
+    ring.setAttribute('aria-hidden', 'true');
+
+    btn.appendChild(light);
+    btn.appendChild(ring);
     btn.appendChild(content);
-    btn.appendChild(fill);
     btn.classList.add('sfb-enhanced');
 
-    [baseInner, submerged].forEach(inner => {
-      inner.style.display = cs.display.includes('flex') ? cs.display : 'flex';
-      inner.style.alignItems = cs.alignItems;
-      inner.style.justifyContent = cs.justifyContent;
-      inner.style.gap = cs.gap;
-    });
+    const trackPointer = e => {
+      const r = btn.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const x = ((e.clientX - r.left) / r.width) * 100;
+      const y = ((e.clientY - r.top) / r.height) * 100;
+      btn.style.setProperty('--mx', `${x.toFixed(1)}%`);
+      btn.style.setProperty('--my', `${y.toFixed(1)}%`);
+    };
 
-    submerged.style.height = btn.offsetHeight + 'px';
-    window.__sfbResizeObserver.observe(btn);
+    btn.addEventListener('pointerenter', trackPointer);
+    btn.addEventListener('pointermove', trackPointer);
   });
 }
 
