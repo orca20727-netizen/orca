@@ -1,0 +1,99 @@
+/*!
+ * transparent-cards.css (v2)
+ * Goal: no solid/boxed panels anywhere in the app -- every card becomes
+ * pure text floating over the ambient background, outlined only by
+ * the animated neon border (neon-border.js).
+ *
+ * LOAD ORDER: link this AFTER styles.css in index.html:
+ *   <link rel="stylesheet" href="styles.css">
+ *   <link rel="stylesheet" href="transparent-cards.css">
+ *
+ * WHAT THIS DELIBERATELY LEAVES ALONE (and why):
+ * - Buttons (SOS, CTAs, nav tabs, "Ask Agents", filter chips) -- these
+ *   are controls, not text cards; killing their fill makes them
+ *   invisible / hard to tap.
+ * - <select> dropdowns and the search <input> -- same reason.
+ * - Vessel table row status coloring (Safe Fishing / Border Alert
+ *   etc.) -- that color IS the information, not decoration.
+ * - The live map + its HUD overlay bar -- the HUD sits on top of the
+ *   map imagery itself, not on the sky background, so making it
+ *   transparent would make it unreadable against the map.
+ * If you want any of those flattened too, tell me which one and I'll
+ * add it -- I kept them solid on purpose rather than guessing wrong.
+ */
+
+/* ---- Core repeating surfaces ---- */
+.glass-card,
+.glass-card-strong,
+.glass-header,
+.glass-nav,
+.glass-chip {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
+/* ---- Hero banner + Safety Barometer verdict panel (inline Tailwind
+   gradients, not .glass-card) ---- */
+.rounded-2xl.bg-gradient-to-br,
+.rounded-2xl.bg-gradient-to-r {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+/* ---- Safety score box inside the verdict card ---- */
+#safetyIndexRing,
+#safetyVerdictCard > div.bg-ocean-950\/90 {
+    background: transparent !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* ---- IMBL border alert card (Fleet Monitor) ---- */
+#imblAlertCard {
+    background: transparent !important;
+}
+
+/* ---- Chat message bubbles ---- */
+#chatMessages .bg-slate-900 {
+    background: transparent !important;
+    border-color: transparent !important;
+}
+
+/* ---- Recording / status banners ---- */
+#sttRecordingStatus,
+#apiLiveBadge,
+#backendStatusBadge,
+#dagBackendStatusBadge {
+    background: transparent !important;
+}
+
+/* ---- DAG reasoning canvas + its generated node cards ---- */
+.dag-canvas-container,
+#dagNodesGrid > div {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* ---- Satellite reference cards + Advisory Bulletins (JS-generated
+   direct-child cards) ---- */
+#satelliteCardsGrid > div,
+#bulletinsListContainer > div {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* ---- Table header strip (Fleet Monitor) ---- */
+table thead tr.bg-ocean-950\/60 {
+    background: transparent !important;
+}
+
+/* ---- Terminal-style panes ---- */
+#nmeaLiveConsole,
+#inspectorRawJSON {
+    background: transparent !important;
+}
