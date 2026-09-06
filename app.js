@@ -1631,7 +1631,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     if (speedEl) speedEl.textContent = '—';
     if (duskEl) {
       duskEl.innerHTML = `<span class="text-slate-400 font-bold">⚠ ROUTE UNAVAILABLE:</span> ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.`;
-      duskEl.className = "p-2.5 rounded-lg text-xs bg-slate-800/60 border border-slate-600/40 text-slate-300";
+      duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-neutral text-slate-300";
     }
     return;
   }
@@ -1642,7 +1642,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     if (speedEl) speedEl.textContent = '—';
     if (duskEl) {
       duskEl.innerHTML = `<span class="text-red-400 font-bold">✕ NO SAFE MARITIME ROUTE FOUND:</span> ${route.detail || route.reason || 'The router could not find a path avoiding land and Marine Protected Areas for this harbour/PFZ pair.'}`;
-      duskEl.className = "p-2.5 rounded-lg text-xs bg-red-950/60 border border-red-500/40 text-red-200";
+      duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-danger text-red-200";
     }
     return;
   }
@@ -1664,10 +1664,10 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
   if (duskEl) {
     if (isReturnSafe) {
       duskEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ SAFE RETURN:</span> Expected harbour arrival by <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Before 18:30 IST dusk).`;
-      duskEl.className = "p-2.5 rounded-lg text-xs bg-emerald-950/60 border border-emerald-500/40 text-emerald-200";
+      duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-safe text-emerald-200";
     } else {
       duskEl.innerHTML = `<span class="text-amber-400 font-bold">⚠️ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
-      duskEl.className = "p-2.5 rounded-lg text-xs bg-amber-950/60 border border-amber-500/40 text-amber-200";
+      duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-warn text-amber-200";
     }
   }
 
@@ -2057,7 +2057,7 @@ async function handleChatQuery(queryText) {
 
   const userMsgHtml = `
     <div class="flex items-start justify-end gap-3 mb-4">
-      <div class="max-w-[80%] p-3.5 rounded-2xl bg-cyan-600/30 border border-cyan-500/40 text-slate-100 text-sm">
+      <div class="max-w-[80%] p-3.5 rounded-2xl glass-card glass-card-info text-slate-100 text-sm">
         <p class="font-medium">${queryText}</p>
         <span class="text-[10px] text-cyan-300 font-mono mt-1 block text-right">${new Date().toLocaleTimeString()}</span>
       </div>
@@ -2076,7 +2076,7 @@ async function handleChatQuery(queryText) {
       <div class="w-8 h-8 rounded-full bg-slate-800 border border-cyan-500/50 flex items-center justify-center text-cyan-400 text-xs">
         ORCA
       </div>
-      <div class="max-w-[85%] p-4 rounded-2xl bg-slate-900 border border-slate-700 text-slate-300 text-sm space-y-2 w-full">
+      <div class="max-w-[85%] p-4 rounded-2xl glass-card text-slate-300 text-sm space-y-2 w-full">
         <div class="flex items-center gap-2 text-cyan-400 text-xs font-mono">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
           Orchestrating 8 Specialized AI Agents across Oceansat-3, INSAT-3DR & Open-Meteo...
@@ -2122,7 +2122,7 @@ async function handleChatQuery(queryText) {
       <div class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg shadow-cyan-500/20">
         AI
       </div>
-      <div class="max-w-[88%] p-5 rounded-2xl bg-slate-900/95 border border-slate-700 shadow-xl space-y-3">
+      <div class="max-w-[88%] p-5 rounded-2xl glass-card shadow-xl space-y-3">
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
           <div class="flex items-center gap-2">
             <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Multi-Agent Marine Advisory</span>
@@ -2653,7 +2653,7 @@ function renderSatelliteCards() {
   if (!container || state.satellites.length === 0) return;
 
   container.innerHTML = state.satellites.map(sat => `
-    <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-cyan-500/60 transition shadow-lg">
+    <div class="p-4 rounded-xl glass-card glass-card-interactive transition shadow-lg">
       <div class="flex items-start justify-between gap-2 mb-2">
         <div>
           <h4 class="font-bold text-slate-100 text-sm">${sat.name}</h4>
@@ -2779,8 +2779,9 @@ function updateSafetyIndexCard(weather) {
   if (descEl) {
     descEl.textContent = `Live Open-Meteo marine telemetry places significant wave height at ${weather.significant_wave_height_m}m and surface wind at ${weather.surface_wind_knots}kn near your selected harbour, giving a computed safety score of ${weather.safety_score}/100.`;
   }
+  const glassVariant = { emerald: 'glass-card-safe', amber: 'glass-card-warn', rose: 'glass-card-danger' }[theme.color] || 'glass-card-safe';
   if (cardEl) {
-    cardEl.className = `py-6 flex flex-col md:flex-row items-center justify-between gap-6`;
+    cardEl.className = `p-6 rounded-2xl glass-card ${glassVariant} flex flex-col md:flex-row items-center justify-between gap-6`;
   }
   if (dotEl) dotEl.className = `w-3 h-3 rounded-full ${c.dot} animate-ping`;
   if (ringEl) {
