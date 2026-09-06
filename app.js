@@ -2659,7 +2659,7 @@ function renderSatelliteCards() {
           <h4 class="font-bold text-slate-100 text-sm">${sat.name}</h4>
           <span class="text-[10px] font-mono text-slate-400">NORAD: ${sat.norad_id} · ${sat.orbit_type}</span>
         </div>
-        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+        <span class="text-[10px] font-bold text-emerald-300 flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
           ${sat.health_status}
         </span>
