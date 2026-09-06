@@ -38,9 +38,8 @@
 }
 
 /* ---- Hero banner + Safety Barometer verdict panel (inline Tailwind
-   gradients, not .glass-card) ---- */
-.rounded-2xl.bg-gradient-to-br,
-.rounded-2xl.bg-gradient-to-r {
+   backgrounds, not .glass-card) ---- */
+#heroBanner {
     background: transparent !important;
     background-image: none !important;
     box-shadow: none !important;

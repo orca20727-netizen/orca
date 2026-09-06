@@ -136,7 +136,7 @@ on the UI above it. -->
 
 <!-- Brand Logo -->
 <div class="flex items-center gap-3">
-<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/30">
+<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/30">
 ⚓
 <span class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 border-2 border-ocean-700 animate-ping"></span>
 </div>
@@ -184,7 +184,7 @@ ISRO Collaborative Marine Intelligence · Team SavioursX
 </select>
 
 <!-- High-Visibility SOS Button -->
-<button id="btnHeaderSOS" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-lg shadow-red-600/40 border border-red-400/50 pulse-sos transition">
+<button id="btnHeaderSOS" class="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-lg shadow-red-600/40 border border-red-400/50 pulse-sos transition">
 <span></span>
 <span data-i18n="sosButton">SOS EMERGENCY</span>
 </button>
@@ -231,7 +231,7 @@ ISRO Collaborative Marine Intelligence · Team SavioursX
 <section id="tab-home" class="tab-content space-y-8">
 
 <!-- Hero Banner -->
-<div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-ocean-900 via-ocean-850 to-cyan-950 border border-ocean-700/80 p-6 lg:p-12 shadow-2xl">
+<div id="heroBanner" class="relative overflow-hidden rounded-2xl bg-ocean-900 border border-ocean-700/80 p-6 lg:p-12 shadow-2xl">
 <div class="absolute -right-16 -top-16 w-96 h-96 rounded-full bg-cyan-500/10 filter blur-3xl pointer-events-none"></div>
 <div class="absolute -left-16 -bottom-16 w-96 h-96 rounded-full bg-teal-500/10 filter blur-3xl pointer-events-none"></div>
 <div class="relative z-10 max-w-3xl space-y-4 stagger-children">
@@ -242,7 +242,7 @@ Collaborative Marine Intelligence for the Indian Ocean
 Reasoning over ISRO Oceansat-3, INSAT-3DR satellite oceanography, IMBL geofencing, real-time fleet density, and voyage ETA to empower India's coastal fishing community.
 </p>
 <div class="flex flex-wrap gap-3 pt-2 reveal">
-<button onclick="switchTab('chat')" class="sfb-btn glow-btn px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
+<button onclick="switchTab('chat')" class="sfb-btn glow-btn px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
 <span></span> <span data-i18n="ctaStudio">Launch AI Decision Studio</span>
 </button>
 <button onclick="switchTab('map')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-slate-100 font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
@@ -354,7 +354,7 @@ New Conversation
 <!-- Messages Container -->
 <div id="chatMessages" class="p-4 sm:p-6 rounded-xl glass-card min-h-[420px] max-h-[580px] overflow-y-auto space-y-4">
 <div class="flex items-start gap-3">
-<div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg">
+<div class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg">
 AI
 </div>
 <div class="max-w-[88%] p-4 rounded-2xl bg-slate-900 border border-slate-700 text-sm space-y-2">
@@ -388,7 +388,7 @@ Vanakkam / Namaste! I am the <strong>ORCA INSIGHT</strong> multi-agent synthesis
 </svg>
 </button>
 <input id="chatInput" type="text" data-i18n-placeholder="chatPlaceholder" placeholder="Ask ORCA (or click microphone to speak)..." class="flex-1 bg-transparent px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none font-sans">
-<button id="btnSendChat" class="glow-btn px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1">
+<button id="btnSendChat" class="glow-btn px-5 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1">
 <span data-i18n="chatSend">Ask Agents</span> <span>➔</span>
 </button>
 </div>
@@ -488,7 +488,7 @@ Interactive high-contrast nautical map with real-time satellite PFZs, IMBL bound
 <label class="block text-slate-400 mb-1" data-i18n="destinationPFZ">Destination PFZ Zone</label>
 <select id="routePFZSelect" class="w-full glass-chip rounded-lg p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-400"></select>
 </div>
-<button id="btnSimulateRoute" class="glow-btn w-full py-2 bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold rounded-lg transition shadow-md" data-i18n="simulateRouteBtn">
+<button id="btnSimulateRoute" class="glow-btn w-full py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg transition shadow-md" data-i18n="simulateRouteBtn">
 Simulate Safe Route & ETA
 </button>
 </div>
@@ -555,7 +555,7 @@ Real-time multi-agent execution pipeline reasoning over Oceansat-3, INSAT-3DR, I
 <button id="btnDAGZoomOut" class="px-2.5 py-1 text-slate-300 hover:text-slate-100 font-bold text-xs transition">-</button>
 <button id="btnDAGZoomReset" class="px-2.5 py-1 text-slate-400 hover:text-slate-100 text-xs border-l border-ocean-700 transition">Reset</button>
 </div>
-<button id="btnRunDAGSimulation" class="glow-btn px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition">
+<button id="btnRunDAGSimulation" class="glow-btn px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/25 transition">
 ▶ Run Live Pipeline Simulation
 </button>
 </div>
@@ -911,8 +911,6 @@ DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Sm
 <script src="config.js"></script>
 <script src="app.js"></script>
 <script type="text/babel" src="react-components.js?v=3"></script> 
-<script src="neon-border.js"></script>
-<script src="neon-border.js"></script>
 <script src="variable-weight-headings.js"></script>
 <!-- Ambient background is now mounted by react-components.js (CloudSky,
      rendered into #beyondHorizonHost) -- BeyondHorizon.mount() removed. -->

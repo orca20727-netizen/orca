@@ -2169,7 +2169,7 @@ async function handleChatQuery(queryText) {
 
   const botMsgHtml = `
     <div class="flex items-start gap-3 mb-6">
-      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg shadow-cyan-500/20">
+      <div class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg shadow-cyan-500/20">
         AI
       </div>
       <div class="max-w-[88%] p-5 rounded-2xl bg-slate-900/95 border border-slate-700 shadow-xl space-y-3">
@@ -3027,7 +3027,7 @@ function renderFleetDistributionChart() {
           <span class="text-cyan-400 font-mono font-bold">${count} vessels</span>
         </div>
         <div class="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
-          <div class="h-full rounded-full bg-gradient-to-r from-cyan-500 to-teal-400 transition-all duration-500" style="width: ${pct}%"></div>
+          <div class="h-full rounded-full bg-cyan-500 transition-all duration-500" style="width: ${pct}%"></div>
         </div>
       </div>
     `;

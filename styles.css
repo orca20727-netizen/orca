@@ -184,7 +184,6 @@
   --radius-pill: 999px;
   --radius-lg: 1.25rem;
   --radius-xl: 1.5rem;
-  --text-gradient-primary: linear-gradient(135deg, var(--cyan-light) 0%, var(--cyan-primary) 50%, var(--teal-primary) 100%);
 }
 
 * {
@@ -288,13 +287,12 @@ body {
 }
 
 .dag-canvas-container {
-  background-image: radial-gradient(rgba(30, 49, 85, 0.35) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-color: rgba(15, 22, 40, 0.4);
 }
 
 /* NavIC Skyplot Circular Grid */
 .skyplot-grid {
-  background: radial-gradient(circle, rgba(18, 52, 86, 0.05) 0%, rgba(15, 28, 52, 0.8) 100%);
+  background: rgba(15, 28, 52, 0.8);
 }
 
 /* Leaflet Map Overrides -- themed via the same --ocean-* and --slate-* variables
@@ -376,7 +374,7 @@ body {
   overflow: hidden;
   z-index: 2;
   pointer-events: none;
-  background: linear-gradient(180deg, var(--cyan-light) 0%, var(--cyan-primary) 55%, var(--teal-primary) 100%);
+  background: var(--cyan-primary);
   transition: height 0.45s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
@@ -528,11 +526,7 @@ body {
    Typography (glass restyle, phase 5)
    ============================================ */
 .text-gradient {
-  background: var(--text-gradient-primary);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--cyan-primary);
 }
 
 /* ============================================
@@ -597,15 +591,14 @@ body {
 .ambient-dot-grid {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, var(--glass-border) 1px, transparent 1px);
-  background-size: 28px 28px;
 }
 
 .ambient-orb {
   position: absolute;
   border-radius: 9999px;
   filter: blur(60px);
-  background: radial-gradient(circle, var(--glow-accent-strong) 0%, transparent 70%);
+  background: var(--glow-accent-strong);
+  opacity: 0.35;
 }
 
 .ambient-orb-1 {
@@ -696,7 +689,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(6, 12, 24, 0.35) 0%, rgba(6, 12, 24, 0.9) 100%);
+  background: rgba(6, 12, 24, 0.7);
   z-index: 0;
 }
 
