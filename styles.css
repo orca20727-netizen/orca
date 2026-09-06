@@ -388,18 +388,53 @@ body {
    Cards & Panels (glass restyle, phase 3)
    ============================================ */
 .glass-card {
+  position: relative;
+  isolation: isolate;
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%) brightness(108%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%) brightness(108%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
 
 .glass-card-strong {
+  position: relative;
+  isolation: isolate;
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%) brightness(108%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%) brightness(108%);
   box-shadow: var(--glass-shadow);
+}
+
+/* Soft diagonal light sheen -- a negative-z-index pseudo-element so it
+   paints above the card's own blurred background but behind its real
+   content (see .sfb-light for the same layering idea on buttons). This
+   is what sells "light passing through glass" rather than just a flat
+   tinted blur: a highlight band that reads differently depending on
+   what's moving in the ambient background behind the card. */
+.glass-card::before,
+.glass-card-strong::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.10) 32%,
+    transparent 62%
+  );
+}
+
+/* Alert-tinted glass -- same refracting blur/sheen as .glass-card,
+   pair with .glass-card in markup (e.g. class="glass-card glass-card-danger")
+   to tint it red for danger/warning states like the IMBL proximity alert,
+   instead of falling back to a flat, non-glass background. */
+.glass-card-danger {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.45);
 }
 
 .glass-card-interactive {
