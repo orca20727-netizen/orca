@@ -1546,10 +1546,10 @@ function renderHeatmapLayers() {
       map: state.map,
       center: { lat: zone.center[0], lng: zone.center[1] },
       radius: radiusMeters,
-      strokeColor: '#06b6d4',
+      strokeColor: '#123456',
       strokeOpacity: 1,
       strokeWeight: 1,
-      fillColor: '#06b6d4',
+      fillColor: '#123456',
       fillOpacity: 0.12
     });
     state.mapLayers.heatmap.push(circle);
@@ -1742,7 +1742,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
       const routeLine = new mappls.Polyline({
         map: state.map,
         paths,
-        strokeColor: '#06b6d4',
+        strokeColor: '#123456',
         strokeWeight: 3.5,
         strokeOpacity: 0.9,
         popupHtml: routePopupHtml,
@@ -2618,7 +2618,7 @@ function renderNavICSkyplot() {
   ctx.stroke();
 
   // Cardinal Labels
-  ctx.fillStyle = '#06b6d4';
+  ctx.fillStyle = '#123456';
   ctx.font = '10px Inter';
   ctx.fillText('N', cx - 4, cy - radius - 6);
   ctx.fillText('S', cx - 4, cy + radius + 14);
@@ -2635,7 +2635,7 @@ function renderNavICSkyplot() {
     // Halo
     ctx.beginPath();
     ctx.arc(x, y, 9, 0, Math.PI * 2);
-    ctx.fillStyle = '#06b6d4';
+    ctx.fillStyle = '#123456';
     ctx.fill();
 
     // Text
@@ -2955,7 +2955,7 @@ async function fetchSafetyTrendHistory(lat, lon) {
 
 function renderTrendSparklines() {
   const wavePoints = appendLivePoint(state.safetyTrend.wave, state.liveMarine.waveHeight);
-  drawSVGSparkline('sparklineWave', wavePoints, '#06b6d4');
+  drawSVGSparkline('sparklineWave', wavePoints, '#123456');
 
   const windPoints = appendLivePoint(state.safetyTrend.wind, state.liveMarine.windSpeed);
   drawSVGSparkline('sparklineWind', windPoints, '#3b82f6');

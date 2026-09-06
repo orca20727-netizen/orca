@@ -43,16 +43,16 @@
   --slate-200: #e2e8f0;
   --slate-100: #f1f5f9;
 
-  --cyan-400: #22d3ee;
-  --cyan-300: #67e8f9;
+  --cyan-400: #123456;
+  --cyan-300: #123456;
 
   /* Glass & glow tokens */
   --glass-bg: rgba(15, 28, 52, 0.62);
   --glass-bg-strong: rgba(11, 20, 38, 0.80);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --glow-accent: rgba(6, 182, 212, 0.28);
-  --glow-accent-strong: rgba(6, 182, 212, 0.55);
+  --glow-accent: rgba(18, 52, 86, 0.28);
+  --glow-accent-strong: rgba(18, 52, 86, 0.55);
 }
 
 [data-theme="day"] {
@@ -78,8 +78,8 @@
   --slate-200: #1e293b;
   --slate-100: #14A3C7;
 
-  --cyan-400: #0e7490;
-  --cyan-300: #0891b2;
+  --cyan-400: #123456;
+  --cyan-300: #123456;
 
   /* Glass & glow tokens -- lighter/softer than the dark themes since these
      sit on white/near-white chrome; glow uses Day's own darker cyan-400
@@ -88,8 +88,8 @@
   --glass-bg-strong: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(15, 23, 42, 0.08);
   --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --glow-accent: rgba(14, 116, 144, 0.18);
-  --glow-accent-strong: rgba(14, 116, 144, 0.34);
+  --glow-accent: rgba(18, 52, 86, 0.18);
+  --glow-accent-strong: rgba(18, 52, 86, 0.34);
 }
 
 [data-theme="grey"] {
@@ -111,16 +111,16 @@
   --slate-200: #e2e8f0;
   --slate-100: #f1f5f9;
 
-  --cyan-400: #22d3ee;
-  --cyan-300: #67e8f9;
+  --cyan-400: #123456;
+  --cyan-300: #123456;
 
   /* Glass & glow tokens */
   --glass-bg: rgba(26, 26, 30, 0.62);
   --glass-bg-strong: rgba(19, 19, 22, 0.80);
   --glass-border: rgba(255, 255, 255, 0.07);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --glow-accent: rgba(6, 182, 212, 0.24);
-  --glow-accent-strong: rgba(6, 182, 212, 0.48);
+  --glow-accent: rgba(18, 52, 86, 0.24);
+  --glow-accent-strong: rgba(18, 52, 86, 0.48);
 }
 
 [data-theme="blue"] {
@@ -141,16 +141,16 @@
   --slate-200: #e2e8f0;
   --slate-100: #f1f5f9;
 
-  --cyan-400: #22d3ee;
-  --cyan-300: #67e8f9;
+  --cyan-400: #123456;
+  --cyan-300: #123456;
 
   /* Glass & glow tokens */
   --glass-bg: rgba(10, 26, 68, 0.62);
   --glass-bg-strong: rgba(7, 18, 51, 0.80);
   --glass-border: rgba(255, 255, 255, 0.09);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --glow-accent: rgba(6, 182, 212, 0.30);
-  --glow-accent-strong: rgba(6, 182, 212, 0.58);
+  --glow-accent: rgba(18, 52, 86, 0.30);
+  --glow-accent-strong: rgba(18, 52, 86, 0.58);
 }
 
 :root {
@@ -159,11 +159,11 @@
   --bg-card: var(--ocean-850);
   --bg-card-hover: var(--ocean-800);
   --border-color: var(--ocean-700);
-  --border-focus: #06b6d4;
+  --border-focus: #123456;
 
-  --cyan-glow: rgba(6, 182, 212, 0.4);
-  --cyan-primary: #06b6d4;
-  --cyan-light: #67e8f9;
+  --cyan-glow: rgba(18, 52, 86, 0.4);
+  --cyan-primary: #123456;
+  --cyan-light: #123456;
   --teal-primary: #14b8a6;
 
   --emerald-safe: #10b981;
@@ -229,7 +229,7 @@ body {
   box-shadow: 0 0 20px var(--cyan-glow);
 }
 .glow-text-cyan {
-  text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+  text-shadow: 0 0 12px rgba(18, 52, 86, 0.6);
 }
 .glow-emerald {
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
@@ -242,15 +242,15 @@ body {
 @keyframes radar-pulse {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
+    box-shadow: 0 0 0 0 rgba(18, 52, 86, 0.7);
   }
   70% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 12px rgba(6, 182, 212, 0);
+    box-shadow: 0 0 0 12px rgba(18, 52, 86, 0);
   }
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+    box-shadow: 0 0 0 0 rgba(18, 52, 86, 0);
   }
 }
 
@@ -294,7 +294,7 @@ body {
 
 /* NavIC Skyplot Circular Grid */
 .skyplot-grid {
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, rgba(15, 28, 52, 0.8) 100%);
+  background: radial-gradient(circle, rgba(18, 52, 86, 0.05) 0%, rgba(15, 28, 52, 0.8) 100%);
 }
 
 /* Leaflet Map Overrides -- themed via the same --ocean-* and --slate-* variables
@@ -309,7 +309,7 @@ body {
   color: var(--slate-100) !important;
   border: 1px solid var(--ocean-700) !important;
   border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(6, 182, 212, 0.3) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(18, 52, 86, 0.3) !important;
 }
 
 .leaflet-popup-tip {
@@ -326,7 +326,7 @@ body {
 
 /* Sparklines */
 .sparkline-svg {
-  filter: drop-shadow(0 2px 4px rgba(6, 182, 212, 0.3));
+  filter: drop-shadow(0 2px 4px rgba(18, 52, 86, 0.3));
 }
 
 /* Audio Soundbar Waveform */
