@@ -30,7 +30,7 @@
  * CUSTOMIZING
  * - Global: define before the script tag —
  *     window.VarWeightConfig = {
- *       selector: "h1, h2, h3, h4, h5",
+ *       selector: "h1, h2, h3, h4, h5, h6",
  *       fromWeight: 500, toWeight: 900, strength: 25, duration: 0.3
  *     };
  * - Per-heading: data attributes on the element —
@@ -44,7 +44,7 @@
     var MAX_REACH = 800; // px, at strength = 100
 
     var DEFAULTS = {
-        selector: "h1, h2, h3, h4, h5",
+        selector: "h1, h2, h3, h4, h5, h6",
         fromWeight: 500,
         toWeight: 900,
         strength: 25,
