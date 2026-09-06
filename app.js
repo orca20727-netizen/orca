@@ -26,21 +26,9 @@ const BACKEND_CONFIG = {
   wsBase: window.ORCA_WS_BASE || `${ORCA_BACKEND_WS_PROTOCOL}://${ORCA_BACKEND_HOST}:8000`
 };
 
-// Theme system: applied immediately, before DOMContentLoaded, so the page
-// never flashes the default Night theme before switching to a saved
-// preference. Must match the [data-theme="..."] blocks in styles.css;
-// setupThemeSwitcher() below only wires up the <select> to this.
-const ORCA_THEMES = ['night', 'day', 'grey', 'blue'];
-(function applyStoredThemeEarly() {
-  try {
-    const saved = localStorage.getItem('orca-theme');
-    document.documentElement.setAttribute('data-theme', ORCA_THEMES.includes(saved) ? saved : 'night');
-  } catch (err) {
-    // Storage can be unavailable (private browsing, disabled cookies) --
-    // fall back to the default theme rather than breaking startup.
-    document.documentElement.setAttribute('data-theme', 'night');
-  }
-})();
+// Theme system removed (Night/Grey/Blue deleted) -- Day is now the only
+// theme, and its values live directly in :root in styles.css, so there's
+// nothing left to apply/switch here.
 
 // The Mappls Maps SDK's overlay registry can still be finishing its own
 // internal setup a moment after the SDK fires the map's 'load' event --
@@ -477,7 +465,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   runStartupStep('setupHeaderScrollHide', setupHeaderScrollHide);
   runStartupStep('setupScrollReveal', setupScrollReveal);
   runStartupStep('setupLanguageSwitcher', setupLanguageSwitcher);
-  runStartupStep('setupThemeSwitcher', setupThemeSwitcher);
   runStartupStep('setupMap', setupMap);
   runStartupStep('setupChatbot', setupChatbot);
   runStartupStep('setupSpeechRecognition', setupSpeechRecognition);
@@ -984,33 +971,6 @@ function setupLanguageSwitcher() {
     state.currentLang = e.target.value;
     state.languageOverride = true;
     applyLanguage(state.currentLang);
-  });
-}
-
-// Theme Switcher (Night/Day/Grey/Blue) -- purely presentational: swaps a
-// data-theme attribute that styles.css keys off of, so none of the data
-// fetching or rendering logic in this file is touched by a theme change.
-function setupThemeSwitcher() {
-  const themeSelect = document.getElementById('themeSelect');
-  if (!themeSelect) return;
-
-  themeSelect.value = document.documentElement.getAttribute('data-theme') || 'night';
-
-  themeSelect.addEventListener('change', (e) => {
-    const theme = ORCA_THEMES.includes(e.target.value) ? e.target.value : 'night';
-    document.documentElement.setAttribute('data-theme', theme);
-    try {
-      localStorage.setItem('orca-theme', theme);
-    } catch (err) {
-      console.warn('ORCA INSIGHT: could not persist theme preference:', err);
-    }
-    // Nudge a resize so the map canvas and any open popups repaint with the
-    // new theme's colors.
-    if (state.map) {
-      setTimeout(() => {
-        try { state.map.resize(); } catch (err) { /* not available -- ignore */ }
-      }, 50);
-    }
   });
 }
 

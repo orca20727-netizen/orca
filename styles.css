@@ -2,66 +2,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ==========================================================================
-   Theme system
+   Theme
    --------------------------------------------------------------------------
-   Four user-selectable themes (Night/Day/Grey/Blue), switched via a
-   [data-theme] attribute on <html> (see setupThemeSwitcher() in app.js).
-   Every theme defines the same set of --ocean-*, --slate-*, --cyan-400/300
-   variables; index.html's Tailwind config points bg-ocean-*, text-slate-*,
-   bg-slate-*, border-slate-*, text-cyan-400 and text-cyan-300 at these
-   variables, so switching themes re-colors the entire existing UI without
-   any change to the markup or the JS that renders it. Semantic status
-   colors (emerald/amber/red = safe/warn/danger, and the cyan-500/600
-   button/badge shades) intentionally stay constant across themes so they
-   keep meaning what they mean.
-
-   Each theme also now defines a parallel set of --glass-*, --glow-accent*
-   tokens (UI/UX restyle, phase 1) so glassmorphic surfaces and accent
-   glows can be themed the same way: rgba glass fills/borders tuned to
-   that theme's own chrome, and a glow color tuned to that theme's own
-   cyan-400 rather than one glow value forced across all four themes
-   (a bright cyan glow reads fine on the dark themes but is too harsh on
-   Day's light chrome, so Day's glow uses its darker cyan-400 instead).
+   Day is now the app's only theme (Night/Grey/Blue and the theme switcher
+   have been removed). Its --ocean-*, --slate-*, --cyan-400/300, --glass-*,
+   and --glow-accent* variables live directly in :root below. index.html's
+   Tailwind config points bg-ocean-*, text-slate-*, bg-slate-*, border-slate-*,
+   text-cyan-400 and text-cyan-300 at these variables. Semantic status colors
+   (emerald/amber/red = safe/warn/danger, and the cyan-500/600 button/badge
+   shades) are unaffected by this and keep their own fixed values.
    ========================================================================== */
 
-:root,
-[data-theme="night"] {
-  /* Night (default) -- the original deep-ocean navy look. */
-  --ocean-950: #060c18;
-  --ocean-900: #0b1426;
-  --ocean-850: #0f1c34;
-  --ocean-800: #152545;
-  --ocean-700: #1e3155;
-
-  --slate-900: #0f172a;
-  --slate-800: #1e293b;
-  --slate-700: #334155;
-  --slate-600: #475569;
-  --slate-500: #64748b;
-  --slate-400: #94a3b8;
-  --slate-300: #cbd5e1;
-  --slate-200: #e2e8f0;
-  --slate-100: #f1f5f9;
-
-  --cyan-400: #123456;
-  --cyan-300: #123456;
-
-  /* Glass & glow tokens */
-  --glass-bg: rgba(15, 28, 52, 0.62);
-  --glass-bg-strong: rgba(11, 20, 38, 0.80);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --glow-accent: rgba(18, 52, 86, 0.28);
-  --glow-accent-strong: rgba(18, 52, 86, 0.55);
-}
-
-[data-theme="day"] {
-  /* Day -- light chrome. text-slate-* is inverted (100<->900, 200<->800,
-     etc.) so existing "light text on dark chrome" markup becomes "dark
-     text on light chrome" automatically. cyan-400/300 are darkened here
-     only, since the default pale cyan is unreadable as text on a light
-     background (it's fine everywhere else because it's normally used on
-     dark chrome or inside its own tinted badge background). */
+:root {
+  /* Day -- the app's only theme now (Night/Grey/Blue removed). Light
+     chrome; text-slate-* is inverted (100<->900, 200<->800, etc.) so the
+     "light text on dark chrome" markup renders as dark text on light
+     chrome. cyan-400/300 are darkened here since the default pale cyan
+     is unreadable as text on a light background. */
   --ocean-950: #eef2f6;
   --ocean-900: #ffffff;
   --ocean-850: #ffffff;
@@ -81,76 +38,15 @@
   --cyan-400: #123456;
   --cyan-300: #123456;
 
-  /* Glass & glow tokens -- lighter/softer than the dark themes since these
-     sit on white/near-white chrome; glow uses Day's own darker cyan-400
-     so it reads as a tint rather than a neon blur. */
+  /* Glass & glow tokens -- lighter/softer, sit on white/near-white chrome;
+     glow uses this darker cyan-400 so it reads as a tint rather than a
+     neon blur. */
   --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-bg-strong: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(15, 23, 42, 0.08);
   --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   --glow-accent: rgba(18, 52, 86, 0.18);
   --glow-accent-strong: rgba(18, 52, 86, 0.34);
-}
-
-[data-theme="grey"] {
-  /* Grey -- a neutral, achromatic dark mode (no navy tint), for anyone who
-     prefers a true dark-grey chrome over Night's blue-tinted one. */
-  --ocean-950: #0a0a0c;
-  --ocean-900: #131316;
-  --ocean-850: #1a1a1e;
-  --ocean-800: #232327;
-  --ocean-700: #323236;
-
-  --slate-900: #0f172a;
-  --slate-800: #1e293b;
-  --slate-700: #334155;
-  --slate-600: #475569;
-  --slate-500: #64748b;
-  --slate-400: #94a3b8;
-  --slate-300: #cbd5e1;
-  --slate-200: #e2e8f0;
-  --slate-100: #f1f5f9;
-
-  --cyan-400: #123456;
-  --cyan-300: #123456;
-
-  /* Glass & glow tokens */
-  --glass-bg: rgba(26, 26, 30, 0.62);
-  --glass-bg-strong: rgba(19, 19, 22, 0.80);
-  --glass-border: rgba(255, 255, 255, 0.07);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --glow-accent: rgba(18, 52, 86, 0.24);
-  --glow-accent-strong: rgba(18, 52, 86, 0.48);
-}
-
-[data-theme="blue"] {
-  /* Blue -- a deeper, more saturated blue chrome than Night's navy. */
-  --ocean-950: #020817;
-  --ocean-900: #071233;
-  --ocean-850: #0a1a44;
-  --ocean-800: #102454;
-  --ocean-700: #1b3568;
-
-  --slate-900: #0f172a;
-  --slate-800: #1e293b;
-  --slate-700: #334155;
-  --slate-600: #475569;
-  --slate-500: #64748b;
-  --slate-400: #94a3b8;
-  --slate-300: #cbd5e1;
-  --slate-200: #e2e8f0;
-  --slate-100: #f1f5f9;
-
-  --cyan-400: #123456;
-  --cyan-300: #123456;
-
-  /* Glass & glow tokens */
-  --glass-bg: rgba(10, 26, 68, 0.62);
-  --glass-bg-strong: rgba(7, 18, 51, 0.80);
-  --glass-border: rgba(255, 255, 255, 0.09);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --glow-accent: rgba(18, 52, 86, 0.30);
-  --glow-accent-strong: rgba(18, 52, 86, 0.58);
 }
 
 :root {
@@ -357,7 +253,17 @@ body {
   overflow: visible;
   --mx: 50%;
   --my: 50%;
-  background: rgba(255, 255, 255, 0.08);
+  /* Theme-aware glass fill (was a flat rgba(255,255,255,0.08)). That
+     worked only while .glass-nav behind it still had its own solid
+     --glass-bg fill + blur; now that transparent-cards.css strips
+     .glass-nav's background entirely (see LOAD ORDER note in that
+     file), this 8% white wash was all that was left on each button,
+     so on a bright ambient background every nav button but Home
+     (which carries its own bg-cyan-500/20 override on top) just
+     read as plain white. Using --glass-bg here gives every button a
+     real, theme-correct fill of its own, independent of whatever
+     container it happens to sit inside. */
+  background: var(--glass-bg);
   backdrop-filter: blur(20px) saturate(180%) brightness(108%);
   -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(108%);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
