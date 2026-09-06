@@ -374,7 +374,7 @@ body {
   overflow: hidden;
   z-index: 2;
   pointer-events: none;
-  background: var(--cyan-primary);
+  background: #1E90FF;
   transition: height 0.45s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
