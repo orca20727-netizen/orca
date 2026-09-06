@@ -207,7 +207,14 @@
   };
 
   function BeyondHorizonInstance(host, opts) {
+    if (host.dataset.beyondHorizonMounted === "1") {
+      console.warn("BeyondHorizon: host already mounted, skipping duplicate mount", host);
+      return { destroy: function () {} };
+    }
+    host.dataset.beyondHorizonMounted = "1";
+
     var options = Object.assign({}, DEFAULTS, opts || {});
+    console.log("BeyondHorizon: mounting on", host, "with options", options);
 
     var canvas = document.createElement("canvas");
     canvas.style.position = "absolute";
@@ -222,13 +229,17 @@
       canvas.getContext("experimental-webgl");
 
     if (!gl) {
-      console.error("BeyondHorizon: no WebGL context available");
+      console.error("BeyondHorizon: no WebGL context available (getContext returned null)");
       return { destroy: function () { host.removeChild(canvas); } };
     }
+    console.log("BeyondHorizon: WebGL context OK", gl.getParameter(gl.VERSION));
 
     var vs = compile(gl, gl.VERTEX_SHADER, VERT);
     var fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
-    if (!vs || !fs) return { destroy: function () { host.removeChild(canvas); } };
+    if (!vs || !fs) {
+      console.error("BeyondHorizon: shader compile failed, see above");
+      return { destroy: function () { host.removeChild(canvas); } };
+    }
 
     var prog = gl.createProgram();
     gl.attachShader(prog, vs);
@@ -239,6 +250,7 @@
       return { destroy: function () { host.removeChild(canvas); } };
     }
     gl.useProgram(prog);
+    console.log("BeyondHorizon: program linked OK");
 
     var buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -309,10 +321,15 @@
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
-    var raf = 0, lastT = 0, start = 0;
+    var raf = 0, lastT = 0, start = 0, frameCount = 0;
 
     resize();
-    draw(0);
+    try {
+      draw(0);
+      console.log("BeyondHorizon: first draw() call succeeded");
+    } catch (err) {
+      console.error("BeyondHorizon: first draw() threw", err);
+    }
 
     function onResize() { if (resize()) draw(lastT); }
     var ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(onResize) : null;
@@ -325,10 +342,20 @@
       pointer.x += (pointer.tx - pointer.x) * 0.06;
       pointer.y += (pointer.ty - pointer.y) * 0.06;
       pointer.hover += (pointer.thover - pointer.hover) * 0.05;
-      draw(lastT);
+      try {
+        draw(lastT);
+      } catch (err) {
+        console.error("BeyondHorizon: draw() threw inside loop, stopping animation", err);
+        return; // do not re-schedule -- this is what a silent freeze looks like otherwise
+      }
+      frameCount++;
+      if (frameCount === 1 || frameCount % 120 === 0) {
+        console.log("BeyondHorizon: heartbeat, frame", frameCount, "t=", lastT.toFixed(2), "hover=", pointer.hover.toFixed(2));
+      }
       raf = requestAnimationFrame(loop);
     }
     raf = requestAnimationFrame(loop);
+    console.log("BeyondHorizon: RAF loop started, first raf id =", raf);
 
     function endTouch() {
       if (!touching) return;
