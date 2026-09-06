@@ -650,23 +650,16 @@ body {
    for content that isn't actually a card)
    ============================================ */
 
-/* Stat row: numbers separated by hairline dividers
-   instead of 4 identical boxed cards. Apply to the
-   wrapper that currently holds the 4 stat cards. */
+/* Stat row: numbers separated by spacing only, no borders or
+   backgrounds at all — nothing to read as a "tile" or "card". */
 .stat-strip {
   display: flex;
   flex-wrap: wrap;
-  border-top: 1px solid var(--glass-border);
+  gap: 32px 48px;
 }
 
 .stat-item {
   flex: 1 1 200px;
-  padding: 24px 32px;
-  border-right: 1px solid var(--glass-border);
-}
-
-.stat-item:last-child {
-  border-right: none;
 }
 
 .stat-item .stat-value {
