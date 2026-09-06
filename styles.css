@@ -643,3 +643,71 @@ body {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
+
+/* ============================================
+   Differentiated content treatments
+   (replaces re-using .glass-card / a pill badge
+   for content that isn't actually a card)
+   ============================================ */
+
+/* Stat row: numbers separated by hairline dividers
+   instead of 4 identical boxed cards. Apply to the
+   wrapper that currently holds the 4 stat cards. */
+.stat-strip {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--glass-border);
+}
+
+.stat-item {
+  flex: 1 1 200px;
+  padding: 24px 32px;
+  border-right: 1px solid var(--glass-border);
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-item .stat-value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+.stat-item .stat-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* Eyebrow: plain small text, no pill/badge background.
+   Replaces the "· separated" pill above the H1. */
+.eyebrow-plain {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--cyan-300);
+  border-left: 2px solid var(--cyan-primary);
+  padding-left: 10px;
+}
+
+/* Scrim: readable text over photo backgrounds without
+   relying on the photo itself for contrast. */
+.scrim-bottom {
+  position: relative;
+}
+
+.scrim-bottom::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 12, 24, 0.35) 0%, rgba(6, 12, 24, 0.9) 100%);
+  z-index: 0;
+}
+
+.scrim-bottom > * {
+  position: relative;
+  z-index: 1;
+}
