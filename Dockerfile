@@ -7,7 +7,7 @@ WORKDIR /app
 COPY backend/requirements.txt backend/requirements.txt
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
-COPY index-2.html static/index.html
+COPY index.html static/index.html
 COPY app.js styles.css sw.js manifest.json config.js live-overrides.js beyond-horizon-bg.js react-components.js variable-weight-headings.js static/
 EXPOSE 8000
 
