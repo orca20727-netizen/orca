@@ -446,14 +446,14 @@ function CloudSky(props) {
   mount(
     "beyondHorizonHost",
     React.createElement(CloudSky, {
-      background: "#04101c",
-      baseColor: "#0a1f33",
-      accentColor: "#3d5a72",
-      density: 40,
+      background: "#5AA9E6",
+      baseColor: "#CFE8FA",
+      accentColor: "#FFFFFF",
+      density: 85,
       speed: 40,
-      size: 130,
-      clouds: { cirrus: 12, shadow: 90, softness: 160 },
-      sun: { x: 82, y: 88, glow: "rgba(120, 190, 220, 0.35)" }
+      size: 140,
+      clouds: { cirrus: 55, shadow: 60, softness: 180 },
+      sun: { x: 82, y: 88, glow: "rgba(255, 255, 255, 0.7)" }
     })
   );
 })();
