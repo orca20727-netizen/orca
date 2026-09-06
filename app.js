@@ -1778,7 +1778,7 @@ function renderDAGNodes() {
         </div>
         <p class="text-xs text-slate-400 mb-3 line-clamp-2">${agent.role}</p>
         <div class="flex flex-wrap gap-1 mb-2">
-          ${agent.sensors.map(s => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800/40 font-mono">${s}</span>`).join('')}
+          ${agent.sensors.map(s => `<span class="text-[10px] text-slate-400 font-mono">${s}</span>`).join(' ')}
         </div>
         <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800">
           <span class="flex items-center gap-1.5">
