@@ -9,7 +9,7 @@ COPY backend/ backend/
 COPY ais_gateway.py backend/ais_gateway.py
 COPY data/data/ data/
 
-COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js beyond-horizon-bg.js transparent-cards.css react-components.js static/
+COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js beyond-horizon-bg.js transparent-cards.css react-components.js variable-weight-headings.js static/
 
 EXPOSE 8000
 

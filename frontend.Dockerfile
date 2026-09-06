@@ -3,7 +3,7 @@
 # from ./Dockerfile (port 8000). Run together via docker-compose.yml.
 FROM nginx:1.27-alpine
 
-COPY index.html app.js styles.css sw.js manifest.json /usr/share/nginx/html/
+COPY index.html app.js styles.css sw.js manifest.json transparent-cards.css variable-weight-headings.js /usr/share/nginx/html/
 COPY icons/ /usr/share/nginx/html/icons/
 COPY data/ /usr/share/nginx/html/data/
 COPY config.js.template /etc/nginx/templates/config.js.template
