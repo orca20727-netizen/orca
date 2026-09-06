@@ -7,9 +7,10 @@ WORKDIR /app
 COPY backend/requirements.txt backend/requirements.txt
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
-COPY index.html static/index.html
-COPY app.js styles.css sw.js manifest.json config.js live-overrides.js beyond-horizon-bg.js react-components.js variable-weight-headings.js static/
-EXPOSE 8000
+COPY backend/ backend/
+COPY ais_gateway.py backend/ais_gateway.py
+COPY data/data/ data/
+COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js beyond-horizon-bg.js react-components.js variable-weight-headings.js static ./
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health', timeout=3)" || exit 1
