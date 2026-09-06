@@ -1449,7 +1449,7 @@ function renderVesselsOnMap() {
           <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md ${simBorder} ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
             ▲
           </div>
-          <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-slate-950/80 px-1 rounded text-slate-300 border border-slate-800 pointer-events-none">
+          <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-[#14A3C7] px-1 rounded text-[#00008B] border border-[#00008B]/30 pointer-events-none">
                         ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' · SIM' : ''}
           </span>
         </div>
