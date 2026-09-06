@@ -224,9 +224,8 @@ ISRO Collaborative Marine Intelligence · Team SavioursX
 <div class="absolute -right-16 -top-16 w-96 h-96 rounded-full bg-cyan-500/10 filter blur-3xl pointer-events-none"></div>
 <div class="absolute -left-16 -bottom-16 w-96 h-96 rounded-full bg-teal-500/10 filter blur-3xl pointer-events-none"></div>
 <div class="relative z-10 max-w-3xl space-y-4 stagger-children">
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold reveal">
-<span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-Smart India Hackathon 2026 · PS 26176 · ISRO Dept. of Space
+<div class="eyebrow-plain reveal">
+Smart India Hackathon 2026 &middot; PS 26176 &middot; ISRO Dept. of Space
 </div>
 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white text-gradient leading-tight reveal" data-i18n="heroTitle">
 Collaborative Marine Intelligence for the Indian Ocean
@@ -249,56 +248,44 @@ Reasoning over ISRO Oceansat-3, INSAT-3DR satellite oceanography, IMBL geofencin
 </div>
 
 <!-- Constellation & Fleet KPI Counters -->
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-<div class="p-5 rounded-xl glass-card">
-<div class="flex items-center justify-between mb-2">
+<div class="stat-strip">
+<div class="stat-item">
 <span class="text-xs text-slate-400 font-medium" data-i18n="statsActiveVessels">Active Vessels Tracked</span>
-<span class="text-cyan-400 text-base"></span>
+<div class="stat-value font-mono" id="homeActiveVessels">35</div>
+<span class="stat-label text-emerald-400">Simulated AIS fleet</span>
 </div>
-<div class="text-2xl sm:text-3xl font-extrabold text-white font-mono" id="homeActiveVessels">35</div>
-<span class="text-[11px] text-emerald-400 mt-1 block">Simulated AIS fleet</span>
-</div>
-<div class="p-5 rounded-xl glass-card">
-<div class="flex items-center justify-between mb-2">
+<div class="stat-item">
 <span class="text-xs text-slate-400 font-medium" data-i18n="statsSatellites">ISRO Satellite Feeds</span>
-<span class="text-cyan-400 text-base"></span>
+<div class="stat-value font-mono text-cyan-300">3 Active</div>
+<span class="stat-label">Oceansat-3, INSAT-3DR, Sentinel-3</span>
 </div>
-<div class="text-2xl sm:text-3xl font-extrabold text-cyan-300 font-mono">3 Active</div>
-<span class="text-[11px] text-slate-400 mt-1 block">Oceansat-3, INSAT-3DR, Sentinel-3</span>
-</div>
-<div class="p-5 rounded-xl glass-card">
-<div class="flex items-center justify-between mb-2">
+<div class="stat-item">
 <span class="text-xs text-slate-400 font-medium" data-i18n="statsPFZ">High-Yield Fishing Zones</span>
-<span class="text-cyan-400 text-base"></span>
+<div class="stat-value font-mono text-emerald-400">7 Zones</div>
+<span class="stat-label">Wadge Bank, Kochi, Veraval...</span>
 </div>
-<div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">7 Zones</div>
-<span class="text-[11px] text-slate-400 mt-1 block">Wadge Bank, Kochi, Veraval...</span>
-</div>
-<div class="p-5 rounded-xl glass-card">
-<div class="flex items-center justify-between mb-2">
+<div class="stat-item">
 <span class="text-xs text-slate-400 font-medium" data-i18n="statsIMBL">IMBL Geofenced Sectors</span>
-<span class="text-red-400 text-base"></span>
-</div>
-<div class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono">2 Corridors</div>
-<span class="text-[11px] text-red-300 mt-1 block">India-Sri Lanka & Pak Borders</span>
+<div class="stat-value font-mono text-amber-400">2 Corridors</div>
+<span class="stat-label text-red-300">India-Sri Lanka & Pak Borders</span>
 </div>
 </div>
 
 <!-- Feature Highlight Pillars -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 <div class="p-6 rounded-xl glass-card space-y-3">
-
 <h3 class="text-lg font-bold text-white">8-Node Collaborative Agent DAG</h3>
 <p class="text-xs text-slate-300 leading-relaxed">
 Multi-agent architecture decomposing queries into satellite, wave hazard, geofencing, vessel counting, ETA, and neural synthesis steps with sub-second latency.
 </p>
-
-<
+</div>
+<div class="p-6 rounded-xl glass-card space-y-3">
 <h3 class="text-lg font-bold text-white">Live Sea-State ETA & Dusk Safety</h3>
 <p class="text-xs text-slate-300 leading-relaxed">
 Hydrodynamic transit calculations adjusted for wave resistance with automated Return-by-Dusk safety alerts to prevent stranded fishermen after sunset.
 </p>
-
+</div>
+<div class="p-6 rounded-xl glass-card space-y-3">
 <h3 class="text-lg font-bold text-white">Live Fleet Density & IMBL Alert</h3>
 <p class="text-xs text-slate-300 leading-relaxed">
 Real-time vessel counting per zone, overcrowding risk indicators, and automated 5 NM/2 NM geofence proximity alerts protecting maritime borders.
