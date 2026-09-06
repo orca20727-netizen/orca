@@ -3,10 +3,10 @@
  * Vanilla-JS port of the "Dynamic Weight" (VariableFontCursorProximity)
  * Originkit/Framer component, adapted for ORCA INSIGHT (plain HTML/CSS/
  * JS + Tailwind — no React/Framer Motion in this project, so the .tsx
- * component is re-implemented here with the same math: each letter's
- * font-variation-settings `wght` axis morphs from a resting weight to
- * a heavier weight based on how close the cursor is to that letter,
- * eased over time.
+ * Each letter's font-variation-settings `wght` axis morphs from a resting
+ * weight to a heavier weight based on how close the cursor is to that
+ * letter. The response is instant — each frame sets the weight directly
+ * from cursor distance, no easing/ramp delay.
  *
  * USAGE
  * Add, right before </body> (after neon-border.js is fine):
@@ -31,7 +31,7 @@
  * - Global: define before the script tag —
  *     window.VarWeightConfig = {
  *       selector: "h1, h2, h3, h4, h5, h6",
- *       fromWeight: 500, toWeight: 900, strength: 25, duration: 0.3
+ *       fromWeight: 500, toWeight: 900, strength: 25
  *     };
  * - Per-heading: data attributes on the element —
  *     <h3 data-varweight-from="400" data-varweight-to="800" data-varweight-strength="40">
@@ -47,8 +47,7 @@
         selector: "h1, h2, h3, h4, h5, h6",
         fromWeight: 500,
         toWeight: 900,
-        strength: 25,
-        duration: 0.3 // seconds, easing time constant
+        strength: 25
     };
 
     var FONT_STACK = '"InterVariableFramer", "Inter Variable", "Inter", system-ui, sans-serif';
@@ -87,7 +86,6 @@
         if (d.varweightFrom) o.fromWeight = parseFloat(d.varweightFrom);
         if (d.varweightTo) o.toWeight = parseFloat(d.varweightTo);
         if (d.varweightStrength) o.strength = parseFloat(d.varweightStrength);
-        if (d.varweightDuration) o.duration = parseFloat(d.varweightDuration);
         return o;
     }
 
@@ -143,8 +141,6 @@
     Instance.prototype.tick = function (mouseX, mouseY, dtSec) {
         if (this.letters.length === 0) return;
         var o = this.opts;
-        var tau = Math.max(0.016, o.duration);
-        var a = 1 - Math.exp(-dtSec / tau);
 
         for (var i = 0; i < this.letters.length; i++) {
             var item = this.letters[i];
@@ -155,17 +151,17 @@
             var dy = mouseY - cy;
             var dist = Math.sqrt(dx * dx + dy * dy);
 
+            // Instant response: the target IS the factor, no easing ramp.
             var target = Math.min(Math.max(1 - dist / this.reach, 0), 1);
-            var f = item.factor + (target - item.factor) * a;
-            item.factor = f;
+            item.factor = target;
 
-            if (f < 0.001) {
+            if (target < 0.001) {
                 if (item.span.style.fontVariationSettings !== this.fromSettings) {
                     item.span.style.fontVariationSettings = this.fromSettings;
                 }
                 continue;
             }
-            var w = Math.round(o.fromWeight + (o.toWeight - o.fromWeight) * f);
+            var w = Math.round(o.fromWeight + (o.toWeight - o.fromWeight) * target);
             item.span.style.fontVariationSettings = "'wght' " + w;
         }
     };
@@ -234,8 +230,7 @@
         var opts = {
             fromWeight: cfg.fromWeight,
             toWeight: cfg.toWeight,
-            strength: cfg.strength,
-            duration: cfg.duration
+            strength: cfg.strength
         };
         Object.keys(opts).forEach(function (k) { if (opts[k] === undefined) delete opts[k]; });
 
