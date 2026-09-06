@@ -380,7 +380,11 @@ body {
 }
 
 /* Internal light -- a soft radial highlight that follows the pointer,
-   screen-blended so it brightens rather than paints over the glass. */
+   screen-blended so it brightens rather than paints over the glass.
+   Sized as an ellipse with no fixed radius, so it scales to each
+   button's own box (small nav pills get a small glow, big hero CTAs
+   get a big one) instead of a fixed-px circle flooding small buttons
+   solid white. */
 .sfb-light {
   position: absolute;
   inset: 0;
@@ -391,17 +395,17 @@ body {
   opacity: 0;
   transition: opacity 0.3s ease;
   background: radial-gradient(
-    circle 120px at var(--mx) var(--my),
-    rgba(255, 255, 255, 0.55),
-    rgba(255, 255, 255, 0.22) 45%,
-    transparent 75%
+    ellipse at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.12) 35%,
+    transparent 65%
   );
   mix-blend-mode: screen;
 }
 
 .sfb-btn:hover .sfb-light,
 .sfb-btn:focus-visible .sfb-light {
-  opacity: 1;
+  opacity: 0.85;
 }
 
 /* Glass edge -- a thin gradient ring sampling the light brighter and
