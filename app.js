@@ -3131,30 +3131,26 @@ function renderBulletinsList(filterSeverity = 'ALL') {
   const filtered = state.bulletins.filter(b => filterSeverity === 'ALL' || b.severity === filterSeverity);
 
   container.innerHTML = filtered.map(b => {
-    let borderClass = 'border-blue-500/50 bg-blue-950/20';
-    let badgeClass = 'bg-blue-500/20 text-blue-300';
+    let severityColor = '#ffffff';
     if (b.severity === 'CRITICAL') {
-      borderClass = 'border-red-500/50 bg-red-950/20';
-      badgeClass = 'bg-red-500/20 text-red-300';
+      severityColor = '#7E3517';
     } else if (b.severity === 'WARNING') {
-      borderClass = 'border-amber-500/50 bg-amber-950/20';
-      badgeClass = 'bg-amber-500/20 text-amber-300';
+      severityColor = '#D4A017';
     } else if (b.severity === 'ADVISORY') {
-      borderClass = 'border-emerald-500/50 bg-emerald-950/20';
-      badgeClass = 'bg-emerald-500/20 text-emerald-300';
+      severityColor = '#033E3E';
     }
 
     return `
-      <div class="p-5 rounded-xl border ${borderClass} shadow-lg space-y-3">
+      <div class="p-5 rounded-xl glass-card space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-xs font-mono font-bold ${badgeClass}">${b.severity}</span>
+            <span class="text-xs font-mono font-bold" style="color: ${severityColor};">${b.severity}</span>
             <span class="text-xs font-mono text-slate-400">${b.id}</span>
           </div>
           <span class="text-xs text-slate-400 font-mono">Issued: ${b.issued_at}</span>
         </div>
 
-        <h3 class="text-base font-bold text-white">${b.title}</h3>
+        <h3 class="text-base font-bold" style="color: ${severityColor};">${b.title}</h3>
         <p class="text-sm text-slate-300 leading-relaxed">${b.summary}</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-mono">
