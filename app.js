@@ -2703,6 +2703,12 @@ async function refreshSafetyBarometer(lat, lon) {
     state.liveMarine.isLiveFeed = weather.data_source?.wave_height === 'LIVE_OPEN_METEO_MARINE';
 
     updateMapHUD();
+    // Keep the AI Decision Studio's "Live Ocean Telemetry" card (wave/
+    // wind/sea state) in sync with the same reading -- this used to only
+    // get set once at startup by fetchLiveMarineTelemetry(), so it went
+    // stale after the first load even though this function itself polls
+    // every 5 minutes.
+    updateSafetyMetricsUI();
 
     renderTrendSparklines();
   } catch (err) {
