@@ -2824,7 +2824,7 @@ function updateSafetyIndexCard(weather) {
     descEl.textContent = `Live Open-Meteo marine telemetry places significant wave height at ${weather.significant_wave_height_m}m and surface wind at ${weather.surface_wind_knots}kn near your selected harbour, giving a computed safety score of ${weather.safety_score}/100.`;
   }
   if (cardEl) {
-    cardEl.className = `p-6 rounded-2xl glass-card border-l-4 ${c.border} shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6`;
+    cardEl.className = `py-6 flex flex-col md:flex-row items-center justify-between gap-6`;
   }
   if (dotEl) dotEl.className = `w-3 h-3 rounded-full ${c.dot} animate-ping`;
   if (ringEl) {
