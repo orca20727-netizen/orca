@@ -9,7 +9,7 @@ COPY backend/ backend/
 COPY ais_gateway.py backend/ais_gateway.py
 COPY data/data/ data/
 
-COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js neon-border.js beyond-horizon-bg.js react-components.js static/
+COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js beyond-horizon-bg.js react-components.js static/
 
 EXPOSE 8000
 
