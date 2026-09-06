@@ -18,6 +18,9 @@
  * - The live map + its HUD overlay bar -- the HUD sits on top of the
  *   map imagery itself, not on the sky background, so making it
  *   transparent would make it unreadable against the map.
+ * - The Agent DAG Visualizer's canvas + its 8 node cards -- restored to
+ *   real glass boxes below (see that section) after the flatten made the
+ *   dense grid of agent cards read as an unreadable wall of text.
  * If you want any of those flattened too, tell me which one and I'll
  * add it -- I kept them solid on purpose rather than guessing wrong.
  */
@@ -71,11 +74,21 @@
     background: transparent !important;
 }
 
-/* ---- DAG reasoning canvas + its generated node cards ---- */
-.dag-canvas-container,
-#dagNodesGrid > div {
-    background: transparent !important;
-    box-shadow: none !important;
+/* ---- Agent DAG Visualizer -- glass boxes restored ----
+   Previously flattened along with everything else below; the DAG canvas
+   and its 8 generated agent-node cards are dense, close together, and
+   read as a jumbled wall of text without a visible box per node, so
+   they're excluded from the flatten and given their real glass fill
+   back. Higher-specificity selectors so they win over the generic
+   .glass-card flatten rule above despite both using !important. */
+#dagNodesGrid > div.glass-card,
+.dag-canvas-container {
+    background: var(--glass-bg) !important;
+    background-color: var(--glass-bg) !important;
+    backdrop-filter: blur(var(--glass-blur)) !important;
+    -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
+    box-shadow: var(--glass-shadow) !important;
+    border-color: var(--glass-border) !important;
 }
 
 /* ---- Satellite reference cards + Advisory Bulletins (JS-generated
