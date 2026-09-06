@@ -354,7 +354,6 @@ body {
    ============================================ */
 .sfb-btn {
   position: relative;
-  isolation: isolate;
   overflow: visible;
   --mx: 50%;
   --my: 50%;
@@ -379,12 +378,13 @@ body {
   align-items: center;
 }
 
-/* Internal light -- a soft radial highlight that follows the pointer,
-   screen-blended so it brightens rather than paints over the glass.
-   Sized as an ellipse with no fixed radius, so it scales to each
-   button's own box (small nav pills get a small glow, big hero CTAs
-   get a big one) instead of a fixed-px circle flooding small buttons
-   solid white. */
+/* Internal light -- a soft radial highlight that follows the pointer.
+   No mix-blend-mode here on purpose: mix-blend-mode:screen on a child
+   of a backdrop-filtered element is unreliable across Chrome/Safari --
+   instead of blending against the button's real backdrop it can
+   composite against opaque white, which read as the whole button
+   flashing solid white on hover. A plain low-alpha overlay (no blend
+   mode) is what actually renders correctly everywhere. */
 .sfb-light {
   position: absolute;
   inset: 0;
@@ -395,12 +395,11 @@ body {
   opacity: 0;
   transition: opacity 0.3s ease;
   background: radial-gradient(
-    ellipse at var(--mx) var(--my),
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(255, 255, 255, 0.12) 35%,
-    transparent 65%
+    circle at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.30) 0%,
+    rgba(255, 255, 255, 0.10) 40%,
+    transparent 70%
   );
-  mix-blend-mode: screen;
 }
 
 .sfb-btn:hover .sfb-light,
@@ -409,8 +408,14 @@ body {
 }
 
 /* Glass edge -- a thin gradient ring sampling the light brighter and
-   sharper than the face, per the original "stroke brightness 140%"
-   recipe constant. */
+   sharper than the face. No backdrop-filter on this element: Safari
+   has a well-documented bug where backdrop-filter combined with a
+   mask (needed here to carve out just the ring band) fails to
+   respect the mask and paints the element's full box solid white
+   instead, especially on repaint (e.g. a hover-state change on a
+   sibling) -- which is exactly the "whole button turns white on
+   hover" seen in Safari. A plain masked gradient, no filter, avoids
+   that code path entirely. */
 .sfb-ring {
   position: absolute;
   inset: 0;
@@ -422,8 +427,6 @@ body {
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  backdrop-filter: saturate(220%) brightness(140%);
-  -webkit-backdrop-filter: saturate(220%) brightness(140%);
 }
 
 /* Active nav tab -- a persistent tint + brighter ring instead of the
