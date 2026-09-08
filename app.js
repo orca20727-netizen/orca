@@ -2667,7 +2667,7 @@ function renderSatelliteCards() {
 
       <div class="my-3 space-y-1.5 text-xs">
         ${sat.sensors.map(sen => `
-          <div class="flex items-center justify-between bg-slate-950/70 px-2 py-1 rounded border border-slate-800">
+          <div class="flex items-center justify-between py-0.5">
             <span class="text-cyan-300 font-mono text-[11px]">${sen.name}</span>
             <span class="text-slate-400 text-[10px]">${sen.metric}</span>
           </div>
