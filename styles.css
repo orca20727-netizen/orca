@@ -589,12 +589,13 @@ body {
   object-fit: cover;
 }
 
-/* Dark tint over the raw video so foreground glass cards/text stay legible,
-   replacing the sky-blue (#5AA9E6) backdrop CloudSky was tinted to. */
+/* Light wash over the video so foreground glass cards/text stay legible
+   against the bright ocean footage, tuned for the site's permanent light
+   "Day" theme (a dark overlay here would crush the video's vivid blues). */
 .ambient-bg-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(2, 8, 20, 0.55), rgba(2, 8, 20, 0.75));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(238, 242, 246, 0.35));
 }
 
 .ambient-dot-grid {
