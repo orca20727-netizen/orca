@@ -98,6 +98,11 @@
     background: transparent !important;
     box-shadow: none !important;
 }
+/* ---- Kill the dark-navy "cyan" text/highlight inside satellite boxes ---- */
+#satelliteCardsGrid > div .text-cyan-300,
+#satelliteCardsGrid > div .text-cyan-400 {
+    color: var(--slate-400) !important; /* or any other color you prefer */
+}
 
 /* ---- Table header strip (Fleet Monitor) ---- */
 table thead tr.bg-ocean-950\/60 {
