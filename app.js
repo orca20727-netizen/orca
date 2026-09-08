@@ -1632,6 +1632,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     if (duskEl) {
       duskEl.innerHTML = `<span class="text-slate-400 font-bold">⚠ ROUTE UNAVAILABLE:</span> ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.`;
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-neutral text-slate-300";
+      duskEl.style.color = "";
     }
     return;
   }
@@ -1665,9 +1666,11 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     if (isReturnSafe) {
       duskEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ SAFE RETURN:</span> Expected harbour arrival by <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Before 18:30 IST dusk).`;
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-safe text-emerald-200";
+      duskEl.style.color = "";
     } else {
-      duskEl.innerHTML = `<span class="text-red-400 font-bold">⚠️ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
-      duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-danger text-red-200";
+      duskEl.innerHTML = `<span class="font-bold" style="color:#ff0000;">⚠️ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono" style="color:#ff0000;">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
+      duskEl.className = "p-2.5 rounded-lg text-xs";
+      duskEl.style.color = "#ff0000";
     }
   }
 
