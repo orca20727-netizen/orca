@@ -105,6 +105,7 @@ was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
        a looping MP4 video background below. react-components.js still defines
        CloudSky, but its mount() call now targets a div that no longer exists,
        so it silently no-ops -- safe to leave as-is. -->
+  <link rel="stylesheet" href="ocean-bg.css">
 </head>
 <body class="bg-ocean-950 text-slate-100 flex flex-col min-h-screen">
 
@@ -894,6 +895,7 @@ DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Sm
 <script src="app.js"></script>
 <script type="text/babel" src="react-components.js?v=3"></script> 
 <script src="variable-weight-headings.js"></script>
+  <script src="ocean-video-bg.js" defer></script>
 <!-- Ambient background is now a plain <video> element (see .ambient-bg above),
      not a React/WebGL component -- react-components.js's CloudSky mount() no-ops. -->
 </body>
