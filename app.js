@@ -3022,7 +3022,7 @@ function renderVesselsTable(filteredList = null) {
     return `
       <tr class="border-b border-slate-800 hover:bg-slate-800/50 transition ${v.is_simulated ? 'opacity-80' : ''}">
         <td class="py-2.5 px-3 font-mono text-cyan-400 text-xs font-bold">${v.id}</td>
-        <td class="py-2.5 px-3 text-xs text-[#0077ff] font-medium">${v.name}</td>
+        <td class="py-2.5 px-3 text-xs text-[#003366] font-medium">${v.name}</td>
         <td class="py-2.5 px-3 text-xs text-slate-400">${v.type}</td>
         <td class="py-2.5 px-3 text-xs text-slate-300">${v.zone}</td>
         <td class="py-2.5 px-3 font-mono text-xs text-slate-200">${v.speed_knots} kn / ${v.heading}°</td>
