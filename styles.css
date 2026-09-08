@@ -580,6 +580,23 @@ body {
   pointer-events: none;
 }
 
+/* Video background (replaces the CloudSky WebGL cloudscape). */
+.ambient-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark tint over the raw video so foreground glass cards/text stay legible,
+   replacing the sky-blue (#5AA9E6) backdrop CloudSky was tinted to. */
+.ambient-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2, 8, 20, 0.55), rgba(2, 8, 20, 0.75));
+}
+
 .ambient-dot-grid {
   position: absolute;
   inset: 0;
