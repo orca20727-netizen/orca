@@ -1666,8 +1666,8 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
       duskEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ SAFE RETURN:</span> Expected harbour arrival by <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Before 18:30 IST dusk).`;
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-safe text-emerald-200";
     } else {
-      duskEl.innerHTML = `<span class="text-amber-400 font-bold">⚠️ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
-      duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-warn text-amber-200";
+      duskEl.innerHTML = `<span class="text-red-400 font-bold">⚠️ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
+      duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-danger text-red-200";
     }
   }
 
