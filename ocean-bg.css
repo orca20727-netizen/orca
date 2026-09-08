@@ -1,0 +1,101 @@
+/* ============================================================
+   ORCA — Cinematic Ocean Video Background
+   Reusable full-viewport background layer.
+   Sits behind the entire app; never intercepts clicks.
+   ============================================================ */
+
+/* Body must not paint an opaque colour above the fixed video layer.
+   We keep the ocean-950 colour on the wrapper itself as the "page is
+   still this colour" fallback before the video / if it fails. */
+body.bg-ocean-950 {
+  background-color: transparent !important;
+}
+
+.orca-ocean-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;               /* behind body's own background + all content */
+  overflow: hidden;
+  background-color: var(--ocean-950, #030b14); /* fallback colour, same as old body bg */
+  pointer-events: none;      /* never blocks clicks / taps / scroll */
+}
+
+.orca-ocean-bg video,
+.orca-ocean-bg .orca-ocean-fallback-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+}
+
+/* Cinematic readability overlay: dark-blue gradient + vignette.
+   Tuned so the ocean/waves/boats stay clearly visible while text
+   above it stays readable. Adjust the alpha values to taste. */
+.orca-ocean-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 15%, rgba(3,11,20,0) 0%, rgba(3,11,20,0.35) 60%, rgba(3,11,20,0.72) 100%),
+    linear-gradient(180deg,
+      rgba(3,11,20,0.62) 0%,
+      rgba(3,11,20,0.28) 22%,
+      rgba(3,11,20,0.30) 60%,
+      rgba(3,11,20,0.70) 100%
+    );
+}
+
+/* Slightly stronger darkening specifically behind the header/nav so
+   the logo & nav labels stay legible over bright sky/water. */
+header.glass-header,
+nav.glass-nav {
+  position: relative;
+}
+header.glass-header::before,
+nav.glass-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(3, 11, 20, 0.35);
+}
+
+/* Respect reduced-motion: swap the moving video for the static frame,
+   no JS re-render loop, no layout shift. */
+@media (prefers-reduced-motion: reduce) {
+  .orca-ocean-bg video {
+    display: none;
+  }
+  .orca-ocean-bg .orca-ocean-fallback-img {
+    display: block;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .orca-ocean-bg .orca-ocean-fallback-img {
+    display: none;
+  }
+}
+
+/* Mobile / tablet: keep the ocean + at least some vessels in frame
+   instead of stretching. Nudge the crop point per breakpoint. */
+@media (max-width: 1024px) {
+  .orca-ocean-bg video,
+  .orca-ocean-bg .orca-ocean-fallback-img {
+    object-position: center 68%;
+  }
+}
+@media (max-width: 640px) {
+  .orca-ocean-bg video,
+  .orca-ocean-bg .orca-ocean-fallback-img {
+    object-position: center 74%;
+  }
+}
+
+/* GIS map tab: the map itself must stay the primary, fully legible
+   surface. When that tab is active we dim our background further so
+   map controls/labels never fight the video for attention. */
+body.orca-map-active .orca-ocean-bg::after {
+  background: rgba(3, 11, 20, 0.86);
+}
