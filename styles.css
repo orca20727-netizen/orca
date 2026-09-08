@@ -5,7 +5,7 @@
    Theme
    --------------------------------------------------------------------------
    Day is now the app's only theme (Night/Grey/Blue and the theme switcher
-   have been removed). Its --ocean-*, --slate-*, --cyan-400/300, --glass-*,
+   have been removed). Its --oz-index: -1cean-*, --slate-*, --cyan-400/300, --glass-*,
    and --glow-accent* variables live directly in :root below. index.html's
    Tailwind config points bg-ocean-*, text-slate-*, bg-slate-*, border-slate-*,
    text-cyan-400 and text-cyan-300 at these variables. Semantic status colors
@@ -417,7 +417,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   border-radius: inherit;
   pointer-events: none;
   background: linear-gradient(
