@@ -433,8 +433,8 @@ body {
    to tint it red for danger/warning states like the IMBL proximity alert,
    instead of falling back to a flat, non-glass background. */
 .glass-card-danger {
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.32);
+  border-color: rgba(239, 68, 68, 0.75);
 }
 
 /* Same idea, emerald tint -- safe/positive verdicts (sea-venture
