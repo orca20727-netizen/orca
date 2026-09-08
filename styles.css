@@ -580,21 +580,22 @@ body {
   pointer-events: none;
 }
 
-/* Video background (replaces the CloudSky WebGL cloudscape). */
-.ambient-bg-video {
+/* Static ocean image background (replaces the looping MP4 video and the
+   CloudSky WebGL cloudscape before it). */
+.ambient-bg-image {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
   background-image: url('assets/img/ocean-background.jpg');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* Light wash over the video so foreground glass cards/text stay legible
-   against the bright ocean footage, tuned for the site's permanent light
-   "Day" theme (a dark overlay here would crush the video's vivid blues). */
+/* Light wash over the image so foreground glass cards/text stay legible
+   against the bright ocean photo, tuned for the site's permanent light
+   "Day" theme (a dark overlay here would crush the image's vivid blues). */
 .ambient-bg-overlay {
   position: absolute;
   inset: 0;
