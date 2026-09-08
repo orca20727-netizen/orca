@@ -35,8 +35,8 @@
   --slate-200: #1e293b;
   --slate-100: #14A3C7;
 
-  --cyan-400: #123456;
-  --cyan-300: #123456;
+  --cyan-400: #0e7490;
+  --cyan-300: #0e7490;
 
   /* Glass & glow tokens -- lighter/softer, sit on white/near-white chrome;
      glow uses this darker cyan-400 so it reads as a tint rather than a
@@ -45,8 +45,8 @@
   --glass-bg-strong: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(15, 23, 42, 0.08);
   --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --glow-accent: rgba(18, 52, 86, 0.18);
-  --glow-accent-strong: rgba(18, 52, 86, 0.34);
+  --glow-accent: rgba(6, 182, 212, 0.18);
+  --glow-accent-strong: rgba(6, 182, 212, 0.34);
 }
 
 :root {
@@ -55,10 +55,10 @@
   --bg-card: var(--ocean-850);
   --bg-card-hover: var(--ocean-800);
   --border-color: var(--ocean-700);
-  --border-focus: #123456;
+  --border-focus: #0891b2;
 
-  --cyan-glow: rgba(18, 52, 86, 0.4);
-  --cyan-primary: #123456;
+  --cyan-glow: rgba(6, 182, 212, 0.4);
+  --cyan-primary: #0891b2;
   --cyan-light: #4a90c2;
   --teal-primary: #14b8a6;
 
@@ -124,7 +124,7 @@ body {
   box-shadow: 0 0 20px var(--cyan-glow);
 }
 .glow-text-cyan {
-  text-shadow: 0 0 12px rgba(18, 52, 86, 0.6);
+  text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
 }
 .glow-emerald {
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
@@ -137,15 +137,15 @@ body {
 @keyframes radar-pulse {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(18, 52, 86, 0.7);
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
   }
   70% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 12px rgba(18, 52, 86, 0);
+    box-shadow: 0 0 0 12px rgba(6, 182, 212, 0);
   }
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(18, 52, 86, 0);
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
   }
 }
 
@@ -203,7 +203,7 @@ body {
   color: var(--slate-100) !important;
   border: 1px solid var(--ocean-700) !important;
   border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(18, 52, 86, 0.3) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(6, 182, 212, 0.3) !important;
 }
 
 .leaflet-popup-tip {
@@ -220,7 +220,7 @@ body {
 
 /* Sparklines */
 .sparkline-svg {
-  filter: drop-shadow(0 2px 4px rgba(18, 52, 86, 0.3));
+  filter: drop-shadow(0 2px 4px rgba(6, 182, 212, 0.3));
 }
 
 /* Audio Soundbar Waveform */
