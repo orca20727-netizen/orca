@@ -587,6 +587,9 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background-image: url('assets/img/ocean-background.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 /* Light wash over the video so foreground glass cards/text stay legible
