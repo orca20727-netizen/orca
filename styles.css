@@ -731,3 +731,95 @@ body {
 #tab-fleet .focus\:ring-cyan-400:focus {
   --tw-ring-color: #2B547E !important;
 }
+
+
+/* ============================================================
+   Mobile & Tablet UI/UX optimization pass
+   ============================================================ */
+
+/* Live telemetry badge -- a live-data update in app.js overwrites
+   this element's className at runtime and drops its responsive
+   "hidden xl:flex" classes, so on phones/tablets it always renders
+   and its fixed padding forces the long telemetry string to wrap
+   into an unreadable 4-5 line column in the header. Force-hide it
+   below the desktop breakpoint regardless of whatever class list
+   JS leaves it with -- the same wave-height reading is already
+   shown on every tab (hero stat strip, Safety Barometer, map HUD). */
+@media (max-width: 1279px) {
+  #apiLiveBadge {
+    display: none !important;
+  }
+}
+
+/* A few "heading + row-of-controls" headers put their controls in
+   an unwrappable flex row. On narrow screens that row gets
+   squeezed far below its content width, wrapping each button's
+   own label into a single-word-per-line column (worst offender:
+   the DAG visualizer's "Run Live Pipeline Simulation" button).
+   Let each of these specific control clusters wrap instead. */
+@media (max-width: 900px) {
+  .flex:has(> #btnRunDAGSimulation),
+  .flex:has(> #toggleHazardNotifications),
+  .flex:has(> #btnTrackMyPosition) {
+    flex-wrap: wrap;
+  }
+  #btnRunDAGSimulation {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Header: tighten spacing on phones so the brand lockup and the
+   right-hand controls (language, SOS) sit comfortably now that
+   the telemetry badge above is hidden at this width. */
+@media (max-width: 640px) {
+  header.glass-header {
+    padding-left: 14px;
+    padding-right: 14px;
+    gap: 8px;
+  }
+  header.glass-header h1 {
+    font-size: 1rem;
+  }
+  header.glass-header .w-10.h-10 {
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+  }
+  #langSelect {
+    max-width: 6.5rem;
+  }
+}
+
+/* Secondary nav: momentum scrolling + slightly tighter tabs so
+   more of the bar reads per swipe on a phone. */
+nav.glass-nav {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+@media (max-width: 640px) {
+  nav.glass-nav .sfb-btn {
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* Any horizontally-scrolling data surface (vessel table, raw
+   NMEA/JSON panes, satellite reference strip) gets momentum
+   scrolling so it doesn't feel stuck on touch devices. */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Comfortable minimum touch targets on phones. */
+@media (max-width: 640px) {
+  .sfb-btn {
+    min-height: 40px;
+  }
+  select,
+  input[type="text"],
+  input[type="search"] {
+    min-height: 42px;
+  }
+}
