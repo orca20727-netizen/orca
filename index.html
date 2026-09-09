@@ -180,53 +180,16 @@ function orcaToggleTheme(){
 <!-- ==================================================== -->
 <!-- LANDING GATE: overview splash shown before the dashboard -->
 <!-- ==================================================== -->
-<section id="landingGate" class="relative z-10 min-h-screen flex flex-col">
-<div class="flex-1 flex flex-col items-center justify-center text-center px-4 py-16 max-w-4xl mx-auto">
-<div class="flex items-center gap-2 px-3 py-1.5 rounded-full glass-chip text-[11px] font-mono text-cyan-300 mb-6">
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-SMART INDIA HACKATHON 2026 &middot; PS 26176 &middot; ISRO &middot; TEAM SAVIOURSX
-</div>
-<div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 mb-6">
-<svg viewBox="0 0 64 64" class="w-10 h-10"><use href="#orca-mark"></use></svg>
+<section id="landingGate" onclick="orcaEnterDashboard()" title="Enter the dashboard" class="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4 cursor-pointer">
+<div class="flex items-center justify-center w-28 h-28 rounded-3xl bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 mb-8 transition-transform duration-300 hover:scale-105">
+<svg viewBox="0 0 64 64" class="w-16 h-16"><use href="#orca-mark"></use></svg>
 </div>
 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gradient leading-tight mb-4">
 ORCA INSIGHT
 </h1>
-<p class="text-base sm:text-lg text-slate-200 leading-relaxed mb-10 max-w-2xl">
+<p class="text-lg sm:text-xl text-white leading-relaxed max-w-2xl" style="text-shadow: 0 2px 16px rgba(0,0,0,0.45);">
 Collaborative marine intelligence for the Indian Ocean. ORCA INSIGHT fuses ISRO satellite oceanography, IMBL geofencing, live fleet density and a collaborative agent network into one command deck for India's coastal fishing community.
 </p>
-<button onclick="orcaEnterDashboard()" class="sfb-btn glow-btn px-7 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
-<span>Enter the Dashboard</span> <span>&rarr;</span>
-</button>
-</div>
-<div class="px-4 pb-16 max-w-6xl mx-auto w-full">
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-<div class="p-5 rounded-xl glass-card space-y-2">
-<h3 class="text-sm font-bold text-slate-100">AI Decision Studio</h3>
-<p class="text-xs text-slate-300 leading-relaxed">Ask natural-language questions and get answers reasoned live across the 8-node collaborative agent network.</p>
-</div>
-<div class="p-5 rounded-xl glass-card space-y-2">
-<h3 class="text-sm font-bold text-slate-100">GIS Command Map</h3>
-<p class="text-xs text-slate-300 leading-relaxed">Live map of PFZ zones, IMBL boundaries, MPAs, harbours and fleet AIS positions.</p>
-</div>
-<div class="p-5 rounded-xl glass-card space-y-2">
-<h3 class="text-sm font-bold text-slate-100">Agent DAG Visualizer</h3>
-<p class="text-xs text-slate-300 leading-relaxed">Watch each query decompose in real time across satellite, hazard, geofencing, ETA and synthesis agents.</p>
-</div>
-<div class="p-5 rounded-xl glass-card space-y-2">
-<h3 class="text-sm font-bold text-slate-100">Safety Barometer</h3>
-<p class="text-xs text-slate-300 leading-relaxed">A single safe-sea index built from live Oceansat-3 and INSAT-3DR satellite passes.</p>
-</div>
-<div class="p-5 rounded-xl glass-card space-y-2">
-<h3 class="text-sm font-bold text-slate-100">Fleet Monitor</h3>
-<p class="text-xs text-slate-300 leading-relaxed">Real-time vessel density per zone with overcrowding and IMBL proximity alerts.</p>
-</div>
-<div class="p-5 rounded-xl glass-card space-y-2">
-<h3 class="text-sm font-bold text-slate-100">NavIC GPS Bridge &amp; Advisory Bulletins</h3>
-<p class="text-xs text-slate-300 leading-relaxed">NavIC-based positioning telemetry alongside ISRO-INCOIS advisory and warning bulletins.</p>
-</div>
-</div>
-</div>
 </section>
 
 <script>
