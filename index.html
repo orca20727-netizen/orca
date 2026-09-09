@@ -136,6 +136,9 @@ html.dark {
 
   --border-focus: #22d3ee;
 }
+html.dark .ambient-bg-image {
+  background-image: url('assets/img/ocean-background-dark.jpg') !important;
+}
 html.dark .ambient-bg-overlay {
   background: linear-gradient(180deg, rgba(2, 6, 23, 0.45), rgba(2, 6, 23, 0.68)) !important;
 }
@@ -160,7 +163,7 @@ function orcaToggleTheme(){
 (z-index: -1, pointer-events: none). -->
 <div class="ambient-bg" aria-hidden="true" style="position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;">
 <div class="ambient-bg-image" style="position:absolute; inset:0; width:100%; height:100%; background-image:url('assets/img/ocean-background.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat;">
-</div><video class="ambient-bg-video" autoplay muted loop playsinline preload="auto" poster="assets/img/ocean-background.jpg" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"><source src="assets/img/ambient-ocean-bg.mp4" type="video/mp4"></video><div class="ambient-bg-overlay" style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,0.15), rgba(238,242,246,0.35));"></div>
+</div><div class="ambient-bg-overlay" style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,0.15), rgba(238,242,246,0.35));"></div>
 </div>
 <svg width="0" height="0" style="position:absolute">
 <symbol id="orca-mark" viewBox="0 0 64 64">
