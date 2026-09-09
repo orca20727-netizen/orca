@@ -593,23 +593,6 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Looping ambient video, layered on top of the static ocean image above.
-   The image stays underneath as an instant-paint background and as a
-   fallback for browsers that can't play the video; object-fit: cover
-   matches the image's cropping behavior exactly. */
-.ambient-bg-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-@media (prefers-reduced-motion: reduce) {
-  .ambient-bg-video {
-    display: none;
-  }
-}
-
 /* Light wash over the image so foreground glass cards/text stay legible
    against the bright ocean photo, tuned for the site's permanent light
    "Day" theme (a dark overlay here would crush the image's vivid blues). */
