@@ -2192,6 +2192,30 @@ async function handleChatQuery(queryText) {
 
   messagesContainer.insertAdjacentHTML('beforeend', botMsgHtml);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  renderReasoningTrace(advisory.agentSteps);
+}
+
+// Renders the same agentSteps already computed for the chat message's
+// inline collapsible trace into the persistent "Live Reasoning Trace"
+// panel beside the conversation, so the multi-agent execution is visible
+// live without expanding each message.
+function renderReasoningTrace(steps) {
+  const list = document.getElementById('reasoningTraceList');
+  const countEl = document.getElementById('reasoningTraceCount');
+  if (!list || !steps || !steps.length) return;
+  if (countEl) countEl.textContent = `${steps.length}-node DAG`;
+  list.innerHTML = steps.map((step, idx) => `
+    <div class="flex gap-3 pb-3 mb-3 border-b border-ocean-700/60 last:border-0 last:pb-0 last:mb-0">
+      <div class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 text-[10px] font-mono font-bold flex items-center justify-center flex-none mt-0.5">${idx + 1}</div>
+      <div class="min-w-0">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold text-slate-100">${step.agent}</span>
+          <span class="text-[10px] text-slate-500 font-mono flex-none">${step.latency}</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">${step.trace}</p>
+      </div>
+    </div>
+  `).join('');
 }
 
 // Calls the real multi-agent FastAPI backend's synthesis endpoint.
