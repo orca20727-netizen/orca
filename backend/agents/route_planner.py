@@ -133,7 +133,7 @@ class RoutePlanner:
         lon_max = max(olon, dlon) + padding_deg
 
         lat_span = max(lat_max - lat_min, 1e-6)
-        lon_span = max(lon_max - lon_min, 1e-6)
+        lon_span = max(lon_max - lon_min, 1e-:)
 
         # Adaptive step: keep the grid to roughly target_grid_cells_per_axis
         # per axis so short hops (harbour -> nearby PFZ) get fine resolution
@@ -270,12 +270,28 @@ class RoutePlanner:
         waypoints_latlon[0] = (olat, olon)
         waypoints_latlon[-1] = (dlat, dlon)
 
-        simplified = self._simplify_collinear(waypoints_latlon)
+        # Raw A* output on an 8-connected grid "staircases" along any
+        # bearing that isn't a multiple of 45 degrees (alternating between
+        # two headings every hop) -- that staircase is the visible zigzag,
+        # and it survives naive bearing-diff simplification because each
+        # hop's heading differs sharply from the one before it, even though
+        # the *path* it traces is straight. String-pull it first: each kept
+        # point jumps directly to the farthest later point it has a clear
+        # line of sight to, which collapses a staircase to a single clean
+        # segment while still turning at real obstacle corners.
+        smoothed = self._smooth_path(waypoints_latlon)
+        # A further collinear pass mops up any residual near-straight
+        # points the smoothing left behind (e.g. along a coastline it had
+        # to hug).
+        simplified = self._simplify_collinear(smoothed)
 
         # Simplification can re-introduce a land/MPA-crossing shortcut if a
         # "collinear enough" run of grid hops actually curved around an
         # obstacle -- verify every simplified edge is still clear, and fall
-        # back to the un-simplified (denser) path if not.
+        # back progressively to less-aggressive simplification, then the
+        # un-simplified (denser) path, if not.
+        if not self._path_is_clear(simplified):
+            simplified = smoothed
         if not self._path_is_clear(simplified):
             simplified = waypoints_latlon
 
@@ -304,6 +320,34 @@ class RoutePlanner:
             "grid_cells": n_rows * n_cols,
             "grid_resolution_deg": round(max(lat_step, lon_step), 4),
         }
+
+    def _smooth_path(
+        self, points: List[Tuple[float, float]]
+    ) -> List[Tuple[float, float]]:
+        """
+        Line-of-sight "string pulling": from each kept point, jump straight
+        to the farthest later point reachable without crossing land or an
+        MPA (using the same edge check the search itself uses), dropping
+        every in-between grid-staircase hop. This is what turns the raw
+        8-connected A* zigzag into a route that runs straight wherever the
+        water is open and only bends at an actual obstacle.
+        """
+        n = len(points)
+        if n <= 2:
+            return points
+
+        smoothed = [points[0]]
+        i = 0
+        while i < n - 1:
+            j = n - 1
+            while j > i + 1:
+                a, b = points[i], points[j]
+                if not self._edge_blocked(a[0], a[1], b[0], b[1]):
+                    break
+                j -= 1
+            smoothed.append(points[j])
+            i = j
+        return smoothed
 
     def _path_is_clear(self, points: List[Tuple[float, float]]) -> bool:
         for i in range(len(points) - 1):
