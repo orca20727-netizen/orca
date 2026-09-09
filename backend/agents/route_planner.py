@@ -133,7 +133,7 @@ class RoutePlanner:
         lon_max = max(olon, dlon) + padding_deg
 
         lat_span = max(lat_max - lat_min, 1e-6)
-        lon_span = max(lon_max - lon_min, 1e-:)
+        lon_span = max(lon_max - lon_min, 1e-6)
 
         # Adaptive step: keep the grid to roughly target_grid_cells_per_axis
         # per axis so short hops (harbour -> nearby PFZ) get fine resolution
