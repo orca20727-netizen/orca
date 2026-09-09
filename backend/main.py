@@ -24,6 +24,20 @@ allowed_origins = ["*"] if _frontend_origin.strip() == "*" else [item.strip() fo
 app = FastAPI(title="ORCA INSIGHT API", version="1.1.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=allowed_origins, allow_credentials=allowed_origins != ["*"], allow_methods=["*"], allow_headers=["*"])
 
+# Static assets (index.html/app.js/styles.css/config.js/icons/...) have no
+# version-hashed filenames, and browsers heuristically cache any response
+# that lacks Cache-Control -- so a redeploy can silently keep serving an
+# old cached copy to a returning visitor until they hard-refresh. Force
+# revalidation on every static/data request (StaticFiles already sets an
+# ETag, so this is a cheap conditional GET, not a full re-download) so a
+# new deploy is always picked up on normal reload.
+@app.middleware("http")
+async def add_no_cache_headers(request: Request, call_next):
+    response = await call_next(request)
+    if not request.url.path.startswith("/api"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(status_code=422, content={"detail": "Invalid request.", "errors": exc.errors()})
