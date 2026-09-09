@@ -759,8 +759,14 @@ body {
    Let each of these specific control clusters wrap instead. */
 @media (max-width: 900px) {
   .flex:has(> #btnRunDAGSimulation),
-  .flex:has(> #toggleHazardNotifications),
   .flex:has(> #btnTrackMyPosition) {
+    flex-wrap: wrap;
+  }
+  /* The hazard-notifications toggle is nested inside a <label>, so
+     the row that actually needs to wrap is the checkbox row's
+     grandparent, not its direct .flex parent (which is the label
+     itself and has nothing to wrap). */
+  .flex:has(> label > #toggleHazardNotifications) {
     flex-wrap: wrap;
   }
   #btnRunDAGSimulation {
