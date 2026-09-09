@@ -31,12 +31,14 @@
 .glass-header,
 .glass-nav,
 .glass-chip {
-    background: var(--glass-bg) !important;
-    background-color: var(--glass-bg) !important;
-    backdrop-filter: blur(var(--glass-blur)) saturate(180%) brightness(108%) !important;
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%) brightness(108%) !important;
-    box-shadow: var(--glass-shadow) !important;
-    border-color: var(--glass-border) !important;
+    /* Same treatment as the satellite reference cards below: drop the
+       white fill entirely but keep the base .glass-card rule's own
+       backdrop-filter blur + border (defined in styles.css) so every
+       card reads as frosted/blurred glass over the live ocean image
+       instead of a solid white panel. */
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
 }
 
 /* ---- Hero banner + Safety Barometer verdict panel (inline Tailwind
@@ -82,12 +84,9 @@
    .glass-card flatten rule above despite both using !important. */
 #dagNodesGrid > div.glass-card,
 .dag-canvas-container {
-    background: var(--glass-bg) !important;
-    background-color: var(--glass-bg) !important;
-    backdrop-filter: blur(var(--glass-blur)) !important;
-    -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
-    box-shadow: var(--glass-shadow) !important;
-    border-color: var(--glass-border) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
 }
 
 /* ---- Satellite reference cards + Advisory Bulletins (JS-generated
