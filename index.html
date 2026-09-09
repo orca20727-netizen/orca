@@ -144,6 +144,17 @@ html.dark .ambient-bg-overlay {
 }
 html.dark #themeIconMoon { display: none; }
 html.dark #themeIconSun { display: block; }
+
+/* Adaptive halo behind the landing headline/copy: a light halo behind
+   dark text on the light theme's bright photo, a dark halo behind
+   light text on the dark theme's darker photo -- so contrast holds
+   automatically when the theme is toggled, instead of a fixed color. */
+.landing-copy {
+  text-shadow: 0 2px 20px rgba(255, 255, 255, 0.55);
+}
+html.dark .landing-copy {
+  text-shadow: 0 2px 20px rgba(2, 6, 23, 0.55);
+}
 </style>
 <script>
 (function(){
@@ -184,10 +195,10 @@ function orcaToggleTheme(){
 <div class="flex items-center justify-center w-28 h-28 rounded-3xl bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 mb-8 transition-transform duration-300 hover:scale-105">
 <svg viewBox="0 0 64 64" class="w-16 h-16"><use href="#orca-mark"></use></svg>
 </div>
-<h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gradient leading-tight mb-4">
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gradient leading-tight mb-4 landing-copy">
 ORCA INSIGHT
 </h1>
-<p class="text-lg sm:text-xl text-white leading-relaxed max-w-2xl" style="text-shadow: 0 2px 16px rgba(0,0,0,0.45);">
+<p class="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl landing-copy">
 Collaborative marine intelligence for the Indian Ocean. ORCA INSIGHT fuses ISRO satellite oceanography, IMBL geofencing, live fleet density and a collaborative agent network into one command deck for India's coastal fishing community.
 </p>
 </section>
