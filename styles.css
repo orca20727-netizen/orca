@@ -711,3 +711,23 @@ body {
   position: relative;
   z-index: 1;
 }
+
+
+/* ============================================================
+   Fleet Monitor -- steel-blue accent override
+   Scoped to #tab-fleet only, so the rest of the site keeps its
+   normal cyan accent. Requested color: #2B547E.
+   ============================================================ */
+#tab-fleet .text-cyan-400,
+#tab-fleet .text-cyan-300 {
+  color: #2B547E !important;
+}
+#tab-fleet .bg-cyan-500 {
+  background-color: #2B547E !important;
+}
+#tab-fleet .hover\:bg-cyan-600:hover {
+  background-color: #25476B !important;
+}
+#tab-fleet .focus\:ring-cyan-400:focus {
+  --tw-ring-color: #2B547E !important;
+}
