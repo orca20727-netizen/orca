@@ -41,8 +41,8 @@
   /* Glass & glow tokens -- lighter/softer, sit on white/near-white chrome;
      glow uses this darker cyan-400 so it reads as a tint rather than a
      neon blur. */
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-bg-strong: rgba(255, 255, 255, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-bg-strong: rgba(255, 255, 255, 0.92);
   --glass-border: rgba(15, 23, 42, 0.08);
   --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   --glow-accent: rgba(6, 182, 212, 0.18);
@@ -76,7 +76,7 @@
 
   /* Shared glass/motion tokens (theme-agnostic; per-theme rgba tints are
      defined above alongside each theme's own --ocean-* and --cyan-* values) */
-  --glass-blur: 20px;
+  --glass-blur: 28px;
   --radius-pill: 999px;
   --radius-lg: 1.25rem;
   --radius-xl: 1.5rem;
