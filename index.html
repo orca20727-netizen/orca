@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -100,6 +100,59 @@ was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
 <!-- Custom Styles -->
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="transparent-cards.css">
+
+<!-- ============ NIGHT (dark mode) THEME ============
+     Overrides only the base day-theme tokens defined in styles.css;
+     every derived var (--bg-primary, --text-main, --glass-* etc.)
+     already references these via var(), so this cascades site-wide
+     without touching styles.css or any component markup. -->
+<style>
+html.dark {
+  --ocean-950: #050b14;
+  --ocean-900: #0a1622;
+  --ocean-850: #0d1b29;
+  --ocean-800: #142230;
+  --ocean-700: #223244;
+
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #7dd3ea;
+
+  --cyan-400: #22d3ee;
+  --cyan-300: #67e8f9;
+
+  --glass-bg: rgba(8, 15, 26, 0.55);
+  --glass-bg-strong: rgba(8, 15, 26, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --glow-accent: rgba(34, 211, 238, 0.22);
+  --glow-accent-strong: rgba(34, 211, 238, 0.40);
+
+  --border-focus: #22d3ee;
+}
+html.dark .ambient-bg-overlay {
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.45), rgba(2, 6, 23, 0.68)) !important;
+}
+html.dark #themeIconMoon { display: none; }
+html.dark #themeIconSun { display: block; }
+</style>
+<script>
+(function(){
+  var saved = null;
+  try { saved = localStorage.getItem('orcaTheme'); } catch(e){}
+  if (saved === 'dark') document.documentElement.classList.add('dark');
+})();
+function orcaToggleTheme(){
+  var isDark = document.documentElement.classList.toggle('dark');
+  try { localStorage.setItem('orcaTheme', isDark ? 'dark' : 'light'); } catch(e){}
+}
+</script>
 </head>
 <body class="text-slate-100 flex flex-col min-h-screen">
 
@@ -223,6 +276,12 @@ ISRO Collaborative Marine Intelligence · Team SavioursX
 <div id="liveClock" class="hidden md:flex items-center text-xs px-3 py-1.5 rounded-lg glass-chip">
 <!-- populated by JS -->
 </div>
+
+<!-- Dark Mode Toggle -->
+<button id="themeToggleBtn" onclick="orcaToggleTheme()" class="glass-chip hover:border-cyan-500/60 text-slate-200 rounded-lg w-8 h-8 flex items-center justify-center transition cursor-pointer" title="Toggle dark mode" aria-label="Toggle dark mode">
+<svg id="themeIconMoon" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="themeIconSun" viewBox="0 0 24 24" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+</button>
 
 <!-- Language Selector -->
 <select id="langSelect" class="glass-chip hover:border-cyan-500/60 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition cursor-pointer font-medium">
