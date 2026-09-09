@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 COPY backend/ backend/
 COPY ais_gateway.py backend/ais_gateway.py
 COPY data/data/ data/
+COPY assets/ static/assets/
 
 COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js ocean-bg.css ocean-background-v2.jpg transparent-cards.css react-components.js variable-weight-headings.js static/
 
