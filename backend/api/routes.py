@@ -135,7 +135,7 @@ async def plan_route(req: RouteRequest):
 
     try:
         result = core.route_planner.plan_route(origin, destination)
-    except Exception as e:
+    excepT Exception as e:
         logger.exception("Route planner raised unexpectedly")
         raise HTTPException(status_code=500, detail="Internal routing error.") from e
 
@@ -207,6 +207,27 @@ async def get_ocean(
 @router.get("/api/fleet")
 async def get_fleet(pfz_id: str = DEFAULT_PFZ_ID):
     return await core.fleet_agent.analyze_fleet(pfz_id=pfz_id)
+
+
+@router.get("/api/fisherman/dashboard")
+async def get_fisherman_dashboard(
+    lat: float = Query(9.85, ge=-90, le=90),
+    lon: float = Query(75.60, ge=-180, le=180),
+    species: str = Query(default=None),
+):
+    """The Fisherman module's single dashboard payload: today's Opportunity
+    Score and ranked species, Sell Smarter pricing, a trip-cost calculator's
+    defaults, buyer leads, trip-performance history, and community posts.
+
+    Deliberately composed from the SAME weather_agent/pfz_agent calls the
+    rest of the app already uses for these coordinates (not fetched
+    independently), so this can never disagree with the Safety Barometer or
+    GIS Command Map about today's conditions or the best-ranked zone."""
+    weather, pfz = await asyncio.gather(
+        core.weather_agent.evaluate_hazard(lat=lat, lon=lon),
+        core.pfz_agent.rank_pfz_zones(vessel_lat=lat, vessel_lon=lon),
+    )
+    return await core.fisherman_agent.build_dashboard(weather, pfz, preferred_species=species)
 
 
 @router.get("/api/live/status")
