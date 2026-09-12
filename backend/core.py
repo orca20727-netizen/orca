@@ -21,6 +21,7 @@ from agents.fleet_agent import FleetTrafficAgent
 from agents.eta_agent import ETAVoyageSafetyAgent
 from agents.synthesis_agent import NeuralSynthesisAgent
 from agents.route_planner import RoutePlanner
+from agents.fisherman_agent import FishermanOpportunityAgent
 
 from constants import DEFAULT_HARBOUR_ID, DEFAULT_PFZ_ID
 from language import detect_query_language
@@ -106,6 +107,10 @@ geofence_agent = GeofencingAgent()
 fleet_agent = FleetTrafficAgent()
 eta_agent = ETAVoyageSafetyAgent(planner=route_planner)
 synthesis_agent = NeuralSynthesisAgent()
+# The Fisherman module's own agent -- composed from weather_agent/pfz_agent
+# results by the /api/fisherman/dashboard route rather than fetching data
+# itself, so it never needs to be part of the advisory run_pipeline() DAG.
+fisherman_agent = FishermanOpportunityAgent()
 
 FALLBACK_ADVISORY = {
     "advisory_text": (
