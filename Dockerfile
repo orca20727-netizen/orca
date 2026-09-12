@@ -11,7 +11,7 @@ COPY data/data/ data/
 COPY assets/ static/assets/
 COPY icons/ static/icons/
 
-COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js ocean-bg.css ocean-background-v2.jpg transparent-cards.css react-components.js variable-weight-headings.js static/
+COPY index.html app.js styles.css sw.js manifest.json config.js live-overrides.js ocean-bg.css ocean-background-v2.jpg react-components.js variable-weight-headings.js static/
 
 EXPOSE 8000
 
