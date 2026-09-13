@@ -1,0 +1,52 @@
+{
+  "model_name": "price_model",
+  "selected_algorithm": "GradientBoosting",
+  "candidates_compared": {
+    "RandomForest": {
+      "mae": 18.094,
+      "rmse": 24.737,
+      "r2": 0.9815,
+      "train_seconds": 0.26
+    },
+    "GradientBoosting": {
+      "mae": 18.071,
+      "rmse": 24.68,
+      "r2": 0.9816,
+      "train_seconds": 0.26
+    }
+  },
+  "validation_metrics": {
+    "mae": 18.071,
+    "rmse": 24.68,
+    "r2": 0.9816,
+    "train_seconds": 0.26
+  },
+  "feature_importance": {
+    "species__Pomfret": 0.7625,
+    "species__Sardine": 0.077,
+    "species__Kingfish": 0.0722,
+    "species__Tuna": 0.0394,
+    "demand__High": 0.0173,
+    "species__Mackerel": 0.0147,
+    "month_sin": 0.0146,
+    "demand__Medium": 0.0018,
+    "month_cos": 0.0004,
+    "demand__Low": 0.0
+  },
+  "feature_columns": [
+    "month_sin",
+    "month_cos",
+    "species__Tuna",
+    "species__Pomfret",
+    "species__Sardine",
+    "species__Mackerel",
+    "species__Kingfish",
+    "demand__High",
+    "demand__Medium",
+    "demand__Low"
+  ],
+  "training_rows": 6000,
+  "training_data": "ORCA demonstration dataset (synthetic, see backend/ml/data/generate_demo_dataset.py)",
+  "status": "DEMO MODEL",
+  "disclaimer": "Model performance is based on demonstration data and does not represent real-world predictive accuracy."
+}
