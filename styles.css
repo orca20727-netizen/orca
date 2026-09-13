@@ -987,3 +987,49 @@ nav.glass-nav {
     min-height: 42px;
   }
 }
+
+/* iOS Safari zooms the whole page in when a form control's computed
+   font-size is under 16px -- every input/select on this site is set in
+   text-xs/text-sm (12-14px), so typing a harbour, a search term, or a
+   trip cost currently triggers that zoom on every phone. Force 16px
+   just for the phone breakpoint so focusing a field never zooms, without
+   touching the compact desktop look. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Dynamic-viewport-height upgrade: min-h-screen (min-height:100vh) can
+   be taller than what a phone browser actually shows once its address
+   bar/toolbar is factored in, leaving the landing gate's last card just
+   out of view. 100dvh tracks the real visible viewport; only applied
+   where supported, so the 100vh Tailwind already sets stays as the
+   fallback everywhere else. */
+@media (max-width: 900px) {
+  @supports (height: 100dvh) {
+    body,
+    .min-h-screen {
+      min-height: 100dvh;
+    }
+  }
+}
+
+/* Safety net: if the Insight header's brand + theme/language/SOS
+   controls ever don't quite fit one row on a phone, wrap to a second
+   line instead of squeezing text or cutting the SOS button off the
+   edge of the screen -- this must never be allowed to overflow, since
+   the SOS button is a safety control. Matches the other phone-tier
+   tweaks above at 640px rather than only the very narrowest phones. */
+@media (max-width: 640px) {
+  header.glass-header {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  header.glass-header > div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}

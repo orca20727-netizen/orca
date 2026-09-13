@@ -236,6 +236,11 @@ const translations = {
     clearanceSafe: "SAFE FOR SEA VENTURE",
     clearanceCaution: "PROCEED WITH CAUTION",
     clearanceUnsafe: "UNSAFE: DO NOT VENTURE",
+    bigVerdictQuestion: "Safe to go fishing today?",
+    bigVerdictYes: "YES",
+    bigVerdictNo: "NO",
+    bigVerdictCaution: "CAUTION",
+    listenVerdict: "Listen",
     waveHeight: "Significant Wave Height",
     windSpeed: "Surface Wind Speed",
     seaState: "Douglas Sea State",
@@ -285,6 +290,11 @@ const translations = {
     clearanceSafe: "समुद्र यात्रा के लिए सुरक्षित",
     clearanceCaution: "सावधानीपूर्वक आगे बढ़ें",
     clearanceUnsafe: "असुरक्षित: समुद्र में न जाएं",
+    bigVerdictQuestion: "आज मछली पकड़ने जाना सुरक्षित है?",
+    bigVerdictYes: "हाँ",
+    bigVerdictNo: "नहीं",
+    bigVerdictCaution: "सावधान",
+    listenVerdict: "सुनें",
     waveHeight: "लहरों की ऊंचाई",
     windSpeed: "हवा की गति",
     seaState: "समुद्र की स्थिति (डगलस)",
@@ -334,6 +344,11 @@ const translations = {
     clearanceSafe: "கடல் பயணம் பாதுகாப்பானது",
     clearanceCaution: "எச்சரிக்கையுடன் செல்லவும்",
     clearanceUnsafe: "ஆபத்து: கடலுக்கு செல்ல வேண்டாம்",
+    bigVerdictQuestion: "இன்று மீன்பிடிக்க செல்வது பாதுகாப்பானதா?",
+    bigVerdictYes: "ஆம்",
+    bigVerdictNo: "இல்லை",
+    bigVerdictCaution: "எச்சரிக்கை",
+    listenVerdict: "கேளுங்கள்",
     waveHeight: "அலைகளின் உயரம்",
     windSpeed: "காற்றின் வேகம்",
     seaState: "கடல் நிலை",
@@ -388,7 +403,12 @@ const translations = {
     seaState: "കടൽ അവസ്ഥ",
     lightningRisk: "മിന്നൽ സാധ്യത",
     vesselTableTitle: "തത്സമയ ബോട്ട് വിവരങ്ങൾ (AIS)",
-    simulatedDisclaimer: "ശ്രദ്ധിക്കുക: നിലവിൽ റിസീവർ കവറേജ് ഇല്ലാത്ത സ്ഥലങ്ങളിൽ ലൈവ് AIS ബോട്ട് സ്ഥാനങ്ങൾ, വ്യക്തമായി അടയാളപ്പെടുത്തിയ സിമുലേറ്റഡ് കപ്പലുകൾ ഉപയോഗിച്ച് പൂരിപ്പിക്കുന്നു. ഉപഗ്രഹ സമുദ്ര വിവരങ്ങൾ SIH 2026 അവതരണത്തിനായി സിമുലേറ്റ് ചെയ്തതു തന്നെയാണ്."
+    simulatedDisclaimer: "ശ്രദ്ധിക്കുക: നിലവിൽ റിസീവർ കവറേജ് ഇല്ലാത്ത സ്ഥലങ്ങളിൽ ലൈവ് AIS ബോട്ട് സ്ഥാനങ്ങൾ, വ്യക്തമായി അടയാളപ്പെടുത്തിയ സിമുലേറ്റഡ് കപ്പലുകൾ ഉപയോഗിച്ച് പൂരിപ്പിക്കുന്നു. ഉപഗ്രഹ സമുദ്ര വിവരങ്ങൾ SIH 2026 അവതരണത്തിനായി സിമുലേറ്റ് ചെയ്തതു തന്നെയാണ്.",
+    bigVerdictQuestion: "ഇന്ന് മീൻപിടിക്കാൻ പോകുന്നത് സുരക്ഷിതമാണോ?",
+    bigVerdictYes: "അതെ",
+    bigVerdictNo: "ഇല്ല",
+    bigVerdictCaution: "ജാഗ്രത",
+    listenVerdict: "കേൾക്കുക"
   }
 };
 
@@ -2854,6 +2874,8 @@ function updateSafetyIndexCard(weather) {
   chatClearanceEl.className = `${c.text} font-bold`;
 }
 
+  updateBigVerdictCard(verdict, weather);
+
   const waveVal = document.getElementById('safetyTileWaveVal');
   const waveBand = document.getElementById('safetyTileWaveBand');
   if (waveVal) waveVal.textContent = `${weather.significant_wave_height_m} m`;
@@ -2875,6 +2897,70 @@ function updateSafetyIndexCard(weather) {
   if (lightVal) lightVal.textContent = `${lightPct}% ${lightPct < 20 ? 'Low' : lightPct < 50 ? 'Moderate' : 'High'}`;
   if (lightBand) lightBand.textContent = lightningBandLabel(lightPct);
 }
+
+// Big Yes/No verdict banner: a huge icon + word + Listen button that reads
+// correctly at a glance, no literacy required, sitting above the detailed
+// Safety Barometer card (which stays exactly as-is for anyone who wants the
+// numbers). Keeps its own tiny state so the Listen button can speak the
+// same verdict without re-deriving it from the DOM.
+window._orcaBigVerdict = { verdict: 'SAFE', label: 'Safe to go fishing today', score: null };
+
+function updateBigVerdictCard(verdict, weather) {
+  const cardEl = document.getElementById('bigVerdictCard');
+  const iconWrapEl = document.getElementById('bigVerdictIcon');
+  const wordEl = document.getElementById('bigVerdictWord');
+  const btnEl = document.getElementById('btnListenVerdict');
+  if (!cardEl || !iconWrapEl || !wordEl) return;
+
+  const lang = (state.currentLang || 'en');
+  const t = translations[lang] || translations.en;
+
+  const themes = {
+    SAFE: {
+      glass: 'glass-card-safe', ring: 'border-emerald-400', text: 'text-emerald-400',
+      btn: 'bg-emerald-500 hover:bg-emerald-400 shadow-emerald-500/30', glow: 'shadow-emerald-500/30',
+      word: t.bigVerdictYes || 'YES', speakWord: 'Yes',
+      icon: '<path d="M5 12l5 5L20 7"/>'
+    },
+    CAUTION: {
+      glass: 'glass-card-warn', ring: 'border-amber-400', text: 'text-amber-400',
+      btn: 'bg-amber-500 hover:bg-amber-400 shadow-amber-500/30', glow: 'shadow-amber-500/30',
+      word: t.bigVerdictCaution || 'CAUTION', speakWord: 'Caution',
+      icon: '<path d="M12 9v4"/><path d="M12 16.5h.01"/><path d="M10.6 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.4 3.9a2 2 0 0 0-3.4 3.4"/>'
+    },
+    UNSAFE: {
+      glass: 'glass-card-danger', ring: 'border-rose-400', text: 'text-rose-400',
+      btn: 'bg-rose-500 hover:bg-rose-400 shadow-rose-500/30', glow: 'shadow-rose-500/30',
+      word: t.bigVerdictNo || 'NO', speakWord: 'No',
+      icon: '<path d="M18 6L6 18"/><path d="M6 6l12 12"/>'
+    }
+  };
+  const th = themes[verdict] || themes.SAFE;
+
+  cardEl.className = `p-6 sm:p-8 rounded-2xl glass-card ${th.glass} flex flex-col sm:flex-row items-center gap-5 sm:gap-8 text-center sm:text-left`;
+  iconWrapEl.className = `w-24 h-24 sm:w-28 sm:h-28 rounded-full border-[5px] ${th.ring} flex items-center justify-center ${th.text} shrink-0 shadow-lg ${th.glow}`;
+  iconWrapEl.innerHTML = `<svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${th.icon}</svg>`;
+  wordEl.textContent = th.word;
+  wordEl.className = `text-5xl sm:text-6xl font-black ${th.text} leading-none`;
+  if (btnEl) {
+    btnEl.className = `w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-4 rounded-xl ${th.btn} text-slate-950 font-bold text-base shadow-lg transition`;
+  }
+
+  const questionText = (t.bigVerdictQuestion || 'Safe to go fishing today?');
+  const score = weather && weather.safety_score != null ? weather.safety_score : null;
+  window._orcaBigVerdict = {
+    verdict, word: th.speakWord, question: questionText,
+    sentence: `${questionText} ${th.speakWord}.${score != null ? ` Safety score ${score} out of 100.` : ''}`
+  };
+}
+
+function speakBigVerdict() {
+  const v = window._orcaBigVerdict || { sentence: 'Safety verdict not yet available.' };
+  if (typeof window.playAudioText === 'function') {
+    window.playAudioText(encodeURIComponent(v.sentence));
+  }
+}
+window.speakBigVerdict = speakBigVerdict;
 
 function waveBandLabel(h) {
   if (h < 0.5) return 'Calm (< 0.5m)';

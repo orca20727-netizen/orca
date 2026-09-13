@@ -21,8 +21,17 @@ display:"standalone" from manifest.json on its own). -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ORCA INSIGHT">
 
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
+<!-- Static, self-hosted build of the Tailwind utility classes this page
+     actually uses (replaces the Tailwind Play CDN script). The CDN is a
+     runtime dependency with zero fallback: on a slow or restricted mobile
+     connection the script fails to load and every utility class silently
+     stops applying, which produced exactly the "zoomed in / out of
+     proportion" rendering reported from an installed phone. This file is
+     generated ahead of time and ships with the app, so styling no longer
+     depends on a third-party host being reachable. Regenerate it (see
+     tools/build-tailwind.py in this repo, or ask for it to be rebuilt) if
+     new utility classes are ever added to the markup. -->
+<link rel="stylesheet" href="tailwind-build.css">
   <!-- React + JSX support for dropping in React component templates,
      no build step required. Existing app.js / vanilla DOM code is
      untouched -- React only owns the mount points listed below. -->
@@ -38,56 +47,6 @@ display:"standalone" from manifest.json on its own). -->
   "imports": {
     "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
   }
-}
-</script>
-
-<script>
-tailwind.config = {
-darkMode: 'class',
-theme: {
-extend: {
-colors: {
-ocean: {
-950: 'var(--ocean-950)',
-900: 'var(--ocean-900)',
-850: 'var(--ocean-850)',
-800: 'var(--ocean-800)',
-700: 'var(--ocean-700)'
-},
-slate: {
-900: 'var(--slate-900)',
-800: 'var(--slate-800)',
-700: 'var(--slate-700)',
-600: 'var(--slate-600)',
-500: 'var(--slate-500)',
-400: 'var(--slate-400)',
-300: 'var(--slate-300)',
-200: 'var(--slate-200)',
-100: 'var(--slate-100)'
-},
-cyan: {
-50: '#ecfeff',
-100: '#cffafe',
-200: '#a5f3fc',
-300: '#67e8f9',
-400: '#22d3ee',
-500: '#06b6d4',
-600: '#0891b2',
-700: '#0e7490',
-800: '#155e75',
-900: '#164e63',
-950: '#083344'
-},
-marine: {
-cyan: '#06b6d4',
-teal: '#14b8a6',
-emerald: '#10b981',
-amber: '#f59e0b',
-danger: '#ef4444'
-}
-}
-}
-}
 }
 </script>
 
@@ -193,16 +152,16 @@ function orcaToggleTheme(){
 <!-- LANDING GATE: overview splash shown before the dashboard -->
 <!-- ==================================================== -->
 <section id="landingGate" class="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4">
-<div class="landing-stagger flex flex-col items-center">
+<div class="landing-stagger w-full flex flex-col items-center">
 <span class="landing-eyebrow landing-copy reveal">ISRO Collaborative Marine Intelligence · Smart India Hackathon 2026</span>
-<div class="relative flex items-center justify-center w-28 h-28 rounded-3xl bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 mb-8 mt-5 transition-transform duration-300 hover:scale-105 reveal">
+<div class="relative flex items-center justify-center w-28 h-28 rounded-full text-cyan-400 mb-8 mt-5 transition-transform duration-300 hover:scale-105 reveal">
 <span class="landing-mark-ring" aria-hidden="true"></span>
 <div class="landing-orbit" aria-hidden="true">
 <span class="orbit-node"></span>
 <span class="orbit-node"></span>
 <span class="orbit-node"></span>
 </div>
-<svg viewBox="0 0 64 64" class="w-16 h-16 relative z-10"><use href="#orca-mark"></use></svg>
+<svg viewBox="0 0 64 64" class="w-16 h-16 relative z-10" fill="currentColor"><use href="#orca-mark"></use></svg>
 </div>
 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gradient leading-tight mb-4 landing-copy reveal">
 ORCA
@@ -804,6 +763,25 @@ Real-time multi-agent execution pipeline reasoning over Oceansat-3, INSAT-3DR, I
 <!-- 5. SAFETY BAROMETER SECTION -->
 <!-- ==================================================== -->
 <section id="tab-safetyadv" class="tab-content hidden space-y-6">
+
+<!-- Big Yes/No Verdict: readable at a glance without reading -- huge
+     icon + huge word + a Listen button, no text required to understand
+     it. The detailed verdict card and 4-tile grid below it stay as-is
+     for anyone who wants the numbers. -->
+<div id="bigVerdictCard" class="p-6 sm:p-8 rounded-2xl glass-card glass-card-safe flex flex-col sm:flex-row items-center gap-5 sm:gap-8 text-center sm:text-left">
+<div id="bigVerdictIcon" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-[5px] border-emerald-400 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-500/30">
+<svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+</div>
+<div class="flex-1 space-y-1">
+<p class="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wide" data-i18n="bigVerdictQuestion">Safe to go fishing today?</p>
+<h2 id="bigVerdictWord" class="text-5xl sm:text-6xl font-black text-emerald-400 leading-none" data-i18n="bigVerdictYes">YES</h2>
+</div>
+<button id="btnListenVerdict" onclick="speakBigVerdict()" class="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-base shadow-lg shadow-emerald-500/30 transition" style="min-height:56px;" aria-label="Listen to this verdict spoken aloud">
+<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M17 8a5 5 0 0 1 0 8"/></svg>
+<span data-i18n="listenVerdict">Listen</span>
+</button>
+</div>
+
 <!-- Sea-Venture Clearance Verdict Card -->
 <div id="safetyVerdictCard" class="p-6 rounded-2xl glass-card glass-card-safe flex flex-col md:flex-row items-center justify-between gap-6">
 <div class="space-y-2 max-w-xl">

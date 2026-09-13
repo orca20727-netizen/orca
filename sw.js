@@ -1,10 +1,11 @@
 // ORCA INSIGHT Service Worker - Offline Marine Caching
-const CACHE_NAME = 'orca-insight-v2.0.0-live';
+const CACHE_NAME = 'orca-insight-v2.1.0-live';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './app.js',
   './styles.css',
+  './tailwind-build.css',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -63,7 +64,8 @@ self.addEventListener('fetch', (event) => {
   const isSameOrigin = url.origin === self.location.origin;
   const isApiPath = url.pathname.startsWith('/api/');
   const isAppShell = url.pathname === '/' || url.pathname.endsWith('/index.html') ||
-    /\/(app|config|live-overrides)\.js$/.test(url.pathname) || url.pathname.endsWith('/styles.css');
+    /\/(app|config|live-overrides)\.js$/.test(url.pathname) || url.pathname.endsWith('/styles.css') ||
+    url.pathname.endsWith('/tailwind-build.css');
 
   if (req.method !== 'GET' || !isSameOrigin || isApiPath) {
     event.respondWith(fetch(req));
