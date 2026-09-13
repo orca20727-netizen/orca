@@ -197,6 +197,11 @@ function orcaToggleTheme(){
 <span class="landing-eyebrow landing-copy reveal">ISRO Collaborative Marine Intelligence · Smart India Hackathon 2026</span>
 <div class="relative flex items-center justify-center w-28 h-28 rounded-3xl bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 mb-8 mt-5 transition-transform duration-300 hover:scale-105 reveal">
 <span class="landing-mark-ring" aria-hidden="true"></span>
+<div class="landing-orbit" aria-hidden="true">
+<span class="orbit-node"></span>
+<span class="orbit-node"></span>
+<span class="orbit-node"></span>
+</div>
 <svg viewBox="0 0 64 64" class="w-16 h-16 relative z-10"><use href="#orca-mark"></use></svg>
 </div>
 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gradient leading-tight mb-4 landing-copy reveal">
@@ -205,6 +210,28 @@ ORCA
 <p class="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl landing-copy reveal">
 One collaborative marine-intelligence platform, two command decks: a fisherman's daily opportunity console, and the full ISRO satellite, AIS and geofencing insight suite.
 </p>
+<div class="landing-strip reveal max-w-3xl w-full mt-7" aria-hidden="true">
+<div class="landing-strip-track">
+<span class="landing-strip-item"><span class="strip-dot"></span>Oceansat-3 SSTM Thermal Fronts</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>INSAT-3DR Satellite Oceanography</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>8-Node Collaborative Agent DAG</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>NavIC (IRNSS) GPS Bridge</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>IMBL Border Geofencing Alerts</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>Live AIS Fleet & GIS Command</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>Sell Smarter Buyer Pricing</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>406 MHz SOS Distress Beacon</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>EN · हिन्दी · தமிழ் · മലയാളം</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>Oceansat-3 SSTM Thermal Fronts</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>INSAT-3DR Satellite Oceanography</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>8-Node Collaborative Agent DAG</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>NavIC (IRNSS) GPS Bridge</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>IMBL Border Geofencing Alerts</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>Live AIS Fleet & GIS Command</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>Sell Smarter Buyer Pricing</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>406 MHz SOS Distress Beacon</span>
+<span class="landing-strip-item"><span class="strip-dot"></span>EN · हिन्दी · தமிழ் · മലയാളം</span>
+</div>
+</div>
 <div class="reveal grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl w-full mt-9">
 <button type="button" onclick="orcaEnterFisherman()" title="Open the Fisherman Console" class="glass-card hover:border-emerald-500/60 text-left p-6 rounded-2xl transition transform hover:-translate-y-1 cursor-pointer group">
 <div class="flex items-center gap-3 mb-3">
@@ -317,23 +344,17 @@ ISRO Collaborative Marine Intelligence · Team SavioursX
 <button data-nav-target="chat" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
 <span></span> <span data-i18n="navChat">AI Decision Studio</span>
 </button>
-<button data-nav-target="map" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span></span> <span data-i18n="navMap">GIS Command Map</span>
+<button data-nav-target="fleetgis" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+<span></span> <span data-i18n="navFleetGIS">Fleet & GIS Command</span>
 </button>
 <button data-nav-target="dag" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
 <span></span> <span data-i18n="navDAG">Agent DAG Visualizer</span>
 </button>
-<button data-nav-target="safety" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span></span> <span data-i18n="navSafety">Safety Barometer</span>
-</button>
-<button data-nav-target="fleet" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span></span> <span data-i18n="navFleet">Fleet Monitor</span>
+<button data-nav-target="safetyadv" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+<span></span> <span data-i18n="navSafetyAdv">Safety & Advisories</span>
 </button>
 <button data-nav-target="navic" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
 <span></span> <span data-i18n="navNavic">NavIC GPS Bridge</span>
-</button>
-<button data-nav-target="bulletins" class="sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span></span> <span data-i18n="navBulletins">Advisory Bulletins</span>
 </button>
 </div>
 </nav>
@@ -361,11 +382,8 @@ Reasoning over ISRO Oceansat-3, INSAT-3DR satellite oceanography, IMBL geofencin
 <button onclick="switchTab('chat')" class="sfb-btn glow-btn px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/25 transition flex items-center gap-2">
 <span></span> <span data-i18n="ctaStudio">Launch AI Decision Studio</span>
 </button>
-<button onclick="switchTab('map')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-slate-100 font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
-<span></span> <span data-i18n="ctaMap">Open GIS Command Map</span>
-</button>
-<button onclick="switchTab('fleet')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-cyan-300 font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
-<span></span> <span data-i18n="ctaFleet">Inspect Fleet Monitor</span>
+<button onclick="switchTab('fleetgis')" class="sfb-btn px-5 py-3 rounded-xl bg-ocean-800 hover:bg-ocean-700 text-slate-100 font-semibold text-sm border border-ocean-700 transition flex items-center gap-2">
+<span></span> <span data-i18n="ctaFleetGIS">Open Fleet & GIS Command</span>
 </button>
 <button onclick="window.ORCA_INSTALL_APP && window.ORCA_INSTALL_APP()" class="orca-install-btn hidden sfb-btn px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
 <span></span> <span data-i18n="ctaInstall">Install App</span>
@@ -565,7 +583,7 @@ Open Full Agent DAG Visualizer ➔
 <!-- ==================================================== -->
 <!-- 3. GIS COMMAND MAP SECTION -->
 <!-- ==================================================== -->
-<section id="tab-map" class="tab-content hidden space-y-4">
+<section id="tab-fleetgis" class="tab-content hidden space-y-4">
 <!-- Top Map Controls & Layer Switcher -->
 <div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
 <div>
@@ -664,6 +682,75 @@ Simulate Safe Route & ETA
 </div>
 </div>
 </div>
+
+<!-- Fleet Monitor (merged into Fleet & GIS Command) -->
+<div class="flex items-center gap-2 pt-2 border-t border-ocean-700">
+<h3 class="font-bold text-slate-100 text-sm">Fleet Monitor · Live Vessel Telemetry</h3>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-1 space-y-4">
+<div class="p-5 rounded-xl glass-card space-y-3">
+<div class="flex items-center justify-between">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-cyan-400">Total Active Vessels</h4>
+<span id="fleetTotalActive" class="text-2xl font-black text-slate-100 font-mono">35</span>
+</div>
+<p class="text-[11px] text-slate-400">Vessels currently broadcasting AIS transponder signals</p>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-cyan-400">Vessel Distribution per Zone</h4>
+<div id="zoneDistributionBars" class="space-y-3">
+<!-- Populated by JS -->
+</div>
+</div>
+<div id="imblAlertCard" class="p-5 rounded-xl glass-card glass-card-danger space-y-3 shadow-lg transition-colors">
+<div class="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wider">
+<span id="imblAlertDot" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+IMBL Border Proximity Alert
+</div>
+<p id="imblAlertBox" class="text-xs text-red-200 leading-relaxed">
+No vessel telemetry available yet.
+</p>
+</div>
+</div>
+<div class="lg:col-span-2 p-5 rounded-xl glass-card space-y-4">
+<div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700 pb-3">
+<div>
+<h4 class="font-bold text-slate-100 text-sm" data-i18n="vesselTableTitle">
+Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)
+</h4>
+<p class="text-[11px] text-slate-400">Live AIS positions from AISstream.io, backfilled with a clearly-tagged simulated fleet (see "SIM" badge) wherever there's currently no live receiver coverage</p>
+</div>
+<div class="flex items-center gap-2">
+<input id="vesselSearchInput" type="text" placeholder="Search vessel name or ID..." class="glass-chip rounded-lg px-2.5 py-1 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400">
+<select id="vesselStatusFilter" class="glass-chip rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none">
+<option value="ALL">All Statuses</option>
+<option value="FISHING">Safe Fishing</option>
+<option value="TRANSIT">In Transit</option>
+<option value="BORDER_ALERT">Border Alert</option>
+</select>
+</div>
+</div>
+<div class="overflow-x-auto max-h-[500px]">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="border-b border-ocean-700 text-slate-400 font-mono text-[11px] bg-ocean-950/60 sticky top-0">
+<th class="py-2.5 px-3">Vessel ID</th>
+<th class="py-2.5 px-3">Vessel Name</th>
+<th class="py-2.5 px-3">Type</th>
+<th class="py-2.5 px-3">Current Zone</th>
+<th class="py-2.5 px-3">Speed / Heading</th>
+<th class="py-2.5 px-3">IMBL Dist</th>
+<th class="py-2.5 px-3">Status</th>
+<th class="py-2.5 px-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody id="vesselsTableBody">
+<!-- Populated by JS -->
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
 
 <!-- ==================================================== -->
@@ -716,7 +803,7 @@ Real-time multi-agent execution pipeline reasoning over Oceansat-3, INSAT-3DR, I
 <!-- ==================================================== -->
 <!-- 5. SAFETY BAROMETER SECTION -->
 <!-- ==================================================== -->
-<section id="tab-safety" class="tab-content hidden space-y-6">
+<section id="tab-safetyadv" class="tab-content hidden space-y-6">
 <!-- Sea-Venture Clearance Verdict Card -->
 <div id="safetyVerdictCard" class="p-6 rounded-2xl glass-card glass-card-safe flex flex-col md:flex-row items-center justify-between gap-6">
 <div class="space-y-2 max-w-xl">
@@ -802,78 +889,35 @@ All satellite oceanography indicators (Oceansat-3 SSTM thermal fronts, Sentinel-
 <!-- Populated by JS -->
 </div>
 </div>
-</section>
 
-<!-- ==================================================== -->
-<!-- 6. FLEET MONITOR SECTION -->
-<!-- ==================================================== -->
-<section id="tab-fleet" class="tab-content hidden space-y-6">
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<div class="lg:col-span-1 space-y-4">
-<div class="p-5 rounded-xl glass-card space-y-3">
-<div class="flex items-center justify-between">
-<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-cyan-400">Total Active Vessels</h4>
-<span id="fleetTotalActive" class="text-2xl font-black text-slate-100 font-mono">35</span>
-</div>
-<p class="text-[11px] text-slate-400">Vessels currently broadcasting AIS transponder signals</p>
-</div>
-<div class="p-5 rounded-xl glass-card space-y-4">
-<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-cyan-400">Vessel Distribution per Zone</h4>
-<div id="zoneDistributionBars" class="space-y-3">
-<!-- Populated by JS -->
-</div>
-</div>
-<div id="imblAlertCard" class="p-5 rounded-xl glass-card glass-card-danger space-y-3 shadow-lg transition-colors">
-<div class="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-wider">
-<span id="imblAlertDot" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-IMBL Border Proximity Alert
-</div>
-<p id="imblAlertBox" class="text-xs text-red-200 leading-relaxed">
-No vessel telemetry available yet.
+<!-- Advisory Bulletins (merged into Safety & Advisories) -->
+<div class="p-6 rounded-2xl glass-card space-y-4">
+<div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700 pb-4">
+<div>
+<h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+<span></span> Official Marine & Fisheries Bulletins (ISRO - INCOIS)
+</h3>
+<p class="text-xs text-slate-400 mt-0.5">
+Numbered advisories, cyclone hazard warnings, and international boundary compliance alerts.
 </p>
 </div>
-</div>
-<div class="lg:col-span-2 p-5 rounded-xl glass-card space-y-4">
-<div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700 pb-3">
-<div>
-<h4 class="font-bold text-slate-100 text-sm" data-i18n="vesselTableTitle">
-Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)
-</h4>
-<p class="text-[11px] text-slate-400">Live AIS positions from AISstream.io, backfilled with a clearly-tagged simulated fleet (see "SIM" badge) wherever there's currently no live receiver coverage</p>
-</div>
 <div class="flex items-center gap-2">
-<input id="vesselSearchInput" type="text" placeholder="Search vessel name or ID..." class="glass-chip rounded-lg px-2.5 py-1 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400">
-<select id="vesselStatusFilter" class="glass-chip rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none">
-<option value="ALL">All Statuses</option>
-<option value="FISHING">Safe Fishing</option>
-<option value="TRANSIT">In Transit</option>
-<option value="BORDER_ALERT">Border Alert</option>
-</select>
+<label class="flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-slate-300 cursor-pointer" title="Receive browser alerts only while this tab/PWA is open">
+<input id="toggleHazardNotifications" type="checkbox" class="accent-cyan-400">
+Notify while open
+</label>
+<button data-bulletin-filter="ALL" class="px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 transition">All Bulletins</button>
+<button data-bulletin-filter="CRITICAL" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-red-300 hover:bg-ocean-700 transition">Critical</button>
+<button data-bulletin-filter="WARNING" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-amber-300 hover:bg-ocean-700 transition">Warnings</button>
+<button data-bulletin-filter="ADVISORY" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-emerald-300 hover:bg-ocean-700 transition">Advisories</button>
 </div>
 </div>
-<div class="overflow-x-auto max-h-[500px]">
-<table class="w-full text-left text-xs border-collapse">
-<thead>
-<tr class="border-b border-ocean-700 text-slate-400 font-mono text-[11px] bg-ocean-950/60 sticky top-0">
-<th class="py-2.5 px-3">Vessel ID</th>
-<th class="py-2.5 px-3">Vessel Name</th>
-<th class="py-2.5 px-3">Type</th>
-<th class="py-2.5 px-3">Current Zone</th>
-<th class="py-2.5 px-3">Speed / Heading</th>
-<th class="py-2.5 px-3">IMBL Dist</th>
-<th class="py-2.5 px-3">Status</th>
-<th class="py-2.5 px-3 text-right">Action</th>
-</tr>
-</thead>
-<tbody id="vesselsTableBody">
+<div id="bulletinsListContainer" class="space-y-4 pt-2">
 <!-- Populated by JS -->
-</tbody>
-</table>
 </div>
-</div>
+<p class="text-[11px] text-slate-500">Hazard alerts are proactive only while this tab/PWA is open. Closed-app push notifications require a production push-subscription service and are not implemented in this prototype.</p>
 </div>
 </section>
-
 <!-- ==================================================== -->
 <!-- 7. NavIC (IRNSS) SATELLITE GPS BRIDGE SECTION -->
 <!-- ==================================================== -->
@@ -946,37 +990,6 @@ Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)
 </div>
 </section>
 
-<!-- ==================================================== -->
-<!-- 8. ADVISORY BULLETINS SECTION -->
-<!-- ==================================================== -->
-<section id="tab-bulletins" class="tab-content hidden space-y-6">
-<div class="p-6 rounded-2xl glass-card space-y-4">
-<div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700 pb-4">
-<div>
-<h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
-<span></span> Official Marine & Fisheries Bulletins (ISRO - INCOIS)
-</h3>
-<p class="text-xs text-slate-400 mt-0.5">
-Numbered advisories, cyclone hazard warnings, and international boundary compliance alerts.
-</p>
-</div>
-<div class="flex items-center gap-2">
-<label class="flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-slate-300 cursor-pointer" title="Receive browser alerts only while this tab/PWA is open">
-<input id="toggleHazardNotifications" type="checkbox" class="accent-cyan-400">
-Notify while open
-</label>
-<button data-bulletin-filter="ALL" class="px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 transition">All Bulletins</button>
-<button data-bulletin-filter="CRITICAL" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-red-300 hover:bg-ocean-700 transition">Critical</button>
-<button data-bulletin-filter="WARNING" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-amber-300 hover:bg-ocean-700 transition">Warnings</button>
-<button data-bulletin-filter="ADVISORY" class="px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-emerald-300 hover:bg-ocean-700 transition">Advisories</button>
-</div>
-</div>
-<div id="bulletinsListContainer" class="space-y-4 pt-2">
-<!-- Populated by JS -->
-</div>
-<p class="text-[11px] text-slate-500">Hazard alerts are proactive only while this tab/PWA is open. Closed-app push notifications require a production push-subscription service and are not implemented in this prototype.</p>
-</div>
-</section>
 
 </main>
 

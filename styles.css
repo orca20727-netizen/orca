@@ -586,6 +586,100 @@ body {
 }
 
 /* ============================================
+   Hub landing: orbiting mark + feature ticker
+   (Hub landing upgrade, Insight tab-merge pass)
+   ============================================ */
+.landing-orbit {
+  position: absolute;
+  inset: -22px;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.landing-orbit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px dashed var(--cyan-primary);
+  opacity: 0.28;
+}
+
+.orbit-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px;
+  border-radius: 50%;
+  background: var(--cyan-400);
+  box-shadow: 0 0 10px var(--glow-accent-strong);
+  animation: orcaOrbit 9s linear infinite;
+}
+
+.orbit-node:nth-child(2) { background: var(--teal-primary); animation-delay: -3s; }
+.orbit-node:nth-child(3) { background: #f59e0b; animation-delay: -6s; }
+
+@keyframes orcaOrbit {
+  from { transform: rotate(0deg) translateX(78px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(78px) rotate(-360deg); }
+}
+
+.landing-strip {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+.landing-strip-track {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  width: max-content;
+  animation: orcaTicker 26s linear infinite;
+}
+
+.landing-strip:hover .landing-strip-track {
+  animation-play-state: paused;
+}
+
+.landing-strip-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.landing-strip-item .strip-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  flex: none;
+}
+
+@keyframes orcaTicker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-node,
+  .landing-strip-track {
+    animation: none !important;
+  }
+}
+
+/* ============================================
    Motion (glass restyle, phase 6)
    ============================================ */
 @keyframes revealUp {

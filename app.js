@@ -182,13 +182,16 @@ const translations = {
     navDAG: "Agent DAG Visualizer",
     navSafety: "Safety Barometer",
     navFleet: "Fleet Monitor",
+    navFleetGIS: "Fleet & GIS Command",
     navNavic: "NavIC GPS Bridge",
     navBulletins: "Advisory Bulletins",
+    navSafetyAdv: "Safety & Advisories",
     heroTitle: "Collaborative Marine Intelligence for the Indian Ocean",
     heroDesc: "Reasoning over ISRO Oceansat-3, INSAT-3DR satellite oceanography, IMBL geofencing, real-time fleet density, and voyage ETA to empower India's coastal fishing community.",
     ctaStudio: "Launch AI Decision Studio",
     ctaMap: "Open GIS Command Map",
     ctaFleet: "Inspect Fleet Monitor",
+    ctaFleetGIS: "Open Fleet & GIS Command",
     statsActiveVessels: "Active Vessels Tracked",
     statsSatellites: "ISRO Satellite Feeds",
     statsPFZ: "High-Yield Fishing Zones",
@@ -228,13 +231,16 @@ const translations = {
     navDAG: "एजेंट डीएजी विज़ुअलाइज़र",
     navSafety: "सुरक्षा बैरोमीटर",
     navFleet: "नाव बेड़ा मॉनिटर",
+    navFleetGIS: "फ्लीट और जीआईएस कमांड",
     navNavic: "नाविक (NavIC) जीपीएस",
     navBulletins: "आधिकारिक बुलेटिन",
+    navSafetyAdv: "सुरक्षा व सलाह",
     heroTitle: "भारतीय महासागर के लिए सहयोगात्मक समुद्री बुद्धिमत्ता",
     heroDesc: "इसरो ओशनसैट-3, इनसैट-3डीआर उपग्रह डेटा, आईएमबीएल सीमा सुरक्षा, लाइव नाव घनत्व और सटीक ईटीए का विश्लेषण कर मछुआरों को सुरक्षित और समृद्ध बनाता है।",
     ctaStudio: "एआई निर्णय केंद्र शुरू करें",
     ctaMap: "कमांड मैप खोलें",
     ctaFleet: "नाव बेड़ा देखें",
+    ctaFleetGIS: "फ्लीट और जीआईएस कमांड खोलें",
     statsActiveVessels: "सक्रिय नावें ट्रैक की गईं",
     statsSatellites: "इसरो उपग्रह डेटा स्रोत",
     statsPFZ: "उच्च उपज मत्स्य क्षेत्र",
@@ -274,13 +280,16 @@ const translations = {
     navDAG: "ஏஜென்ட் DAG காட்சிப்படுத்தி",
     navSafety: "பாதுகாப்பு அளவுகோல்",
     navFleet: "படகுகள் கண்காணிப்பு",
+    navFleetGIS: "கப்பல் & GIS கட்டளை",
     navNavic: "நாவிக் (NavIC) ஜிபிஎஸ்",
     navBulletins: "அதிகாரப்பூர்வ அறிவிப்புகள்",
+    navSafetyAdv: "பாதுகாப்பு & அறிவிப்புகள்",
     heroTitle: "இந்தியப் பெருங்கடலுக்கான கூட்டு கடல்சார் நுண்ணறிவு",
     heroDesc: "இஸ்ரோ ஓஷன்சாட்-3, இன்சாட்-3டிஆர் செயற்கைக்கோள் தரவு, சர்வதேச எல்லைக் கோடு, படகுகளின் அடர்த்தி மற்றும் வருகை நேரத்தை பகுப்பாய்வு செய்து மீனவர்களுக்கு வழிகாட்டுகிறது.",
     ctaStudio: "AI முடிவெடுக்கும் மையம்",
     ctaMap: "கட்டளை வரைபடம்",
     ctaFleet: "படகு கண்காணிப்பு",
+    ctaFleetGIS: "கப்பல் & GIS கட்டளையை திறக்கவும்",
     statsActiveVessels: "கண்காணிக்கப்படும் படகுகள்",
     statsSatellites: "இஸ்ரோ செயற்கைக்கோள்கள்",
     statsPFZ: "மீன்பிடி மண்டலங்கள் (PFZ)",
@@ -320,13 +329,16 @@ const translations = {
     navDAG: "ഏജന്റ് ഡി.എ.ജി റീസണിംഗ്",
     navSafety: "സുരക്ഷാ മാനദണ്ഡങ്ങൾ",
     navFleet: "ബോട്ട് ഫ്ലീറ്റ് മോണിറ്റർ",
+    navFleetGIS: "ഫ്ലീറ്റ് & ജിഐഎസ് കമാൻഡ്",
     navNavic: "നാവിക് (NavIC) ജി.പി.എസ്",
     navBulletins: "ബുള്ളറ്റിനുകൾ",
+    navSafetyAdv: "സുരക്ഷയും ഉപദേശങ്ങളും",
     heroTitle: "ഇന്ത്യൻ സമുദ്രത്തിനായുള്ള സമ്പൂർണ്ണ എ.ഐ സഹായം",
     heroDesc: "ഐ.എസ്.ആർ.ഒ ഓഷ്യൻസാറ്റ്-3, ഇൻസാറ്റ്-3ഡിആർ ഉപഗ്രഹ വിവരങ്ങൾ, സമുദ്രാതിർത്തി (IMBL), മത്സ്യസാന്നിധ്യ മേഖലകൾ (PFZ), തത്സമയ ബോട്ട് വിവരങ്ങൾ എന്നിവ ലഭ്യമാക്കുന്നു.",
     ctaStudio: "എ.ഐ സ്റ്റുഡിയോ തുറക്കുക",
     ctaMap: "കമാൻഡ് മാപ്പ് തുറക്കുക",
     ctaFleet: "ഫ്ലീറ്റ് മോണിറ്റർ",
+    ctaFleetGIS: "ഫ്ലീറ്റ് & ജിഐഎസ് കമാൻഡ് തുറക്കുക",
     statsActiveVessels: "നിരീക്ഷിക്കുന്ന ബോട്ടുകൾ",
     statsSatellites: "ഉപഗ്രഹങ്ങൾ",
     statsPFZ: "മത്സ്യലഭ്യതാ മേഖലകൾ",
@@ -848,7 +860,7 @@ function switchTab(tabId) {
     btn.classList.toggle('sfb-active', btn.getAttribute('data-nav-target') === tabId);
   });
 
-  if (tabId === 'map' && state.map) {
+  if (tabId === 'fleetgis' && state.map) {
     setTimeout(() => {
       // Mappls' vector engine has no documented invalidateSize() -- try its
       // MapLibre-style resize() defensively so a tab-switch reflow still
@@ -3090,7 +3102,7 @@ window.zoomToVessel = function(vesselId) {
   const vessel = state.vessels.find(v => v.id === vesselId);
   if (!vessel || !state.map) return;
 
-  switchTab('map');
+  switchTab('fleetgis');
   state.map.setCenter({ lat: vessel.lat, lng: vessel.lon });
   state.map.setZoom(9);
 
@@ -3233,7 +3245,7 @@ function startLiveVesselSimulation() {
       }
     });
 
-    if (state.activeTab === 'fleet') {
+    if (state.activeTab === 'fleetgis') {
       renderFleetDistributionChart();
     }
   }, 3500);
