@@ -4,6 +4,28 @@
  * Team SavioursX
  */
 
+// Redesign-style inline icon set: replaces the plain emoji glyphs that used
+// to sit in these dynamically-built strings (⚠, 🛡️, ⚓, 🔊, 🚢, 🔍, 📡, etc.)
+// with small stroke-style SVGs matching the Hub landing/dashboard icon set,
+// so pop-ups, banners and toasts built in JS stay visually consistent with
+// the icons in the static markup.
+const ORCA_ICON_PATHS = {
+  alert:    '<path d="M12 3L2 20h20L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/>',
+  shield:   '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>',
+  anchor:   '<circle cx="12" cy="5" r="2"/><path d="M12 7v13M6 12H2a10 10 0 0 0 10 9 10 10 0 0 0 10-9h-4"/>',
+  speaker:  '<path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M17 8a5 5 0 0 1 0 8"/>',
+  vessel:   '<path d="M3 17h18M5 17V9l7-4 7 4v8"/>',
+  search:   '<circle cx="10" cy="10" r="6"/><path d="M15 15l5 5"/>',
+  radar:    '<circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>'
+};
+function orcaIcon(name, size) {
+  size = size || 13;
+  const body = ORCA_ICON_PATHS[name] || '';
+  return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" fill="none" ' +
+    'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+    'style="display:inline-block;vertical-align:-2px;flex-shrink:0" aria-hidden="true">' + body + '</svg>';
+}
+
 // Backend Connection Config — points at the FastAPI service in /backend.
 // Auto-detects the backend host from the page's own hostname so a phone
 // on the same Wi-Fi (loading the frontend as http://<LAN-IP>:3000) reaches
@@ -599,7 +621,7 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
     el.style.background = '#0c4a6e';
     el.style.color = '#e0f2fe';
     const liveText = liveCount ? `${liveCount} live AIS vessel${liveCount === 1 ? '' : 's'}` : 'no live AIS vessels right now';
-    el.textContent = ` Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
+    el.innerHTML = `${orcaIcon('vessel')} Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
     return;
   }
 
@@ -615,7 +637,7 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
       detail = 'Disconnected from the AIS provider (AISstream.io); reconnecting automatically.';
     }
   }
-  el.textContent = ' ' + detail;
+  el.innerHTML = orcaIcon('alert') + ' ' + detail;
 }
 
 // Populates the home tab's IMBL Border Proximity Alert card from real
@@ -1299,7 +1321,7 @@ function renderIMBLLayers() {
     state.mapLayers.imbl.push(polyline);
 
     const bufferPaths = bound.coordinates.map(c => ({ lat: c[0] + 0.08, lng: c[1] + 0.08 }));
-    const bufferPopupHtml = ` ${bound.warning_distance_nm} NM IMBL Buffer Corridor`;
+    const bufferPopupHtml = `${orcaIcon('alert')} ${bound.warning_distance_nm} NM IMBL Buffer Corridor`;
     const bufferPoly = new mappls.Polyline({
       map: state.map,
       paths: bufferPaths,
@@ -1322,7 +1344,7 @@ function renderMPALayers() {
 
     const popupHtml = `
       <div class="p-2">
-        <span class="text-xs font-bold text-pink-400"> ${mpa.name}</span>
+        <span class="text-xs font-bold text-pink-400">${orcaIcon('shield')} ${mpa.name}</span>
         <div class="text-[11px] bg-pink-950/60 border border-pink-700/50 text-pink-200 px-1.5 py-0.5 rounded my-1 font-semibold">
           RESTRICTED ECO-RESERVE
         </div>
@@ -1351,7 +1373,7 @@ function renderHarbourMarkers() {
 
   state.harbours.forEach(hbr => {
     const html = `<div class="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/30 hover:scale-110 transition cursor-pointer">
-               
+               ${orcaIcon('anchor', 15)}
              </div>`;
 
     const popupHtml = `
@@ -1365,7 +1387,7 @@ function renderHarbourMarkers() {
           <div><span class="text-slate-400">Ice Plant:</span> <span class="text-emerald-400 font-semibold">Active</span></div>
         </div>
         <button onclick="selectHarbourForRouting('${hbr.id}')" class="mt-2 w-full py-1 bg-teal-600 hover:bg-teal-500 text-white rounded text-xs font-semibold transition">
-          Set as Origin Harbour 
+          ${orcaIcon('anchor', 12)} Set as Origin Harbour
         </button>
       </div>
     `;
@@ -2153,7 +2175,7 @@ async function handleChatQuery(queryText) {
               <span class="text-xs"></span> Listen (TTS)
             </button>
             <button onclick="copyAdvisoryMSS()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-600 text-xs flex items-center gap-1 transition">
-              <span></span> NavIC MSS Code
+              <span>${orcaIcon('radar')}</span> NavIC MSS Code
             </button>
           </div>
         </div>
@@ -2183,7 +2205,7 @@ async function handleChatQuery(queryText) {
 
         <details class="group mt-3 pt-2 border-t border-slate-800/80">
           <summary class="text-xs text-slate-400 hover:text-cyan-400 cursor-pointer flex items-center justify-between font-mono">
-            <span> View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)</span>
+            <span>${orcaIcon('search')} View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)</span>
             <span class="text-[10px] text-slate-500 group-open:rotate-180 transition">▼</span>
           </summary>
           <div class="mt-3 space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono">
@@ -2329,14 +2351,14 @@ function syncDetectedLanguage(language) {
 // to be live when it is actually simulated" requirement.
 function generateAgentAdvisory(query) {
   const q = query.toLowerCase();
-  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1"> OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.</p>`;
+  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1">${orcaIcon('alert')} OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.</p>`;
 
   if (q.includes('border') || q.includes('imbl') || q.includes('sri lanka') || q.includes('pakistan') || q.includes('सीमा') || q.includes('எல்லை')) {
     return {
       confidence: 60,
       metrics: { zone: "Palk Strait & Rameswaram", eta: "1h 45m (simulated)", vesselCount: 7, imblClearance: "SIMULATED ~2-4 NM" },
       plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Vessels in the Palk Strait / Gulf of Mannar area are typically within a few Nautical Miles of the India-Sri Lanka IMBL boundary. Maintain a westward heading and keep VHF transponders active on Channel 16. Reconnect to the ORCA backend for an actual measured distance to the boundary.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400"> IMBL Geofencing Advisory (Simulated Offline Estimate):</strong></p>
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400">${orcaIcon('alert')} IMBL Geofencing Advisory (Simulated Offline Estimate):</strong></p>
         <p class="mt-1">Without a live backend connection, exact vessel-to-boundary distances cannot be measured. As a general precaution near Palk Strait Sector 4, maintain a westward heading toward Mandapam.</p>
         <p class="mt-2 text-slate-300">This is a generic offline safety reminder, not a measured geofence reading. Reconnect to ORCA backend for a real distance-to-IMBL calculation.</p>`,
       agentSteps: [
@@ -2351,7 +2373,7 @@ function generateAgentAdvisory(query) {
       confidence: 55,
       metrics: { zone: "PFZ-01 & Wadge Bank", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
       plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Live vessel counts cannot be retrieved without a backend connection. Historically, Wadge Bank and Kochi Deep Offshore see moderate fishing traffic. Reconnect to the ORCA backend for an actual fleet-density reading from the vessel dataset.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400"> Fleet Density (Offline — Simulated Placeholder):</strong></p>
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400">${orcaIcon('vessel')} Fleet Density (Offline — Simulated Placeholder):</strong></p>
         <p class="mt-1">The Fleet & Traffic Agent's live vessel dataset is not reachable right now, so an exact in-zone vessel count is unavailable.</p>
         <ul class="list-disc list-inside mt-2 space-y-1 text-slate-300">
           <li>Reconnect to the ORCA backend for a real per-zone vessel count and overcrowding verdict.</li>
@@ -2368,7 +2390,7 @@ function generateAgentAdvisory(query) {
     confidence: 55,
     metrics: { zone: "PFZ-01 (Kochi Deep) — simulated", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
     plainText: `OFFLINE ADVISORY (backend unreachable): ORCA's multi-agent backend could not be reached, so this answer is a generic, non-live placeholder rather than a grounded reading. Your browser's own Open-Meteo widget reports significant wave height around ${liveWave}m, but PFZ ranking, route distance, ETA, and fleet counts all require the backend and are not shown here. Reconnect to the ORCA backend for a real advisory.`,
-    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400"> Offline Placeholder Advisory</strong></p>
+    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400">${orcaIcon('alert')} Offline Placeholder Advisory</strong></p>
       <p class="mt-1">The ORCA multi-agent backend (satellite, weather, PFZ ranking, geofencing, fleet, routing, and Neural Synthesis) is currently unreachable. Client-side, this browser last saw a wave height of <strong>${liveWave}m</strong> from Open-Meteo, but every other figure requires the backend.</p>
       <p class="mt-2 text-slate-300"><strong>No PFZ recommendation, route, ETA, or fleet count is shown</strong> because those would have to be invented rather than computed. Reconnect to the ORCA backend for a full grounded advisory.</p>`,
     agentSteps: [
@@ -2442,7 +2464,7 @@ function updateTTSButtons(isPlaying) {
       `;
       ttsBtn.classList.add('bg-cyan-600', 'text-white');
     } else {
-      ttsBtn.innerHTML = `<span> Listen Audio Advisory</span>`;
+      ttsBtn.innerHTML = `<span>${orcaIcon('speaker')} Listen Audio Advisory</span>`;
       ttsBtn.classList.remove('bg-cyan-600', 'text-white');
     }
   }
@@ -3158,7 +3180,7 @@ function renderBulletinsList(filterSeverity = 'ALL') {
         <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
           <span class="text-slate-400">Source: <strong class="text-slate-300">${b.source}</strong></span>
           <button onclick="playAudioText('${encodeURIComponent(b.title + '. ' + b.summary)}')" class="text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 transition">
-            <span></span> Listen Bulletin
+            <span>${orcaIcon('speaker')}</span> Listen Bulletin
           </button>
         </div>
       </div>
