@@ -135,7 +135,7 @@ async def plan_route(req: RouteRequest):
 
     try:
         result = core.route_planner.plan_route(origin, destination)
-    excepT Exception as e:
+    except Exception as e:
         logger.exception("Route planner raised unexpectedly")
         raise HTTPException(status_code=500, detail="Internal routing error.") from e
 
