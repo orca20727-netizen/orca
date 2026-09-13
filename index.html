@@ -143,9 +143,11 @@ html.dark .ambient-bg-overlay {
 }
 html.dark #themeIconMoon { display: none; }
 html.dark #themeIconSun { display: block; }
+html.dark #themeIconMoonFm { display: none; }
+html.dark #themeIconSunFm { display: block; }
 
 /* Adaptive halo behind the landing headline/copy: a light halo behind
-   dark text on the light theme's bright photo, a dark halo behind
+acrk text on the light theme's bright photo, a dark halo behind
    light text on the dark theme's darker photo -- so contrast holds
    automatically when the theme is toggled, instead of a fixed color. */
 .landing-copy {
@@ -190,7 +192,7 @@ function orcaToggleTheme(){
 <!-- ==================================================== -->
 <!-- LANDING GATE: overview splash shown before the dashboard -->
 <!-- ==================================================== -->
-<section id="landingGate" onclick="orcaEnterDashboard()" title="Enter the dashboard" class="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4 cursor-pointer">
+<section id="landingGate" class="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4">
 <div class="landing-stagger flex flex-col items-center">
 <span class="landing-eyebrow landing-copy reveal">ISRO Collaborative Marine Intelligence · Smart India Hackathon 2026</span>
 <div class="relative flex items-center justify-center w-28 h-28 rounded-3xl bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 mb-8 mt-5 transition-transform duration-300 hover:scale-105 reveal">
@@ -198,15 +200,29 @@ function orcaToggleTheme(){
 <svg viewBox="0 0 64 64" class="w-16 h-16 relative z-10"><use href="#orca-mark"></use></svg>
 </div>
 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gradient leading-tight mb-4 landing-copy reveal">
-ORCA INSIGHT
+ORCA
 </h1>
 <p class="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl landing-copy reveal">
-Collaborative marine intelligence for the Indian Ocean. ORCA INSIGHT fuses ISRO satellite oceanography, IMBL geofencing, live fleet density and a collaborative agent network into one command deck for India's coastal fishing community.
+One collaborative marine-intelligence platform, two command decks: a fisherman's daily opportunity console, and the full ISRO satellite, AIS and geofencing insight suite.
 </p>
-<span class="landing-enter-cue reveal">
-<svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
-Tap anywhere to enter
-</span>
+<div class="reveal grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl w-full mt-9">
+<button type="button" onclick="orcaEnterFisherman()" title="Open the Fisherman Console" class="glass-card hover:border-emerald-500/60 text-left p-6 rounded-2xl transition transform hover:-translate-y-1 cursor-pointer group">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-xl">🎣</div>
+<h3 class="text-lg font-bold text-slate-100 group-hover:text-emerald-300 transition">ORCA Fisherman</h3>
+</div>
+<p class="text-xs text-slate-400 leading-relaxed mb-3">Today's Opportunity Score, Sell Smarter pricing, a trip-cost calculator and buyer leads for your catch — built for the boat.</p>
+<span class="text-xs font-semibold text-emerald-300 flex items-center gap-1">Open Fisherman Console <span aria-hidden="true">→</span></span>
+</button>
+<button type="button" onclick="orcaEnterDashboard()" title="Open the Insight command deck" class="glass-card hover:border-cyan-500/60 text-left p-6 rounded-2xl transition transform hover:-translate-y-1 cursor-pointer group">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center text-xl">🛰️</div>
+<h3 class="text-lg font-bold text-slate-100 group-hover:text-cyan-300 transition">ORCA Insight</h3>
+</div>
+<p class="text-xs text-slate-400 leading-relaxed mb-3">Full command deck: ISRO satellite oceanography, GIS map, the 8-node agent DAG, Safety Barometer, Fleet Monitor and NavIC bridge.</p>
+<span class="text-xs font-semibold text-cyan-300 flex items-center gap-1">Open Insight Command Deck <span aria-hidden="true">→</span></span>
+</button>
+</div>
 </div>
 </section>
 
@@ -216,8 +232,15 @@ function orcaEnterDashboard(){
   document.getElementById('dashboardShell').classList.remove('hidden');
   window.scrollTo(0,0);
 }
+function orcaEnterFisherman(){
+  document.getElementById('landingGate').classList.add('hidden');
+  document.getElementById('fishermanShell').classList.remove('hidden');
+  window.scrollTo(0,0);
+  if (window.ORCA_FISHERMAN_INIT) { window.ORCA_FISHERMAN_INIT(); }
+}
 function orcaBackToLanding(){
   document.getElementById('dashboardShell').classList.add('hidden');
+  document.getElementById('fishermanShell').classList.add('hidden');
   document.getElementById('landingGate').classList.remove('hidden');
   window.scrollTo(0,0);
 }
@@ -442,7 +465,7 @@ New Conversation
 <button data-chat-prompt="What is the current vessel count and density distribution across Wadge Bank and Kochi Deep?" class="px-3 py-1.5 rounded-lg glass-chip text-xs font-medium text-amber-300 border border-ocean-700 hover:border-amber-500/50 transition flex items-center gap-1.5">
 <span></span> <span data-i18n="chipDensity">Vessel Density & Overcrowding</span>
 </button>
-<button data-chat-prompt="Calculate transit ETA from Kochi to PFZ-01 and verify if round-trip returns safely before 18:30 dusk." class="px-3 py-1.5 rounded-lg glass-chip text-xs font-medium text-teal-300 border border-ocean-700 hover:border-teal-500/50 transition flex items-center gap-1.5">
+<button data-chat-prompt="Calculate transit ETA from Kochi to PFZ-01 and verify if round-trip returns safely before 18:30 dusk." class="px-3 py-1.5 rounded-lg glass-chip text-xs font-medioum text-teal-300 border border-ocean-700 hover:border-teal-500/50 transition flex items-center gap-1.5">
 <span></span> <span data-i18n="chipETA">Calculate ETA & Safe Return Time</span>
 </button>
 </div>
@@ -471,7 +494,6 @@ Vanakkam / Namaste! I am the <strong>ORCA INSIGHT</strong> multi-agent synthesis
 <p class="text-xs text-slate-400">
  <em>Click the microphone icon below to speak in Tamil, Hindi, Malayalam, or English!</em>
 </p>
-</div>
 </div>
 </div>
 
@@ -640,7 +662,6 @@ Simulate Safe Route & ETA
 </div>
 </div>
 </div>
-</div>
 </section>
 
 <!-- ==================================================== -->
@@ -705,7 +726,7 @@ Real-time multi-agent execution pipeline reasoning over Oceansat-3, INSAT-3DR, I
 SAFE FOR SEA VENTURE
 </h2>
 <p id="safetyVerdictDesc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-All satellite oceanography indicators (Oceansat-3 SSTM thermal fronts, Sentinel-3 wave altimetry) confirm favorable fishing conditions along Kerala, Karnataka, and Tamil Nadu coastal waters.
+All satellite oceanography indicators  (Oceansat-3 SSTM thermal fronts, Sentinel-3 wave altimetry) confirm favorable fishing conditions along Kerala, Karnataka, and Tamil Nadu coastal waters.
 </p>
 </div>
 <div class="flex items-center gap-4">
@@ -1021,6 +1042,332 @@ DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Sm
 </div>
 </div>
 </footer>
+</div>
+
+<!-- ==================================================== -->
+<!-- ORCA FISHERMAN: standalone console, namespaced (fm*/data-fm-nav/  -->
+<!-- .fm-tab-content) so it can never interfere with the Insight       -->
+<!-- dashboard's own switchTab()/data-nav-target state above. Wired to -->
+<!-- GET /api/fisherman/dashboard (backend/agents/fisherman_agent.py). -->
+<!-- ==================================================== -->
+<div id="fishermanShell" class="hidden">
+
+<!-- FISHERMAN TOP HEADER -->
+<header class="sticky top-0 z-50 glass-header px-4 lg:px-8 py-3 flex items-center justify-between transition-transform duration-300">
+<div class="flex items-center gap-3" onclick="orcaBackToLanding()" style="cursor:pointer;" title="Back to ORCA Hub">
+<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/30">
+<svg viewBox="0 0 64 64" class="w-6 h-6"><use href="#orca-mark"></use></svg>
+<span class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-400 border-2 border-ocean-700 animate-ping"></span>
+</div>
+<div>
+<h1 class="text-lg lg:text-xl font-black tracking-wider text-gradient font-sans">ORCA FISHERMAN</h1>
+<p class="text-[11px] text-slate-400 hidden sm:block">Daily Opportunity Console · Team SavioursX</p>
+</div>
+</div>
+
+<div class="flex items-center gap-2 sm:gap-3">
+<div id="fmLiveBadge" class="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-mono">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span>LIVE OPPORTUNITY FEED</span>
+</div>
+<button id="themeToggleBtnFm" onclick="orcaToggleTheme()" class="glass-chip hover:border-cyan-500/60 text-slate-200 rounded-lg w-8 h-8 flex items-center justify-center transition cursor-pointer" title="Toggle dark mode" aria-label="Toggle dark mode">
+<svg id="themeIconMoonFm" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="themeIconSunFm" viewBox="0 0 24 24" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+</button>
+<button onclick="orcaBackToLanding()" class="px-3.5 py-1.5 rounded-lg glass-chip hover:border-cyan-500/60 text-slate-200 font-semibold text-xs flex items-center gap-1.5 transition">
+← Hub
+</button>
+</div>
+</header>
+
+<!-- FISHERMAN SECONDARY NAVIGATION -->
+<nav class="glass-nav px-4 lg:px-8 py-2 overflow-x-auto flex justify-center">
+<div class="flex items-center gap-1 sm:gap-2 min-w-max">
+<button data-fm-nav="opportunity" class="fm-nav-btn sfb-btn sfb-active px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5 bg-emerald-500/20 text-emerald-400 border-emerald-500/50">
+<span>🎯</span> <span>Today's Opportunity</span>
+</button>
+<button data-fm-nav="map" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+<span>🗺️</span> <span>Fishing Zones Map</span>
+</button>
+<button data-fm-nav="sell" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+<span>💰</span> <span>Sell Smarter</span>
+</button>
+<button data-fm-nav="calculator" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+<span>🧮</span> <span>Trip Calculator</span>
+</button>
+<button data-fm-nav="community" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+<span>📢</span> <span>Performance &amp; Community</span>
+</button>
+</div>
+</nav>
+
+<!-- FISHERMAN MAIN CONTENT -->
+<main class="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full">
+
+<!-- ==================================================== -->
+<!-- FM-1. TODAY'S OPPORTUNITY -->
+<!-- ==================================================== -->
+<section id="fm-tab-opportunity" class="fm-tab-content space-y-6">
+
+<div id="fmBackendStatusBadge" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-600 text-slate-400 text-[11px] font-mono w-fit">
+<span class="w-2 h-2 rounded-full bg-slate-500"></span> Checking backend...
+</div>
+
+<div id="fmOpportunityCard" class="p-6 rounded-2xl glass-card glass-card-safe flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+<div class="space-y-2 max-w-xl">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+<span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">Today's Best Opportunity</span>
+</div>
+<h2 id="fmRecommendedSpecies" class="text-2xl sm:text-3xl font-extrabold text-emerald-400">—</h2>
+<p id="fmOpportunityDesc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+Loading today's opportunity from the Fisherman Opportunity Agent…
+</p>
+<div class="flex items-center gap-2 pt-1">
+<label class="text-[11px] text-slate-400" for="fmSpeciesSelect">Preferred species:</label>
+<select id="fmSpeciesSelect" class="glass-chip rounded-lg px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+<option value="">Auto (Best Match)</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-xs text-slate-400 block font-mono">Opportunity Score</span>
+<span id="fmOpportunityScore" class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono">—</span><span class="text-lg text-slate-400 font-normal">/100</span>
+</div>
+<div id="fmOpportunityRing" class="w-14 h-14 rounded-full border-4 border-emerald-400 flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/30">🎣</div>
+</div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Recommended Zone</span>
+<div id="fmRecommendedZone" class="text-sm font-bold text-slate-100">—</div>
+<span id="fmZoneDistance" class="text-[11px] text-cyan-300 font-mono">—</span>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Expected Catch</span>
+<div id="fmExpectedCatch" class="text-sm font-bold text-slate-100">—</div>
+<span class="text-[11px] text-slate-500">at today's price</span>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Revenue Range</span>
+<div id="fmRevenueRange" class="text-sm font-bold text-emerald-400 font-mono">—</div>
+<span class="text-[11px] text-slate-500">before trip costs</span>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Estimated Profit</span>
+<div id="fmProfitRange" class="text-sm font-bold text-amber-400 font-mono">—</div>
+<span id="fmConfidencePct" class="text-[11px] text-slate-500">Confidence —%</span>
+</div>
+</div>
+
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Opportunity Score Breakdown</h4>
+<div id="fmScoreBreakdown" class="space-y-3 text-xs">
+<!-- Populated by JS: Ocean 25% / Fish 30% / Market 20% / Profit 25% -->
+</div>
+</div>
+</section>
+
+<!-- ==================================================== -->
+<!-- FM-MAP. FISHING ZONES MAP (same Mappls basemap/SDK as the GIS -->
+<!-- Command Map, plotting the live-scored /api/pfz ranking) -->
+<!-- ==================================================== -->
+<section id="fm-tab-map" class="fm-tab-content hidden space-y-4">
+<div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
+<div>
+<h3 class="font-bold text-slate-100 text-sm flex items-center gap-2"><span>🗺️</span> Best Fish Yield Zones · Live Map</h3>
+<p class="text-[11px] text-slate-400">Same live-scored Ocean Analytics &amp; PFZ Agent data used by Today's Opportunity, plotted on the GIS Command Map's basemap.</p>
+</div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+<div class="lg:col-span-1 p-4 rounded-xl glass-card space-y-3 max-h-[560px] overflow-y-auto">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Ranked by Yield</h4>
+<div id="fmZoneRankList" class="space-y-2 text-xs">
+<!-- Populated by JS -->
+</div>
+</div>
+
+<div class="lg:col-span-3 rounded-xl overflow-hidden border border-ocean-700/80 shadow-2xl relative">
+<div id="fmMapContainer" class="w-full h-[480px] sm:h-[560px] z-10"></div>
+<div class="absolute bottom-3 left-3 right-3 z-20 glass-card-strong border border-ocean-700/80 rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+<div class="flex items-center gap-4">
+<div><span class="text-slate-400">Top Zone:</span> <span id="fmMapHudZone" class="text-emerald-400 font-bold">—</span></div>
+<div><span class="text-slate-400">Yield Score:</span> <span id="fmMapHudYield" class="text-cyan-300 font-bold">—</span></div>
+</div>
+<div id="fmMapHudSpecies" class="text-amber-300 font-semibold">—</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==================================================== -->
+<!-- FM-2. SELL SMARTER -->
+<!-- ==================================================== -->
+<section id="fm-tab-sell" class="fm-tab-content hidden space-y-6">
+<div class="p-5 rounded-xl glass-card space-y-3">
+<h4 class="font-bold text-slate-100 text-sm flex items-center gap-2"><span>💰</span> Sell Smarter</h4>
+<p id="fmSellSmarterDesc" class="text-xs text-slate-400 leading-relaxed">Loading pricing comparison…</p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+<div class="p-4 rounded-lg glass-chip text-center">
+<span class="text-[11px] text-slate-400 block">Typical Informal Price</span>
+<span id="fmTypicalPrice" class="text-xl font-bold text-slate-200 font-mono">—</span>
+</div>
+<div class="p-4 rounded-lg glass-chip text-center border border-emerald-500/40">
+<span class="text-[11px] text-emerald-300 block">ORCA Opportunity Price</span>
+<span id="fmOpportunityPrice" class="text-xl font-bold text-emerald-400 font-mono">—</span>
+</div>
+<div class="p-4 rounded-lg glass-chip text-center">
+<span class="text-[11px] text-slate-400 block">Potential Extra Revenue</span>
+<span id="fmExtraRevenue" class="text-xl font-bold text-amber-400 font-mono">—</span>
+</div>
+</div>
+</div>
+
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Species Price Ranking</h4>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="border-b border-ocean-700 text-slate-400 font-mono text-[11px]">
+<th class="py-2 px-3">Species</th>
+<th class="py-2 px-3">Price/kg</th>
+<th class="py-2 px-3">Trend</th>
+<th class="py-2 px-3">Demand</th>
+<th class="py-2 px-3">Est. Profit</th>
+<th class="py-2 px-3">Opportunity Score</th>
+</tr>
+</thead>
+<tbody id="fmSpeciesRankingBody">
+<!-- Populated by JS -->
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Buyer Leads</h4>
+<div id="fmBuyerLeadsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Populated by JS -->
+</div>
+</div>
+</section>
+
+<!-- ==================================================== -->
+<!-- FM-3. TRIP CALCULATOR -->
+<!-- ==================================================== -->
+<section id="fm-tab-calculator" class="fm-tab-content hidden space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Trip-Cost Calculator</h4>
+<div class="space-y-3 text-xs">
+<div>
+<label class="block text-slate-400 mb-1" for="calcSpecies">Species</label>
+<select id="calcSpecies" class="w-full glass-chip rounded-lg p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-400"></select>
+</div>
+<div>
+<label class="block text-slate-400 mb-1" for="calcCatchKg">Expected Catch (kg)</label>
+<input id="calcCatchKg" type="number" min="0" step="1" class="w-full glass-chip rounded-lg p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+</div>
+<div>
+<label class="block text-slate-400 mb-1" for="calcPricePerKg">Price per kg (₹)</label>
+<input id="calcPricePerKg" type="number" min="0" step="1" class="w-full glass-chip rounded-lg p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div>
+<label class="block text-slate-400 mb-1" for="calcFuelCost">Fuel (₹)</label>
+<input id="calcFuelCost" type="number" min="0" step="1" class="w-full glass-chip rounded-lg p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+</div>
+<div>
+<label class="block text-slate-400 mb-1" for="calcIceCost">Ice (₹)</label>
+<input id="calcIceCost" type="number" min="0" step="1" class="w-full glass-chip rounded-lg p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+</div>
+<div>
+<label class="block text-slate-400 mb-1" for="calcOtherCost">Other (₹)</label>
+<input id="calcOtherCost" type="number" min="0" step="1" class="w-full glass-chip rounded-lg p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-400">
+</div>
+</div>
+<button id="btnRecalcTrip" type="button" class="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md transition">Recalculate</button>
+</div>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Trip Summary</h4>
+<div class="space-y-2 text-xs">
+<div class="flex justify-between p-2 rounded glass-chip">
+<span class="text-slate-400">Gross Revenue:</span>
+<span id="calcRevenueOut" class="text-emerald-400 font-mono font-bold">—</span>
+</div>
+<div class="flex justify-between p-2 rounded glass-chip">
+<span class="text-slate-400">Total Trip Cost:</span>
+<span id="calcCostOut" class="text-slate-200 font-mono font-bold">—</span>
+</div>
+<div class="flex justify-between p-2 rounded glass-chip">
+<span class="text-slate-400">Net Profit:</span>
+<span id="calcProfitOut" class="text-amber-400 font-mono font-bold">—</span>
+</div>
+<div class="flex justify-between p-2 rounded glass-chip">
+<span class="text-slate-400">Profit Margin:</span>
+<span id="calcMarginOut" class="text-cyan-300 font-mono font-bold">—</span>
+</div>
+</div>
+<p class="text-[11px] text-slate-500 pt-2">Defaults are pre-filled from today's recommended species and this app's simulated market data — adjust any field and press Recalculate.</p>
+</div>
+</div>
+</section>
+
+<!-- ==================================================== -->
+<!-- FM-4. PERFORMANCE & COMMUNITY -->
+<!-- ==================================================== -->
+<section id="fm-tab-community" class="fm-tab-content hidden space-y-6">
+<div class="p-5 rounded-xl glass-card space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Your Trip Performance</h4>
+<span id="fmAvgProfit" class="text-lg font-black text-slate-100 font-mono">—</span>
+</div>
+<p id="fmPerformanceInsight" class="text-xs text-slate-300 leading-relaxed">Loading performance history…</p>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="border-b border-ocean-700 text-slate-400 font-mono text-[11px]">
+<th class="py-2 px-3">Trip</th>
+<th class="py-2 px-3">Species</th>
+<th class="py-2 px-3">Catch (kg)</th>
+<th class="py-2 px-3">Price/kg</th>
+<th class="py-2 px-3">Revenue</th>
+<th class="py-2 px-3">Profit</th>
+</tr>
+</thead>
+<tbody id="fmTripHistoryBody">
+<!-- Populated by JS -->
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="space-y-3">
+<h3 class="text-base font-bold text-slate-100 flex items-center gap-2"><span>📢</span> Community &amp; Advisory Feed</h3>
+<div id="fmCommunityFeed" class="space-y-3">
+<!-- Populated by JS -->
+</div>
+</div>
+</section>
+
+</main>
+
+<!-- FISHERMAN FOOTER -->
+<footer class="bg-ocean-900 border-t border-ocean-700/60 px-4 lg:px-8 py-4 mt-auto">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+<div>
+<span class="text-slate-200 font-semibold">ORCA FISHERMAN</span> · Built by <strong class="text-emerald-400">Team SavioursX</strong> · Smart India Hackathon 2026 · Problem Statement 26176 (ISRO)
+</div>
+<div class="text-[11px] text-slate-500 text-center sm:text-right">
+DISCLAIMER: Species market prices, buyer leads and trip history are simulated for Smart India Hackathon 2026 judging demonstration.
+</div>
+</div>
+</footer>
+
 </div>
 
 <!-- Runtime deployment settings are generated by the frontend container. -->
