@@ -3238,3 +3238,550 @@ function startLiveVesselSimulation() {
     }
   }, 3500);
 }
+
+// ============================================================
+// ORCA FISHERMAN MODULE
+// ============================================================
+// Standalone console wired to GET /api/fisherman/dashboard
+// (backend/agents/fisherman_agent.py, composed from the SAME
+// weather_agent + pfz_agent results the Insight dashboard uses, so
+// this console's "today's opportunity" can never disagree with the
+// Safety Barometer or GIS Command Map about current conditions).
+//
+// Deliberately namespaced end-to-end (fm*/calc* ids, data-fm-nav,
+// .fm-tab-content, switchFishermanTab/initFishermanConsole) instead
+// of reusing the Insight dashboard's tab-content/data-nav-target
+// contract, so entering/leaving this console can never interfere
+// with switchTab()'s own state above.
+// ============================================================
+
+const fishermanState = {
+  initialized: false,
+  dashboard: null,
+  // Same default Kochi Harbour coordinates used elsewhere in this app
+  // (see fetchLiveMarineTelemetry(9.93, 76.26) above) so the Fisherman
+  // console's default view matches the rest of the app's default origin.
+  lat: 9.93,
+  lon: 76.26,
+  // Fishing Zones Map (fm-tab-map) -- a second, independent Mappls map
+  // instance (the GIS Command Map's render*Layer() functions are all
+  // hardcoded to the single global state.map, so this map gets its own
+  // small self-contained instance + marker list rather than being bolted
+  // onto that code).
+  map: null,
+  mapMarkers: [],
+  zoneRanking: []
+};
+
+// Called by orcaEnterFisherman() (in index.html) every time the Fisherman
+// shell is opened. Wires up event listeners exactly once, then always
+// pulls a fresh dashboard snapshot.
+function initFishermanConsole() {
+  if (!fishermanState.initialized) {
+    setupFishermanNavigation();
+    setupTripCalculator();
+    fishermanState.initialized = true;
+  }
+  refreshFishermanDashboard();
+  refreshFishermanZones();
+}
+window.ORCA_FISHERMAN_INIT = initFishermanConsole;
+
+function setupFishermanNavigation() {
+  document.querySelectorAll('[data-fm-nav]').forEach(btn => {
+    btn.addEventListener('click', () => switchFishermanTab(btn.getAttribute('data-fm-nav')));
+  });
+  const speciesSelect = document.getElementById('fmSpeciesSelect');
+  if (speciesSelect) {
+    speciesSelect.addEventListener('change', () => {
+      refreshFishermanDashboard(speciesSelect.value || null);
+    });
+  }
+}
+
+function switchFishermanTab(tabId) {
+  document.querySelectorAll('.fm-tab-content').forEach(section => {
+    section.classList.add('hidden');
+  });
+  const activeSection = document.getElementById(`fm-tab-${tabId}`);
+  if (activeSection) activeSection.classList.remove('hidden');
+
+  document.querySelectorAll('[data-fm-nav]').forEach(btn => {
+    const isActive = btn.getAttribute('data-fm-nav') === tabId;
+    btn.classList.toggle('bg-emerald-500/20', isActive);
+    btn.classList.toggle('text-emerald-400', isActive);
+    btn.classList.toggle('border-emerald-500/50', isActive);
+    btn.classList.toggle('text-slate-400', !isActive);
+    btn.classList.toggle('border-transparent', !isActive);
+    btn.classList.toggle('sfb-active', isActive);
+  });
+
+  if (tabId === 'map') {
+    if (!fishermanState.map) {
+      setupFishermanMap();
+    } else {
+      // Mirrors switchTab()'s own defensive Mappls resize() call above --
+      // the container has zero size while its parent tab is hidden, so the
+      // map needs a nudge once it's actually visible again.
+      setTimeout(() => {
+        try { fishermanState.map.resize(); } catch (err) { /* not available -- ignore */ }
+      }, 200);
+    }
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setFishermanStatusBadge(online, label) {
+  const badge = document.getElementById('fmBackendStatusBadge');
+  if (!badge) return;
+  if (online) {
+    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${label}`;
+    badge.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-[11px] font-mono w-fit";
+  } else {
+    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> ${label}`;
+    badge.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-950/60 border border-amber-500/40 text-amber-300 text-[11px] font-mono w-fit";
+  }
+}
+
+async function refreshFishermanDashboard(preferredSpecies) {
+  try {
+    let url = `${BACKEND_CONFIG.apiBase}/api/fisherman/dashboard?lat=${fishermanState.lat}&lon=${fishermanState.lon}`;
+    if (preferredSpecies) url += `&species=${encodeURIComponent(preferredSpecies)}`;
+    const res = await fetchWithTimeout(url, {}, 8000);
+    if (!res.ok) throw new Error(`Fisherman dashboard responded with ${res.status}`);
+    const data = await res.json();
+    fishermanState.dashboard = data;
+
+    setFishermanStatusBadge(true, `LIVE — ${data.data_source}`);
+    renderFishermanOpportunity(data);
+    renderFishermanSellSmarter(data);
+    renderFishermanCalculatorDefaults(data);
+    renderFishermanPerformance(data);
+  } catch (err) {
+    console.log('Fisherman dashboard refresh failed, keeping last known values', err);
+    setFishermanStatusBadge(false, 'BACKEND OFFLINE — showing last known data');
+  }
+}
+
+// Full literal Tailwind class strings (not template-interpolated) so the
+// Tailwind Play CDN's runtime scanner reliably picks these up, matching
+// the same convention already used by updateSafetyIndexCard() above.
+const FM_SCORE_META = {
+  ocean:  { label: 'Ocean Safety',    weightLabel: '25%', barClass: 'bg-cyan-500',    textClass: 'text-cyan-400' },
+  fish:   { label: 'Fish Yield',      weightLabel: '30%', barClass: 'bg-emerald-500', textClass: 'text-emerald-400' },
+  market: { label: 'Market Momentum', weightLabel: '20%', barClass: 'bg-amber-500',   textClass: 'text-amber-400' },
+  profit: { label: 'Profit Margin',   weightLabel: '25%', barClass: 'bg-teal-500',    textClass: 'text-teal-400' }
+};
+
+function fmCurrency(n) {
+  return `₹${Math.round(n || 0).toLocaleString('en-IN')}`;
+}
+
+function renderFishermanOpportunity(data) {
+  const opp = data.opportunity || {};
+
+  const speciesEl = document.getElementById('fmRecommendedSpecies');
+  if (speciesEl) speciesEl.textContent = opp.recommended_species || '—';
+
+  const descEl = document.getElementById('fmOpportunityDesc');
+  if (descEl) {
+    descEl.textContent = `Best match today at ₹${opp.price_per_kg}/kg near ${opp.top_recommended_pfz || 'the recommended zone'} — composite Opportunity Score ${opp.composite_score}/100.`;
+  }
+
+  const scoreEl = document.getElementById('fmOpportunityScore');
+  if (scoreEl) scoreEl.textContent = opp.composite_score != null ? Math.round(opp.composite_score) : '—';
+
+  const zoneEl = document.getElementById('fmRecommendedZone');
+  if (zoneEl) zoneEl.textContent = opp.top_recommended_pfz || '—';
+  const distEl = document.getElementById('fmZoneDistance');
+  if (distEl) distEl.textContent = opp.distance_from_vessel_nm != null ? `${opp.distance_from_vessel_nm} NM away` : '';
+
+  const catchEl = document.getElementById('fmExpectedCatch');
+  if (catchEl) catchEl.textContent = (opp.catch_min_kg != null && opp.catch_max_kg != null) ? `${opp.catch_min_kg}–${opp.catch_max_kg} kg` : '—';
+
+  const revEl = document.getElementById('fmRevenueRange');
+  if (revEl) revEl.textContent = (opp.revenue_min != null && opp.revenue_max != null) ? `${fmCurrency(opp.revenue_min)}–${fmCurrency(opp.revenue_max)}` : '—';
+
+  const profitEl = document.getElementById('fmProfitRange');
+  if (profitEl) profitEl.textContent = (opp.profit_min != null && opp.profit_max != null) ? `${fmCurrency(opp.profit_min)}–${fmCurrency(opp.profit_max)}` : '—';
+
+  const confEl = document.getElementById('fmConfidencePct');
+  if (confEl) confEl.textContent = opp.confidence_pct != null ? `Confidence ${opp.confidence_pct}%` : 'Confidence —%';
+
+  const breakdownEl = document.getElementById('fmScoreBreakdown');
+  if (breakdownEl && opp.score_breakdown) {
+    breakdownEl.innerHTML = Object.entries(opp.score_breakdown).map(([key, v]) => {
+      const meta = FM_SCORE_META[key] || { label: key, weightLabel: `${Math.round((v.weight || 0) * 100)}%`, barClass: 'bg-cyan-500', textClass: 'text-cyan-400' };
+      const score = Math.max(0, Math.min(100, Math.round(v.score || 0)));
+      return `
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-300 font-medium">${meta.label} <span class="text-slate-500">(${meta.weightLabel})</span></span>
+            <span class="${meta.textClass} font-mono font-bold">${score}/100</span>
+          </div>
+          <div class="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
+            <div class="h-full rounded-full ${meta.barClass} transition-all duration-500" style="width: ${score}%"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Species selector: "Auto" + every ranked species, preserving whatever
+  // the user had picked (falls back to Auto if that species dropped out).
+  const speciesSelect = document.getElementById('fmSpeciesSelect');
+  if (speciesSelect && Array.isArray(data.ranking)) {
+    const current = speciesSelect.value;
+    speciesSelect.innerHTML = `<option value="">Auto (Best Match)</option>` +
+      data.ranking.map(r => `<option value="${r.species}">${r.species}</option>`).join('');
+    speciesSelect.value = (current && data.ranking.some(r => r.species === current)) ? current : '';
+  }
+}
+
+function renderFishermanSellSmarter(data) {
+  const ss = data.sell_smarter || {};
+
+  const descEl = document.getElementById('fmSellSmarterDesc');
+  if (descEl) {
+    descEl.textContent = `${ss.species || 'Your catch'}: selling to an ORCA-matched buyer instead of the informal market nets an estimated extra ${fmCurrency(ss.potential_additional_revenue)} on an assumed ${ss.assumed_catch_kg || 0} kg catch.`;
+  }
+  const typicalEl = document.getElementById('fmTypicalPrice');
+  if (typicalEl) typicalEl.textContent = ss.typical_price_per_kg != null ? `₹${ss.typical_price_per_kg}/kg` : '—';
+  const oppPriceEl = document.getElementById('fmOpportunityPrice');
+  if (oppPriceEl) oppPriceEl.textContent = ss.opportunity_price_per_kg != null ? `₹${ss.opportunity_price_per_kg}/kg` : '—';
+  const extraEl = document.getElementById('fmExtraRevenue');
+  if (extraEl) extraEl.textContent = fmCurrency(ss.potential_additional_revenue);
+
+  const rankingBody = document.getElementById('fmSpeciesRankingBody');
+  if (rankingBody && Array.isArray(data.ranking)) {
+    rankingBody.innerHTML = data.ranking.map(r => {
+      const trendUp = (r.price_change_pct || 0) >= 0;
+      const trendClass = trendUp ? 'text-emerald-400' : 'text-red-400';
+      const trendArrow = trendUp ? '▲' : '▼';
+      const demandClass = { High: 'text-emerald-400', Medium: 'text-amber-400', Low: 'text-red-400' }[r.demand] || 'text-slate-300';
+      return `
+        <tr class="border-b border-ocean-800/60 hover:bg-ocean-800/40 transition">
+          <td class="py-2 px-3 font-semibold text-slate-100">${r.species}</td>
+          <td class="py-2 px-3 font-mono text-slate-200">₹${r.price_per_kg}</td>
+          <td class="py-2 px-3 font-mono ${trendClass}">${trendArrow} ${Math.abs(r.price_change_pct || 0)}%</td>
+          <td class="py-2 px-3 font-semibold ${demandClass}">${r.demand}</td>
+          <td class="py-2 px-3 font-mono text-amber-300">${fmCurrency(r.profit_min)}–${fmCurrency(r.profit_max)}</td>
+          <td class="py-2 px-3 font-mono text-cyan-300">${r.composite_score}/100</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  const buyersGrid = document.getElementById('fmBuyerLeadsGrid');
+  if (buyersGrid && Array.isArray(data.buyers)) {
+    buyersGrid.innerHTML = data.buyers.map(b => `
+      <div class="p-4 rounded-xl glass-card space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-bold text-slate-100">${b.name}</span>
+          <span class="text-[11px] font-mono text-emerald-300">${b.species}</span>
+        </div>
+        <div class="text-xs text-slate-400">Wants <strong class="text-slate-200">${b.qty_kg} kg</strong> · ₹${b.price_min}–₹${b.price_max}/kg</div>
+        <div class="flex items-center justify-between text-[11px] text-slate-500">
+          <span>${b.location}</span>
+          <span class="text-amber-300 font-semibold">${b.deadline}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function renderFishermanCalculatorDefaults(data) {
+  const d = data.trip_calculator_defaults;
+  if (!d) return;
+
+  const speciesSelect = document.getElementById('calcSpecies');
+  if (speciesSelect && Array.isArray(data.ranking)) {
+    speciesSelect.innerHTML = data.ranking.map(r => `<option value="${r.species}" data-price="${r.price_per_kg}">${r.species}</option>`).join('');
+    speciesSelect.value = d.species;
+  }
+
+  // Only pre-fill fields the user hasn't touched themselves, so a manual
+  // edit followed by a background refresh never silently overwrites it.
+  const prefill = (id, value) => {
+    const el = document.getElementById(id);
+    if (el && !el.dataset.userEdited) el.value = value;
+  };
+  prefill('calcCatchKg', d.catch_kg);
+  prefill('calcPricePerKg', d.price_per_kg);
+  prefill('calcFuelCost', d.fuel_cost);
+  prefill('calcIceCost', d.ice_cost);
+  prefill('calcOtherCost', d.other_cost);
+
+  recalculateTrip();
+}
+
+function setupTripCalculator() {
+  ['calcCatchKg', 'calcPricePerKg', 'calcFuelCost', 'calcIceCost', 'calcOtherCost'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => { el.dataset.userEdited = '1'; recalculateTrip(); });
+  });
+  const speciesSelect = document.getElementById('calcSpecies');
+  if (speciesSelect) {
+    speciesSelect.addEventListener('change', () => {
+      const opt = speciesSelect.selectedOptions[0];
+      const priceEl = document.getElementById('calcPricePerKg');
+      if (opt && priceEl && !priceEl.dataset.userEdited) priceEl.value = opt.dataset.price;
+      recalculateTrip();
+    });
+  }
+  const btn = document.getElementById('btnRecalcTrip');
+  if (btn) btn.addEventListener('click', recalculateTrip);
+}
+
+function recalculateTrip() {
+  const num = id => parseFloat(document.getElementById(id)?.value) || 0;
+  const catchKg = num('calcCatchKg');
+  const pricePerKg = num('calcPricePerKg');
+  const fuel = num('calcFuelCost');
+  const ice = num('calcIceCost');
+  const other = num('calcOtherCost');
+  const revenue = catchKg * pricePerKg;
+  const cost = fuel + ice + other;
+  const profit = revenue - cost;
+  const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+  const revEl = document.getElementById('calcRevenueOut');
+  if (revEl) revEl.textContent = fmCurrency(revenue);
+  const costEl = document.getElementById('calcCostOut');
+  if (costEl) costEl.textContent = fmCurrency(cost);
+  const profitEl = document.getElementById('calcProfitOut');
+  if (profitEl) {
+    profitEl.textContent = fmCurrency(profit);
+    profitEl.className = `font-mono font-bold ${profit >= 0 ? 'text-amber-400' : 'text-red-400'}`;
+  }
+  const marginEl = document.getElementById('calcMarginOut');
+  if (marginEl) marginEl.textContent = `${margin.toFixed(1)}%`;
+}
+
+const FM_POST_TYPE_META = {
+  weather_alert: { icon: '⛈️', color: 'text-amber-300', label: 'Weather Alert' },
+  market_update: { icon: '📈', color: 'text-emerald-300', label: 'Market Update' },
+  fisherman_post: { icon: '🎣', color: 'text-cyan-300', label: 'Fisherman Report' }
+};
+
+function renderFishermanPerformance(data) {
+  const perf = data.performance || {};
+
+  const avgEl = document.getElementById('fmAvgProfit');
+  if (avgEl) avgEl.textContent = perf.average_profit ? `${fmCurrency(perf.average_profit)} avg/trip` : '—';
+
+  const insightEl = document.getElementById('fmPerformanceInsight');
+  if (insightEl) insightEl.textContent = perf.insight || 'No trip history recorded yet.';
+
+  const tbody = document.getElementById('fmTripHistoryBody');
+  if (tbody && Array.isArray(perf.trips)) {
+    tbody.innerHTML = perf.trips.map(t => `
+      <tr class="border-b border-ocean-800/60 hover:bg-ocean-800/40 transition">
+        <td class="py-2 px-3 text-slate-300">${t.trips_ago} trip${t.trips_ago === 1 ? '' : 's'} ago</td>
+        <td class="py-2 px-3 font-semibold text-slate-100">${t.species}</td>
+        <td class="py-2 px-3 font-mono text-slate-300">${t.catch_kg} kg</td>
+        <td class="py-2 px-3 font-mono text-slate-300">₹${t.price_per_kg}</td>
+        <td class="py-2 px-3 font-mono text-emerald-300">${fmCurrency(t.revenue)}</td>
+        <td class="py-2 px-3 font-mono text-amber-300">${fmCurrency(t.profit)}</td>
+      </tr>
+    `).join('');
+  }
+
+  const feed = document.getElementById('fmCommunityFeed');
+  if (feed && Array.isArray(data.community_posts)) {
+    feed.innerHTML = data.community_posts.map(p => {
+      const meta = FM_POST_TYPE_META[p.type] || { icon: '📢', color: 'text-slate-300', label: 'Update' };
+      return `
+        <div class="p-4 rounded-xl glass-card space-y-1.5">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold ${meta.color} flex items-center gap-1.5">${meta.icon} ${meta.label}</span>
+            <span class="text-slate-500">${p.posted}</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">${p.text}</p>
+          <span class="text-[11px] text-slate-500">— ${p.author}</span>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// ============================================================
+// FISHERMAN FISHING ZONES MAP (fm-tab-map)
+// ============================================================
+// Reuses the exact same Mappls SDK already loaded for the GIS Command Map
+// (one <script> tag in index.html's <head>, one shared `mappls` global) --
+// but as its OWN map instance, since none of the existing render*Layer()
+// functions in this file take a map instance as a parameter; they're all
+// hardcoded to the single global state.map used by the Insight dashboard.
+// Duplicating the (short) init/marker/clear pattern here keeps this
+// feature fully independent of Insight's map state, so nothing here can
+// ever interfere with the GIS Command Map tab.
+//
+// Zone data is the SAME live-scored GET /api/pfz used internally by
+// fisherman_agent.build_dashboard() (via core.pfz_agent.rank_pfz_zones()),
+// merged client-side with the static data/pfz_zones.json's center/bounds
+// (already loaded into state.pfzZones by loadInitialData() above) since
+// the live ranking returns scores/distance but not coordinates.
+
+const FM_YIELD_TIERS = [
+  { min: 85, label: 'HIGH',     textClass: 'text-emerald-400', dot: 'bg-emerald-400', barClass: 'bg-emerald-500', badgeClass: 'bg-emerald-500/20 text-emerald-300' },
+  { min: 70, label: 'GOOD',     textClass: 'text-cyan-400',    dot: 'bg-cyan-400',    barClass: 'bg-cyan-500',    badgeClass: 'bg-cyan-500/20 text-cyan-300' },
+  { min: 0,  label: 'MODERATE', textClass: 'text-amber-400',   dot: 'bg-amber-400',   barClass: 'bg-amber-500',   badgeClass: 'bg-amber-500/20 text-amber-300' }
+];
+function fmYieldTier(score) {
+  return FM_YIELD_TIERS.find(t => (score || 0) >= t.min) || FM_YIELD_TIERS[FM_YIELD_TIERS.length - 1];
+}
+
+async function refreshFishermanZones() {
+  try {
+    const url = `${BACKEND_CONFIG.apiBase}/api/pfz?lat=${fishermanState.lat}&lon=${fishermanState.lon}`;
+    const res = await fetchWithTimeout(url, {}, 8000);
+    if (!res.ok) throw new Error(`PFZ agent responded with ${res.status}`);
+    const data = await res.json();
+    const ranking = Array.isArray(data.full_ranking) ? data.full_ranking : [];
+
+    const byId = {};
+    state.pfzZones.forEach(z => { byId[z.id] = z; });
+
+    // Re-sorted by yield_score_pct (not the GIS map's reachability-weighted
+    // composite_score) since this view is specifically "best fish YIELD
+    // zones" for a fisherman deciding where to go, not the route planner's
+    // distance-adjusted ranking.
+    fishermanState.zoneRanking = ranking
+      .map(z => ({ ...z, center: (byId[z.id] || {}).center || null }))
+      .sort((a, b) => (b.yield_score_pct || 0) - (a.yield_score_pct || 0));
+
+    renderFishermanZoneList();
+    renderFishermanZoneMarkers();
+  } catch (err) {
+    console.log('Fisherman zone map refresh failed, keeping last known values', err);
+  }
+}
+
+function renderFishermanZoneList() {
+  const listEl = document.getElementById('fmZoneRankList');
+  if (!listEl) return;
+
+  if (!fishermanState.zoneRanking.length) {
+    listEl.innerHTML = `<p class="text-slate-500 text-[11px] leading-relaxed">Loading zones…</p>`;
+    return;
+  }
+
+  listEl.innerHTML = fishermanState.zoneRanking.map((z, i) => {
+    const tier = fmYieldTier(z.yield_score_pct || 0);
+    const pct = Math.max(0, Math.min(100, z.yield_score_pct || 0));
+    return `
+      <button type="button" onclick="focusFishermanZone('${z.id}')" class="w-full text-left p-2.5 rounded-lg glass-chip hover:border-emerald-500/50 transition space-y-1.5">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-bold text-slate-100">#${i + 1} ${z.name || z.id}</span>
+          <span class="flex items-center gap-1 ${tier.textClass} font-mono font-bold whitespace-nowrap">
+            <span class="w-1.5 h-1.5 rounded-full ${tier.dot}"></span>${z.yield_score_pct}%
+          </span>
+        </div>
+        <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+          <div class="h-full rounded-full ${tier.barClass}" style="width: ${pct}%"></div>
+        </div>
+        <div class="flex items-center justify-between text-[10px] text-slate-500">
+          <span>${(z.dominant_species || []).slice(0, 2).join(', ')}</span>
+          <span>${z.distance_nm != null ? `${z.distance_nm} NM` : ''}</span>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  const top = fishermanState.zoneRanking[0];
+  if (top) {
+    const hudZone = document.getElementById('fmMapHudZone');
+    if (hudZone) hudZone.textContent = top.name || top.id;
+    const hudYield = document.getElementById('fmMapHudYield');
+    if (hudYield) hudYield.textContent = `${top.yield_score_pct}%`;
+    const hudSpecies = document.getElementById('fmMapHudSpecies');
+    if (hudSpecies) hudSpecies.textContent = (top.dominant_species || []).join(', ');
+  }
+}
+
+function setupFishermanMap() {
+  const container = document.getElementById('fmMapContainer');
+  if (!container || fishermanState.map) return;
+
+  if (typeof mappls === 'undefined' || !mappls.Map) {
+    console.warn('ORCA FISHERMAN: Mappls SDK failed to load -- zone map disabled.');
+    return;
+  }
+
+  fishermanState.map = new mappls.Map('fmMapContainer', {
+    center: { lat: 12.0, lng: 77.5 },
+    zoom: 6
+  });
+
+  fishermanState.map.addListener('load', function () {
+    renderFishermanZoneMarkers();
+  });
+}
+
+function clearFishermanZoneMarkers() {
+  if (!fishermanState.map) return;
+  fishermanState.mapMarkers.forEach(marker => {
+    try { mappls.remove({ map: fishermanState.map, layer: marker }); } catch (err) { /* already gone */ }
+  });
+  fishermanState.mapMarkers = [];
+}
+
+function renderFishermanZoneMarkers() {
+  if (!fishermanState.map) return;
+  clearFishermanZoneMarkers();
+
+  fishermanState.zoneRanking.forEach((z, i) => {
+    if (!z.center) return; // live ranking has no static-dataset match to plot
+    const tier = fmYieldTier(z.yield_score_pct || 0);
+
+    const popupHtml = `
+      <div class="p-2 min-w-[220px]">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <span class="font-bold text-cyan-400 text-sm">#${i + 1} ${z.name || z.id}</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${tier.badgeClass}">${tier.label} YIELD (${z.yield_score_pct}%)</span>
+        </div>
+        <p class="text-xs text-slate-300 mb-2">${z.advisory_notes || ''}</p>
+        <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900/80 p-1.5 rounded border border-slate-700">
+          <div><span class="text-slate-400">SST:</span> <span class="text-slate-200 font-semibold">${z.sst_celsius}°C</span></div>
+          <div><span class="text-slate-400">Depth:</span> <span class="text-slate-200 font-semibold">${z.depth_m} m</span></div>
+          <div><span class="text-slate-400">Distance:</span> <span class="text-cyan-400 font-bold">${z.distance_nm} NM</span></div>
+          <div><span class="text-slate-400">Safety:</span> <span class="text-slate-200 font-semibold">${z.safety_status || '—'}</span></div>
+        </div>
+        <div class="mt-2 text-[10px] text-slate-400">
+          <span class="font-semibold text-slate-300">Target Species:</span> ${(z.dominant_species || []).join(', ')}
+        </div>
+      </div>
+    `;
+    const labelHtml = `<div class="px-2 py-0.5 rounded text-[10px] font-bold ${tier.badgeClass} whitespace-nowrap shadow-lg flex items-center gap-1">
+      <span class="w-1.5 h-1.5 rounded-full ${tier.dot}"></span> #${i + 1} ${z.id} · ${z.yield_score_pct}%
+    </div>`;
+
+    const marker = new mappls.Marker({
+      map: fishermanState.map,
+      position: { lat: z.center[0], lng: z.center[1] },
+      html: labelHtml,
+      width: 100,
+      height: 20,
+      popupHtml,
+      popupOptions: true
+    });
+    fishermanState.mapMarkers.push(marker);
+  });
+}
+
+// Bound via onclick="focusFishermanZone('PFZ-01')" from the rendered zone
+// list (see renderFishermanZoneList() above) -- pans/zooms the map to that
+// zone. Wrapped defensively: Mappls' exact Map API surface beyond
+// addListener()/resize() isn't documented in this codebase (see the
+// existing resize() try/catch in switchTab() above), so a missing
+// setCenter/setZoom degrades to a no-op instead of an error.
+function focusFishermanZone(zoneId) {
+  const zone = fishermanState.zoneRanking.find(z => z.id === zoneId);
+  if (!zone || !zone.center || !fishermanState.map) return;
+  try {
+    fishermanState.map.setCenter({ lat: zone.center[0], lng: zone.center[1] });
+    fishermanState.map.setZoom(8);
+  } catch (err) { /* Mappls setCenter/setZoom not available -- ignore */ }
+}
