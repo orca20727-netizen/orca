@@ -336,7 +336,7 @@ ISRO Collaborative Marine Intelligence · Team SavioursX
 </header>
 
 <!-- SECONDARY NAVIGATION BAR -->
-<nav class="glass-nav px-4 lg:px-8 py-2 overflow-x-auto flex justify-center">
+<nav class="glass-nav px-4 lg:px-8 py-2 overflow-x-auto flex justify-start lg:justify-center">
 <div class="flex items-center gap-1 sm:gap-2 min-w-max">
 <button data-nav-target="home" class="sfb-btn sfb-active px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5 bg-cyan-500/20 text-cyan-400 border-cyan-500/50">
 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="inline-block align-[-2px] shrink-0" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg> <span data-i18n="navHome">Home</span>
@@ -669,7 +669,7 @@ Simulate Safe Route & ETA
 
 <!-- Map Container -->
 <div class="lg:col-span-3 rounded-xl overflow-hidden border border-ocean-700/80 shadow-2xl relative">
-<div id="mapContainer" class="w-full h-[540px] z-10"></div>
+<div id="mapContainer" class="w-full h-[360px] sm:h-[540px] z-10"></div>
 <div class="absolute bottom-3 left-3 right-3 z-20 glass-card-strong border border-ocean-700/80 rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
 <div class="flex items-center gap-4">
 <div><span class="text-slate-400">Wave Height:</span> <span id="mapHudWave" class="text-cyan-400 font-bold">1.25 m</span></div>
@@ -760,7 +760,7 @@ Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)
 <div class="p-6 rounded-2xl glass-card space-y-4">
 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ocean-700/80 pb-4">
 <div>
-<div class="flex items-center gap-2">
+<div class="flex flex-wrap items-center gap-2">
 <h3 class="text-lg font-bold text-slate-100">8-Node Collaborative Multi-Agent DAG</h3>
 <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
 Interactive Reasoning Canvas
@@ -901,7 +901,7 @@ All satellite oceanography indicators (Oceansat-3 SSTM thermal fronts, Sentinel-
 Numbered advisories, cyclone hazard warnings, and international boundary compliance alerts.
 </p>
 </div>
-<div class="flex items-center gap-2">
+<div class="flex flex-wrap items-center gap-2">
 <label class="flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-ocean-800 text-slate-300 cursor-pointer" title="Receive browser alerts only while this tab/PWA is open">
 <input id="toggleHazardNotifications" type="checkbox" class="accent-cyan-400">
 Notify while open
@@ -1096,7 +1096,7 @@ DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Sm
 </header>
 
 <!-- FISHERMAN SECONDARY NAVIGATION -->
-<nav class="glass-nav px-4 lg:px-8 py-2 overflow-x-auto flex justify-center">
+<nav class="glass-nav px-4 lg:px-8 py-2 overflow-x-auto flex justify-start lg:justify-center">
 <div class="flex items-center gap-1 sm:gap-2 min-w-max">
 <button data-fm-nav="opportunity" class="fm-nav-btn sfb-btn sfb-active px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5 bg-emerald-500/20 text-emerald-400 border-emerald-500/50">
 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="inline-block align-[-2px] shrink-0" aria-hidden="true"><path d="M3 12s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6z"/><circle cx="16" cy="11" r="0.9" fill="currentColor" stroke="none"/><path d="M3 12L1 9m2 3l-2 3"/></svg> <span>Today's Opportunity</span>
