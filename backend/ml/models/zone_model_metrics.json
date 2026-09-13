@@ -1,0 +1,53 @@
+{
+  "model_name": "zone_model",
+  "selected_algorithm": "GradientBoosting",
+  "candidates_compared": {
+    "RandomForest": {
+      "mae": 39.797,
+      "rmse": 54.983,
+      "r2": 0.4284,
+      "train_seconds": 1.41
+    },
+    "GradientBoosting": {
+      "mae": 39.235,
+      "rmse": 53.911,
+      "r2": 0.4505,
+      "train_seconds": 1.29
+    }
+  },
+  "validation_metrics": {
+    "mae": 39.235,
+    "rmse": 53.911,
+    "r2": 0.4505,
+    "train_seconds": 1.29
+  },
+  "feature_importance": {
+    "zone_yield_score": 0.2868,
+    "wave_height_m": 0.2716,
+    "distance_from_port_km": 0.1609,
+    "wind_speed_kmh": 0.1398,
+    "chlorophyll_mg_m3": 0.0544,
+    "rainfall_mm": 0.0388,
+    "sea_surface_temperature_c": 0.0239,
+    "fishing_effort_vessels": 0.0144,
+    "month_sin": 0.0065,
+    "month_cos": 0.0031
+  },
+  "feature_columns": [
+    "zone_yield_score",
+    "chlorophyll_mg_m3",
+    "sea_surface_temperature_c",
+    "wave_height_m",
+    "wind_speed_kmh",
+    "rainfall_mm",
+    "distance_from_port_km",
+    "fishing_effort_vessels",
+    "month_sin",
+    "month_cos"
+  ],
+  "training_rows": 6000,
+  "training_data": "ORCA demonstration dataset (synthetic, see backend/ml/data/generate_demo_dataset.py)",
+  "status": "DEMO MODEL",
+  "disclaimer": "Model performance is based on demonstration data and does not represent real-world predictive accuracy.",
+  "note": "Predicts a zone-conditions-only expected-catch proxy; the product-facing 0-100 Fishing Potential Score is this prediction min-max scaled across the candidate zones evaluated in a given request (see decision_engine)."
+}

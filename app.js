@@ -3905,3 +3905,194 @@ function focusFishermanZone(zoneId) {
     fishermanState.map.setZoom(8);
   } catch (err) { /* Mappls setCenter/setZoom not available -- ignore */ }
 }
+
+// ============================================================
+// ORCA FISHERMAN -- AI DECISION STUDIO (fm-tab-aistudio)
+// ============================================================
+// Trip Planner UI for POST /api/fisherman/analyze-trip
+// (backend/api/fisherman_ai_routes.py), which runs ORCA's own
+// on-device scikit-learn models (backend/ml/) plus a deterministic
+// profit/risk/market engine (backend/ml/decision/decision_engine.py).
+// No external AI API is called anywhere in this pipeline -- every
+// number rendered below comes straight from that response. Reuses
+// fishermanState.lat/lon (same default harbour origin as the rest of
+// the Fisherman console) rather than tracking its own location.
+// ============================================================
+
+function fmModelPct(v) {
+  return v != null ? `${Math.round(v * 100) / 100}%` : '—';
+}
+
+async function runAiTripPlanner() {
+  const btn = document.getElementById('aiPlanTripBtn');
+  const btnLabel = document.getElementById('aiPlanTripBtnLabel');
+  const loadingEl = document.getElementById('aiLoadingState');
+  const errorEl = document.getElementById('aiErrorState');
+  const resultsEl = document.getElementById('aiResultsWrap');
+
+  if (btn) btn.setAttribute('disabled', 'true');
+  if (btnLabel) btnLabel.textContent = 'Running ORCA models…';
+  if (loadingEl) loadingEl.classList.remove('hidden');
+  if (errorEl) errorEl.classList.add('hidden');
+  if (resultsEl) resultsEl.classList.add('hidden');
+
+  const boatType = document.getElementById('aiBoatType')?.value || 'Motorized';
+  const gearType = document.getElementById('aiGearType')?.value || 'Gillnet';
+  const tripDuration = parseFloat(document.getElementById('aiTripDuration')?.value) || 8;
+  const targetSpecies = document.getElementById('aiTargetSpecies')?.value || null;
+
+  const payload = {
+    lat: fishermanState.lat,
+    lon: fishermanState.lon,
+    boat_type: boatType,
+    gear_type: gearType,
+    target_species: targetSpecies,
+    trip_duration_hours: tripDuration,
+    month: new Date().getMonth() + 1
+  };
+
+  try {
+    const res = await fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/fisherman/analyze-trip`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }, 15000);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.detail || `Backend responded with ${res.status}`);
+    }
+    const data = await res.json();
+    renderAiTripResults(data);
+    if (resultsEl) resultsEl.classList.remove('hidden');
+  } catch (err) {
+    console.log('AI Decision Studio trip analysis failed', err);
+    if (errorEl) {
+      errorEl.textContent = `Could not reach ORCA's AI Decision Studio backend (${err.message || err}). Training the ML models requires a one-time backend setup -- see backend/ml/training/. Try again shortly.`;
+      errorEl.classList.remove('hidden');
+    }
+  } finally {
+    if (btn) btn.removeAttribute('disabled');
+    if (btnLabel) btnLabel.textContent = 'Plan My Trip';
+    if (loadingEl) loadingEl.classList.add('hidden');
+  }
+}
+
+function renderAiTripResults(data) {
+  const plan = data.best_fishing_plan || {};
+
+  const headlineEl = document.getElementById('aiPlanHeadline');
+  if (headlineEl) headlineEl.textContent = `${plan.target_species || '—'} at ${plan.zone_name || 'the recommended zone'}`;
+
+  const descEl = document.getElementById('aiPlanDesc');
+  if (descEl) {
+    descEl.textContent = `Best window ${plan.best_time_window || '—'} · sell at ${plan.best_market || 'the recommended market'} · ORCA Trip Score ${plan.orca_trip_score != null ? plan.orca_trip_score : '—'}/100.`;
+  }
+
+  const scoreEl = document.getElementById('aiTripScore');
+  if (scoreEl) scoreEl.textContent = plan.orca_trip_score != null ? Math.round(plan.orca_trip_score) : '—';
+
+  const zoneEl = document.getElementById('aiBestZone');
+  if (zoneEl) zoneEl.textContent = plan.zone_name || '—';
+  const zoneDistEl = document.getElementById('aiBestZoneDistance');
+  const topZone = (data.zone_ranking || [])[0];
+  if (zoneDistEl) zoneDistEl.textContent = topZone && topZone.distance_from_port_km != null ? `${Math.round(topZone.distance_from_port_km)} km from port` : '';
+
+  const timeEl = document.getElementById('aiBestTimeWindow');
+  if (timeEl) timeEl.textContent = plan.best_time_window || '—';
+
+  const catchEl = document.getElementById('aiExpectedCatch');
+  if (catchEl) {
+    catchEl.textContent = plan.expected_catch_range
+      ? `${Math.round(plan.expected_catch_range[0])}–${Math.round(plan.expected_catch_range[1])} kg`
+      : (plan.expected_catch_kg != null ? `${Math.round(plan.expected_catch_kg)} kg` : '—');
+  }
+  const reliabilityEl = document.getElementById('aiCatchReliability');
+  if (reliabilityEl) reliabilityEl.textContent = plan.model_reliability_pct != null ? `Reliability ${Math.round(plan.model_reliability_pct)}%` : 'Reliability —%';
+
+  const profitEl = document.getElementById('aiEstimatedProfit');
+  if (profitEl) profitEl.textContent = plan.estimated_profit != null ? fmCurrency(plan.estimated_profit) : '—';
+  const riskEl = document.getElementById('aiRiskLevel');
+  if (riskEl) riskEl.textContent = plan.risk ? `Risk ${plan.risk}` : 'Risk —';
+
+  // Zone ranking list
+  const zoneListEl = document.getElementById('aiZoneRankList');
+  if (zoneListEl && Array.isArray(data.zone_ranking)) {
+    zoneListEl.innerHTML = data.zone_ranking.map((z, i) => `
+      <div class="flex items-center justify-between gap-3 p-2.5 rounded-lg ${i === 0 ? 'bg-emerald-950/40 border border-emerald-500/30' : 'glass-chip'}">
+        <div class="min-w-0">
+          <div class="font-semibold text-slate-100 truncate">${z.zone_name}</div>
+          <div class="text-[10px] text-slate-500">${Math.round(z.distance_from_port_km)} km · yield score ${z.zone_yield_score}</div>
+        </div>
+        <span class="font-mono font-bold ${i === 0 ? 'text-emerald-400' : 'text-cyan-300'} shrink-0">${Math.round(z.potential_score)}</span>
+      </div>
+    `).join('');
+  }
+
+  // Species ranking list
+  const speciesListEl = document.getElementById('aiSpeciesRankList');
+  if (speciesListEl && Array.isArray(data.species_ranking)) {
+    speciesListEl.innerHTML = data.species_ranking.map((s, i) => `
+      <div class="flex items-center justify-between gap-3 p-2.5 rounded-lg ${i === 0 ? 'bg-emerald-950/40 border border-emerald-500/30' : 'glass-chip'}">
+        <span class="font-semibold text-slate-100">${s.species}</span>
+        <span class="font-mono font-bold ${i === 0 ? 'text-emerald-400' : 'text-cyan-300'}">${Math.round(s.score)}</span>
+      </div>
+    `).join('');
+  }
+
+  // Market comparison table
+  const marketBodyEl = document.getElementById('aiMarketTableBody');
+  if (marketBodyEl && Array.isArray(data.market_comparison)) {
+    marketBodyEl.innerHTML = data.market_comparison.map((m, i) => `
+      <tr class="border-b border-ocean-800/60 ${i === 0 ? 'text-emerald-400' : 'text-slate-300'}">
+        <td class="py-2 px-3 font-semibold">${m.market}</td>
+        <td class="py-2 px-3 font-mono">${Math.round(m.distance_km)} km</td>
+        <td class="py-2 px-3 font-mono">₹${m.price_per_kg}</td>
+        <td class="py-2 px-3 font-mono font-bold">${fmCurrency(m.net_revenue)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Feature importance (top 6, catch model)
+  const featureEl = document.getElementById('aiFeatureImportanceList');
+  if (featureEl && data.feature_importance) {
+    const top = Object.entries(data.feature_importance)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6);
+    const maxVal = top.length ? top[0][1] : 1;
+    featureEl.innerHTML = top.map(([name, val]) => `
+      <div class="space-y-1">
+        <div class="flex justify-between">
+          <span class="text-slate-300">${name.replace(/__/g, ': ').replace(/_/g, ' ')}</span>
+          <span class="text-cyan-300 font-mono">${fmModelPct(val * 100)}</span>
+        </div>
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+          <div class="h-full rounded-full bg-cyan-500" style="width: ${Math.max(3, (val / maxVal) * 100)}%"></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Why ORCA chose this -- deterministic template sentences from the backend
+  const explanationEl = document.getElementById('aiExplanationList');
+  if (explanationEl && Array.isArray(data.why_orca_chose_this)) {
+    explanationEl.innerHTML = data.why_orca_chose_this.map(s => `<li>${s}</li>`).join('');
+  }
+
+  // Model transparency -- real algorithm + validation metrics per model
+  const transparencyEl = document.getElementById('aiModelTransparencyList');
+  if (transparencyEl && data.model_transparency) {
+    transparencyEl.innerHTML = Object.entries(data.model_transparency).map(([name, m]) => {
+      const metrics = m.validation_metrics || {};
+      const metricsLine = metrics.r2 != null
+        ? `R² ${metrics.r2} · MAE ${metrics.mae}`
+        : (metrics.f1 != null ? `F1 ${metrics.f1} · Acc ${metrics.accuracy}` : '—');
+      return `
+        <div class="p-2.5 rounded-lg glass-card space-y-1">
+          <div class="text-slate-400 uppercase tracking-wider text-[10px]">${name.replace(/_/g, ' ')}</div>
+          <div class="text-slate-200 font-semibold">${m.selected_algorithm || '—'}</div>
+          <div class="text-slate-500 font-mono">${metricsLine}</div>
+        </div>
+      `;
+    }).join('');
+  }
+}

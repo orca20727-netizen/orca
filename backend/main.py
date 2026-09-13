@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from api.routes import router
+from api.fisherman_ai_routes import router as fisherman_ai_router
 from live_scheduler import lifespan
 
 logging.basicConfig(level=logging.INFO)
@@ -48,6 +49,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
     return JSONResponse(status_code=500, content={"detail": "An unexpected server error occurred. Please try again."})
 
 app.include_router(router)
+app.include_router(fisherman_ai_router)
 
 root = Path(__file__).resolve().parent.parent
 app.mount("/data", StaticFiles(directory=root / "data"), name="data")

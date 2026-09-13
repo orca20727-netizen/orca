@@ -1079,6 +1079,9 @@ DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Sm
 <button data-fm-nav="opportunity" class="fm-nav-btn sfb-btn sfb-active px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5 bg-emerald-500/20 text-emerald-400 border-emerald-500/50">
 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="inline-block align-[-2px] shrink-0" aria-hidden="true"><path d="M3 12s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6z"/><circle cx="16" cy="11" r="0.9" fill="currentColor" stroke="none"/><path d="M3 12L1 9m2 3l-2 3"/></svg> <span>Today's Opportunity</span>
 </button>
+<button data-fm-nav="aistudio" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
+<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="inline-block align-[-2px] shrink-0" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg> <span>AI Decision Studio</span>
+</button>
 <button data-fm-nav="map" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="inline-block align-[-2px] shrink-0" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg> <span>Fishing Zones Map</span>
 </button>
@@ -1161,6 +1164,168 @@ Loading today's opportunity from the Fisherman Opportunity Agent…
 <!-- Populated by JS: Ocean 25% / Fish 30% / Market 20% / Profit 25% -->
 </div>
 </div>
+</section>
+
+<!-- ==================================================== -->
+<!-- FM-AI. AI DECISION STUDIO -- Trip Planner + Recommendation. -->
+<!-- Wired to POST /api/fisherman/analyze-trip (backend/api/       -->
+<!-- fisherman_ai_routes.py), which runs 4 real scikit-learn       -->
+<!-- models (catch/zone/species/price, backend/ml/) trained on     -->
+<!-- ORCA's own demo dataset, combined with a deterministic        -->
+<!-- profit/risk/market engine (backend/ml/decision/). No external -->
+<!-- AI API is called anywhere in this pipeline.                   -->
+<!-- ==================================================== -->
+<section id="fm-tab-aistudio" class="fm-tab-content hidden space-y-6">
+
+<div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
+<div>
+<h3 class="font-bold text-slate-100 text-sm flex items-center gap-2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="inline-block align-[-2px] shrink-0" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg> AI Decision Studio — Plan Your Trip</h3>
+<p class="text-[11px] text-slate-400">4 on-device scikit-learn models (catch, zone, species, price) trained on ORCA's own data, combined with a deterministic profit &amp; risk engine. No external AI API is used anywhere in this pipeline.</p>
+</div>
+<span class="px-2.5 py-1 rounded-lg bg-amber-950/60 border border-amber-500/40 text-amber-300 text-[11px] font-mono whitespace-nowrap">DEMO MODEL · synthetic training data</span>
+</div>
+
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Trip Planner</h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="space-y-1">
+<label class="text-[11px] text-slate-400" for="aiBoatType">Boat Type</label>
+<select id="aiBoatType" class="glass-chip rounded-lg px-2 py-1.5 text-xs text-slate-100 w-full focus:outline-none focus:ring-1 focus:ring-emerald-400">
+<option>Traditional (Non-mechanized)</option>
+<option selected>Motorized</option>
+<option>Mechanized Trawler</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-[11px] text-slate-400" for="aiGearType">Gear Type</label>
+<select id="aiGearType" class="glass-chip rounded-lg px-2 py-1.5 text-xs text-slate-100 w-full focus:outline-none focus:ring-1 focus:ring-emerald-400">
+<option selected>Gillnet</option>
+<option>Trawl</option>
+<option>Ring Seine</option>
+<option>Longline</option>
+<option>Hook &amp; Line</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-[11px] text-slate-400" for="aiTripDuration">Trip Duration (hours)</label>
+<input id="aiTripDuration" type="number" min="2" max="48" value="8" class="glass-chip rounded-lg px-2 py-1.5 text-xs text-slate-100 w-full focus:outline-none focus:ring-1 focus:ring-emerald-400" />
+</div>
+<div class="space-y-1">
+<label class="text-[11px] text-slate-400" for="aiTargetSpecies">Target Species</label>
+<select id="aiTargetSpecies" class="glass-chip rounded-lg px-2 py-1.5 text-xs text-slate-100 w-full focus:outline-none focus:ring-1 focus:ring-emerald-400">
+<option value="">Auto (Best Match)</option>
+<option>Tuna</option>
+<option>Pomfret</option>
+<option>Sardine</option>
+<option>Mackerel</option>
+<option>Kingfish</option>
+</select>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+<p class="text-[11px] text-slate-500">Uses your current harbour location and live marine weather for today.</p>
+<button id="aiPlanTripBtn" onclick="runAiTripPlanner()" class="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition flex items-center gap-2 cursor-pointer">
+<span id="aiPlanTripBtnLabel">Plan My Trip</span>
+</button>
+</div>
+</div>
+
+<div id="aiLoadingState" class="hidden p-8 rounded-xl glass-card text-center text-xs text-slate-400">
+Running ORCA's on-device ML models (catch, zone, species, price) plus the profit &amp; risk engine…
+</div>
+
+<div id="aiErrorState" class="hidden p-5 rounded-xl glass-card border border-rose-500/40 text-xs text-rose-300"></div>
+
+<div id="aiResultsWrap" class="hidden space-y-6">
+
+<div class="p-6 rounded-2xl glass-card glass-card-safe flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+<div class="space-y-2 max-w-xl">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+<span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">ORCA's Recommended Plan</span>
+</div>
+<h2 id="aiPlanHeadline" class="text-2xl sm:text-3xl font-extrabold text-emerald-400">—</h2>
+<p id="aiPlanDesc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">—</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-xs text-slate-400 block font-mono">ORCA Trip Score</span>
+<span id="aiTripScore" class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono">—</span><span class="text-lg text-slate-400 font-normal">/100</span>
+</div>
+<div id="aiTripScoreRing" class="w-14 h-14 rounded-full border-4 border-emerald-400 flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/30"></div>
+</div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Best Zone</span>
+<div id="aiBestZone" class="text-sm font-bold text-slate-100">—</div>
+<span id="aiBestZoneDistance" class="text-[11px] text-cyan-300 font-mono">—</span>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Best Time Window</span>
+<div id="aiBestTimeWindow" class="text-sm font-bold text-slate-100">—</div>
+<span class="text-[11px] text-slate-500">highest predicted catch</span>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Expected Catch</span>
+<div id="aiExpectedCatch" class="text-sm font-bold text-slate-100">—</div>
+<span id="aiCatchReliability" class="text-[11px] text-slate-500">Reliability —%</span>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-2">
+<span class="text-xs text-slate-400 font-medium">Estimated Profit</span>
+<div id="aiEstimatedProfit" class="text-sm font-bold text-amber-400 font-mono">—</div>
+<span id="aiRiskLevel" class="text-[11px] text-slate-500">Risk —</span>
+</div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+<div class="p-5 rounded-xl glass-card space-y-3">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Zone Ranking · Fishing Potential</h4>
+<div id="aiZoneRankList" class="space-y-2 text-xs"><!-- Populated by JS --></div>
+</div>
+<div class="p-5 rounded-xl glass-card space-y-3">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Species Suitability Ranking</h4>
+<div id="aiSpeciesRankList" class="space-y-2 text-xs"><!-- Populated by JS --></div>
+</div>
+</div>
+
+<div class="p-5 rounded-xl glass-card space-y-4">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Where to Sell</h4>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="border-b border-ocean-700 text-slate-400 font-mono text-[11px]">
+<th class="py-2 px-3">Market</th>
+<th class="py-2 px-3">Distance</th>
+<th class="py-2 px-3">Price/kg</th>
+<th class="py-2 px-3">Net Revenue</th>
+</tr>
+</thead>
+<tbody id="aiMarketTableBody"><!-- Populated by JS --></tbody>
+</table>
+</div>
+</div>
+
+<div class="p-5 rounded-xl glass-card space-y-3">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">What Drives This Prediction</h4>
+<p class="text-[11px] text-slate-500">Top factors the catch model actually weighed for this trip — real feature importances read from the trained model, not invented.</p>
+<div id="aiFeatureImportanceList" class="space-y-2 text-xs"><!-- Populated by JS --></div>
+</div>
+
+<div class="p-5 rounded-xl glass-card space-y-3">
+<h4 class="font-bold text-slate-100 text-xs uppercase tracking-wider text-emerald-400">Why ORCA Chose This</h4>
+<ul id="aiExplanationList" class="space-y-2 text-xs text-slate-300 leading-relaxed list-disc list-inside"><!-- Populated by JS --></ul>
+</div>
+
+<div class="p-4 rounded-xl glass-chip space-y-2">
+<h4 class="font-bold text-slate-300 text-[11px] uppercase tracking-wider">Model Transparency</h4>
+<div id="aiModelTransparencyList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-[11px]"><!-- Populated by JS --></div>
+<p class="text-[10px] text-slate-500 pt-1">DEMO MODEL — every model above is trained on ORCA's synthetic demonstration dataset, not real historical catch records. Reliability figures are measured on that dataset, not real-world accuracy.</p>
+</div>
+
+</div>
+
 </section>
 
 <!-- ==================================================== -->

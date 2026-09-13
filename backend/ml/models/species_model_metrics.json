@@ -1,0 +1,61 @@
+{
+  "model_name": "species_model",
+  "selected_algorithm": "GradientBoosting",
+  "candidates_compared": {
+    "RandomForest": {
+      "accuracy": 0.935,
+      "precision": 0.9198,
+      "recall": 1.0,
+      "f1": 0.9582,
+      "train_seconds": 0.47
+    },
+    "GradientBoosting": {
+      "accuracy": 0.9817,
+      "precision": 0.976,
+      "recall": 1.0,
+      "f1": 0.9878,
+      "train_seconds": 0.64
+    }
+  },
+  "validation_metrics": {
+    "accuracy": 0.9817,
+    "precision": 0.976,
+    "recall": 1.0,
+    "f1": 0.9878,
+    "train_seconds": 0.64
+  },
+  "feature_importance": {
+    "zone_yield_score": 0.8588,
+    "species__Sardine": 0.0307,
+    "species__Kingfish": 0.0291,
+    "species__Tuna": 0.0246,
+    "species__Pomfret": 0.0235,
+    "species__Mackerel": 0.0216,
+    "wave_height_m": 0.0044,
+    "chlorophyll_mg_m3": 0.0039,
+    "sea_surface_temperature_c": 0.0029,
+    "season__monsoon": 0.0005,
+    "season__pre_monsoon": 0.0,
+    "season__post_monsoon": 0.0
+  },
+  "feature_columns": [
+    "zone_yield_score",
+    "chlorophyll_mg_m3",
+    "sea_surface_temperature_c",
+    "wave_height_m",
+    "species__Tuna",
+    "species__Pomfret",
+    "species__Sardine",
+    "species__Mackerel",
+    "species__Kingfish",
+    "season__monsoon",
+    "season__post_monsoon",
+    "season__pre_monsoon"
+  ],
+  "training_rows": 6000,
+  "positive_rate": 0.745,
+  "training_data": "ORCA demonstration dataset (synthetic, see backend/ml/data/generate_demo_dataset.py)",
+  "status": "DEMO MODEL",
+  "disclaimer": "Model performance is based on demonstration data and does not represent real-world predictive accuracy.",
+  "note": "Species ranking scores are this classifier's predict_proba() for each of the 5 known species run through the SAME zone/season conditions, sorted descending -- not independently generated numbers."
+}
