@@ -147,7 +147,7 @@ html.dark #themeIconMoonFm { display: none; }
 html.dark #themeIconSunFm { display: block; }
 
 /* Adaptive halo behind the landing headline/copy: a light halo behind
-dark text on the light theme's bright photo, a dark halo behind
+   dark text on the light theme's bright photo, a dark halo behind
    light text on the dark theme's darker photo -- so contrast holds
    automatically when the theme is toggled, instead of a fixed color. */
 .landing-copy {
@@ -208,7 +208,7 @@ One collaborative marine-intelligence platform, two command decks: a fisherman's
 <div class="reveal grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl w-full mt-9">
 <button type="button" onclick="orcaEnterFisherman()" title="Open the Fisherman Console" class="glass-card hover:border-emerald-500/60 text-left p-6 rounded-2xl transition transform hover:-translate-y-1 cursor-pointer group">
 <div class="flex items-center gap-3 mb-3">
-<div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-xl">🎣</div>
+<div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-xl"></div>
 <h3 class="text-lg font-bold text-slate-100 group-hover:text-emerald-300 transition">ORCA Fisherman</h3>
 </div>
 <p class="text-xs text-slate-400 leading-relaxed mb-3">Today's Opportunity Score, Sell Smarter pricing, a trip-cost calculator and buyer leads for your catch — built for the boat.</p>
@@ -216,7 +216,7 @@ One collaborative marine-intelligence platform, two command decks: a fisherman's
 </button>
 <button type="button" onclick="orcaEnterDashboard()" title="Open the Insight command deck" class="glass-card hover:border-cyan-500/60 text-left p-6 rounded-2xl transition transform hover:-translate-y-1 cursor-pointer group">
 <div class="flex items-center gap-3 mb-3">
-<div class="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center text-xl">🛰️</div>
+<div class="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center text-xl"></div>
 <h3 class="text-lg font-bold text-slate-100 group-hover:text-cyan-300 transition">ORCA Insight</h3>
 </div>
 <p class="text-xs text-slate-400 leading-relaxed mb-3">Full command deck: ISRO satellite oceanography, GIS map, the 8-node agent DAG, Safety Barometer, Fleet Monitor and NavIC bridge.</p>
@@ -496,6 +496,7 @@ Vanakkam / Namaste! I am the <strong>ORCA INSIGHT</strong> multi-agent synthesis
 </p>
 </div>
 </div>
+</div>
 
 <!-- Speech Recording Status Banner -->
 <div id="sttRecordingStatus" class="hidden p-2.5 rounded-lg glass-card glass-card-danger text-red-200 text-xs font-mono flex items-center gap-2">
@@ -629,7 +630,6 @@ Interactive high-contrast nautical map with real-time satellite PFZs, IMBL bound
 Simulate Safe Route & ETA
 </button>
 </div>
-
 <div class="space-y-2 pt-2 border-t border-ocean-700">
 <div class="flex justify-between text-xs">
 <span class="text-slate-400" data-i18n="distanceNM">Route Distance:</span>
@@ -909,7 +909,7 @@ Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)
 <div class="p-5 rounded-xl glass-card space-y-3">
 <div class="flex items-center justify-between">
 <h4 class="font-bold text-slate-100 text-sm flex items-center gap-2">
-<span>💻</span> Live NMEA-0183 Hardware Stream ($GNGGA / $GNRMC)
+<span></span> Live NMEA-0183 Hardware Stream ($GNGGA / $GNRMC)
 </h4>
 <span class="text-xs font-mono text-cyan-400">Baud Rate: 9600 bps · 1 Hz Feed</span>
 </div>
@@ -1086,19 +1086,19 @@ DISCLAIMER: Satellite oceanography and vessel AIS positions are simulated for Sm
 <nav class="glass-nav px-4 lg:px-8 py-2 overflow-x-auto flex justify-center">
 <div class="flex items-center gap-1 sm:gap-2 min-w-max">
 <button data-fm-nav="opportunity" class="fm-nav-btn sfb-btn sfb-active px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5 bg-emerald-500/20 text-emerald-400 border-emerald-500/50">
-<span>🎯</span> <span>Today's Opportunity</span>
+<span></span> <span>Today's Opportunity</span>
 </button>
 <button data-fm-nav="map" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span>🗺️</span> <span>Fishing Zones Map</span>
+<span></span> <span>Fishing Zones Map</span>
 </button>
 <button data-fm-nav="sell" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span>💰</span> <span>Sell Smarter</span>
+<span></span> <span>Sell Smarter</span>
 </button>
 <button data-fm-nav="calculator" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span>🧮</span> <span>Trip Calculator</span>
+<span></span> <span>Trip Calculator</span>
 </button>
 <button data-fm-nav="community" class="fm-nav-btn sfb-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-transparent text-slate-400 hover:text-slate-200 hover:bg-ocean-800 transition flex items-center gap-1.5">
-<span>📢</span> <span>Performance &amp; Community</span>
+<span></span> <span>Performance &amp; Community</span>
 </button>
 </div>
 </nav>
@@ -1137,7 +1137,7 @@ Loading today's opportunity from the Fisherman Opportunity Agent…
 <span class="text-xs text-slate-400 block font-mono">Opportunity Score</span>
 <span id="fmOpportunityScore" class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono">—</span><span class="text-lg text-slate-400 font-normal">/100</span>
 </div>
-<div id="fmOpportunityRing" class="w-14 h-14 rounded-full border-4 border-emerald-400 flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/30">🎣</div>
+<div id="fmOpportunityRing" class="w-14 h-14 rounded-full border-4 border-emerald-400 flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/30"></div>
 </div>
 </div>
 
@@ -1179,7 +1179,7 @@ Loading today's opportunity from the Fisherman Opportunity Agent…
 <section id="fm-tab-map" class="fm-tab-content hidden space-y-4">
 <div class="p-4 rounded-xl glass-card flex flex-wrap items-center justify-between gap-3">
 <div>
-<h3 class="font-bold text-slate-100 text-sm flex items-center gap-2"><span>🗺️</span> Best Fish Yield Zones · Live Map</h3>
+<h3 class="font-bold text-slate-100 text-sm flex items-center gap-2"><span></span> Best Fish Yield Zones · Live Map</h3>
 <p class="text-[11px] text-slate-400">Same live-scored Ocean Analytics &amp; PFZ Agent data used by Today's Opportunity, plotted on the GIS Command Map's basemap.</p>
 </div>
 </div>
@@ -1210,7 +1210,7 @@ Loading today's opportunity from the Fisherman Opportunity Agent…
 <!-- ==================================================== -->
 <section id="fm-tab-sell" class="fm-tab-content hidden space-y-6">
 <div class="p-5 rounded-xl glass-card space-y-3">
-<h4 class="font-bold text-slate-100 text-sm flex items-center gap-2"><span>💰</span> Sell Smarter</h4>
+<h4 class="font-bold text-slate-100 text-sm flex items-center gap-2"><span></span> Sell Smarter</h4>
 <p id="fmSellSmarterDesc" class="text-xs text-slate-400 leading-relaxed">Loading pricing comparison…</p>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
 <div class="p-4 rounded-lg glass-chip text-center">
@@ -1349,7 +1349,7 @@ Loading today's opportunity from the Fisherman Opportunity Agent…
 </div>
 
 <div class="space-y-3">
-<h3 class="text-base font-bold text-slate-100 flex items-center gap-2"><span>📢</span> Community &amp; Advisory Feed</h3>
+<h3 class="text-base font-bold text-slate-100 flex items-center gap-2"><span></span> Community &amp; Advisory Feed</h3>
 <div id="fmCommunityFeed" class="space-y-3">
 <!-- Populated by JS -->
 </div>

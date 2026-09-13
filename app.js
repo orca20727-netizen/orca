@@ -587,7 +587,7 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
     el.style.background = '#0c4a6e';
     el.style.color = '#e0f2fe';
     const liveText = liveCount ? `${liveCount} live AIS vessel${liveCount === 1 ? '' : 's'}` : 'no live AIS vessels right now';
-    el.textContent = `ℹ Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
+    el.textContent = ` Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
     return;
   }
 
@@ -603,7 +603,7 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
       detail = 'Disconnected from the AIS provider (AISstream.io); reconnecting automatically.';
     }
   }
-  el.textContent = '⚠ ' + detail;
+  el.textContent = ' ' + detail;
 }
 
 // Populates the home tab's IMBL Border Proximity Alert card from real
@@ -1287,7 +1287,7 @@ function renderIMBLLayers() {
     state.mapLayers.imbl.push(polyline);
 
     const bufferPaths = bound.coordinates.map(c => ({ lat: c[0] + 0.08, lng: c[1] + 0.08 }));
-    const bufferPopupHtml = `⚠️ ${bound.warning_distance_nm} NM IMBL Buffer Corridor`;
+    const bufferPopupHtml = ` ${bound.warning_distance_nm} NM IMBL Buffer Corridor`;
     const bufferPoly = new mappls.Polyline({
       map: state.map,
       paths: bufferPaths,
@@ -1310,7 +1310,7 @@ function renderMPALayers() {
 
     const popupHtml = `
       <div class="p-2">
-        <span class="text-xs font-bold text-pink-400">🛡️ ${mpa.name}</span>
+        <span class="text-xs font-bold text-pink-400"> ${mpa.name}</span>
         <div class="text-[11px] bg-pink-950/60 border border-pink-700/50 text-pink-200 px-1.5 py-0.5 rounded my-1 font-semibold">
           RESTRICTED ECO-RESERVE
         </div>
@@ -1339,7 +1339,7 @@ function renderHarbourMarkers() {
 
   state.harbours.forEach(hbr => {
     const html = `<div class="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/30 hover:scale-110 transition cursor-pointer">
-               ⚓
+               
              </div>`;
 
     const popupHtml = `
@@ -1353,7 +1353,7 @@ function renderHarbourMarkers() {
           <div><span class="text-slate-400">Ice Plant:</span> <span class="text-emerald-400 font-semibold">Active</span></div>
         </div>
         <button onclick="selectHarbourForRouting('${hbr.id}')" class="mt-2 w-full py-1 bg-teal-600 hover:bg-teal-500 text-white rounded text-xs font-semibold transition">
-          Set as Origin Harbour ⚓
+          Set as Origin Harbour 
         </button>
       </div>
     `;
@@ -1630,7 +1630,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     if (etaEl) etaEl.textContent = '—';
     if (speedEl) speedEl.textContent = '—';
     if (duskEl) {
-      duskEl.innerHTML = `<span class="text-slate-400 font-bold">⚠ ROUTE UNAVAILABLE:</span> ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.`;
+      duskEl.innerHTML = `<span class="text-slate-400 font-bold"> ROUTE UNAVAILABLE:</span> ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.`;
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-neutral text-slate-300";
       duskEl.style.color = "";
     }
@@ -1668,7 +1668,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-safe text-emerald-200";
       duskEl.style.color = "";
     } else {
-      duskEl.innerHTML = `<span class="font-bold" style="color:#ff0000;">⚠️ RETURN AFTER DUSK:</span> Expected return at <span class="font-mono" style="color:#ff0000;">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
+      duskEl.innerHTML = `<span class="font-bold" style="color:#ff0000;"> RETURN AFTER DUSK:</span> Expected return at <span class="font-mono" style="color:#ff0000;">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
       duskEl.className = "p-2.5 rounded-lg text-xs";
       duskEl.style.color = "#ff0000";
     }
@@ -2138,10 +2138,10 @@ async function handleChatQuery(queryText) {
           </div>
           <div class="flex items-center gap-2">
             <button onclick="playAudioText('${encodeURIComponent(advisory.plainText)}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-600 text-xs flex items-center gap-1.5 transition">
-              <span class="text-xs">🔊</span> Listen (TTS)
+              <span class="text-xs"></span> Listen (TTS)
             </button>
             <button onclick="copyAdvisoryMSS()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-600 text-xs flex items-center gap-1 transition">
-              <span>📡</span> NavIC MSS Code
+              <span></span> NavIC MSS Code
             </button>
           </div>
         </div>
@@ -2171,7 +2171,7 @@ async function handleChatQuery(queryText) {
 
         <details class="group mt-3 pt-2 border-t border-slate-800/80">
           <summary class="text-xs text-slate-400 hover:text-cyan-400 cursor-pointer flex items-center justify-between font-mono">
-            <span>🔍 View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)</span>
+            <span> View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)</span>
             <span class="text-[10px] text-slate-500 group-open:rotate-180 transition">▼</span>
           </summary>
           <div class="mt-3 space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono">
@@ -2317,14 +2317,14 @@ function syncDetectedLanguage(language) {
 // to be live when it is actually simulated" requirement.
 function generateAgentAdvisory(query) {
   const q = query.toLowerCase();
-  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1">⚠ OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.</p>`;
+  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1"> OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.</p>`;
 
   if (q.includes('border') || q.includes('imbl') || q.includes('sri lanka') || q.includes('pakistan') || q.includes('सीमा') || q.includes('எல்லை')) {
     return {
       confidence: 60,
       metrics: { zone: "Palk Strait & Rameswaram", eta: "1h 45m (simulated)", vesselCount: 7, imblClearance: "SIMULATED ~2-4 NM" },
       plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Vessels in the Palk Strait / Gulf of Mannar area are typically within a few Nautical Miles of the India-Sri Lanka IMBL boundary. Maintain a westward heading and keep VHF transponders active on Channel 16. Reconnect to the ORCA backend for an actual measured distance to the boundary.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400">⚠️ IMBL Geofencing Advisory (Simulated Offline Estimate):</strong></p>
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400"> IMBL Geofencing Advisory (Simulated Offline Estimate):</strong></p>
         <p class="mt-1">Without a live backend connection, exact vessel-to-boundary distances cannot be measured. As a general precaution near Palk Strait Sector 4, maintain a westward heading toward Mandapam.</p>
         <p class="mt-2 text-slate-300">This is a generic offline safety reminder, not a measured geofence reading. Reconnect to ORCA backend for a real distance-to-IMBL calculation.</p>`,
       agentSteps: [
@@ -2339,7 +2339,7 @@ function generateAgentAdvisory(query) {
       confidence: 55,
       metrics: { zone: "PFZ-01 & Wadge Bank", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
       plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Live vessel counts cannot be retrieved without a backend connection. Historically, Wadge Bank and Kochi Deep Offshore see moderate fishing traffic. Reconnect to the ORCA backend for an actual fleet-density reading from the vessel dataset.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400">🚢 Fleet Density (Offline — Simulated Placeholder):</strong></p>
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400"> Fleet Density (Offline — Simulated Placeholder):</strong></p>
         <p class="mt-1">The Fleet & Traffic Agent's live vessel dataset is not reachable right now, so an exact in-zone vessel count is unavailable.</p>
         <ul class="list-disc list-inside mt-2 space-y-1 text-slate-300">
           <li>Reconnect to the ORCA backend for a real per-zone vessel count and overcrowding verdict.</li>
@@ -2356,7 +2356,7 @@ function generateAgentAdvisory(query) {
     confidence: 55,
     metrics: { zone: "PFZ-01 (Kochi Deep) — simulated", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
     plainText: `OFFLINE ADVISORY (backend unreachable): ORCA's multi-agent backend could not be reached, so this answer is a generic, non-live placeholder rather than a grounded reading. Your browser's own Open-Meteo widget reports significant wave height around ${liveWave}m, but PFZ ranking, route distance, ETA, and fleet counts all require the backend and are not shown here. Reconnect to the ORCA backend for a real advisory.`,
-    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400">⚠ Offline Placeholder Advisory</strong></p>
+    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400"> Offline Placeholder Advisory</strong></p>
       <p class="mt-1">The ORCA multi-agent backend (satellite, weather, PFZ ranking, geofencing, fleet, routing, and Neural Synthesis) is currently unreachable. Client-side, this browser last saw a wave height of <strong>${liveWave}m</strong> from Open-Meteo, but every other figure requires the backend.</p>
       <p class="mt-2 text-slate-300"><strong>No PFZ recommendation, route, ETA, or fleet count is shown</strong> because those would have to be invented rather than computed. Reconnect to the ORCA backend for a full grounded advisory.</p>`,
     agentSteps: [
@@ -2430,7 +2430,7 @@ function updateTTSButtons(isPlaying) {
       `;
       ttsBtn.classList.add('bg-cyan-600', 'text-white');
     } else {
-      ttsBtn.innerHTML = `<span>🔊 Listen Audio Advisory</span>`;
+      ttsBtn.innerHTML = `<span> Listen Audio Advisory</span>`;
       ttsBtn.classList.remove('bg-cyan-600', 'text-white');
     }
   }
@@ -2784,7 +2784,7 @@ function updateSafetyIndexCard(weather) {
   const verdict = weather.clearance_verdict || 'SAFE';
   const theme = {
     SAFE: { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' },
-    CAUTION: { color: 'amber', label: 'PROCEED WITH CAUTION', icon: '⚠' },
+    CAUTION: { color: 'amber', label: 'PROCEED WITH CAUTION', icon: '!' },
     UNSAFE: { color: 'rose', label: 'UNSAFE — DO NOT VENTURE', icon: '✕' }
   }[verdict] || { color: 'emerald', label: 'SAFE FOR SEA VENTURE', icon: '✓' };
 
@@ -3146,7 +3146,7 @@ function renderBulletinsList(filterSeverity = 'ALL') {
         <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
           <span class="text-slate-400">Source: <strong class="text-slate-300">${b.source}</strong></span>
           <button onclick="playAudioText('${encodeURIComponent(b.title + '. ' + b.summary)}')" class="text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 transition">
-            <span>🔊</span> Listen Bulletin
+            <span></span> Listen Bulletin
           </button>
         </div>
       </div>
@@ -3560,9 +3560,9 @@ function recalculateTrip() {
 }
 
 const FM_POST_TYPE_META = {
-  weather_alert: { icon: '⛈️', color: 'text-amber-300', label: 'Weather Alert' },
-  market_update: { icon: '📈', color: 'text-emerald-300', label: 'Market Update' },
-  fisherman_post: { icon: '🎣', color: 'text-cyan-300', label: 'Fisherman Report' }
+  weather_alert: { icon: '', color: 'text-amber-300', label: 'Weather Alert' },
+  market_update: { icon: '', color: 'text-emerald-300', label: 'Market Update' },
+  fisherman_post: { icon: '', color: 'text-cyan-300', label: 'Fisherman Report' }
 };
 
 function renderFishermanPerformance(data) {
@@ -3591,7 +3591,7 @@ function renderFishermanPerformance(data) {
   const feed = document.getElementById('fmCommunityFeed');
   if (feed && Array.isArray(data.community_posts)) {
     feed.innerHTML = data.community_posts.map(p => {
-      const meta = FM_POST_TYPE_META[p.type] || { icon: '📢', color: 'text-slate-300', label: 'Update' };
+      const meta = FM_POST_TYPE_META[p.type] || { icon: '', color: 'text-slate-300', label: 'Update' };
       return `
         <div class="p-4 rounded-xl glass-card space-y-1.5">
           <div class="flex items-center justify-between text-[11px]">
