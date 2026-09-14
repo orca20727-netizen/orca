@@ -20,8 +20,14 @@ AISSTREAM_API_KEY): a missing key degrades gracefully, it never crashes.
 ## Products (near-real-time, global -- both cover the Arabian Sea/Bay of
 ## Bengal used by ORCA's PFZ zones)
 - Chlorophyll-a: product GLOBAL_ANALYSISFORECAST_BGC_001_028, dataset
-  `cmems_mod_glo_bgc-pft_anfc_0.25deg_P1D-m`, variable "chl" (mg/m3).
-  Daily-mean, ~0.25 deg (~28km) resolution, delivered ~12:00 UTC.
+  `cmems_mod_glo_bgc-pft_anfc_0.25deg_P1D-m`, variable "chl" (mg/m3), stored
+  on 50 depth levels (~0.49m to ~5728m) -- like SST below, constrained to
+  the shallowest level for the surface value. (Confirmed live in production:
+  omitting the depth bound here returns NaN at every real coastal
+  coordinate tested, because the unconstrained query returns all 50 depths
+  per timestamp and an arbitrary one gets picked, typically deeper than the
+  seafloor at these continental-shelf zones.) Daily-mean, ~0.25 deg (~28km)
+  resolution, delivered ~12:00 UTC.
 - SST: product GLOBAL_ANALYSISFORECAST_PHY_001_024, dataset
   `cmems_mod_glo_phy-thetao_anfc_0.083deg_P1D-m`, variable "thetao"
   (potential temperature, deg C -- already Celsius, no Kelvin conversion)
@@ -89,6 +95,15 @@ def _fetch_point_sync(lat: float, lon: float) -> Optional[Dict[str, Any]]:
             maximum_longitude=lon,
             minimum_latitude=lat,
             maximum_latitude=lat,
+            # This dataset stores chl on 50 depth levels (0.49m to 5728m),
+            # not just at the surface -- confirmed live in production: every
+            # request came back NaN because, with no depth bound, the query
+            # returned all 50 levels per timestamp and .iloc[-1] below
+            # grabbed an arbitrary one of them, typically deeper than the
+            # seafloor at these continental-shelf coordinates (masked/NaN).
+            # Constrain to the shallowest level, exactly like the SST query.
+            minimum_depth=0,
+            maximum_depth=1,
             coordinates_selection_method="nearest",
             start_datetime=start,
             end_datetime=end,
