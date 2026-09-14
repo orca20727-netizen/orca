@@ -1,11 +1,28 @@
 import os
+from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from live_data import live_data
+from .geo_utils import haversine_nm
 
 try:
     import httpx
 except ImportError:  # pragma: no cover
     httpx = None
+
+# Within this many nautical miles of a PFZ zone's own center point, treat
+# that zone's cached Copernicus Marine reading (refreshed every few hours
+# by live_scheduler.refresh_copernicus_zones) as representative of the
+# requested point -- chlorophyll/SST don't change meaningfully over this
+# short a distance, and re-querying Copernicus per-request is far too slow
+# (see copernicus_marine_feed.py). Matches the zone spacing already used
+# elsewhere (pfz_agent's own distance-decay scale is 50nm).
+COPERNICUS_ZONE_MATCH_NM = 40.0
+
+# How old a cached Copernicus snapshot can be before it's treated as stale
+# rather than "the latest we have" -- the refresh loop runs well inside
+# this window by default, so a stale snapshot means the loop itself is
+# failing (bad credentials, Copernicus outage), not just "a bit old".
+COPERNICUS_STALE_HOURS = 30
 
 MARINE_API_URL = "https://marine-api.open-meteo.com/v1/marine"
 
@@ -47,6 +64,50 @@ class SatelliteAgent:
         except Exception:
             return None
 
+    @staticmethod
+    def _nearest_zone_copernicus_snapshot(lat: float, lon: float) -> Optional[Dict[str, Any]]:
+        """The freshest cached Copernicus Marine reading for whichever PFZ
+        zone center is within COPERNICUS_ZONE_MATCH_NM of (lat, lon), or
+        None if no zone is close enough, none has a cached reading yet
+        (COPERNICUSMARINE_SERVICE_USERNAME/PASSWORD not configured, or the
+        background refresh hasn't run yet), or the cached reading is
+        older than COPERNICUS_STALE_HOURS.
+
+        Imports core lazily (not at module level) because core.py imports
+        SatelliteAgent itself when building its agent instances -- a
+        top-level import here would be circular.
+        """
+        try:
+            from core import pfz_agent
+        except Exception:
+            return None
+
+        zones = getattr(pfz_agent, "_zones", None) or []
+        best_zone_id, best_distance_nm = None, None
+        for zone in zones:
+            center = zone.get("center")
+            if not center or len(center) != 2:
+                continue
+            distance_nm = haversine_nm(lat, lon, center[0], center[1])
+            if distance_nm <= COPERNICUS_ZONE_MATCH_NM and (best_distance_nm is None or distance_nm < best_distance_nm):
+                best_zone_id, best_distance_nm = zone.get("id"), distance_nm
+        if not best_zone_id:
+            return None
+
+        snapshot = live_data.store.latest(f"ocean_zone_{best_zone_id}")
+        if not snapshot:
+            return None
+        try:
+            ingested_at = datetime.fromisoformat(snapshot["ingested_at"])
+            if ingested_at.tzinfo is None:
+                ingested_at = ingested_at.replace(tzinfo=timezone.utc)
+            age_hours = (datetime.now(timezone.utc) - ingested_at).total_seconds() / 3600.0
+            if age_hours > COPERNICUS_STALE_HOURS:
+                return None
+        except Exception:
+            pass  # Malformed timestamp -- serve it rather than discard a real reading over a parsing quirk.
+        return snapshot
+
     async def fetch_oceanography(
         self, region: str = "Kochi_Malabar", lat: float = 9.85, lon: float = 75.60
     ) -> Dict[str, Any]:
@@ -63,6 +124,28 @@ class SatelliteAgent:
                 "observed_at": satellite_feed.get("observed_at"),
                 "data_source": {"sst": "LIVE_SATELLITE_FEED", "chlorophyll": "LIVE_SATELLITE_FEED"},
                 "source_tier": "CONFIGURED_LIVE",
+            }
+        copernicus = self._nearest_zone_copernicus_snapshot(lat, lon)
+        if copernicus:
+            snapshot = copernicus["payload"]
+            sst_celsius = float(snapshot["sst_celsius"])
+            chlorophyll_mg_m3 = round(float(snapshot["chlorophyll_mg_m3"]), 2)
+            # Copernicus doesn't give a per-point gradient directly -- derive
+            # it the same way the estimate path does (delta off this
+            # module's own calibration baseline) rather than inventing a
+            # second, unrelated gradient formula.
+            sst_gradient = round(max(0.02, BASELINE_GRADIENT - abs(sst_celsius - BASELINE_SST_C) * 0.02), 2)
+            return {
+                "region": region,
+                "source_satellites": [copernicus["source"]],
+                "sst_celsius": round(sst_celsius, 2),
+                "sst_gradient_c_per_km": sst_gradient,
+                "chlorophyll_mg_m3": chlorophyll_mg_m3,
+                "thermal_front_detected": sst_gradient >= 0.12,
+                "cloud_cover_pct": None,
+                "observed_at": snapshot.get("observed_at"),
+                "data_source": {"sst": "LIVE_COPERNICUS_MARINE", "chlorophyll": "LIVE_COPERNICUS_MARINE"},
+                "source_tier": "LIVE_COPERNICUS_MARINE",
             }
         cached = live_data.store.latest("ocean")
         if cached:

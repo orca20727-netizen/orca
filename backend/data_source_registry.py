@@ -18,6 +18,16 @@ SOURCES = {
     "open_meteo_marine": {"dataset": "ocean_sst_weather", "url": "https://marine-api.open-meteo.com/v1/marine", "tier": "PUBLIC_LIVE"},
     "incois_pfz_webgis": {"dataset": "pfz_advisory", "url": "https://www.incois.gov.in/MarineFisheries/PfzWebGis", "tier": "PUBLIC_DISCOVERY_ONLY"},
     "copernicus_s3_olci": {"dataset": "chlorophyll", "url": "https://sh.dataspace.copernicus.eu/process/v1", "tier": "AUTH_REQUIRED_DISCOVERY"},
+    # The actual live chlorophyll/SST integration (backend/
+    # copernicus_marine_feed.py + live_scheduler.refresh_copernicus_zones),
+    # a *different* Copernicus service (Marine, not the Sentinel Hub/Data
+    # Space entry above). This only probes that the service is reachable --
+    # whether it's actually being USED depends on COPERNICUSMARINE_SERVICE_
+    # USERNAME/PASSWORD being configured, which fetch_oceanography()'s own
+    # "source_tier": "LIVE_COPERNICUS_MARINE" vs "STATIC_FALLBACK" already
+    # reports honestly per-request -- this entry is discovery-only, same as
+    # every other row in this table.
+    "copernicus_marine_service": {"dataset": "chlorophyll", "url": "https://data.marine.copernicus.eu", "tier": "AUTH_REQUIRED_DISCOVERY"},
 }
 
 
