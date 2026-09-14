@@ -100,7 +100,7 @@ def _fetch_point_sync(lat: float, lon: float) -> Optional[Dict[str, Any]]:
             coordinates_selection_method="nearest",
             start_datetime=start,
             end_datetime=end,
-        )
+        
         )
         sst_df = copernicusmarine.read_dataframe(
             dataset_id=SST_DATASET_ID,
