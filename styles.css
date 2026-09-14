@@ -38,13 +38,22 @@
   --cyan-400: #0e7490;
   --cyan-300: #0e7490;
 
-  /* Glass & glow tokens -- lighter/softer, sit on white/near-white chrome;
-     glow uses this darker cyan-400 so it reads as a tint rather than a
-     neon blur. */
-  --glass-bg: rgba(255, 255, 255, 0.88);
-  --glass-bg-strong: rgba(255, 255, 255, 0.96);
-  --glass-border: rgba(15, 23, 42, 0.08);
-  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  /* Glass & glow tokens. Opacity here is deliberately low -- 40-58%,
+     not 88-96% -- because that's what actually reads as "glass" rather
+     than a solid card: high opacity leaves so little of the blurred
+     background visible that the blur/translucency is barely
+     perceptible and the box just looks like a flat white panel. At
+     this opacity the ocean photo behind every card is still clearly
+     (if softly, thanks to the blur) visible through it, and the
+     brightness/saturate boost in the backdrop-filter keeps that
+     visible-through backdrop light enough for dark/tinted text to
+     stay legible on top of it. Border is now a translucent white edge
+     highlight (glass catching light) instead of a near-invisible dark
+     hairline, which reads much more clearly as a distinct glass pane. */
+  --glass-bg: rgba(255, 255, 255, 0.40);
+  --glass-bg-strong: rgba(255, 255, 255, 0.58);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --glow-accent: rgba(6, 182, 212, 0.18);
   --glow-accent-strong: rgba(6, 182, 212, 0.34);
 }
@@ -384,6 +393,19 @@ body {
   border-bottom: 1px solid var(--glass-border);
 }
 
+/* Footer -- same frosted treatment as .glass-header, mirrored (border on
+   top instead of bottom, since it sits at the opposite edge of the page)
+   so the page's top and bottom chrome read as one consistent glass system
+   instead of the header/nav being glass while the footer stays a flat
+   solid bar. */
+.glass-footer {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-top: 1px solid var(--glass-border);
+  box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.10);
+}
+
 /* ============================================
    Cards & Panels (glass restyle, phase 3)
    ============================================ */
@@ -431,41 +453,61 @@ body {
 /* Alert-tinted glass -- same refracting blur/sheen as .glass-card,
    pair with .glass-card in markup (e.g. class="glass-card glass-card-danger")
    to tint it red for danger/warning states like the IMBL proximity alert,
-   instead of falling back to a flat, non-glass background. */
+   instead of falling back to a flat, non-glass background.
+
+   Opacity here is intentionally higher than a plain .glass-card: these
+   tints sit over every part of the background photo, including flat,
+   low-detail regions (e.g. plain sky) where a light 12-16% wash reads
+   as almost invisible and the card loses its "glass pane" identity
+   entirely, blending into the backdrop instead of standing out from
+   it the way the white glass-card does. A stronger, near-frosted tint
+   keeps the card reading as glass -- distinct edge, own surface color
+   -- no matter what's behind it. */
 .glass-card-danger {
-  background: rgba(239, 68, 68, 0.32);
-  border-color: rgba(239, 68, 68, 0.75);
+  background: rgba(239, 68, 68, 0.34);
+  border-color: rgba(239, 68, 68, 0.78);
 }
 
 /* Same idea, emerald tint -- safe/positive verdicts (sea-venture
    clearance, dusk-safe return ETA) that still want to read as glass
    rather than a flat colored box. */
 .glass-card-safe {
-  background: rgba(16, 185, 129, 0.14);
-  border-color: rgba(16, 185, 129, 0.45);
+  background: rgba(16, 185, 129, 0.30);
+  border-color: rgba(16, 185, 129, 0.6);
 }
 
 /* Amber tint -- caution/warning verdicts (proceed with caution,
    return-after-dusk). */
 .glass-card-warn {
-  background: rgba(245, 158, 11, 0.14);
-  border-color: rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.30);
+  border-color: rgba(245, 158, 11, 0.6);
 }
 
 /* Neutral slate tint -- used when there's no verdict to color at all
    (e.g. backend unreachable / route unavailable), so it still reads
    as glass rather than a flat gray box. */
 .glass-card-neutral {
-  background: rgba(100, 116, 139, 0.14);
-  border-color: rgba(100, 116, 139, 0.35);
+  background: rgba(100, 116, 139, 0.26);
+  border-color: rgba(100, 116, 139, 0.5);
 }
 
 /* Cyan tint -- the user's own chat messages, so they read as
    distinct from the AI's glass bubbles without falling back to a
    flat solid color. */
 .glass-card-info {
-  background: rgba(6, 182, 212, 0.16);
-  border-color: rgba(6, 182, 212, 0.4);
+  background: rgba(6, 182, 212, 0.28);
+  border-color: rgba(6, 182, 212, 0.55);
+}
+
+/* Smoked/dark tint -- for monospace terminal-style readouts (NMEA feed,
+   raw JSON inspector) whose text color (bright emerald/cyan) was designed
+   for a near-black backdrop. The default --glass-bg is near-white, which
+   would wash that text out to near-invisible, so this keeps the same
+   blur/border/sheen recipe as every other glass-card but darkens the
+   fill -- still glass, just smoked rather than clear. */
+.glass-card-terminal {
+  background: rgba(8, 15, 28, 0.82);
+  border-color: rgba(148, 163, 184, 0.25);
 }
 
 .glass-card-interactive {

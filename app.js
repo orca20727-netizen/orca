@@ -821,7 +821,7 @@ function evaluateLocalHazards() {
 function showHazardAlert(alert, allowBrowserNotification) {
   const banner = document.createElement('div');
   const danger = alert.severity === 'CRITICAL';
-  banner.className = `fixed right-4 top-20 z-[70] max-w-sm p-4 rounded-xl border shadow-2xl ${danger ? 'bg-red-950 border-red-500 text-red-100' : 'bg-amber-950 border-amber-500 text-amber-100'}`;
+  banner.className = `fixed right-4 top-20 z-[70] max-w-sm p-4 rounded-xl glass-card shadow-2xl ${danger ? 'glass-card-danger text-red-100' : 'glass-card-warn text-amber-100'}`;
   banner.innerHTML = `<strong class="block text-sm">${alert.title}</strong><span class="block text-xs mt-1">${alert.message}</span><span class="block text-[10px] mt-2 opacity-70">${typeof alert.data_source === 'string' ? alert.data_source : 'PROACTIVE_HAZARD_EVALUATOR'}</span>`;
   document.body.appendChild(banner);
   setTimeout(() => banner.remove(), 9000);
@@ -2681,7 +2681,7 @@ function renderNavICSatelliteList() {
   if (!container) return;
 
   container.innerHTML = state.navicSatellites.map(sat => `
-    <div class="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs font-mono">
+    <div class="flex items-center justify-between p-2 rounded glass-chip glass-card-terminal text-xs font-mono">
       <div class="flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
         <span class="text-white font-bold">${sat.id} (PRN ${sat.prn})</span>
@@ -3317,7 +3317,7 @@ function triggerDistressBeacon() {
   const statusEl = document.getElementById('sosDistressStatus');
   if (statusEl) {
     statusEl.innerHTML = `
-      <div class="p-4 rounded-xl bg-red-950/80 border border-red-500 text-red-200 text-sm space-y-2">
+      <div class="p-4 rounded-xl glass-card glass-card-danger text-red-200 text-sm space-y-2">
         <div class="flex items-center gap-2 font-bold text-red-400 text-base">
           <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
           406 MHz SAS&R BEACON TRANSMITTING TO ISRO & COAST GUARD MRCC
@@ -4018,7 +4018,7 @@ function renderAiTripResults(data) {
   const zoneListEl = document.getElementById('aiZoneRankList');
   if (zoneListEl && Array.isArray(data.zone_ranking)) {
     zoneListEl.innerHTML = data.zone_ranking.map((z, i) => `
-      <div class="flex items-center justify-between gap-3 p-2.5 rounded-lg ${i === 0 ? 'bg-emerald-950/40 border border-emerald-500/30' : 'glass-chip'}">
+      <div class="flex items-center justify-between gap-3 p-2.5 rounded-lg ${i === 0 ? 'glass-chip border border-emerald-500/50' : 'glass-chip'}">
         <div class="min-w-0">
           <div class="font-semibold text-slate-100 truncate">${z.zone_name}</div>
           <div class="text-[10px] text-slate-500">${Math.round(z.distance_from_port_km)} km · yield score ${z.zone_yield_score}</div>
@@ -4032,7 +4032,7 @@ function renderAiTripResults(data) {
   const speciesListEl = document.getElementById('aiSpeciesRankList');
   if (speciesListEl && Array.isArray(data.species_ranking)) {
     speciesListEl.innerHTML = data.species_ranking.map((s, i) => `
-      <div class="flex items-center justify-between gap-3 p-2.5 rounded-lg ${i === 0 ? 'bg-emerald-950/40 border border-emerald-500/30' : 'glass-chip'}">
+      <div class="flex items-center justify-between gap-3 p-2.5 rounded-lg ${i === 0 ? 'glass-chip border border-emerald-500/50' : 'glass-chip'}">
         <span class="font-semibold text-slate-100">${s.species}</span>
         <span class="font-mono font-bold ${i === 0 ? 'text-emerald-400' : 'text-cyan-300'}">${Math.round(s.score)}</span>
       </div>
