@@ -100,7 +100,34 @@ class AlertService:
                 "details": {"bulletin_id": bulletin.get("id"), "valid_until": bulletin.get("valid_until")}, "created_at": _now(),
             }
 
-    async def evaluate(self, harbours: Iterable[Dict[str, Any]], bulletins: Iterable[Dict[str, Any]], weather_by_harbour: Optional[Dict[str, Dict[str, Any]]] = None) -> List[Dict[str, Any]]:
+    @staticmethod
+    def _hazard_bulletin_alerts(bulletins: Iterable[Dict[str, Any]]) -> Iterable[Dict[str, Any]]:
+        """Live hazard bulletins (currently: IMD Sea Area / Coastal /
+        Cyclone Track, via imd_marine_feed.fetch_hazard_bulletins()),
+        already normalized to {id, alert_type, severity, region, title,
+        message, valid_until, source}. Unlike _cyclone_alerts above these
+        come from a hazard-specific government feed already, so every
+        record is alertable -- no "cyclone" text filter needed."""
+        for bulletin in bulletins:
+            severity = bulletin.get("severity", "WARNING")
+            if severity not in {"ADVISORY", "WARNING", "CRITICAL"}:
+                severity = "WARNING"
+            alert_type = bulletin.get("alert_type", "SEA_AREA_BULLETIN")
+            yield {
+                "event_key": f"{alert_type}:{bulletin.get('id', bulletin.get('title'))}", "severity": severity,
+                "alert_type": alert_type, "location_id": bulletin.get("region"),
+                "title": bulletin.get("title", "IMD hazard bulletin"), "message": bulletin.get("message", "Hazard bulletin issued."),
+                "data_source": {"tier": "LIVE_IMD_API", "source": bulletin.get("source", "India Meteorological Department")},
+                "details": {"bulletin_id": bulletin.get("id"), "valid_until": bulletin.get("valid_until")}, "created_at": _now(),
+            }
+
+    async def evaluate(
+        self,
+        harbours: Iterable[Dict[str, Any]],
+        bulletins: Iterable[Dict[str, Any]],
+        weather_by_harbour: Optional[Dict[str, Dict[str, Any]]] = None,
+        hazard_bulletins: Optional[Iterable[Dict[str, Any]]] = None,
+    ) -> List[Dict[str, Any]]:
         """Create alerts only when a threshold is crossed; duplicate events stay suppressed."""
         created: List[Dict[str, Any]] = []
         harbour_list = list(harbours)
@@ -117,6 +144,10 @@ class AlertService:
                 if saved:
                     created.append(saved)
         for candidate in self._cyclone_alerts(bulletins):
+            saved = self.store.create(candidate)
+            if saved:
+                created.append(saved)
+        for candidate in self._hazard_bulletin_alerts(hazard_bulletins or []):
             saved = self.store.create(candidate)
             if saved:
                 created.append(saved)

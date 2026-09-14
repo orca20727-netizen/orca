@@ -28,6 +28,14 @@ SOURCES = {
     # reports honestly per-request -- this entry is discovery-only, same as
     # every other row in this table.
     "copernicus_marine_service": {"dataset": "chlorophyll", "url": "https://data.marine.copernicus.eu", "tier": "AUTH_REQUIRED_DISCOVERY"},
+    # The live IMD cyclone/hazard bulletin integration (backend/
+    # imd_marine_feed.py + live_scheduler._live_hazard_bulletins). Same
+    # pattern as the Copernicus Marine row above: this only probes that the
+    # portal is reachable -- whether it's actually being USED depends on
+    # IMD_API_KEY being configured, which each alert's own
+    # data_source.tier ("LIVE_IMD_API" vs "STATIC_BULLETIN") already
+    # reports honestly per-alert.
+    "imd_hazard_bulletins": {"dataset": "cyclone_bulletin", "url": "https://api.imd.gov.in", "tier": "AUTH_REQUIRED_DISCOVERY"},
 }
 
 

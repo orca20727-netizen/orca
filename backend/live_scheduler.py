@@ -10,6 +10,7 @@ from data_source_registry import data_source_registry
 from alert_service import alert_service
 from ais_gateway import start_ais_gateway, stop_ais_gateway
 import copernicus_marine_feed
+import imd_marine_feed
 
 logger = logging.getLogger(__name__)
 REFRESH_SECONDS = max(60, int(os.getenv("LIVE_FEED_REFRESH_SECONDS", "60")))
@@ -31,9 +32,23 @@ def _bundled_bulletins() -> list:
         return []
 
 
+async def _live_hazard_bulletins() -> list:
+    """Live IMD Sea Area / Coastal / Cyclone Track bulletins -- a clean
+    no-op ([]) when IMD_API_KEY isn't configured, exactly like every other
+    optional live feed here. See imd_marine_feed.py."""
+    if not imd_marine_feed.is_configured():
+        return []
+    try:
+        return await imd_marine_feed.fetch_hazard_bulletins()
+    except Exception as exc:
+        logger.warning("IMD hazard bulletin refresh failed: %s", exc)
+        return []
+
+
 async def evaluate_alerts() -> None:
     from core import HARBOURS
-    created = await alert_service.evaluate(HARBOURS.values(), _bundled_bulletins())
+    hazard_bulletins = await _live_hazard_bulletins()
+    created = await alert_service.evaluate(HARBOURS.values(), _bundled_bulletins(), hazard_bulletins=hazard_bulletins)
     if created:
         logger.info("Created %d proactive hazard alert(s)", len(created))
 
