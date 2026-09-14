@@ -1,3 +1,4 @@
+import math
 import os
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
@@ -106,6 +107,22 @@ class SatelliteAgent:
                 return None
         except Exception:
             pass  # Malformed timestamp -- serve it rather than discard a real reading over a parsing quirk.
+
+        # Defense in depth against a NaN/Infinity payload already sitting in
+        # the persistent store from before copernicus_marine_feed.py's own
+        # finite-value check existed (or any future write path that skips
+        # it) -- a non-finite float reaching FastAPI's JSONResponse crashes
+        # the whole request (allow_nan=False), so never trust a cached
+        # payload without checking it here too.
+        try:
+            payload = snapshot.get("payload", {})
+            if not (
+                math.isfinite(float(payload["sst_celsius"]))
+                and math.isfinite(float(payload["chlorophyll_mg_m3"]))
+            ):
+                return None
+        except Exception:
+            return None
         return snapshot
 
     async def fetch_oceanography(

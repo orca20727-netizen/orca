@@ -36,6 +36,7 @@ on every page load.
 """
 import asyncio
 import logging
+import math
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
@@ -116,15 +117,35 @@ def _fetch_point_sync(lat: float, lon: float) -> Optional[Dict[str, Any]]:
     try:
         chl_row = chl_df.sort_values("time").iloc[-1]
         sst_row = sst_df.sort_values("time").iloc[-1]
-        return {
-            "sst_celsius": round(float(sst_row[SST_VARIABLE]), 2),
-            "chlorophyll_mg_m3": round(float(chl_row[CHL_VARIABLE]), 2),
-            "observed_at": str(chl_row.get("time", "")) or datetime.now(timezone.utc).isoformat(),
-            "source": SOURCE_LABEL,
-        }
+        sst_celsius = float(sst_row[SST_VARIABLE])
+        chlorophyll_mg_m3 = float(chl_row[CHL_VARIABLE])
     except Exception as exc:
         logger.warning("Copernicus Marine response parsing failed for (%.3f, %.3f): %s", lat, lon, exc)
         return None
+
+    # The "nearest" coordinate lookup can still land on a masked/land grid
+    # cell (common this close to the coast, which is exactly where ORCA's
+    # PFZ zones sit) -- CMEMS represents those as NaN, and FastAPI's default
+    # JSONResponse sets allow_nan=False, so a NaN reaching the API crashes
+    # the whole request with "Out of range float values are not JSON
+    # compliant" instead of just this one field being missing. Treat a
+    # non-finite reading as no data, same as an empty/failed fetch, so
+    # SatelliteAgent falls back to its estimate instead of ever serving or
+    # caching a NaN.
+    if not (math.isfinite(sst_celsius) and math.isfinite(chlorophyll_mg_m3)):
+        logger.warning(
+            "Copernicus Marine returned non-finite value(s) for (%.3f, %.3f) (sst=%s, chl=%s) -- "
+            "likely a masked/land grid cell; treating as no data",
+            lat, lon, sst_celsius, chlorophyll_mg_m3,
+        )
+        return None
+
+    return {
+        "sst_celsius": round(sst_celsius, 2),
+        "chlorophyll_mg_m3": round(chlorophyll_mg_m3, 2),
+        "observed_at": str(chl_row.get("time", "")) or datetime.now(timezone.utc).isoformat(),
+        "source": SOURCE_LABEL,
+    }
 
 
 async def fetch_point(lat: float, lon: float) -> Optional[Dict[str, Any]]:
