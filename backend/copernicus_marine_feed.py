@@ -88,25 +88,19 @@ def _fetch_point_sync(lat: float, lon: float) -> Optional[Dict[str, Any]]:
 
     start, end = _lookback_window()
     try:
-        chl_df = copernicusmarine.read_dataframe(
+            chl_df = copernicusmarine.read_dataframe(
             dataset_id=CHL_DATASET_ID,
             variables=[CHL_VARIABLE],
             minimum_longitude=lon,
             maximum_longitude=lon,
             minimum_latitude=lat,
             maximum_latitude=lat,
-            # This dataset stores chl on 50 depth levels (0.49m to 5728m),
-            # not just at the surface -- confirmed live in production: every
-            # request came back NaN because, with no depth bound, the query
-            # returned all 50 levels per timestamp and .iloc[-1] below
-            # grabbed an arbitrary one of them, typically deeper than the
-            # seafloor at these continental-shelf coordinates (masked/NaN).
-            # Constrain to the shallowest level, exactly like the SST query.
             minimum_depth=0,
             maximum_depth=1,
             coordinates_selection_method="nearest",
             start_datetime=start,
             end_datetime=end,
+        )
         )
         sst_df = copernicusmarine.read_dataframe(
             dataset_id=SST_DATASET_ID,
