@@ -24,7 +24,14 @@ except ImportError:  # pragma: no cover
 
 logger = logging.getLogger(__name__)
 
-OVERPASS_URL = os.getenv("OVERPASS_API_URL", "https://overpass-api.de/api/interpreter")
+# The main overpass-api.de instance has, as of 2026, started bouncing
+# programmatic-looking requests with a 406 to fight off AI-scraper load --
+# confirmed hitting this in production (see PR notes). kumi.systems is the
+# documented reliable community mirror; both are configurable via env var
+# regardless. A descriptive User-Agent (Overpass's own fair-use ask, and
+# also what the request-shape filter is partly keying on) is sent either way.
+OVERPASS_URL = os.getenv("OVERPASS_API_URL", "https://overpass.kumi.systems/api/interpreter")
+OVERPASS_USER_AGENT = os.getenv("OVERPASS_USER_AGENT", "ORCA-Fisherman/1.0 (Smart India Hackathon 2026 project; nearby-seafood-business lookup)")
 TIMEOUT = float(os.getenv("RESTAURANT_DISCOVERY_TIMEOUT", "15"))
 DEFAULT_RADIUS_M = 5000
 
@@ -52,7 +59,11 @@ async def get_nearby_seafood_businesses(lat: float, lon: float, radius_m: int = 
 
     try:
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            resp = await client.post(OVERPASS_URL, data={"data": _overpass_query(lat, lon, radius_m)})
+            resp = await client.post(
+                OVERPASS_URL,
+                data={"data": _overpass_query(lat, lon, radius_m)},
+                headers={"User-Agent": OVERPASS_USER_AGENT},
+            )
             resp.raise_for_status()
             body = resp.json()
     except Exception as exc:
