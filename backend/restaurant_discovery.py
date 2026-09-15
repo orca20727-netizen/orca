@@ -17,14 +17,23 @@ the main overpass-api.de instance now 406-blocks programmatic-looking
 requests (2026 anti-scraper measure), and the first community mirror tried
 (kumi.systems) was unreachable from Railway's own network (a plain
 ConnectError). Public Overpass mirrors are individually flaky/rate-limited
-by nature (volunteer-run), so this tries a short list in order and only
+by nature (volunteer-run), so this queries a short list of them and only
 reports UNAVAILABLE if every one of them fails -- never fabricates a
 business list, but also doesn't give up after one mirror's bad day.
+
+Mirrors are queried CONCURRENTLY (not one-by-one), first success wins --
+trying them sequentially at up to MIRROR_TIMEOUT seconds each risked
+exceeding Railway's own edge/gateway timeout before all 4 had been tried
+(confirmed in production: a sequential attempt came back "upstream error"
+from Railway's edge before the backend ever got to respond). Concurrent
+attempts, each capped short, keep the whole request's worst case bounded
+to roughly one mirror's timeout instead of the sum of all of them.
 """
 
+import asyncio
 import logging
 import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import httpx
@@ -51,7 +60,13 @@ def _mirrors() -> List[str]:
 
 
 OVERPASS_USER_AGENT = os.getenv("OVERPASS_USER_AGENT", "ORCA-Fisherman/1.0 (Smart India Hackathon 2026 project; nearby-seafood-business lookup)")
-TIMEOUT = float(os.getenv("RESTAURANT_DISCOVERY_TIMEOUT", "15"))
+# Per-mirror timeout -- kept short deliberately (see module docstring):
+# with 4 mirrors queried concurrently, the whole request's worst case is
+# ~this many seconds, not 4x this. Overrides the old RESTAURANT_DISCOVERY_
+# TIMEOUT default of 15s, which was fine sequentially but not concurrently
+# needed at all -- 8s keeps the total comfortably under a typical ~30s
+# platform edge/gateway timeout.
+TIMEOUT = float(os.getenv("RESTAURANT_DISCOVERY_TIMEOUT", "8"))
 DEFAULT_RADIUS_M = 5000
 
 
@@ -78,54 +93,77 @@ def _describe_exc(exc: Exception) -> str:
     return f"{type(exc).__name__}: {text}" if text else type(exc).__name__
 
 
+def _parse_businesses(body: Dict[str, Any]) -> List[Dict[str, Any]]:
+    businesses: List[Dict[str, Any]] = []
+    for el in body.get("elements", []):
+        tags = el.get("tags", {})
+        point_lat = el.get("lat") or (el.get("center") or {}).get("lat")
+        point_lon = el.get("lon") or (el.get("center") or {}).get("lon")
+        if point_lat is None or point_lon is None:
+            continue
+        businesses.append({
+            "name": tags.get("name", "Unnamed"),
+            "type": "restaurant" if tags.get("amenity") == "restaurant" else tags.get("shop", "seafood_business"),
+            "lat": point_lat,
+            "lon": point_lon,
+            "address": ", ".join(filter(None, [tags.get("addr:housenumber"), tags.get("addr:street"), tags.get("addr:city")])) or None,
+            "phone": tags.get("phone") or tags.get("contact:phone"),
+        })
+    return businesses
+
+
+async def _query_mirror(mirror_url: str, query: str) -> Tuple[str, Optional[Dict[str, Any]], Optional[str]]:
+    """Returns (mirror_url, parsed_body_or_None, error_description_or_None) -- never raises."""
+    try:
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            resp = await client.post(mirror_url, data={"data": query}, headers={"User-Agent": OVERPASS_USER_AGENT})
+            resp.raise_for_status()
+            return mirror_url, resp.json(), None
+    except Exception as exc:
+        return mirror_url, None, _describe_exc(exc)
+
+
 async def get_nearby_seafood_businesses(lat: float, lon: float, radius_m: int = DEFAULT_RADIUS_M) -> Dict[str, Any]:
     """Never raises. Returns an explicit UNAVAILABLE status (never a
-    fabricated list) only if every configured mirror fails."""
+    fabricated list) only if every configured mirror fails. Queries all
+    configured mirrors concurrently and takes the first success, so the
+    whole request's worst case stays bounded to ~TIMEOUT seconds instead of
+    the sum of every mirror's timeout (see module docstring)."""
     if httpx is None:
         return {"status": "UNAVAILABLE", "businesses": [], "source": "LIVE_OPENSTREETMAP_OVERPASS", "reason": "httpx not installed"}
 
     query = _overpass_query(lat, lon, radius_m)
+    tasks = [asyncio.create_task(_query_mirror(m, query)) for m in _mirrors()]
     attempts: List[Dict[str, str]] = []
+    result: Optional[Dict[str, Any]] = None
 
-    for mirror_url in _mirrors():
-        try:
-            async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-                resp = await client.post(mirror_url, data={"data": query}, headers={"User-Agent": OVERPASS_USER_AGENT})
-                resp.raise_for_status()
-                body = resp.json()
-        except Exception as exc:
-            reason = _describe_exc(exc)
-            logger.warning("restaurant_discovery: mirror %s failed: %s", mirror_url, reason)
-            attempts.append({"mirror": mirror_url, "error": reason})
-            continue
-
-        businesses: List[Dict[str, Any]] = []
-        for el in body.get("elements", []):
-            tags = el.get("tags", {})
-            point_lat = el.get("lat") or (el.get("center") or {}).get("lat")
-            point_lon = el.get("lon") or (el.get("center") or {}).get("lon")
-            if point_lat is None or point_lon is None:
+    try:
+        for finished in asyncio.as_completed(tasks, timeout=TIMEOUT + 2):
+            mirror_url, body, error = await finished
+            if error:
+                logger.warning("restaurant_discovery: mirror %s failed: %s", mirror_url, error)
+                attempts.append({"mirror": mirror_url, "error": error})
                 continue
-            businesses.append({
-                "name": tags.get("name", "Unnamed"),
-                "type": "restaurant" if tags.get("amenity") == "restaurant" else tags.get("shop", "seafood_business"),
-                "lat": point_lat,
-                "lon": point_lon,
-                "address": ", ".join(filter(None, [tags.get("addr:housenumber"), tags.get("addr:street"), tags.get("addr:city")])) or None,
-                "phone": tags.get("phone") or tags.get("contact:phone"),
-            })
+            result = {
+                "status": "LIVE",
+                "businesses": _parse_businesses(body),
+                "radius_m": radius_m,
+                "source": "LIVE_OPENSTREETMAP_OVERPASS",
+                "mirror_used": mirror_url,
+                "note": "Nearby seafood businesses only -- NOT a buyer requirement/lead. See /api/fisherman/buyers/listings for actual purchasing requirements.",
+            }
+            break
+    except asyncio.TimeoutError:
+        attempts.append({"mirror": "*", "error": "Overall wait exceeded TIMEOUT+2s"})
+    finally:
+        for t in tasks:
+            if not t.done():
+                t.cancel()
 
-        return {
-            "status": "LIVE",
-            "businesses": businesses,
-            "count": len(businesses),
-            "radius_m": radius_m,
-            "source": "LIVE_OPENSTREETMAP_OVERPASS",
-            "mirror_used": mirror_url,
-            "note": "Nearby seafood businesses only -- NOT a buyer requirement/lead. See /api/fisherman/buyers/listings for actual purchasing requirements.",
-        }
+    if result is not None:
+        result["count"] = len(result["businesses"])
+        return result
 
-    # Every mirror failed.
     return {
         "status": "UNAVAILABLE",
         "businesses": [],
