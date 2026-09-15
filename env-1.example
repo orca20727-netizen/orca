@@ -1,0 +1,146 @@
+# Copy this file to .env and fill in real values. Never commit the real
+# .env file -- it's already excluded in .gitignore.
+
+# ORCA's advisory engine is fully rule-based and reasons only over this
+# website's own live telemetry plus its own accumulated stats ledger --
+# there is no external AI/LLM API anywhere in this system, so no API key
+# is needed here for that.
+
+# Optional. Where the stats ledger's SQLite file lives (backend/
+# stats_store.py). Point this at a mounted persistent volume (Railway
+# volume, Docker named volume, etc.) so accumulated history survives
+# restarts/redeploys; defaults to a path inside the backend/ folder,
+# which still accumulates correctly for as long as the process runs.
+ORCA_STATS_DB_PATH=
+
+# Host/port the FastAPI backend binds to. 0.0.0.0 is required (not
+# 127.0.0.1/localhost) for phones on the same Wi-Fi to reach it.
+BACKEND_HOST=0.0.0.0
+BACKEND_PORT=8000
+
+# Comma-separated list of allowed frontend origins for CORS, e.g.
+#   FRONTEND_ORIGIN=http://localhost:3000,http://192.168.1.10:3000
+# Defaults to "*" (any origin) if unset -- fine for local demo use since
+# there are no authenticated endpoints/cookies, but set this explicitly
+# for any non-local deployment. Port 3000 matches start_demo.sh/.bat and
+# the frontend container's nginx port (see docker-compose.yml) -- update
+# this if you serve the static frontend from somewhere else.
+FRONTEND_ORIGIN=http://localhost:3000
+
+# Frontend runtime configuration (used by the Railway frontend service).
+# Use the public backend URL, including https:// and wss:// respectively.
+# Leave these unset for the local two-port Docker/demo setup.
+ORCA_API_BASE=
+ORCA_WS_BASE=
+
+# Seconds to wait for a live Open-Meteo API response before falling back
+# to offline/simulated telemetry.
+OPEN_METEO_TIMEOUT=10
+
+# Nautical miles of clearance the A* route planner tries to keep from
+# every Marine Protected Area boundary (not just avoiding the polygon
+# itself).
+MPA_SAFETY_BUFFER_NM=2.0
+
+# Continuous external-data feeds. These run only in the backend, so keys are
+# never sent to the browser. Copy the JSON contracts from README.md.
+LIVE_FEED_REFRESH_SECONDS=900
+EXTERNAL_FEED_TIMEOUT=15
+ORCA_OCEAN_FEED_URL=
+ORCA_PFZ_FEED_URL=
+ORCA_VESSEL_FEED_URL=
+EXTERNAL_FEED_BEARER_TOKEN=
+
+# Real chlorophyll-a + sea-surface-temperature for every PFZ zone, from the
+# Copernicus Marine Service (free account: https://data.marine.copernicus.eu).
+# These are the Copernicus Marine Toolbox's OWN expected env var names, so no
+# other config is needed once they're set. Leave both blank to keep using
+# SatelliteAgent's existing SST-delta estimate (no crash, just no live
+# chlorophyll) -- see backend/copernicus_marine_feed.py.
+COPERNICUSMARINE_SERVICE_USERNAME=
+COPERNICUSMARINE_SERVICE_PASSWORD=
+# How often (seconds) to refresh the cached Copernicus reading for each PFZ
+# zone. Both Copernicus products used here are daily-mean, so there's no
+# benefit to polling faster than every few hours; default 6h.
+COPERNICUS_REFRESH_SECONDS=21600
+
+
+# Required only when your GPS/AIS tracker gateway POSTs directly to ORCA at
+# /api/telemetry/vessels. Use a long random value; never expose it in the UI.
+TELEMETRY_INGEST_TOKEN=
+AIS_PUBLISH_INTERVAL_SECONDS=20
+
+# Chat-session context stays in backend memory only and is evicted after this
+# many minutes of inactivity. The browser sends at most six recent turns.
+SESSION_TTL_MINUTES=30
+
+# Source-registry discovery checks are allowlisted reachability probes only;
+# they never scrape restricted data or bypass provider authentication.
+SOURCE_REGISTRY_TIMEOUT=5
+
+# Proactive in-app hazard alerts are evaluated on the refresh cycle. They are
+# delivered while the browser/PWA is open; closed-app push needs a separate
+# push subscription service and is intentionally not claimed by this demo.
+HAZARD_WAVE_ALERT_M=2.5
+HAZARD_WIND_ALERT_KNOTS=25
+HAZARD_LIGHTNING_ALERT_PCT=50
+
+# Browser position tracking stays opt-in. The frontend calls /api/geofence
+# for every accepted position and warns at this IMBL approach distance.
+GEOFENCE_WARNING_NM=5
+
+# Live cyclone/hazard bulletins from the India Meteorological Department's
+# official API (free account: https://api.imd.gov.in -- "Create Account",
+# then generate a key from the subscriptions/developer page). Leave blank
+# to keep using only the bundled sample bulletins.json data (no crash, just
+# no live bulletins) -- see backend/imd_marine_feed.py.
+IMD_API_KEY=
+# IMD's public docs don't spell out the exact header/scheme its API
+# gateway expects for the key above, so both are configurable. Defaults
+# are a plain "X-API-KEY: <key>" header; if IMD's real gateway wants
+# something else (found from the first live call's response once you have
+# real credentials), change these -- no code change needed.
+IMD_API_KEY_HEADER=X-API-KEY
+IMD_API_KEY_SCHEME=
+IMD_API_BASE=https://api.imd.gov.in/api/v1
+IMD_API_TIMEOUT=10
+
+# Live fish market prices for the Fisherman module (Tuna/Pomfret/Sardine/
+# Mackerel/Kingfish) from Agmarknet via data.gov.in (free account:
+# https://data.gov.in -- "Register", then "My Account" > "API Keys" once
+# signed in generates the key below). Leave blank to keep using the
+# existing simulated demo prices (no crash, just no live prices) -- see
+# backend/market_price_service.py. Known limitation, not a bug: Agmarknet
+# is sourced from APMC mandis, which mostly don't trade fish -- expect
+# several/most species to have no live match most days; the module falls
+# back to its own last stored real reading, then to the simulated demo
+# default, in that order, and is honest in the response about which one it
+# used for each species.
+FISHERMAN_MARKET_API_KEY=
+FISHERMAN_MARKET_RESOURCE_ID=9ef84268-d588-465a-a308-a864a43d0070
+FISHERMAN_MARKET_TIMEOUT=12
+
+# Nearby seafood restaurants/businesses on the Fisherman module's map --
+# free, keyless, real via OpenStreetMap's public Overpass API. No signup
+# needed, and no need to set OVERPASS_API_URL at all by default: public
+# Overpass mirrors are individually flaky (volunteer-run, and the main
+# overpass-api.de instance now 406-blocks programmatic-looking requests as
+# an anti-scraper measure -- confirmed hitting this in production), so
+# backend/restaurant_discovery.py tries a short built-in list of mirrors in
+# order and only reports unavailable if all of them fail. Leave
+# OVERPASS_API_URL blank to use that list; set it only to pin a single
+# specific mirror/self-hosted instance instead.
+OVERPASS_API_URL=
+OVERPASS_USER_AGENT=ORCA-Fisherman/1.0 (Smart India Hackathon 2026 project; nearby-seafood-business lookup)
+RESTAURANT_DISCOVERY_TIMEOUT=15
+
+# ORCA Buyer Network (real buyer-posted demand, replacing the Fisherman
+# module's simulated "Buyer Leads"). Buyer verification is OTP-only. If
+# these SMTP_* vars are left blank, the OTP is returned directly in the
+# /api/fisherman/buyers/register response instead of emailed (clearly
+# tagged dev-mode in that response) -- so the whole flow is still fully
+# testable/demoable without email infrastructure configured.
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASSWORD=
