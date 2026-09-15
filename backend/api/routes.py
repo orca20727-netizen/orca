@@ -23,9 +23,16 @@ from data_source_registry import data_source_registry
 from alert_service import alert_service
 from geofence_alerts import GEOFENCE_WARNING_NM, geofence_alert_for
 from stats_store import stats_store
+import market_price_service
+import species_reference
+import restaurant_discovery
+import buyer_network
+import price_trend
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+buyer_network.init_db()
 
 
 @router.get("/api/health")
@@ -223,11 +230,98 @@ async def get_fisherman_dashboard(
     rest of the app already uses for these coordinates (not fetched
     independently), so this can never disagree with the Safety Barometer or
     GIS Command Map about today's conditions or the best-ranked zone."""
-    weather, pfz = await asyncio.gather(
+    weather, pfz, live_price_overrides = await asyncio.gather(
         core.weather_agent.evaluate_hazard(lat=lat, lon=lon),
         core.pfz_agent.rank_pfz_zones(vessel_lat=lat, vessel_lon=lon),
+        market_price_service.get_live_market_overrides(list(market_price_service.SPECIES_TO_COMMODITY_CANDIDATES.keys())),
     )
-    return await core.fisherman_agent.build_dashboard(weather, pfz, preferred_species=species)
+    live_buyer_listings = buyer_network.list_listings(status="OPEN")
+    return await core.fisherman_agent.build_dashboard(
+        weather, pfz, preferred_species=species,
+        live_price_overrides=live_price_overrides,
+        live_buyer_listings=live_buyer_listings,
+    )
+
+
+@router.get("/api/fisherman/price-trend")
+async def get_fisherman_price_trend(species: str = Query(...)):
+    """Real observed-price trend (current/previous, 7-day, 30-day) for one
+    species -- computed only from real accumulated readings; explicitly
+    reports INSUFFICIENT_DATA rather than a fabricated trend. See
+    price_trend.py."""
+    return price_trend.compute_price_trend(species)
+
+
+@router.get("/api/fisherman/species-reference")
+async def get_fisherman_species_reference():
+    """Static, hand-sourced fish-species biology reference (common/
+    scientific/local names, habitat, seasonality) for the 5 tracked
+    species. DATABASE DATA, not a live feed -- see species_reference.py."""
+    return species_reference.get_species_reference()
+
+
+@router.get("/api/fisherman/nearby-businesses")
+async def get_fisherman_nearby_businesses(
+    lat: float = Query(9.85, ge=-90, le=90),
+    lon: float = Query(75.60, ge=-180, le=180),
+    radius_m: int = Query(5000, ge=500, le=20000),
+):
+    """LIVE, real, keyless via OpenStreetMap Overpass. NOT buyer demand --
+    see /api/fisherman/buyers/listings for actual purchasing requirements."""
+    return await restaurant_discovery.get_nearby_seafood_businesses(lat, lon, radius_m)
+
+
+@router.post("/api/fisherman/buyers/register")
+async def register_fisherman_buyer(payload: dict):
+    business_name = (payload.get("business_name") or "").strip()
+    contact_email = (payload.get("contact_email") or "").strip()
+    location = payload.get("location")
+    if not business_name or not contact_email:
+        raise HTTPException(status_code=400, detail="business_name and contact_email are required")
+    return buyer_network.register_buyer(business_name, contact_email, location)
+
+
+@router.post("/api/fisherman/buyers/verify")
+async def verify_fisherman_buyer(payload: dict):
+    buyer_id, code = payload.get("buyer_id"), (payload.get("code") or "").strip()
+    if not buyer_id or not code:
+        raise HTTPException(status_code=400, detail="buyer_id and code are required")
+    result = buyer_network.verify_buyer(int(buyer_id), code)
+    if not result["verified"]:
+        raise HTTPException(status_code=400, detail=result["reason"])
+    return result
+
+
+@router.post("/api/fisherman/buyers/listings")
+async def create_fisherman_buyer_listing(payload: dict):
+    required = ("buyer_id", "species", "required_qty_kg")
+    if any(payload.get(f) in (None, "") for f in required):
+        raise HTTPException(status_code=400, detail=f"{required} are required")
+    result = buyer_network.create_listing(
+        buyer_id=int(payload["buyer_id"]), species=payload["species"],
+        required_qty_kg=float(payload["required_qty_kg"]),
+        price_min=payload.get("price_min"), price_max=payload.get("price_max"),
+        deadline=payload.get("deadline"), location=payload.get("location"),
+    )
+    if not result["created"]:
+        raise HTTPException(status_code=400, detail=result["reason"])
+    return result
+
+
+@router.get("/api/fisherman/buyers/listings")
+async def list_fisherman_buyer_listings(species: str = Query(default=None), status: str = Query(default="OPEN")):
+    return {"listings": buyer_network.list_listings(species=species, status=status)}
+
+
+@router.post("/api/fisherman/buyers/listings/{listing_id}/claim")
+async def claim_fisherman_buyer_listing(listing_id: int, payload: dict):
+    fisherman_contact = (payload.get("fisherman_contact") or "").strip()
+    if not fisherman_contact:
+        raise HTTPException(status_code=400, detail="fisherman_contact is required")
+    result = buyer_network.claim_listing(listing_id, fisherman_contact, payload.get("claimed_qty_kg"))
+    if not result["claimed"]:
+        raise HTTPException(status_code=400, detail=result["reason"])
+    return result
 
 
 @router.get("/api/live/status")

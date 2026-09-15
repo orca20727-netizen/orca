@@ -29,6 +29,9 @@ import logging
 import os
 from typing import Any, Dict, List, Optional, Tuple
 
+import demand_intelligence
+import price_trend
+
 logger = logging.getLogger(__name__)
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
@@ -123,9 +126,44 @@ class FishermanOpportunityAgent:
             "profit_score": profit_score,
         }
 
-    def _rank_species(self, ocean_score: float, fish_score: float, trip_cost_total: float) -> List[Dict[str, Any]]:
+    def _rank_species(
+        self,
+        ocean_score: float,
+        fish_score: float,
+        trip_cost_total: float,
+        live_price_overrides: Optional[Dict[str, Dict[str, Any]]] = None,
+        live_listings_by_species: Optional[Dict[str, List[Dict[str, Any]]]] = None,
+    ) -> List[Dict[str, Any]]:
+        live_price_overrides = live_price_overrides or {}
+        live_listings_by_species = live_listings_by_species or {}
         ranked = []
-        for sp in self._data["species_market"]:
+        for base in self._data["species_market"]:
+            sp = dict(base)
+            override = live_price_overrides.get(sp["species"])
+            if override:
+                # The old static/previous price becomes "previous" so
+                # momentum (price_change_pct) still reflects a real change,
+                # not a discontinuity from swapping data sources.
+                sp["prev_price_per_kg"] = base["price_per_kg"]
+                sp["price_per_kg"] = override["price_per_kg"]
+                sp["price_source"] = override["source"]  # LIVE_AGMARKNET or STORED_SNAPSHOT
+                sp["price_observed_at"] = override.get("observed_at")
+                sp["price_market"] = override.get("market")
+            else:
+                sp["price_source"] = "SIMULATED_DEMO"
+
+            real_listings = live_listings_by_species.get(sp["species"], [])
+            if real_listings:
+                live_buyer = real_listings[0]
+                sp["buyer"] = {
+                    "name": live_buyer["name"], "qty_kg": live_buyer["qty_kg"],
+                    "price_min": live_buyer["price_min"], "price_max": live_buyer["price_max"],
+                    "deadline": live_buyer["deadline"], "location": live_buyer["location"],
+                }
+                sp["buyer_source"] = "ORCA_BUYER_NETWORK"
+            else:
+                sp["buyer_source"] = "SIMULATED_DEMO"
+
             market_score, price_change_pct = self._market_score(sp)
             profit = self._profit_for(sp, trip_cost_total)
             composite = (
@@ -134,13 +172,29 @@ class FishermanOpportunityAgent:
                 + WEIGHT_MARKET * market_score
                 + WEIGHT_PROFIT * profit["profit_score"]
             )
+
+            price_trend_result = (
+                price_trend.compute_price_trend(sp["species"])
+                if sp["price_source"] != "SIMULATED_DEMO"
+                else {"species": sp["species"], "status": "INSUFFICIENT_DATA", "reason": "Price is still simulated demo data", "classification": "CALCULATED"}
+            )
+            demand_result = demand_intelligence.compute_demand_score(sp["species"], real_listings, price_change_pct, sp.get("demand"))
+            opportunity_result = demand_intelligence.compute_market_opportunity_score(demand_result["score"], sp["price_source"], price_change_pct)
+
             ranked.append({
                 "species": sp["species"],
                 "price_per_kg": sp["price_per_kg"],
                 "prev_price_per_kg": sp["prev_price_per_kg"],
                 "price_change_pct": price_change_pct,
+                "price_source": sp["price_source"],
+                "price_observed_at": sp.get("price_observed_at"),
+                "price_trend": price_trend_result,
                 "demand": sp["demand"],
+                "demand_score": demand_result,
+                "market_opportunity_score": opportunity_result,
                 "buyer": sp["buyer"],
+                "buyer_source": sp["buyer_source"],
+                "real_listing_count": len(real_listings),
                 "typical_informal_price_per_kg": sp["typical_informal_price_per_kg"],
                 "ocean_score": round(ocean_score, 1),
                 "fish_score": round(fish_score, 1),
@@ -148,6 +202,7 @@ class FishermanOpportunityAgent:
                 "profit_score": round(profit["profit_score"], 1),
                 "composite_score": round(composite, 1),
                 **{k: v for k, v in profit.items() if k != "profit_score"},
+                "_real_listings": real_listings,  # internal only, stripped before response
             })
         ranked.sort(key=lambda r: r["composite_score"], reverse=True)
         return ranked
@@ -180,6 +235,8 @@ class FishermanOpportunityAgent:
         weather: Dict[str, Any],
         pfz: Dict[str, Any],
         preferred_species: Optional[str] = None,
+        live_price_overrides: Optional[Dict[str, Dict[str, Any]]] = None,
+        live_buyer_listings: Optional[List[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         cost = self._data["default_trip_cost"]
         trip_cost_total = float(sum(cost.values()))
@@ -187,7 +244,20 @@ class FishermanOpportunityAgent:
         ocean_score = float(weather.get("safety_score", 70))
         fish_score = float(pfz.get("yield_score_pct", 70))
 
-        ranked = self._rank_species(ocean_score, fish_score, trip_cost_total)
+        # Real Buyer Network listings win over the static demo buyer for a
+        # species (grouped so demand scoring can see every open listing,
+        # not just one; the display "buyer" field still shows just the
+        # first, matching this app's existing "one buyer per species" shape
+        # with zero render changes).
+        live_listings_by_species: Dict[str, List[Dict[str, Any]]] = {}
+        for listing in (live_buyer_listings or []):
+            live_listings_by_species.setdefault(listing["species"], []).append(listing)
+
+        ranked = self._rank_species(
+            ocean_score, fish_score, trip_cost_total,
+            live_price_overrides=live_price_overrides,
+            live_listings_by_species=live_listings_by_species,
+        )
         by_name = {r["species"]: r for r in ranked}
 
         # Prefer whichever dominant species of the top-recommended PFZ zone
@@ -221,6 +291,21 @@ class FishermanOpportunityAgent:
             confidence_pct += 7
         confidence_pct = min(97, confidence_pct)
 
+        best_buyer_recommendation = demand_intelligence.recommend_best_buyer(
+            species=best["species"],
+            current_price_per_kg=best["price_per_kg"],
+            price_source=best["price_source"],
+            real_listings_for_species=best["_real_listings"],
+            static_buyer=best["buyer"],
+            trip_cost_total=best["trip_cost"],
+            catch_kg=catch_mid,
+        )
+
+        # Internal-only field used above to build the recommendation --
+        # strip it before the ranking goes out over the wire.
+        for r in ranked:
+            r.pop("_real_listings", None)
+
         return {
             "opportunity": {
                 "recommended_species": best["species"],
@@ -236,6 +321,11 @@ class FishermanOpportunityAgent:
                 "profit_max": best["profit_max"],
                 "confidence_pct": confidence_pct,
                 "composite_score": best["composite_score"],
+                "price_source": best["price_source"],
+                "price_observed_at": best.get("price_observed_at"),
+                "demand_score": best["demand_score"],
+                "market_opportunity_score": best["market_opportunity_score"],
+                "best_buyer_recommendation": best_buyer_recommendation,
                 "score_breakdown": {
                     "ocean": {"weight": WEIGHT_OCEAN, "score": best["ocean_score"]},
                     "fish": {"weight": WEIGHT_FISH, "score": best["fish_score"]},
@@ -260,9 +350,22 @@ class FishermanOpportunityAgent:
                 "other_cost": cost["other"],
             },
             "buyers": [
-                {"species": r["species"], **r["buyer"]} for r in ranked
+                {"species": r["species"], "buyer_source": r["buyer_source"], **r["buyer"]} for r in ranked
             ],
             "performance": self._performance(),
             "community_posts": self._data.get("community_posts", []),
-            "data_source": "SIMULATED_FALLBACK (fisherman market data unavailable)" if self._using_fallback else "FISHERMAN_MARKET_DATASET",
+            "data_source": self._data_source_summary(ranked),
         }
+
+    @staticmethod
+    def _data_source_summary(ranked: List[Dict[str, Any]]) -> str:
+        """Honest, at-a-glance summary of how many of the 5 tracked species
+        currently have a real price/buyer vs. the simulated demo defaults --
+        shown verbatim in the frontend's LIVE status badge, so this must
+        never claim "live" when nothing live actually came through."""
+        live_prices = sum(1 for r in ranked if r["price_source"] in ("LIVE_AGMARKNET", "STORED_SNAPSHOT"))
+        live_buyers = sum(1 for r in ranked if r["buyer_source"] == "ORCA_BUYER_NETWORK")
+        total = len(ranked)
+        if live_prices == 0 and live_buyers == 0:
+            return "SIMULATED_DEMO (no live price or buyer data configured yet)"
+        return f"MIXED -- prices: {live_prices}/{total} live, buyers: {live_buyers}/{total} real listings (rest simulated demo)"
