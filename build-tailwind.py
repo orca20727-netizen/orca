@@ -142,9 +142,9 @@ def compile_base(cls, base):
     if base == 'sticky': return [('position', 'sticky')]
     if base == 'inset-0': return [('inset', '0')]
     if base == 'top-0': return [('top', '0')]
-    if base in ('left-3', 'right-3', 'bottom-3', 'top-3'):
-        side = base.split('-')[0]
-        return [(side, '0.75rem')]
+    m = re.match(r'^(top|bottom|left|right)-([\d.]+)$', base)
+    if m and m.group(2) in SPACING:
+        return [(m.group(1), SPACING[m.group(2)])]
     m = re.match(r'^-(top|bottom|left|right)-(\d+)$', base)
     if m:
         side, n = m.group(1), m.group(2)
@@ -201,6 +201,8 @@ def compile_base(cls, base):
     if base == 'w-fit': return [('width', 'fit-content')]
     if base == 'w-auto': return [('width', 'auto')]
     if base == 'min-w-max': return [('min-width', 'max-content')]
+    if base == 'min-w-0': return [('min-width', '0')]
+    if base == 'min-w-full': return [('min-width', '100%')]
     if base == 'h-full': return [('height', '100%')]
     if base == 'min-h-screen': return [('min-height', '100vh')]
     if base == 'max-w-xl': return [('max-width', '36rem')]
@@ -236,6 +238,13 @@ def compile_base(cls, base):
     if base == 'list-disc': return [('list-style-type', 'disc')]
     if base == 'list-inside': return [('list-style-position', 'inside')]
     if base == 'whitespace-nowrap': return [('white-space', 'nowrap')]
+    if base == 'truncate': return [('overflow', 'hidden'), ('text-overflow', 'ellipsis'), ('white-space', 'nowrap')]
+
+    if base == 'divide-y':
+        return [('__child_combinator__', '> :not([hidden]) ~ :not([hidden]) { border-top-width: 1px; }')]
+    if base.startswith('divide-') and base != 'divide-y':
+        v = parse_color_class(base[len('divide-'):])
+        return [('__child_combinator__', f'> :not([hidden]) ~ :not([hidden]) {{ border-color: {v}; }}')] if v else None
 
     if base.startswith('bg-'):
         v = parse_color_class(base[3:])
@@ -289,6 +298,8 @@ def compile_base(cls, base):
     if m: return [('transition-duration', f'{m.group(1)}ms')]
     if base == 'origin-top-left': return [('transform-origin', 'top left')]
     if base == 'scale-105': return [('transform', 'scale(1.05)')]
+    m = re.match(r'^rotate-(\d+)$', base)
+    if m: return [('transform', f'rotate({m.group(1)}deg)')]
     m = re.match(r'^-translate-y-([\d.]+)$', base)
     if m and m.group(1) in SPACING:
         return [('transform', f'translateY(-{SPACING[m.group(1)]})')]
