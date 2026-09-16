@@ -246,7 +246,148 @@ const translations = {
     seaState: "Douglas Sea State",
     lightningRisk: "Lightning & Squall Risk",
     vesselTableTitle: "Live Coastal Fleet Telemetry (Live AIS + Simulated Fill-in)",
-    simulatedDisclaimer: "NOTE: Live AIS vessel positions are backfilled with a clearly-tagged simulated fleet where there's no receiver coverage yet. Satellite oceanography layers remain simulated for Smart India Hackathon 2026 demonstration."
+    simulatedDisclaimer: "NOTE: Live AIS vessel positions are backfilled with a clearly-tagged simulated fleet where there's no receiver coverage yet. Satellite oceanography layers remain simulated for Smart India Hackathon 2026 demonstration.",
+
+    // ---- ORCA FISHERMAN module ----
+    fmTitle: "ORCA FISHERMAN",
+    fmSubtitle: "Daily Opportunity Console · Team SavioursX",
+    fmLiveFeedBadge: "LIVE OPPORTUNITY FEED",
+    fmToggleDarkMode: "Toggle dark mode",
+    fmBackToHub: "← Hub",
+    fmBackToHubTitle: "Back to ORCA Hub",
+    fmNavOpportunity: "Today's Opportunity",
+    fmNavMap: "Fishing Zones Map",
+    fmNavSell: "Sell Smarter",
+    fmNavCalculator: "Trip Calculator",
+    fmNavCommunity: "Performance & Community",
+    fmCheckingBackend: "Checking backend...",
+    fmBestOpportunityLabel: "Today's Best Opportunity",
+    fmLoadingOpportunityDesc: "Loading today's opportunity from the Fisherman Opportunity Agent…",
+    fmPreferredSpeciesLabel: "Preferred species:",
+    fmAutoBestMatch: "Auto (Best Match)",
+    fmOpportunityScoreLabel: "Opportunity Score",
+    fmRecommendedZoneLabel: "Recommended Zone",
+    fmExpectedCatchLabel: "Expected Catch",
+    fmAtTodaysPrice: "at today's price",
+    fmRevenueRangeLabel: "Revenue Range",
+    fmBeforeTripCosts: "before trip costs",
+    fmEstimatedProfitLabel: "Estimated Profit",
+    fmConfidenceLabel: "Confidence",
+    fmScoreBreakdownTitle: "Opportunity Score Breakdown",
+    fmAiStudioTitle: "AI Decision Studio — Plan Your Trip",
+    fmAiStudioDesc: "4 on-device scikit-learn models (catch, zone, species, price) trained on ORCA's own data, combined with a deterministic profit & risk engine. No external AI API is used anywhere in this pipeline.",
+    fmDemoModelBadge: "DEMO MODEL · synthetic training data",
+    fmTripPlannerTitle: "Trip Planner",
+    fmBoatTypeLabel: "Boat Type",
+    fmBoatTraditional: "Traditional (Non-mechanized)",
+    fmBoatMotorized: "Motorized",
+    fmBoatMechanized: "Mechanized Trawler",
+    fmGearTypeLabel: "Gear Type",
+    fmGearGillnet: "Gillnet",
+    fmGearTrawl: "Trawl",
+    fmGearRingSeine: "Ring Seine",
+    fmGearLongline: "Longline",
+    fmGearHookLine: "Hook & Line",
+    fmTripDurationLabel: "Trip Duration (hours)",
+    fmTargetSpeciesLabel: "Target Species",
+    fmSpeciesTuna: "Tuna",
+    fmSpeciesPomfret: "Pomfret",
+    fmSpeciesSardine: "Sardine",
+    fmSpeciesMackerel: "Mackerel",
+    fmSpeciesKingfish: "Kingfish",
+    fmUsesCurrentLocation: "Uses your current harbour location and live marine weather for today.",
+    fmPlanMyTrip: "Plan My Trip",
+    fmRunningModelsBtn: "Running ORCA models…",
+    fmRunningModelsDesc: "Running ORCA's on-device ML models (catch, zone, species, price) plus the profit & risk engine…",
+    fmRecommendedPlanLabel: "ORCA's Recommended Plan",
+    fmTripScoreLabel: "ORCA Trip Score",
+    fmBestZoneLabel: "Best Zone",
+    fmBestTimeWindowLabel: "Best Time Window",
+    fmHighestPredictedCatch: "highest predicted catch",
+    fmReliabilityLabel: "Reliability",
+    fmRiskLabel: "Risk",
+    fmZoneRankingTitle: "Zone Ranking · Fishing Potential",
+    fmSpeciesSuitabilityTitle: "Species Suitability Ranking",
+    fmWhereToSellTitle: "Where to Sell",
+    fmThMarket: "Market",
+    fmThDistance: "Distance",
+    fmThPricePerKg: "Price/kg",
+    fmThNetRevenue: "Net Revenue",
+    fmFeatureImportanceTitle: "What Drives This Prediction",
+    fmFeatureImportanceDesc: "Top factors the catch model actually weighed for this trip — real feature importances read from the trained model, not invented.",
+    fmWhyOrcaTitle: "Why ORCA Chose This",
+    fmModelTransparencyTitle: "Model Transparency",
+    fmModelTransparencyDisclaimer: "DEMO MODEL — every model above is trained on ORCA's synthetic demonstration dataset, not real historical catch records. Reliability figures are measured on that dataset, not real-world accuracy.",
+    fmZonesMapTitle: "Best Fish Yield Zones · Live Map",
+    fmZonesMapDesc: "Same live-scored Ocean Analytics & PFZ Agent data used by Today's Opportunity, plotted on the GIS Command Map's basemap.",
+    fmRankedByYieldTitle: "Ranked by Yield",
+    fmLoadingZones: "Loading zones…",
+    fmTopZoneLabel: "Top Zone:",
+    fmYieldScoreLabel: "Yield Score:",
+    fmLoadingPricing: "Loading pricing comparison…",
+    fmTypicalPriceLabel: "Typical Informal Price",
+    fmOpportunityPriceLabel: "ORCA Opportunity Price",
+    fmExtraRevenueLabel: "Potential Extra Revenue",
+    fmSpeciesPriceRankingTitle: "Species Price Ranking",
+    fmThSpecies: "Species",
+    fmThTrend: "Trend",
+    fmThDemand: "Demand",
+    fmThEstProfit: "Est. Profit",
+    fmThOpportunityScore: "Opportunity Score",
+    fmBuyerLeadsTitle: "Buyer Leads",
+    fmTripCostCalcTitle: "Trip-Cost Calculator",
+    fmSpeciesLabel: "Species",
+    fmExpectedCatchKgLabel: "Expected Catch (kg)",
+    fmPricePerKgLabel: "Price per kg (₹)",
+    fmFuelLabel: "Fuel (₹)",
+    fmIceLabel: "Ice (₹)",
+    fmOtherLabel: "Other (₹)",
+    fmRecalculateBtn: "Recalculate",
+    fmTripSummaryTitle: "Trip Summary",
+    fmGrossRevenueLabel: "Gross Revenue:",
+    fmTotalTripCostLabel: "Total Trip Cost:",
+    fmNetProfitLabel: "Net Profit:",
+    fmProfitMarginLabel: "Profit Margin:",
+    fmCalcDefaultsNote: "Defaults are pre-filled from today's recommended species and this app's simulated market data — adjust any field and press Recalculate.",
+    fmTripPerformanceTitle: "Your Trip Performance",
+    fmLoadingPerformance: "Loading performance history…",
+    fmThTrip: "Trip",
+    fmThCatchKg: "Catch (kg)",
+    fmThRevenue: "Revenue",
+    fmThProfit: "Profit",
+    fmCommunityFeedTitle: "Community & Advisory Feed",
+    fmBuiltBy: "Built by",
+    fmHackathonLine: "Smart India Hackathon 2026 · Problem Statement 26176 (ISRO)",
+    fmFooterDisclaimer: "DISCLAIMER: Species market prices, buyer leads and trip history are simulated for Smart India Hackathon 2026 judging demonstration.",
+    fmNoTripHistory: "No trip history recorded yet.",
+    fmYourCatch: "Your catch",
+    fmTripAgoSingular: "{n} trip ago",
+    fmTripAgoPlural: "{n} trips ago",
+    fmTargetSpeciesColon: "Target Species:",
+    fmYieldWord: "YIELD",
+    fmSstLabel: "SST:",
+    fmDepthLabel: "Depth:",
+    fmSafetyLabel: "Safety:",
+    fmOpportunityDescTemplate: "Best match today at ₹{price}/kg near {zone} — composite Opportunity Score {score}/100.",
+    fmTheRecommendedZone: "the recommended zone",
+    fmSellSmarterDescTemplate: "{species}: selling to an ORCA-matched buyer instead of the informal market nets an estimated extra {revenue} on an assumed {catch} kg catch.",
+    fmAiErrorTemplate: "Could not reach ORCA's AI Decision Studio backend ({error}). Training the ML models requires a one-time backend setup -- see backend/ml/training/. Try again shortly.",
+    fmPlanDescTemplate: "Best window {window} · sell at {market} · ORCA Trip Score {score}/100.",
+    fmTheRecommendedMarket: "the recommended market",
+    fmKmFromPortTemplate: "{km} km from port",
+    fmStatusLive: "LIVE",
+    fmStatusOffline: "BACKEND OFFLINE — showing last known data",
+    fmScoreOcean: "Ocean Safety",
+    fmScoreFish: "Fish Yield",
+    fmScoreMarket: "Market Momentum",
+    fmScoreProfit: "Profit Margin",
+    fmTierHigh: "HIGH",
+    fmTierGood: "GOOD",
+    fmTierModerate: "MODERATE",
+    fmPostWeatherAlert: "Weather Alert",
+    fmPostMarketUpdate: "Market Update",
+    fmPostFishermanReport: "Fisherman Report",
+    fmPostUpdate: "Update"
   },
   hi: {
     appTitle: "ओर्का इनसाइट (ORCA INSIGHT)",
@@ -300,7 +441,148 @@ const translations = {
     seaState: "समुद्र की स्थिति (डगलस)",
     lightningRisk: "बिजली और तूफान का जोखिम",
     vesselTableTitle: "लाइव तटीय बेड़ा टेलीमेट्री (लाइव एआईएस + सिम्युलेटेड)",
-    simulatedDisclaimer: "नोट: जिन क्षेत्रों में अभी रिसीवर कवरेज नहीं है, वहाँ लाइव एआईएस नाव स्थितियों को स्पष्ट रूप से चिह्नित सिम्युलेटेड बेड़े से पूरा किया जाता है। उपग्रह समुद्र विज्ञान डेटा एसआईएच 2026 प्रदर्शन के लिए सिम्युलेटेड है।"
+    simulatedDisclaimer: "नोट: जिन क्षेत्रों में अभी रिसीवर कवरेज नहीं है, वहाँ लाइव एआईएस नाव स्थितियों को स्पष्ट रूप से चिह्नित सिम्युलेटेड बेड़े से पूरा किया जाता है। उपग्रह समुद्र विज्ञान डेटा एसआईएच 2026 प्रदर्शन के लिए सिम्युलेटेड है।",
+
+    // ---- ORCA FISHERMAN module ----
+    fmTitle: "ओर्का फिशरमैन (ORCA FISHERMAN)",
+    fmSubtitle: "दैनिक अवसर कंसोल · टीम सेवियर्सएक्स",
+    fmLiveFeedBadge: "लाइव अवसर फ़ीड",
+    fmToggleDarkMode: "डार्क मोड बदलें",
+    fmBackToHub: "← हब",
+    fmBackToHubTitle: "ओर्का हब पर वापस जाएं",
+    fmNavOpportunity: "आज का अवसर",
+    fmNavMap: "मत्स्य क्षेत्र मानचित्र",
+    fmNavSell: "समझदारी से बेचें",
+    fmNavCalculator: "यात्रा लागत कैलकुलेटर",
+    fmNavCommunity: "प्रदर्शन और समुदाय",
+    fmCheckingBackend: "बैकएंड की जांच हो रही है...",
+    fmBestOpportunityLabel: "आज का सर्वश्रेष्ठ अवसर",
+    fmLoadingOpportunityDesc: "फिशरमैन अवसर एजेंट से आज का अवसर लोड हो रहा है…",
+    fmPreferredSpeciesLabel: "पसंदीदा मछली प्रजाति:",
+    fmAutoBestMatch: "स्वतः (सर्वश्रेष्ठ मिलान)",
+    fmOpportunityScoreLabel: "अवसर स्कोर",
+    fmRecommendedZoneLabel: "अनुशंसित क्षेत्र",
+    fmExpectedCatchLabel: "अनुमानित मत्स्य पकड़",
+    fmAtTodaysPrice: "आज के मूल्य पर",
+    fmRevenueRangeLabel: "राजस्व सीमा",
+    fmBeforeTripCosts: "यात्रा लागत से पहले",
+    fmEstimatedProfitLabel: "अनुमानित लाभ",
+    fmConfidenceLabel: "विश्वास स्तर",
+    fmScoreBreakdownTitle: "अवसर स्कोर का विवरण",
+    fmAiStudioTitle: "एआई निर्णय केंद्र — अपनी यात्रा की योजना बनाएं",
+    fmAiStudioDesc: "4 ऑन-डिवाइस scikit-learn मॉडल (पकड़, क्षेत्र, प्रजाति, मूल्य) जो ओर्का के अपने डेटा पर प्रशिक्षित हैं, एक निश्चित लाभ व जोखिम इंजन के साथ मिलकर काम करते हैं। इस पूरी प्रक्रिया में कहीं भी बाहरी एआई एपीआई का उपयोग नहीं किया जाता।",
+    fmDemoModelBadge: "डेमो मॉडल · सिंथेटिक प्रशिक्षण डेटा",
+    fmTripPlannerTitle: "यात्रा योजनाकार",
+    fmBoatTypeLabel: "नाव का प्रकार",
+    fmBoatTraditional: "पारंपरिक (गैर-मशीनीकृत)",
+    fmBoatMotorized: "मोटरयुक्त",
+    fmBoatMechanized: "मशीनीकृत ट्रॉलर",
+    fmGearTypeLabel: "जाल का प्रकार",
+    fmGearGillnet: "गिलनेट",
+    fmGearTrawl: "ट्रॉल",
+    fmGearRingSeine: "रिंग सीन",
+    fmGearLongline: "लॉन्गलाइन",
+    fmGearHookLine: "हुक और लाइन",
+    fmTripDurationLabel: "यात्रा अवधि (घंटे)",
+    fmTargetSpeciesLabel: "लक्षित प्रजाति",
+    fmSpeciesTuna: "टूना",
+    fmSpeciesPomfret: "पॉम्फ्रेट",
+    fmSpeciesSardine: "सार्डिन",
+    fmSpeciesMackerel: "मैकेरल (बांगड़ा)",
+    fmSpeciesKingfish: "किंगफिश (सुरमई)",
+    fmUsesCurrentLocation: "आपके वर्तमान बंदरगाह स्थान और आज के लाइव समुद्री मौसम का उपयोग करता है।",
+    fmPlanMyTrip: "मेरी यात्रा की योजना बनाएं",
+    fmRunningModelsBtn: "ओर्का मॉडल चल रहे हैं…",
+    fmRunningModelsDesc: "ओर्का के ऑन-डिवाइस एमएल मॉडल (पकड़, क्षेत्र, प्रजाति, मूल्य) और लाभ व जोखिम इंजन चलाए जा रहे हैं…",
+    fmRecommendedPlanLabel: "ओर्का की अनुशंसित योजना",
+    fmTripScoreLabel: "ओर्का यात्रा स्कोर",
+    fmBestZoneLabel: "सर्वश्रेष्ठ क्षेत्र",
+    fmBestTimeWindowLabel: "सर्वश्रेष्ठ समय विंडो",
+    fmHighestPredictedCatch: "सर्वाधिक अनुमानित पकड़",
+    fmReliabilityLabel: "विश्वसनीयता",
+    fmRiskLabel: "जोखिम",
+    fmZoneRankingTitle: "क्षेत्र रैंकिंग · मत्स्य क्षमता",
+    fmSpeciesSuitabilityTitle: "प्रजाति उपयुक्तता रैंकिंग",
+    fmWhereToSellTitle: "कहां बेचें",
+    fmThMarket: "बाज़ार",
+    fmThDistance: "दूरी",
+    fmThPricePerKg: "मूल्य/किग्रा",
+    fmThNetRevenue: "शुद्ध राजस्व",
+    fmFeatureImportanceTitle: "इस भविष्यवाणी के पीछे मुख्य कारक",
+    fmFeatureImportanceDesc: "पकड़ मॉडल द्वारा इस यात्रा के लिए वास्तव में तौले गए मुख्य कारक — प्रशिक्षित मॉडल से पढ़े गए वास्तविक फीचर महत्व, बनाए गए नहीं।",
+    fmWhyOrcaTitle: "ओर्का ने यह क्यों चुना",
+    fmModelTransparencyTitle: "मॉडल पारदर्शिता",
+    fmModelTransparencyDisclaimer: "डेमो मॉडल — ऊपर दिए गए सभी मॉडल ओर्का के सिंथेटिक प्रदर्शन डेटासेट पर प्रशिक्षित हैं, वास्तविक ऐतिहासिक पकड़ रिकॉर्ड पर नहीं। विश्वसनीयता के आंकड़े उसी डेटासेट पर मापे गए हैं, वास्तविक दुनिया की सटीकता पर नहीं।",
+    fmZonesMapTitle: "सर्वश्रेष्ठ मत्स्य उपज क्षेत्र · लाइव मानचित्र",
+    fmZonesMapDesc: "वही लाइव-स्कोर किया गया ओशन एनालिटिक्स व PFZ एजेंट डेटा जो आज के अवसर में उपयोग होता है, जीआईएस कमांड मैप के आधार मानचित्र पर दिखाया गया।",
+    fmRankedByYieldTitle: "उपज के अनुसार रैंक किया गया",
+    fmLoadingZones: "क्षेत्र लोड हो रहे हैं…",
+    fmTopZoneLabel: "शीर्ष क्षेत्र:",
+    fmYieldScoreLabel: "उपज स्कोर:",
+    fmLoadingPricing: "मूल्य तुलना लोड हो रही है…",
+    fmTypicalPriceLabel: "सामान्य अनौपचारिक मूल्य",
+    fmOpportunityPriceLabel: "ओर्का अवसर मूल्य",
+    fmExtraRevenueLabel: "संभावित अतिरिक्त राजस्व",
+    fmSpeciesPriceRankingTitle: "प्रजाति मूल्य रैंकिंग",
+    fmThSpecies: "प्रजाति",
+    fmThTrend: "रुझान",
+    fmThDemand: "मांग",
+    fmThEstProfit: "अनुमानित लाभ",
+    fmThOpportunityScore: "अवसर स्कोर",
+    fmBuyerLeadsTitle: "खरीदार संपर्क",
+    fmTripCostCalcTitle: "यात्रा-लागत कैलकुलेटर",
+    fmSpeciesLabel: "प्रजाति",
+    fmExpectedCatchKgLabel: "अनुमानित पकड़ (किग्रा)",
+    fmPricePerKgLabel: "मूल्य प्रति किग्रा (₹)",
+    fmFuelLabel: "ईंधन (₹)",
+    fmIceLabel: "बर्फ (₹)",
+    fmOtherLabel: "अन्य (₹)",
+    fmRecalculateBtn: "पुनर्गणना करें",
+    fmTripSummaryTitle: "यात्रा सारांश",
+    fmGrossRevenueLabel: "सकल राजस्व:",
+    fmTotalTripCostLabel: "कुल यात्रा लागत:",
+    fmNetProfitLabel: "शुद्ध लाभ:",
+    fmProfitMarginLabel: "लाभ मार्जिन:",
+    fmCalcDefaultsNote: "डिफ़ॉल्ट मान आज की अनुशंसित प्रजाति और इस ऐप के सिम्युलेटेड बाज़ार डेटा से पहले से भरे गए हैं — कोई भी फ़ील्ड बदलें और पुनर्गणना करें दबाएं।",
+    fmTripPerformanceTitle: "आपकी यात्रा प्रदर्शन",
+    fmLoadingPerformance: "प्रदर्शन इतिहास लोड हो रहा है…",
+    fmThTrip: "यात्रा",
+    fmThCatchKg: "पकड़ (किग्रा)",
+    fmThRevenue: "राजस्व",
+    fmThProfit: "लाभ",
+    fmCommunityFeedTitle: "समुदाय और सलाहकार फ़ीड",
+    fmBuiltBy: "निर्मित द्वारा",
+    fmHackathonLine: "स्मार्ट इंडिया हैकाथॉन 2026 · समस्या कथन 26176 (इसरो)",
+    fmFooterDisclaimer: "अस्वीकरण: प्रजाति बाज़ार मूल्य, खरीदार संपर्क और यात्रा इतिहास स्मार्ट इंडिया हैकाथॉन 2026 के प्रदर्शन हेतु सिम्युलेटेड हैं।",
+    fmNoTripHistory: "अभी तक कोई यात्रा इतिहास दर्ज नहीं हुआ।",
+    fmYourCatch: "आपकी पकड़",
+    fmTripAgoSingular: "{n} यात्रा पहले",
+    fmTripAgoPlural: "{n} यात्राएं पहले",
+    fmTargetSpeciesColon: "लक्षित प्रजाति:",
+    fmYieldWord: "उपज",
+    fmSstLabel: "SST:",
+    fmDepthLabel: "गहराई:",
+    fmSafetyLabel: "सुरक्षा:",
+    fmOpportunityDescTemplate: "आज ₹{price}/किग्रा पर {zone} के पास सर्वश्रेष्ठ मिलान — समग्र अवसर स्कोर {score}/100।",
+    fmTheRecommendedZone: "अनुशंसित क्षेत्र",
+    fmSellSmarterDescTemplate: "{species}: अनौपचारिक बाज़ार के बजाय ओर्का-मिलान खरीदार को बेचने से अनुमानित {catch} किग्रा पकड़ पर लगभग {revenue} अतिरिक्त राजस्व मिलता है।",
+    fmAiErrorTemplate: "ओर्का के एआई निर्णय केंद्र बैकएंड तक नहीं पहुंचा जा सका ({error})। एमएल मॉडल प्रशिक्षित करने के लिए एक बार बैकएंड सेटअप आवश्यक है -- backend/ml/training/ देखें। कृपया थोड़ी देर बाद पुनः प्रयास करें।",
+    fmPlanDescTemplate: "सर्वश्रेष्ठ विंडो {window} · {market} पर बेचें · ओर्का यात्रा स्कोर {score}/100।",
+    fmTheRecommendedMarket: "अनुशंसित बाज़ार",
+    fmKmFromPortTemplate: "बंदरगाह से {km} किमी",
+    fmStatusLive: "लाइव",
+    fmStatusOffline: "बैकएंड ऑफ़लाइन — अंतिम ज्ञात डेटा दिखाया जा रहा है",
+    fmScoreOcean: "समुद्री सुरक्षा",
+    fmScoreFish: "मत्स्य उपज",
+    fmScoreMarket: "बाज़ार गति",
+    fmScoreProfit: "लाभ मार्जिन",
+    fmTierHigh: "उच्च",
+    fmTierGood: "अच्छा",
+    fmTierModerate: "मध्यम",
+    fmPostWeatherAlert: "मौसम चेतावनी",
+    fmPostMarketUpdate: "बाज़ार अपडेट",
+    fmPostFishermanReport: "मछुआरा रिपोर्ट",
+    fmPostUpdate: "अपडेट"
   },
   ta: {
     appTitle: "ஆர்கா இன்சைட் (ORCA INSIGHT)",
@@ -354,7 +636,148 @@ const translations = {
     seaState: "கடல் நிலை",
     lightningRisk: "மின்னல் மற்றும் புயல் ஆபத்து",
     vesselTableTitle: "நேரடி படகு தொலைத்தொடர்பு தரவு",
-    simulatedDisclaimer: "குறிப்பு: வரவேற்பி (receiver) கவரேஜ் இல்லாத பகுதிகளில் லைவ் AIS படகு நிலைகள், தெளிவாகக் குறிக்கப்பட்ட சிமுலேட்டட் கடற்படையால் நிரப்பப்படுகின்றன. செயற்கைக்கோள் கடல் தரவு SIH 2026 விளக்கக்காட்சிக்காக சிமுலேட் செய்யப்பட்டதாகவே உள்ளது."
+    simulatedDisclaimer: "குறிப்பு: வரவேற்பி (receiver) கவரேஜ் இல்லாத பகுதிகளில் லைவ் AIS படகு நிலைகள், தெளிவாகக் குறிக்கப்பட்ட சிமுலேட்டட் கடற்படையால் நிரப்பப்படுகின்றன. செயற்கைக்கோள் கடல் தரவு SIH 2026 விளக்கக்காட்சிக்காக சிமுலேட் செய்யப்பட்டதாகவே உள்ளது.",
+
+    // ---- ORCA FISHERMAN module ----
+    fmTitle: "ஆர்கா ஃபிஷர்மேன் (ORCA FISHERMAN)",
+    fmSubtitle: "தினசரி வாய்ப்பு கன்சோல் · டீம் சேவியர்ஸ்எக்ஸ்",
+    fmLiveFeedBadge: "நேரடி வாய்ப்பு ஊட்டம்",
+    fmToggleDarkMode: "இருள் பயன்முறையை மாற்று",
+    fmBackToHub: "← மையம்",
+    fmBackToHubTitle: "ஆர்கா மையத்திற்குத் திரும்பு",
+    fmNavOpportunity: "இன்றைய வாய்ப்பு",
+    fmNavMap: "மீன்பிடி மண்டல வரைபடம்",
+    fmNavSell: "புத்திசாலித்தனமாக விற்கவும்",
+    fmNavCalculator: "பயண செலவு கால்குலேட்டர்",
+    fmNavCommunity: "செயல்திறன் & சமூகம்",
+    fmCheckingBackend: "பின்தளம் சரிபார்க்கப்படுகிறது...",
+    fmBestOpportunityLabel: "இன்றைய சிறந்த வாய்ப்பு",
+    fmLoadingOpportunityDesc: "மீனவர் வாய்ப்பு முகவரிடமிருந்து இன்றைய வாய்ப்பு ஏற்றப்படுகிறது…",
+    fmPreferredSpeciesLabel: "விருப்பமான மீன் வகை:",
+    fmAutoBestMatch: "தானாக (சிறந்த பொருத்தம்)",
+    fmOpportunityScoreLabel: "வாய்ப்பு மதிப்பெண்",
+    fmRecommendedZoneLabel: "பரிந்துரைக்கப்பட்ட மண்டலம்",
+    fmExpectedCatchLabel: "எதிர்பார்க்கப்படும் பிடிப்பு",
+    fmAtTodaysPrice: "இன்றைய விலையில்",
+    fmRevenueRangeLabel: "வருவாய் வரம்பு",
+    fmBeforeTripCosts: "பயண செலவுக்கு முன்",
+    fmEstimatedProfitLabel: "மதிப்பிடப்பட்ட லாபம்",
+    fmConfidenceLabel: "நம்பகத்தன்மை",
+    fmScoreBreakdownTitle: "வாய்ப்பு மதிப்பெண் விவரம்",
+    fmAiStudioTitle: "AI முடிவெடுக்கும் மையம் — உங்கள் பயணத்தைத் திட்டமிடுங்கள்",
+    fmAiStudioDesc: "ஆர்காவின் சொந்த தரவில் பயிற்சி பெற்ற 4 ஆன்-டிவைஸ் scikit-learn மாதிரிகள் (பிடிப்பு, மண்டலம், இனம், விலை), ஒரு நிர்ணயிக்கப்பட்ட லாப & இடர் இயந்திரத்துடன் இணைந்து செயல்படுகின்றன. இந்த செயல்முறையில் எங்கும் வெளிப்புற AI API பயன்படுத்தப்படவில்லை.",
+    fmDemoModelBadge: "டெமோ மாதிரி · செயற்கை பயிற்சி தரவு",
+    fmTripPlannerTitle: "பயண திட்டமிடுநர்",
+    fmBoatTypeLabel: "படகு வகை",
+    fmBoatTraditional: "பாரம்பரிய (இயந்திரமற்ற)",
+    fmBoatMotorized: "மோட்டார் படகு",
+    fmBoatMechanized: "இயந்திரமயமாக்கப்பட்ட ட்ராலர்",
+    fmGearTypeLabel: "வலை வகை",
+    fmGearGillnet: "கில்நெட்",
+    fmGearTrawl: "ட்ரால்",
+    fmGearRingSeine: "ரிங் சீன்",
+    fmGearLongline: "லாங்லைன்",
+    fmGearHookLine: "தூண்டில் & கயிறு",
+    fmTripDurationLabel: "பயண கால அளவு (மணி நேரம்)",
+    fmTargetSpeciesLabel: "இலக்கு மீன் இனம்",
+    fmSpeciesTuna: "சூரை (Tuna)",
+    fmSpeciesPomfret: "வாவல் (Pomfret)",
+    fmSpeciesSardine: "மத்தி (Sardine)",
+    fmSpeciesMackerel: "கானாங்கெளுத்தி (Mackerel)",
+    fmSpeciesKingfish: "வஞ்சிரம் (Kingfish)",
+    fmUsesCurrentLocation: "உங்கள் தற்போதைய துறைமுக இருப்பிடம் மற்றும் இன்றைய நேரடி கடல்வாழ் வானிலையைப் பயன்படுத்துகிறது.",
+    fmPlanMyTrip: "எனது பயணத்தைத் திட்டமிடு",
+    fmRunningModelsBtn: "ஆர்கா மாதிரிகள் இயங்குகின்றன…",
+    fmRunningModelsDesc: "ஆர்காவின் ஆன்-டிவைஸ் ML மாதிரிகள் (பிடிப்பு, மண்டலம், இனம், விலை) மற்றும் லாப & இடர் இயந்திரம் இயக்கப்படுகிறது…",
+    fmRecommendedPlanLabel: "ஆர்காவின் பரிந்துரைக்கப்பட்ட திட்டம்",
+    fmTripScoreLabel: "ஆர்கா பயண மதிப்பெண்",
+    fmBestZoneLabel: "சிறந்த மண்டலம்",
+    fmBestTimeWindowLabel: "சிறந்த நேர இடைவெளி",
+    fmHighestPredictedCatch: "அதிகபட்ச கணிக்கப்பட்ட பிடிப்பு",
+    fmReliabilityLabel: "நம்பகத்தன்மை",
+    fmRiskLabel: "இடர்",
+    fmZoneRankingTitle: "மண்டல தரவரிசை · மீன்பிடி திறன்",
+    fmSpeciesSuitabilityTitle: "இன தகுதி தரவரிசை",
+    fmWhereToSellTitle: "எங்கு விற்பது",
+    fmThMarket: "சந்தை",
+    fmThDistance: "தூரம்",
+    fmThPricePerKg: "விலை/கிலோ",
+    fmThNetRevenue: "நிகர வருவாய்",
+    fmFeatureImportanceTitle: "இந்த கணிப்பை இயக்குவது என்ன",
+    fmFeatureImportanceDesc: "இந்த பயணத்திற்கு பிடிப்பு மாதிரி உண்மையில் கருதிய முக்கிய காரணிகள் — கண்டுபிடிக்கப்படவில்லை, பயிற்சி பெற்ற மாதிரியிலிருந்து படிக்கப்பட்ட உண்மையான முக்கியத்துவங்கள்.",
+    fmWhyOrcaTitle: "ஆர்கா இதை ஏன் தேர்ந்தெடுத்தது",
+    fmModelTransparencyTitle: "மாதிரி வெளிப்படைத்தன்மை",
+    fmModelTransparencyDisclaimer: "டெமோ மாதிரி — மேலே உள்ள ஒவ்வொரு மாதிரியும் ஆர்காவின் செயற்கை மாதிரித் தரவுத்தொகுப்பில் பயிற்சி பெற்றுள்ளது, உண்மையான வரலாற்று பிடிப்பு பதிவுகளில் அல்ல. நம்பகத்தன்மை புள்ளிவிவரங்கள் அந்த தரவுத்தொகுப்பில் அளவிடப்பட்டவை, நிஜ உலக துல்லியம் அல்ல.",
+    fmZonesMapTitle: "சிறந்த மீன் விளைச்சல் மண்டலங்கள் · நேரடி வரைபடம்",
+    fmZonesMapDesc: "இன்றைய வாய்ப்பில் பயன்படுத்தப்படும் அதே நேரடி-மதிப்பிடப்பட்ட Ocean Analytics & PFZ முகவர் தரவு, GIS கட்டளை வரைபடத்தின் அடிப்படை வரைபடத்தில் காட்டப்படுகிறது.",
+    fmRankedByYieldTitle: "விளைச்சல் அடிப்படையில் தரவரிசை",
+    fmLoadingZones: "மண்டலங்கள் ஏற்றப்படுகின்றன…",
+    fmTopZoneLabel: "சிறந்த மண்டலம்:",
+    fmYieldScoreLabel: "விளைச்சல் மதிப்பெண்:",
+    fmLoadingPricing: "விலை ஒப்பீடு ஏற்றப்படுகிறது…",
+    fmTypicalPriceLabel: "வழக்கமான முறைசாரா விலை",
+    fmOpportunityPriceLabel: "ஆர்கா வாய்ப்பு விலை",
+    fmExtraRevenueLabel: "சாத்தியமான கூடுதல் வருவாய்",
+    fmSpeciesPriceRankingTitle: "இன விலை தரவரிசை",
+    fmThSpecies: "இனம்",
+    fmThTrend: "போக்கு",
+    fmThDemand: "தேவை",
+    fmThEstProfit: "மதிப்பிடப்பட்ட லாபம்",
+    fmThOpportunityScore: "வாய்ப்பு மதிப்பெண்",
+    fmBuyerLeadsTitle: "வாங்குபவர் தொடர்புகள்",
+    fmTripCostCalcTitle: "பயண-செலவு கால்குலேட்டர்",
+    fmSpeciesLabel: "இனம்",
+    fmExpectedCatchKgLabel: "எதிர்பார்க்கப்படும் பிடிப்பு (கிலோ)",
+    fmPricePerKgLabel: "கிலோவுக்கு விலை (₹)",
+    fmFuelLabel: "எரிபொருள் (₹)",
+    fmIceLabel: "பனிக்கட்டி (₹)",
+    fmOtherLabel: "மற்றவை (₹)",
+    fmRecalculateBtn: "மீண்டும் கணக்கிடு",
+    fmTripSummaryTitle: "பயண சுருக்கம்",
+    fmGrossRevenueLabel: "மொத்த வருவாய்:",
+    fmTotalTripCostLabel: "மொத்த பயண செலவு:",
+    fmNetProfitLabel: "நிகர லாபம்:",
+    fmProfitMarginLabel: "லாப வரம்பு:",
+    fmCalcDefaultsNote: "இன்றைய பரிந்துரைக்கப்பட்ட இனம் மற்றும் இந்த ஆப்பின் சிமுலேட் செய்யப்பட்ட சந்தை தரவிலிருந்து இயல்புநிலைகள் முன் நிரப்பப்பட்டுள்ளன — எந்த புலத்தையும் மாற்றி மீண்டும் கணக்கிடு பொத்தானை அழுத்தவும்.",
+    fmTripPerformanceTitle: "உங்கள் பயண செயல்திறன்",
+    fmLoadingPerformance: "செயல்திறன் வரலாறு ஏற்றப்படுகிறது…",
+    fmThTrip: "பயணம்",
+    fmThCatchKg: "பிடிப்பு (கிலோ)",
+    fmThRevenue: "வருவாய்",
+    fmThProfit: "லாபம்",
+    fmCommunityFeedTitle: "சமூகம் & ஆலோசனை ஊட்டம்",
+    fmBuiltBy: "உருவாக்கியவர்",
+    fmHackathonLine: "ஸ்மார்ட் இந்தியா ஹேக்கத்தான் 2026 · பிரச்சனை அறிக்கை 26176 (இஸ்ரோ)",
+    fmFooterDisclaimer: "மறுப்பு: இன சந்தை விலைகள், வாங்குபவர் தொடர்புகள் மற்றும் பயண வரலாறு ஸ்மார்ட் இந்தியா ஹேக்கத்தான் 2026 நடுவர் காட்சிக்காக சிமுலேட் செய்யப்பட்டவை.",
+    fmNoTripHistory: "இதுவரை பயண வரலாறு எதுவும் பதிவு செய்யப்படவில்லை.",
+    fmYourCatch: "உங்கள் பிடிப்பு",
+    fmTripAgoSingular: "{n} பயணம் முன்பு",
+    fmTripAgoPlural: "{n} பயணங்கள் முன்பு",
+    fmTargetSpeciesColon: "இலக்கு மீன் இனம்:",
+    fmYieldWord: "விளைச்சல்",
+    fmSstLabel: "SST:",
+    fmDepthLabel: "ஆழம்:",
+    fmSafetyLabel: "பாதுகாப்பு:",
+    fmOpportunityDescTemplate: "இன்று ₹{price}/கிலோவில் {zone} அருகே சிறந்த பொருத்தம் — மொத்த வாய்ப்பு மதிப்பெண் {score}/100.",
+    fmTheRecommendedZone: "பரிந்துரைக்கப்பட்ட மண்டலம்",
+    fmSellSmarterDescTemplate: "{species}: முறைசாரா சந்தைக்கு பதிலாக ஆர்கா-பொருத்திய வாங்குபவருக்கு விற்பது, {catch} கிலோ பிடிப்பில் மதிப்பிடப்பட்ட கூடுதல் {revenue} வருவாயைத் தரும்.",
+    fmAiErrorTemplate: "ஆர்காவின் AI முடிவெடுக்கும் மைய பின்தளத்தை அடைய முடியவில்லை ({error}). ML மாதிரிகளுக்கு பயிற்சி அளிக்க ஒருமுறை பின்தள அமைப்பு தேவை -- backend/ml/training/ ஐப் பார்க்கவும். சிறிது நேரத்தில் மீண்டும் முயற்சிக்கவும்.",
+    fmPlanDescTemplate: "சிறந்த இடைவெளி {window} · {market} இல் விற்கவும் · ஆர்கா பயண மதிப்பெண் {score}/100.",
+    fmTheRecommendedMarket: "பரிந்துரைக்கப்பட்ட சந்தை",
+    fmKmFromPortTemplate: "துறைமுகத்திலிருந்து {km} கிமீ",
+    fmStatusLive: "நேரடி",
+    fmStatusOffline: "பின்தளம் ஆஃப்லைன் — கடைசியாக அறியப்பட்ட தரவு காட்டப்படுகிறது",
+    fmScoreOcean: "கடல் பாதுகாப்பு",
+    fmScoreFish: "மீன் விளைச்சல்",
+    fmScoreMarket: "சந்தை வேகம்",
+    fmScoreProfit: "லாப வரம்பு",
+    fmTierHigh: "அதிகம்",
+    fmTierGood: "நல்லது",
+    fmTierModerate: "மிதமானது",
+    fmPostWeatherAlert: "வானிலை எச்சரிக்கை",
+    fmPostMarketUpdate: "சந்தை புதுப்பிப்பு",
+    fmPostFishermanReport: "மீனவர் அறிக்கை",
+    fmPostUpdate: "புதுப்பிப்பு"
   },
   ml: {
     appTitle: "ഓർക്ക ഇൻസൈറ്റ് (ORCA INSIGHT)",
@@ -408,7 +831,148 @@ const translations = {
     bigVerdictYes: "അതെ",
     bigVerdictNo: "ഇല്ല",
     bigVerdictCaution: "ജാഗ്രത",
-    listenVerdict: "കേൾക്കുക"
+    listenVerdict: "കേൾക്കുക",
+
+    // ---- ORCA FISHERMAN module ----
+    fmTitle: "ഓർക്ക ഫിഷർമാൻ (ORCA FISHERMAN)",
+    fmSubtitle: "ദൈനംദിന അവസര കൺസോൾ · ടീം സേവ്യേഴ്സ്എക്സ്",
+    fmLiveFeedBadge: "തത്സമയ അവസര ഫീഡ്",
+    fmToggleDarkMode: "ഡാർക്ക് മോഡ് മാറ്റുക",
+    fmBackToHub: "← ഹബ്",
+    fmBackToHubTitle: "ഓർക്ക ഹബിലേക്ക് മടങ്ങുക",
+    fmNavOpportunity: "ഇന്നത്തെ അവസരം",
+    fmNavMap: "മത്സ്യമേഖല മാപ്പ്",
+    fmNavSell: "മിടുക്കോടെ വിൽക്കുക",
+    fmNavCalculator: "യാത്രാ ചെലവ് കാൽക്കുലേറ്റർ",
+    fmNavCommunity: "പ്രകടനവും സമൂഹവും",
+    fmCheckingBackend: "ബാക്കെൻഡ് പരിശോധിക്കുന്നു...",
+    fmBestOpportunityLabel: "ഇന്നത്തെ മികച്ച അവസരം",
+    fmLoadingOpportunityDesc: "ഫിഷർമാൻ അവസര ഏജന്റിൽ നിന്ന് ഇന്നത്തെ അവസരം ലോഡ് ചെയ്യുന്നു…",
+    fmPreferredSpeciesLabel: "ഇഷ്ടപ്പെട്ട മത്സ്യയിനം:",
+    fmAutoBestMatch: "ഓട്ടോ (മികച്ച പൊരുത്തം)",
+    fmOpportunityScoreLabel: "അവസര സ്കോർ",
+    fmRecommendedZoneLabel: "ശുപാർശ ചെയ്ത മേഖല",
+    fmExpectedCatchLabel: "പ്രതീക്ഷിക്കുന്ന പിടിത്തം",
+    fmAtTodaysPrice: "ഇന്നത്തെ വിലയിൽ",
+    fmRevenueRangeLabel: "വരുമാന പരിധി",
+    fmBeforeTripCosts: "യാത്രാ ചെലവിന് മുൻപ്",
+    fmEstimatedProfitLabel: "കണക്കാക്കിയ ലാഭം",
+    fmConfidenceLabel: "വിശ്വാസ്യത",
+    fmScoreBreakdownTitle: "അവസര സ്കോർ വിശദാംശം",
+    fmAiStudioTitle: "എ.ഐ ഡിസിഷൻ സ്റ്റുഡിയോ — നിങ്ങളുടെ യാത്ര ആസൂത്രണം ചെയ്യുക",
+    fmAiStudioDesc: "ഓർക്കയുടെ സ്വന്തം ഡാറ്റയിൽ പരിശീലനം നേടിയ 4 ഓൺ-ഡിവൈസ് scikit-learn മോഡലുകൾ (പിടിത്തം, മേഖല, ഇനം, വില), ഒരു നിശ്ചിത ലാഭ & റിസ്ക് എഞ്ചിനുമായി ചേർന്ന് പ്രവർത്തിക്കുന്നു. ഈ പ്രക്രിയയിൽ എവിടെയും ബാഹ്യ എ.ഐ എ.പി.ഐ ഉപയോഗിക്കുന്നില്ല.",
+    fmDemoModelBadge: "ഡെമോ മോഡൽ · സിന്തറ്റിക് പരിശീലന ഡാറ്റ",
+    fmTripPlannerTitle: "യാത്രാ ആസൂത്രകൻ",
+    fmBoatTypeLabel: "ബോട്ട് തരം",
+    fmBoatTraditional: "പരമ്പരാഗതം (യന്ത്രവൽക്കരിക്കാത്തത്)",
+    fmBoatMotorized: "മോട്ടോർവൽക്കരിച്ചത്",
+    fmBoatMechanized: "യന്ത്രവൽക്കരിച്ച ട്രോളർ",
+    fmGearTypeLabel: "വല തരം",
+    fmGearGillnet: "ഗിൽനെറ്റ്",
+    fmGearTrawl: "ട്രോൾ",
+    fmGearRingSeine: "റിംഗ് സീൻ",
+    fmGearLongline: "ലോംഗ്‌ലൈൻ",
+    fmGearHookLine: "ചൂണ്ടയും ചരടും",
+    fmTripDurationLabel: "യാത്രാ ദൈർഘ്യം (മണിക്കൂർ)",
+    fmTargetSpeciesLabel: "ലക്ഷ്യമിടുന്ന ഇനം",
+    fmSpeciesTuna: "ചൂര (Tuna)",
+    fmSpeciesPomfret: "ആവോലി (Pomfret)",
+    fmSpeciesSardine: "മത്തി (Sardine)",
+    fmSpeciesMackerel: "അയല (Mackerel)",
+    fmSpeciesKingfish: "അയക്കൂറ (Kingfish)",
+    fmUsesCurrentLocation: "നിങ്ങളുടെ നിലവിലെ തുറമുഖ സ്ഥാനവും ഇന്നത്തെ തത്സമയ കടൽ കാലാവസ്ഥയും ഉപയോഗിക്കുന്നു.",
+    fmPlanMyTrip: "എന്റെ യാത്ര ആസൂത്രണം ചെയ്യുക",
+    fmRunningModelsBtn: "ഓർക്ക മോഡലുകൾ പ്രവർത്തിക്കുന്നു…",
+    fmRunningModelsDesc: "ഓർക്കയുടെ ഓൺ-ഡിവൈസ് എം.എൽ മോഡലുകൾ (പിടിത്തം, മേഖല, ഇനം, വില) കൂടാതെ ലാഭ & റിസ്ക് എഞ്ചിനും പ്രവർത്തിപ്പിക്കുന്നു…",
+    fmRecommendedPlanLabel: "ഓർക്കയുടെ ശുപാർശിത പദ്ധതി",
+    fmTripScoreLabel: "ഓർക്ക യാത്രാ സ്കോർ",
+    fmBestZoneLabel: "മികച്ച മേഖല",
+    fmBestTimeWindowLabel: "മികച്ച സമയ പരിധി",
+    fmHighestPredictedCatch: "ഏറ്റവും ഉയർന്ന പ്രവചിത പിടിത്തം",
+    fmReliabilityLabel: "വിശ്വാസ്യത",
+    fmRiskLabel: "റിസ്ക്",
+    fmZoneRankingTitle: "മേഖല റാങ്കിംഗ് · മത്സ്യബന്ധന ശേഷി",
+    fmSpeciesSuitabilityTitle: "ഇന അനുയോജ്യതാ റാങ്കിംഗ്",
+    fmWhereToSellTitle: "എവിടെ വിൽക്കണം",
+    fmThMarket: "മാർക്കറ്റ്",
+    fmThDistance: "ദൂരം",
+    fmThPricePerKg: "വില/കിലോ",
+    fmThNetRevenue: "അറ്റ വരുമാനം",
+    fmFeatureImportanceTitle: "ഈ പ്രവചനത്തെ നയിക്കുന്നത് എന്ത്",
+    fmFeatureImportanceDesc: "ഈ യാത്രയ്ക്കായി പിടിത്ത മോഡൽ യഥാർത്ഥത്തിൽ പരിഗണിച്ച പ്രധാന ഘടകങ്ങൾ — കണ്ടുപിടിച്ചതല്ല, പരിശീലനം ലഭിച്ച മോഡലിൽ നിന്ന് വായിച്ചെടുത്ത യഥാർത്ഥ ഫീച്ചർ പ്രാധാന്യങ്ങൾ.",
+    fmWhyOrcaTitle: "ഓർക്ക ഇത് തിരഞ്ഞെടുത്തത് എന്തുകൊണ്ട്",
+    fmModelTransparencyTitle: "മോഡൽ സുതാര്യത",
+    fmModelTransparencyDisclaimer: "ഡെമോ മോഡൽ — മുകളിലുള്ള എല്ലാ മോഡലുകളും ഓർക്കയുടെ സിന്തറ്റിക് ഡെമോൺസ്ട്രേഷൻ ഡാറ്റാസെറ്റിൽ പരിശീലനം നേടിയതാണ്, യഥാർത്ഥ ചരിത്രപരമായ പിടിത്ത രേഖകളിലല്ല. വിശ്വാസ്യതാ കണക്കുകൾ ആ ഡാറ്റാസെറ്റിൽ അളന്നതാണ്, യഥാർത്ഥ ലോക കൃത്യതയല്ല.",
+    fmZonesMapTitle: "മികച്ച മത്സ്യ വിളവ് മേഖലകൾ · തത്സമയ മാപ്പ്",
+    fmZonesMapDesc: "ഇന്നത്തെ അവസരത്തിൽ ഉപയോഗിക്കുന്ന അതേ തത്സമയ-സ്കോർ ചെയ്ത Ocean Analytics & PFZ ഏജന്റ് ഡാറ്റ, GIS കമാൻഡ് മാപ്പിന്റെ അടിസ്ഥാന മാപ്പിൽ കാണിച്ചിരിക്കുന്നു.",
+    fmRankedByYieldTitle: "വിളവ് അനുസരിച്ച് റാങ്ക് ചെയ്തത്",
+    fmLoadingZones: "മേഖലകൾ ലോഡ് ചെയ്യുന്നു…",
+    fmTopZoneLabel: "ഏറ്റവും മികച്ച മേഖല:",
+    fmYieldScoreLabel: "വിളവ് സ്കോർ:",
+    fmLoadingPricing: "വില താരതമ്യം ലോഡ് ചെയ്യുന്നു…",
+    fmTypicalPriceLabel: "സാധാരണ അനൗപചാരിക വില",
+    fmOpportunityPriceLabel: "ഓർക്ക അവസര വില",
+    fmExtraRevenueLabel: "സാധ്യമായ അധിക വരുമാനം",
+    fmSpeciesPriceRankingTitle: "ഇന വില റാങ്കിംഗ്",
+    fmThSpecies: "ഇനം",
+    fmThTrend: "പ്രവണത",
+    fmThDemand: "ആവശ്യം",
+    fmThEstProfit: "കണക്കാക്കിയ ലാഭം",
+    fmThOpportunityScore: "അവസര സ്കോർ",
+    fmBuyerLeadsTitle: "വാങ്ങുന്നവരുടെ ബന്ധങ്ങൾ",
+    fmTripCostCalcTitle: "യാത്രാ-ചെലവ് കാൽക്കുലേറ്റർ",
+    fmSpeciesLabel: "ഇനം",
+    fmExpectedCatchKgLabel: "പ്രതീക്ഷിക്കുന്ന പിടിത്തം (കിലോ)",
+    fmPricePerKgLabel: "കിലോയ്ക്ക് വില (₹)",
+    fmFuelLabel: "ഇന്ധനം (₹)",
+    fmIceLabel: "ഐസ് (₹)",
+    fmOtherLabel: "മറ്റുള്ളവ (₹)",
+    fmRecalculateBtn: "വീണ്ടും കണക്കാക്കുക",
+    fmTripSummaryTitle: "യാത്രാ സംഗ്രഹം",
+    fmGrossRevenueLabel: "മൊത്ത വരുമാനം:",
+    fmTotalTripCostLabel: "ആകെ യാത്രാ ചെലവ്:",
+    fmNetProfitLabel: "അറ്റ ലാഭം:",
+    fmProfitMarginLabel: "ലാഭ മാർജിൻ:",
+    fmCalcDefaultsNote: "ഇന്നത്തെ ശുപാർശിത ഇനവും ഈ ആപ്പിന്റെ സിമുലേറ്റഡ് മാർക്കറ്റ് ഡാറ്റയും ഉപയോഗിച്ചാണ് സ്ഥിരസ്ഥിതികൾ മുൻകൂട്ടി പൂരിപ്പിച്ചിരിക്കുന്നത് — ഏത് ഫീൽഡും മാറ്റി വീണ്ടും കണക്കാക്കുക അമർത്തുക.",
+    fmTripPerformanceTitle: "നിങ്ങളുടെ യാത്രാ പ്രകടനം",
+    fmLoadingPerformance: "പ്രകടന ചരിത്രം ലോഡ് ചെയ്യുന്നു…",
+    fmThTrip: "യാത്ര",
+    fmThCatchKg: "പിടിത്തം (കിലോ)",
+    fmThRevenue: "വരുമാനം",
+    fmThProfit: "ലാഭം",
+    fmCommunityFeedTitle: "സമൂഹവും ഉപദേശ ഫീഡും",
+    fmBuiltBy: "നിർമ്മിച്ചത്",
+    fmHackathonLine: "സ്മാർട്ട് ഇന്ത്യ ഹാക്കത്തോൺ 2026 · പ്രശ്ന പ്രസ്താവന 26176 (ഐ.എസ്.ആർ.ഒ)",
+    fmFooterDisclaimer: "മുന്നറിയിപ്പ്: ഇന മാർക്കറ്റ് വിലകൾ, വാങ്ങുന്നവരുടെ ബന്ധങ്ങൾ, യാത്രാ ചരിത്രം എന്നിവ സ്മാർട്ട് ഇന്ത്യ ഹാക്കത്തോൺ 2026 വിലയിരുത്തൽ പ്രദർശനത്തിനായി സിമുലേറ്റ് ചെയ്തതാണ്.",
+    fmNoTripHistory: "ഇതുവരെ യാത്രാ ചരിത്രം രേഖപ്പെടുത്തിയിട്ടില്ല.",
+    fmYourCatch: "നിങ്ങളുടെ പിടിത്തം",
+    fmTripAgoSingular: "{n} യാത്ര മുൻപ്",
+    fmTripAgoPlural: "{n} യാത്രകൾ മുൻപ്",
+    fmTargetSpeciesColon: "ലക്ഷ്യമിടുന്ന ഇനം:",
+    fmYieldWord: "വിളവ്",
+    fmSstLabel: "SST:",
+    fmDepthLabel: "ആഴം:",
+    fmSafetyLabel: "സുരക്ഷ:",
+    fmOpportunityDescTemplate: "ഇന്ന് ₹{price}/കിലോയിൽ {zone} ന് സമീപം മികച്ച പൊരുത്തം — മൊത്തം അവസര സ്കോർ {score}/100.",
+    fmTheRecommendedZone: "ശുപാർശ ചെയ്ത മേഖല",
+    fmSellSmarterDescTemplate: "{species}: അനൗപചാരിക മാർക്കറ്റിന് പകരം ഓർക്ക-പൊരുത്തപ്പെടുത്തിയ വാങ്ങുന്നയാൾക്ക് വിൽക്കുന്നത് {catch} കിലോ പിടിത്തത്തിൽ കണക്കാക്കിയ അധിക {revenue} വരുമാനം നേടിത്തരുന്നു.",
+    fmAiErrorTemplate: "ഓർക്കയുടെ എ.ഐ ഡിസിഷൻ സ്റ്റുഡിയോ ബാക്കെൻഡിലേക്ക് എത്താൻ കഴിഞ്ഞില്ല ({error}). എം.എൽ മോഡലുകൾ പരിശീലിപ്പിക്കാൻ ഒറ്റത്തവണ ബാക്കെൻഡ് സജ്ജീകരണം ആവശ്യമാണ് -- backend/ml/training/ കാണുക. അൽപ്പസമയത്തിനുള്ളിൽ വീണ്ടും ശ്രമിക്കുക.",
+    fmPlanDescTemplate: "മികച്ച സമയപരിധി {window} · {market} ൽ വിൽക്കുക · ഓർക്ക യാത്രാ സ്കോർ {score}/100.",
+    fmTheRecommendedMarket: "ശുപാർശ ചെയ്ത മാർക്കറ്റ്",
+    fmKmFromPortTemplate: "തുറമുഖത്ത് നിന്ന് {km} കിമീ",
+    fmStatusLive: "തത്സമയം",
+    fmStatusOffline: "ബാക്കെൻഡ് ഓഫ്‌ലൈൻ — അവസാനം അറിയാവുന്ന ഡാറ്റ കാണിക്കുന്നു",
+    fmScoreOcean: "സമുദ്ര സുരക്ഷ",
+    fmScoreFish: "മത്സ്യ വിളവ്",
+    fmScoreMarket: "മാർക്കറ്റ് ചലനം",
+    fmScoreProfit: "ലാഭ മാർജിൻ",
+    fmTierHigh: "ഉയർന്നത്",
+    fmTierGood: "നല്ലത്",
+    fmTierModerate: "മിതമായത്",
+    fmPostWeatherAlert: "കാലാവസ്ഥാ മുന്നറിയിപ്പ്",
+    fmPostMarketUpdate: "മാർക്കറ്റ് അപ്ഡേറ്റ്",
+    fmPostFishermanReport: "മത്സ്യത്തൊഴിലാളി റിപ്പോർട്ട്",
+    fmPostUpdate: "അപ്ഡേറ്റ്"
   }
 };
 
@@ -1045,18 +1609,76 @@ function setupScrollReveal() {
 // Language Switcher
 function setupLanguageSwitcher() {
   const langSelect = document.getElementById('langSelect');
-  if (!langSelect) return;
+  const fmLangSelect = document.getElementById('fmLangSelect');
 
-  langSelect.addEventListener('change', (e) => {
+  if (langSelect) {
+    langSelect.addEventListener('change', (e) => {
+      state.currentLang = e.target.value;
+      state.languageOverride = true;
+      applyLanguage(state.currentLang);
+    });
+  }
+
+  // ORCA Fisherman console has its own header, so it gets its own <select>
+  // -- wired to the exact same state.currentLang/applyLanguage() pipeline as
+  // the Insight dashboard's langSelect above, so choosing a language in
+  // either module keeps BOTH in sync (see applyLanguage()'s selector sync).
+  if (fmLangSelect) {
+    fmLangSelect.addEventListener('change', (e) => {
+      state.currentLang = e.target.value;
+      state.languageOverride = true;
+      applyLanguage(state.currentLang);
+    });
+  }
+}
+
+// Also called directly by initFishermanConsole() the first time the
+// Fisherman shell is opened, in case orcaEnterFisherman() runs before
+// setupLanguageSwitcher()'s DOMContentLoaded step has wired #fmLangSelect
+// (its container may not exist in the DOM lookup order some browsers use
+// for a freshly-unhidden shell). Calling this twice is harmless --
+// addEventListener no-ops on a duplicate identical listener only if the
+// same function reference is passed, so guard with a flag instead.
+function setupFishermanLanguageSwitcher() {
+  const fmLangSelect = document.getElementById('fmLangSelect');
+  if (!fmLangSelect || fmLangSelect.dataset.wired) return;
+  fmLangSelect.dataset.wired = '1';
+  fmLangSelect.addEventListener('change', (e) => {
     state.currentLang = e.target.value;
     state.languageOverride = true;
     applyLanguage(state.currentLang);
   });
 }
 
+// Small translation helper for JS-rendered (non-data-i18n) strings -- every
+// dynamic render function in the Fisherman module (and any future Insight
+// dynamic content) should route its hardcoded copy through this instead of
+// inlining English text, so applyLanguage() re-rendering picks it up too.
+function t(key, fallback) {
+  const dict = translations[state.currentLang] || translations.en;
+  if (dict[key] != null) return dict[key];
+  if (translations.en[key] != null) return translations.en[key];
+  return fallback != null ? fallback : key;
+}
+
+// Same lookup as t(), but does {placeholder} substitution for template
+// sentences (score/price/zone-name interpolated advisory text, etc.) so
+// those sentences can be fully translated instead of only their static
+// fragments.
+function tFormat(key, vars, fallback) {
+  let str = t(key, fallback);
+  if (vars) {
+    Object.keys(vars).forEach(k => {
+      str = str.split(`{${k}}`).join(vars[k] != null ? vars[k] : '');
+    });
+  }
+  return str;
+}
+
 function applyLanguage(lang) {
   const t = translations[lang] || translations.en;
-  
+  state.currentLang = lang;
+
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (t[key]) {
@@ -1070,6 +1692,54 @@ function applyLanguage(lang) {
       el.placeholder = t[key];
     }
   });
+
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    if (t[key]) {
+      el.title = t[key];
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria');
+    if (t[key]) {
+      el.setAttribute('aria-label', t[key]);
+    }
+  });
+
+  // Keep BOTH language selectors (Insight's #langSelect and Fisherman's
+  // #fmLangSelect) showing the same choice, whichever one the user actually
+  // changed, so switching language in one module is reflected in the other
+  // the moment they open it.
+  const langSelectEl = document.getElementById('langSelect');
+  if (langSelectEl && langSelectEl.value !== lang) langSelectEl.value = lang;
+  const fmLangSelectEl = document.getElementById('fmLangSelect');
+  if (fmLangSelectEl && fmLangSelectEl.value !== lang) fmLangSelectEl.value = lang;
+
+  // The Fisherman console's dynamic (JS-template-rendered) content isn't
+  // covered by the [data-i18n] sweep above -- re-run its render functions
+  // against whatever data is already cached so a language switch while the
+  // console is open never leaves half-English, half-translated content on
+  // screen. All of this is a no-op (and cheap) if the Fisherman console has
+  // never been opened yet, since fishermanState.dashboard stays null.
+  if (typeof fishermanState !== 'undefined') {
+    try {
+      if (fishermanState.dashboard) {
+        renderFishermanOpportunity(fishermanState.dashboard);
+        renderFishermanSellSmarter(fishermanState.dashboard);
+        renderFishermanPerformance(fishermanState.dashboard);
+      }
+      if (fishermanState.zoneRanking && fishermanState.zoneRanking.length) {
+        renderFishermanZoneList();
+        renderFishermanZoneMarkers();
+      }
+      if (fishermanState.lastAiTripData) {
+        renderAiTripResults(fishermanState.lastAiTripData);
+      }
+    } catch (err) {
+      console.log('ORCA FISHERMAN: dynamic re-render on language switch skipped', err);
+    }
+  }
 }
 
 // Live Clock
@@ -3416,7 +4086,11 @@ const fishermanState = {
   // onto that code).
   map: null,
   mapMarkers: [],
-  zoneRanking: []
+  zoneRanking: [],
+  // Cached last successful AI Decision Studio result, so applyLanguage()
+  // can re-render it in the new language without another network round
+  // trip when the user switches languages while results are on screen.
+  lastAiTripData: null
 };
 
 // Called by orcaEnterFisherman() (in index.html) every time the Fisherman
@@ -3426,8 +4100,14 @@ function initFishermanConsole() {
   if (!fishermanState.initialized) {
     setupFishermanNavigation();
     setupTripCalculator();
+    setupFishermanLanguageSwitcher();
     fishermanState.initialized = true;
   }
+  // Reflect whatever language is already active (set via the Insight
+  // dashboard's own switcher, or a previous visit to this console) onto
+  // the Fisherman header's own selector every time the shell is opened.
+  const fmLangSelectEl = document.getElementById('fmLangSelect');
+  if (fmLangSelectEl) fmLangSelectEl.value = state.currentLang || 'en';
   refreshFishermanDashboard();
   refreshFishermanZones();
 }
@@ -3499,26 +4179,31 @@ async function refreshFishermanDashboard(preferredSpecies) {
     const data = await res.json();
     fishermanState.dashboard = data;
 
-    setFishermanStatusBadge(true, `LIVE — ${data.data_source}`);
+    setFishermanStatusBadge(true, `${t('fmStatusLive')} — ${data.data_source}`);
     renderFishermanOpportunity(data);
     renderFishermanSellSmarter(data);
     renderFishermanCalculatorDefaults(data);
     renderFishermanPerformance(data);
   } catch (err) {
     console.log('Fisherman dashboard refresh failed, keeping last known values', err);
-    setFishermanStatusBadge(false, 'BACKEND OFFLINE — showing last known data');
+    setFishermanStatusBadge(false, t('fmStatusOffline'));
   }
 }
 
 // Full literal Tailwind class strings (not template-interpolated) so the
 // Tailwind Play CDN's runtime scanner reliably picks these up, matching
 // the same convention already used by updateSafetyIndexCard() above.
-const FM_SCORE_META = {
-  ocean:  { label: 'Ocean Safety',    weightLabel: '25%', barClass: 'bg-cyan-500',    textClass: 'text-cyan-400' },
-  fish:   { label: 'Fish Yield',      weightLabel: '30%', barClass: 'bg-emerald-500', textClass: 'text-emerald-400' },
-  market: { label: 'Market Momentum', weightLabel: '20%', barClass: 'bg-amber-500',   textClass: 'text-amber-400' },
-  profit: { label: 'Profit Margin',   weightLabel: '25%', barClass: 'bg-teal-500',    textClass: 'text-teal-400' }
-};
+// A function (not a static const) so its labels re-translate every time
+// it's called, rather than freezing to whatever language was active when
+// app.js first parsed.
+function fmScoreMeta() {
+  return {
+    ocean:  { label: t('fmScoreOcean'),  weightLabel: '25%', barClass: 'bg-cyan-500',    textClass: 'text-cyan-400' },
+    fish:   { label: t('fmScoreFish'),   weightLabel: '30%', barClass: 'bg-emerald-500', textClass: 'text-emerald-400' },
+    market: { label: t('fmScoreMarket'), weightLabel: '20%', barClass: 'bg-amber-500',   textClass: 'text-amber-400' },
+    profit: { label: t('fmScoreProfit'), weightLabel: '25%', barClass: 'bg-teal-500',    textClass: 'text-teal-400' }
+  };
+}
 
 function fmCurrency(n) {
   return `₹${Math.round(n || 0).toLocaleString('en-IN')}`;
@@ -3532,7 +4217,11 @@ function renderFishermanOpportunity(data) {
 
   const descEl = document.getElementById('fmOpportunityDesc');
   if (descEl) {
-    descEl.textContent = `Best match today at ₹${opp.price_per_kg}/kg near ${opp.top_recommended_pfz || 'the recommended zone'} — composite Opportunity Score ${opp.composite_score}/100.`;
+    descEl.textContent = tFormat('fmOpportunityDescTemplate', {
+      price: opp.price_per_kg,
+      zone: opp.top_recommended_pfz || t('fmTheRecommendedZone'),
+      score: opp.composite_score
+    });
   }
 
   const scoreEl = document.getElementById('fmOpportunityScore');
@@ -3553,12 +4242,13 @@ function renderFishermanOpportunity(data) {
   if (profitEl) profitEl.textContent = (opp.profit_min != null && opp.profit_max != null) ? `${fmCurrency(opp.profit_min)}–${fmCurrency(opp.profit_max)}` : '—';
 
   const confEl = document.getElementById('fmConfidencePct');
-  if (confEl) confEl.textContent = opp.confidence_pct != null ? `Confidence ${opp.confidence_pct}%` : 'Confidence —%';
+  if (confEl) confEl.textContent = opp.confidence_pct != null ? `${t('fmConfidenceLabel')} ${opp.confidence_pct}%` : `${t('fmConfidenceLabel')} —%`;
 
   const breakdownEl = document.getElementById('fmScoreBreakdown');
   if (breakdownEl && opp.score_breakdown) {
+    const scoreMeta = fmScoreMeta();
     breakdownEl.innerHTML = Object.entries(opp.score_breakdown).map(([key, v]) => {
-      const meta = FM_SCORE_META[key] || { label: key, weightLabel: `${Math.round((v.weight || 0) * 100)}%`, barClass: 'bg-cyan-500', textClass: 'text-cyan-400' };
+      const meta = scoreMeta[key] || { label: key, weightLabel: `${Math.round((v.weight || 0) * 100)}%`, barClass: 'bg-cyan-500', textClass: 'text-cyan-400' };
       const score = Math.max(0, Math.min(100, Math.round(v.score || 0)));
       return `
         <div class="space-y-1">
@@ -3579,7 +4269,7 @@ function renderFishermanOpportunity(data) {
   const speciesSelect = document.getElementById('fmSpeciesSelect');
   if (speciesSelect && Array.isArray(data.ranking)) {
     const current = speciesSelect.value;
-    speciesSelect.innerHTML = `<option value="">Auto (Best Match)</option>` +
+    speciesSelect.innerHTML = `<option value="">${t('fmAutoBestMatch')}</option>` +
       data.ranking.map(r => `<option value="${r.species}">${r.species}</option>`).join('');
     speciesSelect.value = (current && data.ranking.some(r => r.species === current)) ? current : '';
   }
@@ -3590,7 +4280,11 @@ function renderFishermanSellSmarter(data) {
 
   const descEl = document.getElementById('fmSellSmarterDesc');
   if (descEl) {
-    descEl.textContent = `${ss.species || 'Your catch'}: selling to an ORCA-matched buyer instead of the informal market nets an estimated extra ${fmCurrency(ss.potential_additional_revenue)} on an assumed ${ss.assumed_catch_kg || 0} kg catch.`;
+    descEl.textContent = tFormat('fmSellSmarterDescTemplate', {
+      species: ss.species || t('fmYourCatch'),
+      revenue: fmCurrency(ss.potential_additional_revenue),
+      catch: ss.assumed_catch_kg || 0
+    });
   }
   const typicalEl = document.getElementById('fmTypicalPrice');
   if (typicalEl) typicalEl.textContent = ss.typical_price_per_kg != null ? `₹${ss.typical_price_per_kg}/kg` : '—';
@@ -3705,11 +4399,15 @@ function recalculateTrip() {
   if (marginEl) marginEl.textContent = `${margin.toFixed(1)}%`;
 }
 
-const FM_POST_TYPE_META = {
-  weather_alert: { icon: '', color: 'text-amber-300', label: 'Weather Alert' },
-  market_update: { icon: '', color: 'text-emerald-300', label: 'Market Update' },
-  fisherman_post: { icon: '', color: 'text-cyan-300', label: 'Fisherman Report' }
-};
+// A function (not a static const) so labels re-translate on language switch
+// -- mirrors fmScoreMeta()/fmYieldTiers() above.
+function fmPostTypeMeta() {
+  return {
+    weather_alert: { icon: '', color: 'text-amber-300', label: t('fmPostWeatherAlert') },
+    market_update: { icon: '', color: 'text-emerald-300', label: t('fmPostMarketUpdate') },
+    fisherman_post: { icon: '', color: 'text-cyan-300', label: t('fmPostFishermanReport') }
+  };
+}
 
 function renderFishermanPerformance(data) {
   const perf = data.performance || {};
@@ -3718,26 +4416,27 @@ function renderFishermanPerformance(data) {
   if (avgEl) avgEl.textContent = perf.average_profit ? `${fmCurrency(perf.average_profit)} avg/trip` : '—';
 
   const insightEl = document.getElementById('fmPerformanceInsight');
-  if (insightEl) insightEl.textContent = perf.insight || 'No trip history recorded yet.';
+  if (insightEl) insightEl.textContent = perf.insight || t('fmNoTripHistory');
 
   const tbody = document.getElementById('fmTripHistoryBody');
   if (tbody && Array.isArray(perf.trips)) {
-    tbody.innerHTML = perf.trips.map(t => `
+    tbody.innerHTML = perf.trips.map(trip => `
       <tr class="border-b border-ocean-800/60 hover:bg-ocean-800/40 transition">
-        <td class="py-2 px-3 text-slate-300">${t.trips_ago} trip${t.trips_ago === 1 ? '' : 's'} ago</td>
-        <td class="py-2 px-3 font-semibold text-slate-100">${t.species}</td>
-        <td class="py-2 px-3 font-mono text-slate-300">${t.catch_kg} kg</td>
-        <td class="py-2 px-3 font-mono text-slate-300">₹${t.price_per_kg}</td>
-        <td class="py-2 px-3 font-mono text-emerald-300">${fmCurrency(t.revenue)}</td>
-        <td class="py-2 px-3 font-mono text-amber-300">${fmCurrency(t.profit)}</td>
+        <td class="py-2 px-3 text-slate-300">${tFormat(trip.trips_ago === 1 ? 'fmTripAgoSingular' : 'fmTripAgoPlural', { n: trip.trips_ago })}</td>
+        <td class="py-2 px-3 font-semibold text-slate-100">${trip.species}</td>
+        <td class="py-2 px-3 font-mono text-slate-300">${trip.catch_kg} kg</td>
+        <td class="py-2 px-3 font-mono text-slate-300">₹${trip.price_per_kg}</td>
+        <td class="py-2 px-3 font-mono text-emerald-300">${fmCurrency(trip.revenue)}</td>
+        <td class="py-2 px-3 font-mono text-amber-300">${fmCurrency(trip.profit)}</td>
       </tr>
     `).join('');
   }
 
   const feed = document.getElementById('fmCommunityFeed');
   if (feed && Array.isArray(data.community_posts)) {
+    const postTypeMeta = fmPostTypeMeta();
     feed.innerHTML = data.community_posts.map(p => {
-      const meta = FM_POST_TYPE_META[p.type] || { icon: '', color: 'text-slate-300', label: 'Update' };
+      const meta = postTypeMeta[p.type] || { icon: '', color: 'text-slate-300', label: t('fmPostUpdate') };
       return `
         <div class="p-4 rounded-xl glass-card space-y-1.5">
           <div class="flex items-center justify-between text-[11px]">
@@ -3770,13 +4469,18 @@ function renderFishermanPerformance(data) {
 // (already loaded into state.pfzZones by loadInitialData() above) since
 // the live ranking returns scores/distance but not coordinates.
 
-const FM_YIELD_TIERS = [
-  { min: 85, label: 'HIGH',     textClass: 'text-emerald-400', dot: 'bg-emerald-400', barClass: 'bg-emerald-500', badgeClass: 'bg-emerald-500/20 text-emerald-300' },
-  { min: 70, label: 'GOOD',     textClass: 'text-cyan-400',    dot: 'bg-cyan-400',    barClass: 'bg-cyan-500',    badgeClass: 'bg-cyan-500/20 text-cyan-300' },
-  { min: 0,  label: 'MODERATE', textClass: 'text-amber-400',   dot: 'bg-amber-400',   barClass: 'bg-amber-500',   badgeClass: 'bg-amber-500/20 text-amber-300' }
-];
+// A function (not a static const) so tier labels re-translate on language
+// switch -- mirrors fmScoreMeta()/fmPostTypeMeta() above.
+function fmYieldTiers() {
+  return [
+    { min: 85, label: t('fmTierHigh'),     textClass: 'text-emerald-400', dot: 'bg-emerald-400', barClass: 'bg-emerald-500', badgeClass: 'bg-emerald-500/20 text-emerald-300' },
+    { min: 70, label: t('fmTierGood'),     textClass: 'text-cyan-400',    dot: 'bg-cyan-400',    barClass: 'bg-cyan-500',    badgeClass: 'bg-cyan-500/20 text-cyan-300' },
+    { min: 0,  label: t('fmTierModerate'), textClass: 'text-amber-400',   dot: 'bg-amber-400',   barClass: 'bg-amber-500',   badgeClass: 'bg-amber-500/20 text-amber-300' }
+  ];
+}
 function fmYieldTier(score) {
-  return FM_YIELD_TIERS.find(t => (score || 0) >= t.min) || FM_YIELD_TIERS[FM_YIELD_TIERS.length - 1];
+  const tiers = fmYieldTiers();
+  return tiers.find(tier => (score || 0) >= tier.min) || tiers[tiers.length - 1];
 }
 
 async function refreshFishermanZones() {
@@ -3810,7 +4514,7 @@ function renderFishermanZoneList() {
   if (!listEl) return;
 
   if (!fishermanState.zoneRanking.length) {
-    listEl.innerHTML = `<p class="text-slate-500 text-[11px] leading-relaxed">Loading zones…</p>`;
+    listEl.innerHTML = `<p class="text-slate-500 text-[11px] leading-relaxed">${t('fmLoadingZones')}</p>`;
     return;
   }
 
@@ -3886,17 +4590,17 @@ function renderFishermanZoneMarkers() {
       <div class="p-2 min-w-[220px]">
         <div class="flex items-center justify-between gap-2 mb-1">
           <span class="font-bold text-cyan-400 text-sm">#${i + 1} ${z.name || z.id}</span>
-          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${tier.badgeClass}">${tier.label} YIELD (${z.yield_score_pct}%)</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${tier.badgeClass}">${tier.label} ${t('fmYieldWord')} (${z.yield_score_pct}%)</span>
         </div>
         <p class="text-xs text-slate-300 mb-2">${z.advisory_notes || ''}</p>
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900/80 p-1.5 rounded border border-slate-700">
-          <div><span class="text-slate-400">SST:</span> <span class="text-slate-200 font-semibold">${z.sst_celsius}°C</span></div>
-          <div><span class="text-slate-400">Depth:</span> <span class="text-slate-200 font-semibold">${z.depth_m} m</span></div>
-          <div><span class="text-slate-400">Distance:</span> <span class="text-cyan-400 font-bold">${z.distance_nm} NM</span></div>
-          <div><span class="text-slate-400">Safety:</span> <span class="text-slate-200 font-semibold">${z.safety_status || '—'}</span></div>
+          <div><span class="text-slate-400">${t('fmSstLabel')}</span> <span class="text-slate-200 font-semibold">${z.sst_celsius}°C</span></div>
+          <div><span class="text-slate-400">${t('fmDepthLabel')}</span> <span class="text-slate-200 font-semibold">${z.depth_m} m</span></div>
+          <div><span class="text-slate-400">${t('fmThDistance')}:</span> <span class="text-cyan-400 font-bold">${z.distance_nm} NM</span></div>
+          <div><span class="text-slate-400">${t('fmSafetyLabel')}</span> <span class="text-slate-200 font-semibold">${z.safety_status || '—'}</span></div>
         </div>
         <div class="mt-2 text-[10px] text-slate-400">
-          <span class="font-semibold text-slate-300">Target Species:</span> ${(z.dominant_species || []).join(', ')}
+          <span class="font-semibold text-slate-300">${t('fmTargetSpeciesColon')}</span> ${(z.dominant_species || []).join(', ')}
         </div>
       </div>
     `;
@@ -3957,7 +4661,7 @@ async function runAiTripPlanner() {
   const resultsEl = document.getElementById('aiResultsWrap');
 
   if (btn) btn.setAttribute('disabled', 'true');
-  if (btnLabel) btnLabel.textContent = 'Running ORCA models…';
+  if (btnLabel) btnLabel.textContent = t('fmRunningModelsBtn');
   if (loadingEl) loadingEl.classList.remove('hidden');
   if (errorEl) errorEl.classList.add('hidden');
   if (resultsEl) resultsEl.classList.add('hidden');
@@ -3988,17 +4692,18 @@ async function runAiTripPlanner() {
       throw new Error(body.detail || `Backend responded with ${res.status}`);
     }
     const data = await res.json();
+    fishermanState.lastAiTripData = data;
     renderAiTripResults(data);
     if (resultsEl) resultsEl.classList.remove('hidden');
   } catch (err) {
     console.log('AI Decision Studio trip analysis failed', err);
     if (errorEl) {
-      errorEl.textContent = `Could not reach ORCA's AI Decision Studio backend (${err.message || err}). Training the ML models requires a one-time backend setup -- see backend/ml/training/. Try again shortly.`;
+      errorEl.textContent = tFormat('fmAiErrorTemplate', { error: err.message || err });
       errorEl.classList.remove('hidden');
     }
   } finally {
     if (btn) btn.removeAttribute('disabled');
-    if (btnLabel) btnLabel.textContent = 'Plan My Trip';
+    if (btnLabel) btnLabel.textContent = t('fmPlanMyTrip');
     if (loadingEl) loadingEl.classList.add('hidden');
   }
 }
@@ -4007,11 +4712,15 @@ function renderAiTripResults(data) {
   const plan = data.best_fishing_plan || {};
 
   const headlineEl = document.getElementById('aiPlanHeadline');
-  if (headlineEl) headlineEl.textContent = `${plan.target_species || '—'} at ${plan.zone_name || 'the recommended zone'}`;
+  if (headlineEl) headlineEl.textContent = `${plan.target_species || '—'} at ${plan.zone_name || t('fmTheRecommendedZone')}`;
 
   const descEl = document.getElementById('aiPlanDesc');
   if (descEl) {
-    descEl.textContent = `Best window ${plan.best_time_window || '—'} · sell at ${plan.best_market || 'the recommended market'} · ORCA Trip Score ${plan.orca_trip_score != null ? plan.orca_trip_score : '—'}/100.`;
+    descEl.textContent = tFormat('fmPlanDescTemplate', {
+      window: plan.best_time_window || '—',
+      market: plan.best_market || t('fmTheRecommendedMarket'),
+      score: plan.orca_trip_score != null ? plan.orca_trip_score : '—'
+    });
   }
 
   const scoreEl = document.getElementById('aiTripScore');
@@ -4021,7 +4730,7 @@ function renderAiTripResults(data) {
   if (zoneEl) zoneEl.textContent = plan.zone_name || '—';
   const zoneDistEl = document.getElementById('aiBestZoneDistance');
   const topZone = (data.zone_ranking || [])[0];
-  if (zoneDistEl) zoneDistEl.textContent = topZone && topZone.distance_from_port_km != null ? `${Math.round(topZone.distance_from_port_km)} km from port` : '';
+  if (zoneDistEl) zoneDistEl.textContent = topZone && topZone.distance_from_port_km != null ? tFormat('fmKmFromPortTemplate', { km: Math.round(topZone.distance_from_port_km) }) : '';
 
   const timeEl = document.getElementById('aiBestTimeWindow');
   if (timeEl) timeEl.textContent = plan.best_time_window || '—';
@@ -4033,12 +4742,12 @@ function renderAiTripResults(data) {
       : (plan.expected_catch_kg != null ? `${Math.round(plan.expected_catch_kg)} kg` : '—');
   }
   const reliabilityEl = document.getElementById('aiCatchReliability');
-  if (reliabilityEl) reliabilityEl.textContent = plan.model_reliability_pct != null ? `Reliability ${Math.round(plan.model_reliability_pct)}%` : 'Reliability —%';
+  if (reliabilityEl) reliabilityEl.textContent = plan.model_reliability_pct != null ? `${t('fmReliabilityLabel')} ${Math.round(plan.model_reliability_pct)}%` : `${t('fmReliabilityLabel')} —%`;
 
   const profitEl = document.getElementById('aiEstimatedProfit');
   if (profitEl) profitEl.textContent = plan.estimated_profit != null ? fmCurrency(plan.estimated_profit) : '—';
   const riskEl = document.getElementById('aiRiskLevel');
-  if (riskEl) riskEl.textContent = plan.risk ? `Risk ${plan.risk}` : 'Risk —';
+  if (riskEl) riskEl.textContent = plan.risk ? `${t('fmRiskLabel')} ${plan.risk}` : `${t('fmRiskLabel')} —`;
 
   // Zone ranking list
   const zoneListEl = document.getElementById('aiZoneRankList');
