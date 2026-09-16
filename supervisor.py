@@ -1,0 +1,227 @@
+"""
+Master Supervisor / DAG Planner.
+
+Classifies a natural-language voyage query into one of ten intents and
+dynamically selects which downstream agents are relevant to it, instead of
+always running (and always synthesizing an answer from) the exact same
+fixed agent set regardless of what was actually asked.
+
+Classification is a deterministic, rule-based, multi-signal classifier
+(weighted keyword/phrase groups per intent, evaluated in a fixed priority
+order so a more specific intent -- e.g. an IMBL boundary question -- wins
+over a more generic one -- e.g. general voyage safety). There is no
+external AI/LLM API anywhere in this system any more: the synthesis agent
+(backend/agents/synthesis_agent.py) that consumes this classification is
+also fully rule-based, reasoning only over this website's own live
+telemetry and its own accumulated stats ledger (backend/stats_store.py),
+so nothing here -- classification or synthesis -- ever depends on
+external network/API availability.
+"""
+
+from typing import Any, Dict, List
+
+# Each intent maps to (priority, [keyword/phrase signals]). Priority is
+# evaluated low-to-high; the classifier returns the *first* intent (in
+# priority order) that has at least one matching signal, so more specific
+# intents (boundary, MPA, route, ETA) are checked before the generic
+# "GENERAL_VOYAGE_SAFETY" catch-all.
+INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
+    "en": {
+    "IMBL_BOUNDARY": [
+        "imbl", "international maritime boundary", "border", "boundary",
+        "sri lanka", "pakistan", "bangladesh", "cross the line", "how close am i to",
+    ],
+    "MPA_SAFETY": [
+        "mpa", "marine protected area", "protected area", "can i fish here",
+        "can i fish in", "no-fishing", "no fishing zone", "restricted zone",
+        "eco-reserve", "sanctuary", "national park", "am i allowed to fish",
+    ],
+    "ROUTE_PLANNING": [
+        "route", "safest way", "safest route", "how do i get",
+        "navigate to", "waypoint", "give me the safest", "way to pfz",
+    ],
+    "ETA_RETURN": [
+        "eta", "return", "come back", "dusk", "sunset", "before dark",
+        "how long will it take", "what time will i", "back to harbour", "back home",
+    ],
+    "FLEET_DENSITY": [
+        "density", "how many boats", "how many vessels", "vessel count",
+        "traffic", "crowd", "overcrowd", "too many boats", "how busy",
+    ],
+    "WEATHER_SAFETY": [
+        "weather", "wave", "wind", "storm", "sea state", "safe today",
+        "is the sea safe", "rough sea", "cyclone", "rain",
+        "tide", "tidal", "high tide", "low tide", "lightning", "thunderstorm",
+    ],
+    # Evidence-based diagnostics -- "why is this zone underperforming" --
+    # checked before the generic PFZ_RECOMMENDATION ("which zone should I
+    # fish") so a decline/diagnostic question gets a trend-comparison
+    # answer instead of a plain recommendation.
+    "YIELD_TREND_ANALYSIS": [
+        "declined", "decline", "productivity", "gone down", "dropped",
+        "why has", "why is the catch", "catch is down", "less fish",
+        "fewer fish", "yield has fallen", "why has fish", "falling catch",
+    ],
+    "OCEAN_CONDITIONS": [
+        "chlorophyll", "sea surface temperature", "thermal front",
+        "ocean colour", "ocean color", "phytoplankton", "algal bloom",
+        "favorable sea surface", "sst",
+    ],
+    "PFZ_RECOMMENDATION": [
+        "pfz", "fishing zone", "best zone", "which zone", "where should i fish",
+        "fishing ground", "predicted yield", "which fishing",
+    ],
+    },
+    "hi": {
+        "IMBL_BOUNDARY": ["सीमा", "समुद्री सीमा", "आईएमबीएल", "श्रीलंका"],
+        "MPA_SAFETY": ["संरक्षित क्षेत्र", "मछली पकड़ सकता", "प्रतिबंधित क्षेत्र"],
+        "ROUTE_PLANNING": ["मार्ग", "रास्ता", "सुरक्षित रास्ता"],
+        "ETA_RETURN": ["वापस", "कितना समय", "सूर्यास्त"],
+        "FLEET_DENSITY": ["कितनी नाव", "नावों", "भीड़"],
+        "WEATHER_SAFETY": ["मौसम", "लहर", "हवा", "तूफान", "चक्रवात", "ज्वार", "बिजली"],
+        # Best-effort keyword coverage (not professionally reviewed
+        # translations), matching the style of the other language blocks
+        # in this file.
+        "YIELD_TREND_ANALYSIS": ["उत्पादकता", "घट गई", "कम मछली", "पकड़ कम"],
+        "OCEAN_CONDITIONS": ["क्लोरोफिल", "सतह का तापमान", "समुद्र का तापमान"],
+        "PFZ_RECOMMENDATION": ["मछली पकड़ने का क्षेत्र", "पीएफजेड", "सबसे अच्छा क्षेत्र"],
+    },
+    "ta": {
+        "IMBL_BOUNDARY": ["எல்லை", "கடல் எல்லை", "இஎம்பிஎல்", "இலங்கை"],
+        "MPA_SAFETY": ["பாதுகாக்கப்பட்ட பகுதி", "மீன்பிடிக்க", "தடைசெய்யப்பட்ட பகுதி"],
+        "ROUTE_PLANNING": ["வழி", "பாதுகாப்பான வழி", "பாதை"],
+        "ETA_RETURN": ["திரும்ப", "எவ்வளவு நேரம்", "சூரிய அஸ்தமனம்"],
+        "FLEET_DENSITY": ["எத்தனை படகுகள்", "படகுகள்", "நெரிசல்"],
+        "WEATHER_SAFETY": ["வானிலை", "அலை", "காற்று", "புயல்", "சூறாவளி", "ஓதம்", "மின்னல்"],
+        "YIELD_TREND_ANALYSIS": ["உற்பத்தி குறைந்தது", "மீன் குறைவு", "ஏன் குறைந்தது"],
+        "OCEAN_CONDITIONS": ["குளோரோபில்", "கடல் மேற்பரப்பு வெப்பநிலை"],
+        "PFZ_RECOMMENDATION": ["மீன்பிடி பகுதி", "பிஎப்இசட்", "சிறந்த பகுதி"],
+    },
+    "ml": {
+        "IMBL_BOUNDARY": ["അതിർത്ത്", "സമുദ്ര അതിർത്തി", "ഐഎംബിഎൽ", "ശ്രീലങ്ക"],
+        "MPA_SAFETY": ["സംരക്ഷിത മേഖല", "മത്സ്യബന്ധനം", "നിയന്ത്രിത മേഖല"],
+        "ROUTE_PLANNING": ["വഴി", "സുരക്ഷിത വഴി", "പാത"],
+        "ETA_RETURN": ["തിരികെ", "എത്ര സമയം", "സൂര്യാസ്തമയം"],
+        "FLEET_DENSITY": ["എത്ര ബോട്ടുകൾ", "ബോട്ടുകൾ", "തിരക്ക്"],
+        "WEATHER_SAFETY": ["കാലാവസ്ഥ", "തിര", "കാറ്റ്", "കൊടുങ്കാറ്റ്", "വേലിയേറ്റം", "ഇടിമിന്നൽ"],
+        "YIELD_TREND_ANALYSIS": ["ഉൽപാദനക്ഷമത കുറഞ്ഞു", "മീൻ കുറവ്"],
+        "OCEAN_CONDITIONS": ["ക്ലോറോഫിൽ", "സമുദ്രോപരിതല താപനില"],
+        "PFZ_RECOMMENDATION": ["മത്സ്യബന്ധന മേഖല", "പി എഫ് ഇസഡ്", "മികച്ച മേഖല"],
+    },
+}
+
+# Priority is preserved across languages. Exporting this alias keeps older
+# integrations that imported INTENT_SIGNALS from breaking.
+INTENT_SIGNALS = list(INTENT_SIGNALS_BY_LANG["en"].items())
+
+# Which downstream agents actually matter for each intent. core.run_pipeline
+# executes this plan (rather than using it merely as synthesis decoration).
+INTENT_RELEVANT_AGENTS: Dict[str, List[str]] = {
+    "PFZ_RECOMMENDATION": ["satellite", "pfz", "weather"],
+    "WEATHER_SAFETY": ["weather"],
+    "IMBL_BOUNDARY": ["geofence"],
+    "MPA_SAFETY": ["geofence"],
+    "FLEET_DENSITY": ["fleet"],
+    "ROUTE_PLANNING": ["eta", "geofence", "weather"],
+    "ETA_RETURN": ["eta", "weather"],
+    "YIELD_TREND_ANALYSIS": ["satellite", "pfz", "weather"],
+    "OCEAN_CONDITIONS": ["satellite", "pfz"],
+    "GENERAL_VOYAGE_SAFETY": ["weather", "pfz", "fleet", "eta"],
+}
+
+# Subtasks dispatched per intent -- kept close to the legacy fixed list for
+# UI/backward-compat (the frontend displays subtask counts), but now
+# actually varies by intent rather than being identical for every query.
+_SUBTASK_LIBRARY = {
+    "FETCH_SATELLITE_SST_CHLOROPHYLL": "satellite",
+    "EVALUATE_WAVE_WIND_HAZARD": "weather",
+    "COMPUTE_PFZ_CONVERGENCE": "pfz",
+    "VALIDATE_IMBL_BOUNDARIES": "geofence",
+    "CHECK_MPA_RESTRICTIONS": "geofence",
+    "CALCULATE_FLEET_DENSITY": "fleet",
+    "PLAN_SEA_ROUTE": "eta",
+    "ESTIMATE_VOYAGE_ETA": "eta",
+    "SYNTHESIZE_NEURAL_ADVISORY": "synthesis",
+}
+
+
+def classify_intents(query: str, language_code: str = "en") -> List[str]:
+    """Deterministic, rule-based intent classification -- returns EVERY
+    intent (in the same fixed priority order as before) that has at least
+    one matching signal, not just the first, so a compound question like
+    "is it safe today and where should I fish?" is recognised as both
+    WEATHER_SAFETY and PFZ_RECOMMENDATION instead of only the
+    higher-priority one. Never raises, never requires network access.
+    Always returns at least one intent (GENERAL_VOYAGE_SAFETY if nothing
+    matched)."""
+    q = query.lower()
+    signals_by_intent = INTENT_SIGNALS_BY_LANG.get(language_code, INTENT_SIGNALS_BY_LANG["en"])
+    matched = []
+    for intent in INTENT_SIGNALS_BY_LANG["en"]:
+        signals = signals_by_intent.get(intent, [])
+        if any(signal in q for signal in signals):
+            matched.append(intent)
+    return matched or ["GENERAL_VOYAGE_SAFETY"]
+
+
+def classify_intent(query: str, language_code: str = "en") -> str:
+    """The single highest-priority matched intent -- kept for callers that
+    only ever wanted one answer (e.g. synthesis_agent's own fallback path
+    when no Supervisor plan is available). See classify_intents() for the
+    full compound-question-aware match."""
+    return classify_intents(query, language_code)[0]
+
+
+class SupervisorAgent:
+    def __init__(self):
+        self.name = "Master Supervisor / DAG Planner"
+
+    async def plan_dag(self, query: str, language_code: str = "en") -> Dict[str, Any]:
+        all_intents = classify_intents(query, language_code)
+        intent = all_intents[0]  # highest-priority match; kept as-is for every existing reader of plan["intent"]
+
+        # Compound question support: run the union of every matched
+        # intent's agents, not just the primary one, so "is it safe today
+        # and where should I fish?" actually gets both weather AND PFZ
+        # telemetry instead of only whichever intent happened to win
+        # priority. A single-intent query (the overwhelming majority)
+        # behaves exactly as before, since the union of one set is itself.
+        relevant_agents: List[str] = []
+        for i in all_intents:
+            for agent in INTENT_RELEVANT_AGENTS.get(i, INTENT_RELEVANT_AGENTS["GENERAL_VOYAGE_SAFETY"]):
+                if agent not in relevant_agents:
+                    relevant_agents.append(agent)
+
+        subtasks = [
+            name for name, agent_key in _SUBTASK_LIBRARY.items()
+            if agent_key in relevant_agents or agent_key == "synthesis"
+        ]
+        # Synthesis always runs last regardless of intent.
+        if "SYNTHESIZE_NEURAL_ADVISORY" not in subtasks:
+            subtasks.append("SYNTHESIZE_NEURAL_ADVISORY")
+
+        return {
+            "query": query,
+            "intent": intent,
+            "all_intents": all_intents,
+            "relevant_agents": relevant_agents,
+            "subtasks": subtasks,
+            "classification_method": "DETERMINISTIC_RULE_BASED",
+            "query_language": language_code,
+            "execution_mode": "PARALLEL_ASYNC_DAG",
+        }
+
+    @staticmethod
+    def reactive_agents(intent: str, weather: Dict[str, Any]) -> List[str]:
+        """Return agents added after live evidence changes the initial plan.
+
+        A general fishing question normally does not need a boundary check.
+        Rough seas, an unsafe clearance, or high lightning risk can make a
+        reroute relevant, so the geofence agent is added at that point.
+        """
+        hazard = (
+            weather.get("clearance_verdict") in {"CAUTION", "UNSAFE"}
+            or float(weather.get("significant_wave_height_m", 0) or 0) >= 2.5
+            or float(weather.get("lightning_risk_pct", 0) or 0) >= 50
+        )
+        return ["geofence"] if intent == "GENERAL_VOYAGE_SAFETY" and hazard else []
