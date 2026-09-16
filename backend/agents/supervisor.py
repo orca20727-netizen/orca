@@ -211,44 +211,24 @@ _SUBTASK_LIBRARY = {
 
 _WORD_BOUNDARY_CACHE: Dict[str, "re.Pattern[str]"] = {}
 
-# Only these newly-added intents get word-boundary-safe matching for their
-# single-token signals (see _signal_matches). Every pre-existing maritime
-# intent (WEATHER_SAFETY, IMBL_BOUNDARY, etc.) keeps the ORIGINAL plain
-# substring check, completely untouched -- a first version of this fix
-# applied word-boundary matching to every ASCII single-token signal
-# indiscriminately, which silently broke plural/inflected forms of
-# existing keywords that used to match fine via plain substring (e.g.
-# "wave" no longer matching inside "waves", "storm" inside "storms",
-# "tide" inside "tides", "route" inside "routes", "border" inside
-# "borders") -- caught via a live production test ("waves 2-3 m expected,
-# is it safe?" wrongly fell through to GENERAL_VOYAGE_SAFETY instead of
-# WEATHER_SAFETY). Scoping the boundary check to only the intents that
-# actually need it eliminates that regression entirely while still
-# stopping the original problem this was meant to fix: a bare "hi" (or
-# "help") matching inside "fishing" / "helpful".
-_WORD_BOUNDARY_INTENTS = {
-    "GREETING", "THANKS_FAREWELL", "HELP_CAPABILITY", "OFF_TOPIC_GENERIC",
-}
 
-
-def _signal_matches(signal: str, q: str, use_word_boundary: bool) -> bool:
+def _signal_matches(signal: str, q: str) -> bool:
     """True if `signal` is present in the already-lowercased query `q`.
 
-    Multi-word phrases ("fishing zone", "how many boats") and any
-    non-ASCII (Hindi/Tamil/Malayalam) signal always keep the exact plain-
-    substring check -- a phrase that long can't plausibly match inside an
-    unrelated word, and several non-English signal lists rely on substring
-    matching for agglutinative-language suffixes that attach to a word
-    with no space.
+    Multi-word phrases ("fishing zone", "how many boats") keep the exact
+    original plain-substring check -- a phrase that long can't plausibly
+    match inside an unrelated word, and several non-English signal lists
+    rely on this for agglutinative-language matching (a suffix can attach
+    directly to a word with no space).
 
-    A single ASCII token belonging to one of the new small-talk/generic
-    intents (`_WORD_BOUNDARY_INTENTS`, e.g. "hi", "help") instead matches
-    only as its own whole word via a word-boundary regex, so it can't
-    false-positive inside an unrelated longer word ("hi" inside "fishing",
-    "help" inside "helpful"). Every pre-existing maritime intent's signals
-    are NEVER passed `use_word_boundary=True` and so are completely
-    unaffected by this -- see the note on `_WORD_BOUNDARY_INTENTS` above."""
-    if not use_word_boundary or " " in signal or not signal.isascii():
+    A single ASCII token (no space, e.g. "hi", "border", "imbl") instead
+    matches only as its own whole word via a word-boundary regex. Without
+    this, a short new signal like "hi" would match inside "fishing" (index
+    3-4) -- a real false-positive this function exists to prevent. Existing
+    ASCII single-word signals only get *stricter* (never looser) under this
+    change, so they keep matching every genuine standalone use while losing
+    only accidental substring hits."""
+    if " " in signal or not signal.isascii():
         return signal in q
     pattern = _WORD_BOUNDARY_CACHE.get(signal)
     if pattern is None:
@@ -302,8 +282,7 @@ def classify_intents(query: str, language_code: str = "en") -> List[str]:
     matched = []
     for intent in INTENT_SIGNALS_BY_LANG["en"]:
         signals = signals_by_intent.get(intent, [])
-        use_word_boundary = intent in _WORD_BOUNDARY_INTENTS
-        if any(_signal_matches(signal, q, use_word_boundary) for signal in signals):
+        if any(_signal_matches(signal, q) for signal in signals):
             matched.append(intent)
     # MATH_CALCULATION isn't in the keyword table above -- number/operator
     # shapes vary too much for a fixed phrase list, so it gets its own
