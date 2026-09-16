@@ -28,12 +28,107 @@ one engine, it never depends on any external network/API availability,
 and it never silently reuses stale wording across unrelated queries.
 """
 
+import ast
 import logging
+import operator
+import re
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 from stats_store import stats_store
 
 logger = logging.getLogger(__name__)
+
+# Intents with no maritime data behind them at all (greetings, small talk,
+# capability questions, the server clock, arithmetic, off-topic trivia).
+# _localize() skips the "Marine advisory:"-style prefix for these -- it
+# reads oddly stuck in front of "Good evening!" or a calculator result.
+_NON_MARITIME_INTENTS = {
+    "GREETING", "THANKS_FAREWELL", "HELP_CAPABILITY",
+    "DATE_TIME", "MATH_CALCULATION", "OFF_TOPIC_GENERIC",
+}
+
+_IST_OFFSET = timedelta(hours=5, minutes=30)
+
+
+def _now_ist() -> datetime:
+    return datetime.now(timezone.utc) + _IST_OFFSET
+
+
+# -- Safe arithmetic for MATH_CALCULATION -----------------------------------
+# Deliberately NOT eval()/exec(): this walks a small whitelist of AST node
+# types by hand, so it can only ever add/subtract/multiply/divide plain
+# numbers -- it cannot execute arbitrary code no matter what text ends up
+# in a user's query.
+_MATH_OPERATORS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.USub: operator.neg,
+    ast.UAdd: operator.pos,
+}
+
+_WORD_OP_REPLACEMENTS = [
+    (re.compile(r"\bmultiplied by\b"), "*"),
+    (re.compile(r"\bdivided by\b"), "/"),
+    (re.compile(r"\btimes\b"), "*"),
+    (re.compile(r"\bplus\b"), "+"),
+    (re.compile(r"\bminus\b"), "-"),
+    (re.compile(r"[x×]"), "*"),
+    (re.compile(r"÷"), "/"),
+]
+
+
+def _extract_arithmetic_expression(query: str) -> Optional[str]:
+    """Best-effort: normalizes word operators to symbols, then pulls out
+    the longest run of digits/operators/parens/spaces found. Returns None
+    (never a guess) when nothing that looks like a real expression exists,
+    e.g. the classifier matched on a spaced dash inside a longer sentence
+    that _looks_like_arithmetic() had already decided was safe to treat as
+    math (see supervisor.py's own conservative gate on that)."""
+    q = query.lower()
+    for pattern, repl in _WORD_OP_REPLACEMENTS:
+        q = pattern.sub(repl, q)
+    # Scan every run of digit/operator/space/paren characters (there can be
+    # several -- e.g. a leading "is " contributes a throwaway single-space
+    # run before the real "12 + 7" run) and keep the longest one that
+    # actually contains a digit, rather than re.search's leftmost match,
+    # which would otherwise grab an earlier run of plain whitespace.
+    candidates = [
+        m.group(0).strip()
+        for m in re.finditer(r"[\d.\s+\-*/()]+", q)
+        if re.search(r"\d", m.group(0))
+    ]
+    if not candidates:
+        return None
+    candidate = max(candidates, key=len)
+    if not re.search(r"[+\-*/]", candidate):
+        return None
+    return candidate
+
+
+def _safe_eval_arithmetic(expr: str) -> Optional[float]:
+    try:
+        node = ast.parse(expr, mode="eval").body
+    except Exception:
+        return None
+
+    def _eval(n: ast.AST) -> float:
+        if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)):
+            return n.value
+        if isinstance(n, ast.BinOp) and type(n.op) in _MATH_OPERATORS:
+            return _MATH_OPERATORS[type(n.op)](_eval(n.left), _eval(n.right))
+        if isinstance(n, ast.UnaryOp) and type(n.op) in _MATH_OPERATORS:
+            return _MATH_OPERATORS[type(n.op)](_eval(n.operand))
+        raise ValueError(f"unsupported expression node: {type(n).__name__}")
+
+    try:
+        return float(_eval(node))
+    except ZeroDivisionError:
+        return None
+    except Exception:
+        return None
 
 
 def _fmt(value: Any, unit: str = "", unavailable: str = "unavailable") -> str:
@@ -369,6 +464,49 @@ class NeuralSynthesisAgent:
                 f"{_fmt(p.get('distance_from_vessel_nm'), ' NM')} from current position). "
                 f"Weather clearance verdict: {_fmt(w.get('clearance_verdict'))}."
             )
+        elif intent == "GREETING":
+            hour = _now_ist().hour
+            time_greeting = (
+                "Good morning" if 5 <= hour < 12
+                else "Good afternoon" if 12 <= hour < 17
+                else "Good evening" if 17 <= hour < 21
+                else "Hello"
+            )
+            txt = (
+                f"{time_greeting}! I'm ORCA's voyage advisory assistant. Ask me things like "
+                "\"is the sea safe today\", \"which PFZ zone should I fish\", \"am I near the IMBL\", "
+                "\"how many boats are in this zone\", or \"when should I head back before dusk\", "
+                "and I'll answer from this site's own live weather, satellite, PFZ, geofencing, fleet and ETA data."
+            )
+        elif intent == "THANKS_FAREWELL":
+            txt = "You're welcome -- safe voyage, and check back any time for an updated advisory before you head out."
+        elif intent == "HELP_CAPABILITY":
+            txt = (
+                "I'm ORCA's rule-based voyage advisory assistant -- no external AI is involved anywhere in this "
+                "pipeline, every answer comes from this site's own live weather, satellite, PFZ, geofencing, fleet "
+                "and ETA agents plus its own accumulated stats history. Ask about sea/weather safety, the best "
+                "fishing zone, IMBL/MPA boundaries, fleet density, route planning, or your return ETA before dusk."
+            )
+        elif intent == "DATE_TIME":
+            now = _now_ist()
+            txt = f"It's currently {now.strftime('%H:%M')} IST on {now.strftime('%A, %d %B %Y')} (server clock)."
+        elif intent == "MATH_CALCULATION":
+            expr = _extract_arithmetic_expression(t.get("query", "") or "")
+            result = _safe_eval_arithmetic(expr) if expr else None
+            if result is not None:
+                result_str = f"{result:.6g}"
+                txt = f"{expr.strip()} = {result_str}."
+            else:
+                txt = (
+                    "I can do simple arithmetic (e.g. \"12 + 7\" or \"9 times 4\"), but I couldn't work out a "
+                    "calculation from that -- try rephrasing it as plain numbers and an operator."
+                )
+        elif intent == "OFF_TOPIC_GENERIC":
+            txt = (
+                "That's outside what I can answer -- I'm a maritime voyage advisory assistant with no general "
+                "knowledge lookup or internet access, only this site's own live ocean, weather and fleet data. "
+                "Ask me about sea conditions, the best fishing zone, boundaries, fleet density, or your return ETA instead."
+            )
         else:  # GENERAL_VOYAGE_SAFETY
             dusk = e.get("dusk_safety_verdict")
             dusk_clause = (
@@ -425,7 +563,13 @@ class NeuralSynthesisAgent:
         translation when no translation engine is configured -- this
         system has never called out to a translation API either.
         """
-        if language == "en":
+        if language == "en" or intent in _NON_MARITIME_INTENTS:
+            # Greetings/thanks/help/date-time/math/off-topic have no
+            # maritime-language translation template (they aren't maritime
+            # content), and prefixing "Marine advisory:" onto "Good
+            # evening!" or a calculator result reads as broken rather than
+            # helpful -- return the grounded English text as-is, same as
+            # every other untranslated intent already does further down.
             return english_text
         w = t.get("weather", {}) or {}
         wave = _fmt(w.get("significant_wave_height_m"), " m")
