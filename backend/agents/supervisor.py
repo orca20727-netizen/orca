@@ -1,7 +1,9 @@
 """
 Master Supervisor / DAG Planner.
 
-Classifies a natural-language voyage query into one of ten intents and
+Classifies a natural-language voyage query into one of a fixed set of
+maritime intents (plus greeting/small-talk/generic-question intents, see
+below) and
 dynamically selects which downstream agents are relevant to it, instead of
 always running (and always synthesizing an answer from) the exact same
 fixed agent set regardless of what was actually asked.
@@ -18,6 +20,7 @@ so nothing here -- classification or synthesis -- ever depends on
 external network/API availability.
 """
 
+import re
 from typing import Any, Dict, List
 
 # Each intent maps to (priority, [keyword/phrase signals]). Priority is
@@ -71,6 +74,42 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "pfz", "fishing zone", "best zone", "which zone", "where should i fish",
         "fishing ground", "predicted yield", "which fishing",
     ],
+    # Everything below is deliberately checked AFTER every maritime-specific
+    # intent above, so a query that matches both (e.g. "hi, is the sea safe
+    # today?") still gets a real maritime intent as its primary answer, with
+    # the greeting/small-talk reply appended -- never the other way round.
+    # These give a "decent response" to greetings, thanks, capability
+    # questions and simple generic questions instead of falling into the
+    # GENERAL_VOYAGE_SAFETY catch-all and dumping an irrelevant full
+    # weather/PFZ/ETA advisory on someone who just said "hi".
+    "GREETING": [
+        "hi", "hello", "hey", "hiya", "yo",
+        "good morning", "good afternoon", "good evening", "namaste",
+    ],
+    "THANKS_FAREWELL": [
+        "thanks", "thank you", "thankyou", "much appreciated", "appreciate it",
+        "bye", "goodbye", "see you", "take care", "good night",
+    ],
+    "HELP_CAPABILITY": [
+        "help", "what can you do", "who are you", "what are you",
+        "how do i use this", "how does this work", "what is this app",
+        "capabilities",
+    ],
+    "DATE_TIME": [
+        "what time is it", "current time", "what's the time", "what is the time",
+        "today's date", "what's the date", "what is the date", "what day is it",
+        "what day is today",
+    ],
+    # Common non-maritime trivia-question shapes. Answered with a graceful
+    # redirect (never a fabricated "answer") -- this system has no external
+    # AI/API to actually look these up. See _looks_like_arithmetic() below
+    # for the separate, genuinely-answerable MATH_CALCULATION case.
+    "OFF_TOPIC_GENERIC": [
+        "capital of", "who invented", "tell me a joke", "prime minister of",
+        "president of", "meaning of life", "population of", "who won the world cup",
+        "recipe for", "how to cook", "define ", "who is the ceo",
+        "tallest mountain", "who wrote", "cricket score", "stock price",
+    ],
     },
     "hi": {
         "IMBL_BOUNDARY": ["सीमा", "समुद्री सीमा", "आईएमबीएल", "श्रीलंका"],
@@ -85,6 +124,11 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "YIELD_TREND_ANALYSIS": ["उत्पादकता", "घट गई", "कम मछली", "पकड़ कम"],
         "OCEAN_CONDITIONS": ["क्लोरोफिल", "सतह का तापमान", "समुद्र का तापमान"],
         "PFZ_RECOMMENDATION": ["मछली पकड़ने का क्षेत्र", "पीएफजेड", "सबसे अच्छा क्षेत्र"],
+        "GREETING": ["नमस्ते", "नमस्कार", "हैलो", "सुप्रभात"],
+        "THANKS_FAREWELL": ["धन्यवाद", "शुक्रिया", "अलविदा", "फिर मिलेंगे"],
+        "HELP_CAPABILITY": ["मदद", "आप क्या कर सकते हैं", "आप कौन हैं"],
+        "DATE_TIME": ["अभी क्या समय है", "आज की तारीख", "आज कौन सा दिन है"],
+        "OFF_TOPIC_GENERIC": ["राजधानी", "किसने आविष्कार किया", "मजाक सुनाओ"],
     },
     "ta": {
         "IMBL_BOUNDARY": ["எல்லை", "கடல் எல்லை", "இஎம்பிஎல்", "இலங்கை"],
@@ -96,6 +140,11 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "YIELD_TREND_ANALYSIS": ["உற்பத்தி குறைந்தது", "மீன் குறைவு", "ஏன் குறைந்தது"],
         "OCEAN_CONDITIONS": ["குளோரோபில்", "கடல் மேற்பரப்பு வெப்பநிலை"],
         "PFZ_RECOMMENDATION": ["மீன்பிடி பகுதி", "பிஎப்இசட்", "சிறந்த பகுதி"],
+        "GREETING": ["வணக்கம்", "ஹலோ", "காலை வணக்கம்"],
+        "THANKS_FAREWELL": ["நன்றி", "போய் வருகிறேன்", "பிறகு சந்திப்போம்"],
+        "HELP_CAPABILITY": ["உதவி", "நீங்கள் என்ன செய்ய முடியும்", "நீங்கள் யார்"],
+        "DATE_TIME": ["இப்போது நேரம் என்ன", "இன்றைய தேதி", "இன்று என்ன நாள்"],
+        "OFF_TOPIC_GENERIC": ["தலைநகரம்", "கண்டுபிடித்தவர்", "ஒரு நகைச்சுவை சொல்லு"],
     },
     "ml": {
         "IMBL_BOUNDARY": ["അതിർത്ത്", "സമുദ്ര അതിർത്തി", "ഐഎംബിഎൽ", "ശ്രീലങ്ക"],
@@ -107,6 +156,11 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "YIELD_TREND_ANALYSIS": ["ഉൽപാദനക്ഷമത കുറഞ്ഞു", "മീൻ കുറവ്"],
         "OCEAN_CONDITIONS": ["ക്ലോറോഫിൽ", "സമുദ്രോപരിതല താപനില"],
         "PFZ_RECOMMENDATION": ["മത്സ്യബന്ധന മേഖല", "പി എഫ് ഇസഡ്", "മികച്ച മേഖല"],
+        "GREETING": ["നമസ്കാരം", "ഹലോ", "സുപ്രഭാതം"],
+        "THANKS_FAREWELL": ["നന്ദി", "വിട", "പിന്നെ കാണാം"],
+        "HELP_CAPABILITY": ["സഹായം", "നിങ്ങൾക്ക് എന്ത് ചെയ്യാൻ കഴിയും", "നിങ്ങൾ ആരാണ്"],
+        "DATE_TIME": ["ഇപ്പോൾ എത്ര മണിയായി", "ഇന്നത്തെ തീയതി", "ഇന്ന് ഏത് ദിവസമാണ്"],
+        "OFF_TOPIC_GENERIC": ["തലസ്ഥാനം", "കണ്ടുപിടിച്ചത്", "ഒരു തമാശ പറയൂ"],
     },
 }
 
@@ -127,6 +181,16 @@ INTENT_RELEVANT_AGENTS: Dict[str, List[str]] = {
     "YIELD_TREND_ANALYSIS": ["satellite", "pfz", "weather"],
     "OCEAN_CONDITIONS": ["satellite", "pfz"],
     "GENERAL_VOYAGE_SAFETY": ["weather", "pfz", "fleet", "eta"],
+    # Greetings, thanks, capability questions, the time/date, arithmetic and
+    # off-topic trivia don't need any maritime agent to answer -- core.py's
+    # run_pipeline pre-populates every agent slot with a SKIPPED placeholder
+    # regardless, so an empty list here is a safe, fully-supported plan.
+    "GREETING": [],
+    "THANKS_FAREWELL": [],
+    "HELP_CAPABILITY": [],
+    "DATE_TIME": [],
+    "MATH_CALCULATION": [],
+    "OFF_TOPIC_GENERIC": [],
 }
 
 # Subtasks dispatched per intent -- kept close to the legacy fixed list for
@@ -145,17 +209,95 @@ _SUBTASK_LIBRARY = {
 }
 
 
-def classify_intent(query: str, language_code: str = "en") -> str:
-    """Deterministic, rule-based intent classification. Returns one of the
-    ten supported intents; never raises, never requires network access."""
+_WORD_BOUNDARY_CACHE: Dict[str, "re.Pattern[str]"] = {}
+
+
+def _signal_matches(signal: str, q: str) -> bool:
+    """True if `signal` is present in the already-lowercased query `q`.
+
+    Multi-word phrases ("fishing zone", "how many boats") keep the exact
+    original plain-substring check -- a phrase that long can't plausibly
+    match inside an unrelated word, and several non-English signal lists
+    rely on this for agglutinative-language matching (a suffix can attach
+    directly to a word with no space).
+
+    A single ASCII token (no space, e.g. "hi", "border", "imbl") instead
+    matches only as its own whole word via a word-boundary regex. Without
+    this, a short new signal like "hi" would match inside "fishing" (index
+    3-4) -- a real false-positive this function exists to prevent. Existing
+    ASCII single-word signals only get *stricter* (never looser) under this
+    change, so they keep matching every genuine standalone use while losing
+    only accidental substring hits."""
+    if " " in signal or not signal.isascii():
+        return signal in q
+    pattern = _WORD_BOUNDARY_CACHE.get(signal)
+    if pattern is None:
+        pattern = re.compile(r"\b" + re.escape(signal) + r"\b")
+        _WORD_BOUNDARY_CACHE[signal] = pattern
+    return bool(pattern.search(q))
+
+
+# A handful of common arithmetic phrasings ("2+2", "5 * 3", "12 plus 7",
+# "what is 9 times 4"). Deliberately conservative: a bare spaced dash
+# ("5 - 3") or symbol expression only counts as arithmetic when it's either
+# the entire query or paired with an explicit calculation trigger word, so
+# an ordinary maritime sentence that happens to mention a numeric range
+# (e.g. "waves 2-3 m") never gets misclassified as a math question -- note
+# the *unspaced* "2-3" also can't match _MATH_DASH_PATTERN at all, which
+# requires whitespace on both sides of the dash.
+_MATH_WORD_PATTERN = re.compile(r"\b\d+\s*(?:plus|minus|times|multiplied by|divided by)\s*\d+\b")
+_MATH_SYMBOL_PATTERN = re.compile(r"\d+\s*[+*x×/÷]\s*\d+")
+_MATH_DASH_PATTERN = re.compile(r"\d+\s+-\s+\d+")
+_MATH_PURE_EXPRESSION = re.compile(r"^[\d.\s+\-*/x×÷()]+$")
+_MATH_TRIGGER_PHRASES = ("what is", "what's", "calculate", "solve", "compute", "how much is")
+
+
+def _looks_like_arithmetic(q: str) -> bool:
+    """True only for a genuinely-answerable arithmetic question -- this
+    feeds MATH_CALCULATION, the one OFF_TOPIC-adjacent intent this system
+    can actually compute a correct, real answer for (via a safe AST
+    evaluator in synthesis_agent.py), rather than the graceful redirect
+    every other generic/trivia question gets."""
+    if _MATH_WORD_PATTERN.search(q):
+        return True
+    if _MATH_SYMBOL_PATTERN.search(q) or _MATH_DASH_PATTERN.search(q):
+        stripped = q.strip().rstrip("?").strip()
+        if _MATH_PURE_EXPRESSION.match(stripped):
+            return True
+        return any(p in q for p in _MATH_TRIGGER_PHRASES)
+    return False
+
+
+def classify_intents(query: str, language_code: str = "en") -> List[str]:
+    """Deterministic, rule-based intent classification -- returns EVERY
+    intent (in the same fixed priority order as before) that has at least
+    one matching signal, not just the first, so a compound question like
+    "is it safe today and where should I fish?" is recognised as both
+    WEATHER_SAFETY and PFZ_RECOMMENDATION instead of only the
+    higher-priority one. Never raises, never requires network access.
+    Always returns at least one intent (GENERAL_VOYAGE_SAFETY if nothing
+    matched)."""
     q = query.lower()
     signals_by_intent = INTENT_SIGNALS_BY_LANG.get(language_code, INTENT_SIGNALS_BY_LANG["en"])
+    matched = []
     for intent in INTENT_SIGNALS_BY_LANG["en"]:
         signals = signals_by_intent.get(intent, [])
-        for signal in signals:
-            if signal in q:
-                return intent
-    return "GENERAL_VOYAGE_SAFETY"
+        if any(_signal_matches(signal, q) for signal in signals):
+            matched.append(intent)
+    # MATH_CALCULATION isn't in the keyword table above -- number/operator
+    # shapes vary too much for a fixed phrase list, so it gets its own
+    # dedicated (and deliberately conservative) detector instead.
+    if "MATH_CALCULATION" not in matched and _looks_like_arithmetic(q):
+        matched.append("MATH_CALCULATION")
+    return matched or ["GENERAL_VOYAGE_SAFETY"]
+
+
+def classify_intent(query: str, language_code: str = "en") -> str:
+    """The single highest-priority matched intent -- kept for callers that
+    only ever wanted one answer (e.g. synthesis_agent's own fallback path
+    when no Supervisor plan is available). See classify_intents() for the
+    full compound-question-aware match."""
+    return classify_intents(query, language_code)[0]
 
 
 class SupervisorAgent:
@@ -163,8 +305,20 @@ class SupervisorAgent:
         self.name = "Master Supervisor / DAG Planner"
 
     async def plan_dag(self, query: str, language_code: str = "en") -> Dict[str, Any]:
-        intent = classify_intent(query, language_code)
-        relevant_agents = INTENT_RELEVANT_AGENTS.get(intent, INTENT_RELEVANT_AGENTS["GENERAL_VOYAGE_SAFETY"])
+        all_intents = classify_intents(query, language_code)
+        intent = all_intents[0]  # highest-priority match; kept as-is for every existing reader of plan["intent"]
+
+        # Compound question support: run the union of every matched
+        # intent's agents, not just the primary one, so "is it safe today
+        # and where should I fish?" actually gets both weather AND PFZ
+        # telemetry instead of only whichever intent happened to win
+        # priority. A single-intent query (the overwhelming majority)
+        # behaves exactly as before, since the union of one set is itself.
+        relevant_agents: List[str] = []
+        for i in all_intents:
+            for agent in INTENT_RELEVANT_AGENTS.get(i, INTENT_RELEVANT_AGENTS["GENERAL_VOYAGE_SAFETY"]):
+                if agent not in relevant_agents:
+                    relevant_agents.append(agent)
 
         subtasks = [
             name for name, agent_key in _SUBTASK_LIBRARY.items()
@@ -177,6 +331,7 @@ class SupervisorAgent:
         return {
             "query": query,
             "intent": intent,
+            "all_intents": all_intents,
             "relevant_agents": relevant_agents,
             "subtasks": subtasks,
             "classification_method": "DETERMINISTIC_RULE_BASED",
