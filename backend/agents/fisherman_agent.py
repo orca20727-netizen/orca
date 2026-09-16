@@ -269,15 +269,31 @@ class FishermanOpportunityAgent:
         # Matching is alias-based (see SPECIES_ALIASES / _species_matches)
         # since the PFZ dataset's species labels ("Indian Mackerel", "King
         # Seerfish") don't always literally match our market species names.
+        #
+        # Among however many of that zone's dominant species we have market
+        # data for, pick whichever actually has the HIGHEST composite
+        # Opportunity Score -- not just whichever happens to be listed
+        # FIRST in the zone's dominant_species array. The earlier version of
+        # this picked the first list match unconditionally, which meant the
+        # "best opportunity" was effectively pinned to whatever species a
+        # PFZ zone's dataset happens to name first (e.g. PFZ-01 always lists
+        # "Indian Mackerel" before "Yellowfin Tuna"/"Sardines"), regardless
+        # of that species' actual score -- confirmed live: Tuna scored 87.1
+        # and Mackerel only 84.8 for the same request, yet Mackerel was the
+        # one shown, every time PFZ-01 was the top zone (which is most of
+        # the time). This still keeps the zone-consistency guarantee (only
+        # recommends a species genuinely found in the top-recommended zone)
+        # while actually reflecting which of those species is winning today.
         best = None
         if preferred_species and preferred_species in by_name:
             best = by_name[preferred_species]
         else:
-            for sp_name in (pfz.get("dominant_species") or []):
-                match = next((m for m in by_name if _species_matches(m, sp_name)), None)
-                if match:
-                    best = by_name[match]
-                    break
+            zone_species_names = {
+                m for sp_name in (pfz.get("dominant_species") or [])
+                for m in by_name if _species_matches(m, sp_name)
+            }
+            if zone_species_names:
+                best = max((by_name[m] for m in zone_species_names), key=lambda r: r["composite_score"])
         if best is None:
             best = ranked[0]
 
