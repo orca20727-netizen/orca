@@ -264,11 +264,6 @@ class RoutePlanner:
         path_cells.reverse()
 
         waypoints_latlon = [cell_latlon(r, c) for r, c in path_cells]
-        # Snap the endpoints to the exact requested coordinates rather than
-        # the nearest grid node, so the reported route starts/ends exactly
-        # at origin/destination.
-        waypoints_latlon[0] = (olat, olon)
-        waypoints_latlon[-1] = (dlat, dlon)
 
         # Raw A* output on an 8-connected grid "staircases" along any
         # bearing that isn't a multiple of 45 degrees (alternating between
@@ -294,6 +289,26 @@ class RoutePlanner:
             simplified = smoothed
         if not self._path_is_clear(simplified):
             simplified = waypoints_latlon
+
+        # Snap the endpoints to the exact requested coordinates rather than
+        # the nearest grid node, so the reported route starts/ends exactly
+        # at origin/destination. This MUST happen after every clearance
+        # check above, not before: a real harbour sits right at the
+        # shoreline, a few hundred metres closer to land than the grid
+        # cell center A* actually validated, so substituting the exact
+        # coordinate in *before* re-checking the first/last leg could make
+        # an already-validated grid-to-grid edge look like it clips the
+        # coastline polygon. That false "blocked" reading was silently
+        # discarding the smoothed route on exactly this kind of harbour
+        # and falling all the way back to the dense, unsimplified A* grid
+        # staircase -- the zigzag/non-optimal route this was fixing.
+        # Swapping in the exact coordinates only now, after clearance is
+        # already settled on grid-accurate points, keeps the route both
+        # optimally smoothed AND anchored exactly on the harbour/PFZ
+        # coordinates.
+        simplified = list(simplified)
+        simplified[0] = (olat, olon)
+        simplified[-1] = (dlat, dlon)
 
         total_nm = 0.0
         for i in range(len(simplified) - 1):
