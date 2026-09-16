@@ -7,8 +7,13 @@ from constants import DEFAULT_HARBOUR_ID, DEFAULT_PFZ_ID, MAX_QUERY_LENGTH
 
 class QueryRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=MAX_QUERY_LENGTH)
-    origin_harbour: str = DEFAULT_HARBOUR_ID
-    target_pfz: str = DEFAULT_PFZ_ID
+    # Optional, not just defaulted: a caller (or a future frontend change)
+    # sending JSON null here used to fail Pydantic validation outright
+    # (`str` doesn't accept None), even though "no harbour/PFZ selected
+    # yet" is a perfectly normal state -- None now means exactly that, and
+    # the endpoint substitutes the same defaults it always has.
+    origin_harbour: Optional[str] = None
+    target_pfz: Optional[str] = None
     # Set only when the user deliberately changes the UI language selector.
     # If omitted, the backend replies in the query's detected language.
     response_language: Optional[str] = Field(default=None, max_length=8)

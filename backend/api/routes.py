@@ -412,17 +412,22 @@ async def ingest_vessel_telemetry(
 
 @router.post("/api/advisory/synthesize")
 async def synthesize_advisory(req: QueryRequest):
-    if req.origin_harbour not in core.HARBOURS:
-        raise HTTPException(status_code=404, detail=f"Unknown origin_harbour '{req.origin_harbour}'.")
-    if req.target_pfz not in core.PFZ_ZONES:
-        raise HTTPException(status_code=404, detail=f"Unknown target_pfz '{req.target_pfz}'.")
+    # origin_harbour/target_pfz are optional now (see models/requests.py) --
+    # a caller sending JSON null, or omitting them entirely, means "use the
+    # default", exactly as if the field had never been provided.
+    origin_harbour = req.origin_harbour or DEFAULT_HARBOUR_ID
+    target_pfz = req.target_pfz or DEFAULT_PFZ_ID
+    if origin_harbour not in core.HARBOURS:
+        raise HTTPException(status_code=404, detail=f"Unknown origin_harbour '{origin_harbour}'.")
+    if target_pfz not in core.PFZ_ZONES:
+        raise HTTPException(status_code=404, detail=f"Unknown target_pfz '{target_pfz}'.")
 
-    telemetry = await core.run_pipeline(req.query, req.origin_harbour, req.target_pfz, req.response_language, req.session_id, [turn.model_dump() for turn in req.history], req.force_full_pipeline)
+    telemetry = await core.run_pipeline(req.query, origin_harbour, target_pfz, req.response_language, req.session_id, [turn.model_dump() for turn in req.history], req.force_full_pipeline)
     final_advisory = await core.safe_call(
         "Neural Synthesis", lambda: core.synthesis_agent.synthesize(telemetry), fallback=core.FALLBACK_ADVISORY
     )
     context = telemetry.get("conversation_context", {})
-    core.session_store.record(req.session_id, req.query, final_advisory.get("advisory_text", ""), context.get("resolved_origin_harbour", req.origin_harbour), context.get("resolved_target_pfz", req.target_pfz))
+    core.session_store.record(req.session_id, req.query, final_advisory.get("advisory_text", ""), context.get("resolved_origin_harbour", origin_harbour), context.get("resolved_target_pfz", target_pfz))
 
     return {
         "telemetry": telemetry,
