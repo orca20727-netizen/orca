@@ -153,6 +153,12 @@ def compile_base(cls, base):
     m = re.match(r'^-(right|top)-1$', base)
     if m:
         return [(m.group(1), '-0.25rem')]
+    m = re.match(r'^-(mt|mb|ml|mr|mx|my|m)-([\d.]+)$', base)
+    if m and m.group(2) in SPACING:
+        prop_map = {'mt': 'margin-top', 'mb': 'margin-bottom', 'ml': 'margin-left',
+                    'mr': 'margin-right', 'mx': 'margin-inline', 'my': 'margin-block', 'm': 'margin'}
+        v = SPACING[m.group(2)]
+        return [(prop_map[m.group(1)], v == '0px' and '0px' or f'-{v}')]
 
     if base == 'flex-1': return [('flex', '1 1 0%')]
     if base == 'flex-col': return [('flex-direction', 'column')]
@@ -169,6 +175,7 @@ def compile_base(cls, base):
     if m: return [('grid-template-columns', f'repeat({m.group(1)}, minmax(0, 1fr))')]
     m = re.match(r'^col-span-(\d+)$', base)
     if m: return [('grid-column', f'span {m.group(1)} / span {m.group(1)}')]
+    if base == 'col-span-full': return [('grid-column', '1 / -1')]
 
     m = re.match(r'^gap-([\d.]+)$', base)
     if m and m.group(1) in SPACING: return [('gap', SPACING[m.group(1)])]
@@ -200,6 +207,7 @@ def compile_base(cls, base):
     if base == 'max-w-2xl': return [('max-width', '42rem')]
     if base == 'max-w-3xl': return [('max-width', '48rem')]
     if base == 'max-w-lg': return [('max-width', '32rem')]
+    if base == 'max-w-md': return [('max-width', '28rem')]
     if base == 'max-w-7xl': return [('max-width', '80rem')]
 
     m = re.match(r'^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl)$', base)
@@ -223,6 +231,11 @@ def compile_base(cls, base):
     if base == 'tracking-wider': return [('letter-spacing', '0.05em')]
     if base == 'tracking-widest': return [('letter-spacing', '0.1em')]
     if base == 'uppercase': return [('text-transform', 'uppercase')]
+    if base == 'normal-case': return [('text-transform', 'none')]
+    if base == 'tracking-normal': return [('letter-spacing', '0em')]
+    if base == 'list-disc': return [('list-style-type', 'disc')]
+    if base == 'list-inside': return [('list-style-position', 'inside')]
+    if base == 'whitespace-nowrap': return [('white-space', 'nowrap')]
 
     if base.startswith('bg-'):
         v = parse_color_class(base[3:])
@@ -252,7 +265,7 @@ def compile_base(cls, base):
     if base == 'border-l': return [('border-left-width', '1px'), ('border-left-style', 'solid')]
     if base == 'border-collapse': return [('border-collapse', 'collapse')]
 
-    radii = {'rounded':'0.25rem','rounded-lg':'0.5rem','rounded-xl':'0.75rem','rounded-2xl':'1rem','rounded-3xl':'1.5rem','rounded-full':'9999px'}
+    radii = {'rounded':'0.25rem','rounded-md':'0.375rem','rounded-lg':'0.5rem','rounded-xl':'0.75rem','rounded-2xl':'1rem','rounded-3xl':'1.5rem','rounded-full':'9999px'}
     if base in radii: return [('border-radius', radii[base])]
 
     shadows = {
