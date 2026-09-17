@@ -30,6 +30,25 @@ _SCRIPT_RANGES = [
 ]
 _DEVANAGARI_RANGE = r"[\u0900-\u097F]"  # Shared by Hindi and Marathi
 
+# langdetect's n-gram model needs a reasonable amount of text to have any
+# real signal -- on very short input (a couple of words) it can confidently
+# return a completely wrong language code (e.g. misreading a plain English
+# greeting as Croatian, Somali, or Welsh). Left unguarded, that false read
+# marks ordinary English chat ("hi", "hello", "thanks") as "unsupported" and
+# prepends a spurious language-not-supported note ahead of an otherwise good
+# reply. Common short English conversational openers are recognised directly
+# so they never depend on langdetect's short-text guess, and langdetect is
+# only trusted once there is enough text (heuristically ~20 characters) for
+# its model to be meaningful.
+_COMMON_ENGLISH_SHORT_PHRASES = {
+    "hi", "hii", "hiii", "hello", "hey", "heya", "hiya", "yo", "sup",
+    "ok", "okay", "yes", "no", "yep", "nope", "sure", "cool", "great",
+    "thanks", "thank you", "thankyou", "bye", "goodbye", "good morning",
+    "good afternoon", "good evening", "good night", "how are you",
+    "what's up", "whats up",
+}
+_MIN_LANGDETECT_CHARS = 20
+
 try:
     from langdetect import DetectorFactory, detect
     DetectorFactory.seed = 0
@@ -72,7 +91,9 @@ def detect_query_language(query: str) -> Dict[str, Any]:
 
     detected = "en"
     method = "SAFE_DEFAULT"
-    if detect is not None and text:
+    normalized = re.sub(r"[^a-z' ]", "", text.lower()).strip()
+    is_common_english = normalized in _COMMON_ENGLISH_SHORT_PHRASES
+    if not is_common_english and detect is not None and text and len(text) >= _MIN_LANGDETECT_CHARS:
         try:
             detected = (detect(text) or "en").split("-")[0].lower()
             method = "LANGDETECT"
