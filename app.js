@@ -425,7 +425,339 @@ const translations = {
     fmClaimBtn: "Claim this lead",
     fmClaimPromptText: "Enter your name and phone/contact so this buyer knows who's fulfilling it:",
     fmClaimSuccess: "Claimed — the buyer will be notified off-platform.",
-    fmClaimFailed: "Couldn't claim this listing right now."
+    fmClaimFailed: "Couldn't claim this listing right now.",
+    dagAgentSupervisorName: "Master Supervisor / DAG Planner",
+    dagAgentSupervisorRole: "Decomposes multi-modal marine query, allocates subtasks to satellite, hazard, and geofence agents.",
+    dagAgentSatelliteName: "Satellite Oceanography Agent",
+    dagAgentSatelliteRole: "Ingests Oceansat-3 OCM-3 (chlorophyll-a) & SSTM (thermal fronts) along with INSAT-3DR cloud imagery.",
+    dagAgentWeatherName: "Weather & Marine Hazard Agent",
+    dagAgentWeatherRole: "Evaluates Significant Wave Height (SWH), wind gust vectors, lightning probability, and generates sea-clearance score.",
+    dagAgentPfzName: "Ocean Analytics & PFZ Agent",
+    dagAgentPfzRole: "Identifies thermal-chlorophyll front intersections, calculates pelagic biomass density, and ranks target fishing zones.",
+    dagAgentGeofenceName: "Geofencing & Routing Agent",
+    dagAgentGeofenceRole: "Monitors International Maritime Boundary Lines (IMBL), buffers Marine Protected Areas, and calculates A* safe waypoints.",
+    dagAgentFleetName: "Fleet & Traffic Agent (New)",
+    dagAgentFleetRole: "Scans AIS & ARGOS-4 vessel transponders, tracks fleet distribution, and flags overcrowding or border congestion.",
+    dagAgentEtaName: "ETA & Voyage Safety Agent (New)",
+    dagAgentEtaRole: "Calculates transit duration adjusted for real-time wave resistance and evaluates return-by-dusk safety window.",
+    dagAgentSynthesisName: "Neural Synthesis Agent (Stats-Driven)",
+    dagAgentSynthesisRole: "Aggregates multi-agent telemetry into an authoritative, grounded natural-language advisory with citation tags and TTS -- entirely rule-based, reasoning over this site's own live telemetry and its own accumulated stats ledger. No external AI/LLM API is used.",
+    dagStatusIdle: "Idle",
+    dagInspectLink: "Inspect ➔",
+    dagInspectorLatencyTemplate: "Execution Latency: {latency} · Subtasks Verified",
+    dagStatusQueued: "Queued",
+    dagStatusExecuting: "Executing...",
+    dagStatusCompleted: "Completed",
+    dagStatusSkipped: "Not invoked — intent did not require it",
+    dagBtnReasoningActiveLive: "Reasoning Active (Live Backend)...",
+    dagBtnExecutedLive: "✓ Pipeline Executed via Live Backend · Run Again",
+    dagBtnErrorRetry: "▶ Run Live Pipeline Simulation",
+    dagBtnReasoningActiveOffline: "Reasoning Active (Local Simulation)...",
+    dagBtnExecutedOffline: "✓ Pipeline Executed (Local Simulation) · Run Again",
+    dagTabTitle: "8-Node Collaborative Multi-Agent DAG",
+    dagInteractiveCanvasBadge: "Interactive Reasoning Canvas",
+    dagTabDesc: "Real-time multi-agent execution pipeline reasoning over Oceansat-3, INSAT-3DR, IMBL geofencing, fleet density, and voyage ETA.",
+    backendCheckingStatus: "Checking backend...",
+    dagZoomReset: "Reset",
+    dagRunSimulationBtn: "▶ Run Live Pipeline Simulation",
+    dagClickToInspectHint: "Click any agent card to inspect its raw telemetry input, internal algorithms, and JSON data output.",
+    dagOrchestratorLabel: "Orchestrator: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "Agent Details",
+    dagInspectorDefaultRole: "Role description",
+    dagInspectorLatencyPlaceholder: "Latency: 24ms",
+    dagInspectorJsonLabel: "Live JSON Payload",
+    dagCloseInspector: "Close Inspector",
+    chatNewConversationMsg: "New conversation started. ORCA will not use earlier chat context.",
+    chatYouLabel: "YOU",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Orchestrating 8 Specialized AI Agents across Oceansat-3, INSAT-3DR & Open-Meteo...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "Multi-Agent Marine Advisory",
+    chatGroundedConfidenceTemplate: "{confidence}% Grounded Confidence",
+    chatLangDetectedTooltip: "Language detected from the message",
+    chatListenTts: "Listen (TTS)",
+    chatNavicMssBtn: "NavIC MSS Code",
+    chatMetricZone: "Recommended Zone",
+    chatMetricEta: "Live Sea State ETA",
+    chatMetricVessels: "Active Vessels",
+    chatVesselsSuffix: "{count} Vessels",
+    chatMetricImbl: "IMBL Clearance",
+    chatReasoningTraceSummaryTemplate: "View Multi-Agent Reasoning Trace ({steps} steps executed)",
+    chatNodeDagSuffixTemplate: "{count}-node DAG",
+    chatNoAdvisoryTextFallback: "The ORCA INSIGHT backend generated an advisory but returned no text.",
+    chatLiveAdvisoryLabel: "✓ Live Multi-Agent Advisory",
+    chatGroundedEngineFallback: "Grounded Engine",
+    chatOceanSourceTierTemplate: "Ocean source tier: {tier} · Chlorophyll: {chlorophyll}",
+    chatCitationsTemplate: "Citations: {citations}",
+    chatOfflineBannerText: "OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.",
+    chatOfflineImblPlainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Vessels in the Palk Strait / Gulf of Mannar area are typically within a few Nautical Miles of the India-Sri Lanka IMBL boundary. Maintain a westward heading and keep VHF transponders active on Channel 16. Reconnect to the ORCA backend for an actual measured distance to the boundary.",
+    chatOfflineImblHtmlHeading: "IMBL Geofencing Advisory (Simulated Offline Estimate):",
+    chatOfflineImblHtmlBody1: "Without a live backend connection, exact vessel-to-boundary distances cannot be measured. As a general precaution near Palk Strait Sector 4, maintain a westward heading toward Mandapam.",
+    chatOfflineImblHtmlBody2: "This is a generic offline safety reminder, not a measured geofence reading. Reconnect to ORCA backend for a real distance-to-IMBL calculation.",
+    chatOfflineImblStep1: "Backend unreachable. Classified query as IMBL_BOUNDARY using local keyword match.",
+    chatOfflineImblStep2: "No live geofencing telemetry available -- returning generic boundary-safety guidance only.",
+    chatOfflineDensityPlainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Live vessel counts cannot be retrieved without a backend connection. Historically, Wadge Bank and Kochi Deep Offshore see moderate fishing traffic. Reconnect to the ORCA backend for an actual fleet-density reading from the vessel dataset.",
+    chatOfflineDensityHtmlHeading: "Fleet Density (Offline — Simulated Placeholder):",
+    chatOfflineDensityHtmlBody: "The Fleet & Traffic Agent's live vessel dataset is not reachable right now, so an exact in-zone vessel count is unavailable.",
+    chatOfflineDensityListItem: "Reconnect to the ORCA backend for a real per-zone vessel count and overcrowding verdict.",
+    chatOfflineDensityStep1: "Backend unreachable. Classified query as FLEET_DENSITY using local keyword match.",
+    chatOfflineDensityStep2: "No live fleet dataset available -- vessel counts not shown to avoid presenting a fabricated figure.",
+    chatOfflineGenericPlainTextTemplate: "OFFLINE ADVISORY (backend unreachable): ORCA's multi-agent backend could not be reached, so this answer is a generic, non-live placeholder rather than a grounded reading. Your browser's own Open-Meteo widget reports significant wave height around {liveWave}m, but PFZ ranking, route distance, ETA, and fleet counts all require the backend and are not shown here. Reconnect to the ORCA backend for a real advisory.",
+    chatOfflineGenericHtmlHeading: "Offline Placeholder Advisory",
+    chatOfflineGenericHtmlBody1Template: "The ORCA multi-agent backend (satellite, weather, PFZ ranking, geofencing, fleet, routing, and Neural Synthesis) is currently unreachable. Client-side, this browser last saw a wave height of <strong>{liveWave}m</strong> from Open-Meteo, but every other figure requires the backend.",
+    chatOfflineGenericHtmlBody2: "<strong>No PFZ recommendation, route, ETA, or fleet count is shown</strong> because those would have to be invented rather than computed. Reconnect to the ORCA backend for a full grounded advisory.",
+    chatOfflineGenericStep1: "Backend unreachable. No intent-specific keyword matched -- returning GENERAL_VOYAGE_SAFETY offline placeholder.",
+    chatOfflineGenericStep2Template: "Only client-visible figure available: last known Open-Meteo wave height {liveWave}m (fetched directly by the browser, not via backend).",
+    chatTtsUnsupportedAlert: "Speech Synthesis not supported by your browser.",
+    chatTtsWelcomeFallback: "Welcome to ORCA INSIGHT. All satellite feeds and coastal oceanography systems are operating with normal status.",
+    chatStopAudio: "Stop Audio",
+    chatListenAudioAdvisory: "Listen Audio Advisory",
+    chatTabTitle: "AI Decision Studio & Multi-Agent Chatbot",
+    chatTabSubtitle: "Powered by collaborative agents reasoning over Oceansat-3, INSAT-3DR, and coastal geofencing",
+    chatNewConversationBtn: "New Conversation",
+    chatPromptPFZ: "Find the nearest high-yield PFZ fishing zone from Kochi Harbour with catch potential and species.",
+    chatPromptSafety: "Check Sea-Venture Clearance score, significant wave height, and wind hazard for today.",
+    chatPromptBorder: "Check distance to India-Sri Lanka IMBL border and list vessels in the 2 NM danger zone.",
+    chatPromptDensity: "What is the current vessel count and density distribution across Wadge Bank and Kochi Deep?",
+    chatPromptETA: "Calculate transit ETA from Kochi to PFZ-01 and verify if round-trip returns safely before 18:30 dusk.",
+    chatConversationLabel: "Conversation",
+    chatNeuralCoreActive: "ORCA INSIGHT Neural Core Active",
+    chatAgentsReadyUptime: "8 Agents Ready · 99.94% Uptime",
+    chatWelcomeMessage: "Vanakkam / Namaste! I am the <strong>ORCA INSIGHT</strong> multi-agent synthesis system. You can speak or type your query about safe sailing clearance, high-yield PFZ zones along India's coast, live vessel traffic, IMBL border proximity, and sea-state adjusted ETA calculations.",
+    chatMicHint: "Click the microphone icon below to speak in Tamil, Hindi, Malayalam, or English!",
+    chatVoiceInputTitle: "Speak Query (Speech-to-Text)",
+    chatLiveReasoningTraceTitle: "Live Reasoning Trace",
+    chatReasoningTraceEmptyHint: "Ask a question on the left to watch each of the 8 collaborative agents reason through it here, live.",
+    chatLiveTelemetryTitle: "Live Ocean Telemetry",
+    chatCurrentSeaClearance: "Current Sea Clearance:",
+    chatSignificantWaves: "Significant Waves:",
+    chatSurfaceWind: "Surface Wind:",
+    chatActiveVessels: "Active Vessels:",
+    chatOpenDagVisualizerBtn: "Open Full Agent DAG Visualizer ➔",
+    navicConnected: "NavIC Receiver: Connected (L5/S-Band)",
+    navicDisconnected: "NavIC Receiver: Disconnected",
+    navicTrackMyPosition: "Track my position",
+    navicStopTracking: "Stop tracking",
+    navicSimulateMovement: "Simulate vessel movement",
+    navicStopSimulation: "Stop simulation",
+    navicStatusTrackingOff: "Tracking off · no position is being requested",
+    navicStatusGeoUnsupported: "Geolocation is not supported by this browser. Use simulated vessel movement for the demo.",
+    navicStatusRequestingPermission: "Requesting device-location permission…",
+    navicStatusLiveTrackingTemplate: "Live device tracking · accuracy ±{accuracy}m · not stored",
+    navicStatusPermissionErrorTemplate: "Location permission unavailable ({error}). No position was sent.",
+    navicStatusBackendUnavailable: "Backend unavailable — exact geofence distance cannot be evaluated in local simulation.",
+    navicStatusSimStopped: "Geofence simulation stopped",
+    navicStatusSimMovingTemplate: "Simulated vessel movement · point {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "Copied NavIC MSS / SMS 120-char Satellite Emergency Code:\n\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) Skyplot",
+    navicConstellationDesc: "7-Satellite Geostationary / IGSO Constellation",
+    navicConnectedShort: "Connected (L5/S)",
+    navicTrackedSatellitesTitle: "Tracked Satellites (SNR dB-Hz)",
+    navicNmeaStreamTitle: "Live NMEA-0183 Hardware Stream ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "Baud Rate: 9600 bps · 1 Hz Feed",
+    navicDopPrecisionLabel: "DOP Precision",
+    navicDopValue: "HDOP 1.05 (Excellent)",
+    navicDiffFixLabel: "Differential Fix",
+    navicDiffFixValue: "NavIC DGPS Active",
+    navicBorderHwLabel: "Border Alert Hardware",
+    navicBorderHwValue: "Buzzer Armed",
+    navicGeofenceTitle: "Live position geofencing",
+    navicGeofenceDesc: "Your device location is used only for in-session IMBL/MPA checks and is never stored by ORCA.",
+    navicGeofenceInitialStatus: "Tracking off · 5 NM IMBL warning / MPA buffer warning",
+    safetyVerdictDescTemplate: "Live Open-Meteo marine telemetry places significant wave height at {wave}m and surface wind at {wind}kn near your selected harbour, giving a computed safety score of {score}/100.",
+    safetyWindDefaultDirection: "Westerly",
+    safetyBreezeSuffix: "{direction} Breeze",
+    severityLow: "Low",
+    severityModerate: "Moderate",
+    severityHigh: "High",
+    waveBandCalm: "Calm (< 0.5m)",
+    waveBandSlight: "Slight (0.5 - 1.25m)",
+    waveBandModerate: "Moderate (1.25 - 2.5m)",
+    waveBandRough: "Rough (> 2.5m)",
+    seaStateCalm: "Calm",
+    seaStateSlight: "Slight",
+    seaStateSlightModerate: "Slight to Moderate",
+    seaStateModerateRough: "Moderate to Rough",
+    seaStateUnknown: "Unknown",
+    lightningBandSafe: "Safe Atmospheric Profile",
+    lightningBandElevated: "Elevated Convective Risk",
+    lightningBandSevere: "Severe Squall Warning",
+    safetySyncLatencyLabel: "Sync Latency:",
+    safetyBatteryLabel: "Battery:",
+    safetyLastPassLabel: "Last Pass:",
+    safetyAltitudeLabel: "Altitude:",
+    telemetryLiveOpenMeteoTemplate: "LIVE OPEN-METEO TELEMETRY ({wave}m SWH)",
+    telemetryCachedArchive: "TELEMETRY ACTIVE (CACHED SATELLITE ARCHIVE)",
+    backendOnlineStatus: "LIVE FASTAPI BACKEND CONNECTED",
+    backendOfflineStatus: "BACKEND OFFLINE · LOCAL SIMULATION MODE",
+    aisLiveCountTemplate: "{count} live AIS vessel{plural}",
+    aisNoLiveVessels: "no live AIS vessels right now",
+    aisBlendedBannerTemplate: "Showing {liveText} + {simCount} simulated vessel{plural} filling ports with no live AIS coverage right now.",
+    aisUnavailableDefault: "Live AIS vessel feed unavailable -- showing 0 vessels.",
+    aisNotConfigured: "Live AIS vessel feed is not configured on this deployment.",
+    aisConnectedNotSending: "Connected to the AIS provider (AISstream.io), but it isn’t sending vessel data right now — likely a provider-side outage, not a local fault.",
+    aisDisconnectedReconnecting: "Disconnected from the AIS provider (AISstream.io); reconnecting automatically.",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> is operating at <strong>{dist} NM</strong> from the India–Sri Lanka IMBL{simTag}. Automated warning dispatched.",
+    imblAlertNoneTemplate: "No vessels currently within the {warnDist} NM IMBL warning distance. Nearest tracked vessel: <strong>{dist} NM</strong> away.",
+    imblAlertNoData: "No vessel telemetry available yet.",
+    simulatedSuffix: " (simulated)",
+    notifUnavailableTitle: "Browser notifications unavailable",
+    notifUnavailableMsg: "In-app hazard banners will still be shown while this tab is open.",
+    notifNotEnabledTitle: "Browser notifications not enabled",
+    notifNotEnabledMsg: "In-app hazard banners remain active while this tab is open.",
+    hazardHighWavesTitle: "High waves — local simulation",
+    hazardHighWavesMsgTemplate: "{wave}m exceeds the 2.5m caution threshold. Source: browser Open-Meteo telemetry.",
+    hazardHighWindTitle: "High wind — local simulation",
+    hazardHighWindMsgTemplate: "{wind} kn exceeds the 25 kn caution threshold. Source: browser Open-Meteo telemetry.",
+    hazardLightningTitle: "Lightning risk — local simulation",
+    hazardLightningMsgTemplate: "Lightning proxy is {pct}%. Source: browser Open-Meteo telemetry.",
+    safetyOfficialClearanceLabel: "Official Maritime Clearance",
+    safetyVerdictDescInitial: "All satellite oceanography indicators (Oceansat-3 SSTM thermal fronts, Sentinel-3 wave altimetry) confirm favorable fishing conditions along Kerala, Karnataka, and Tamil Nadu coastal waters.",
+    safetyIndexLabel: "Safety Index",
+    satConstellationTitle: "ISRO & International Oceanographic Satellite Constellation",
+    satStaticDataNote: "Static reference data (not live telemetry)",
+    mapIndiaBoundaryPopup: "India — official boundary (Survey of India)",
+    mapPfzYieldSuffix: "{rating} YIELD ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "Chlorophyll:",
+    mapPfzDepthLabel: "Depth:",
+    mapPfzVesselsLabel: "Vessels:",
+    mapPfzActiveSuffix: "{count} Active",
+    mapPfzTargetSpeciesLabel: "Target Species:",
+    mapPfzSimulateRouteBtn: "Simulate Route Here ➔",
+    mapImblPopupBodyTemplate: "Strict International Maritime Boundary. Warning buffer: {warn} NM. Critical geofence: {danger} NM.",
+    mapImblPopupTreatyNote: "Cross-border crossing prohibited under UNCLOS maritime treaty.",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL Buffer Corridor",
+    mapMpaRestrictedBadge: "RESTRICTED ECO-RESERVE",
+    mapHarbourCoastSuffix: "{state} Coast",
+    mapHarbourCapacityLabel: "Capacity:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "Fuel Station:",
+    mapHarbourFuelAvailable: "Available",
+    mapHarbourIceLabel: "Ice Plant:",
+    mapHarbourIceActive: "Active",
+    mapHarbourSetOriginBtn: "Set as Origin Harbour",
+    mapVesselSimulatedBadge: "Simulated · no live AIS coverage here",
+    mapVesselSpeedLabel: "Speed:",
+    mapVesselHeadingLabel: "Heading:",
+    mapVesselZoneLabel: "Zone:",
+    mapVesselImblDistLabel: "IMBL Dist:",
+    mapVesselStatusLabel: "Status:",
+    mapVesselFuelLabel: "Fuel:",
+    mapVesselFuelNA: "N/A",
+    mapRoutePopupTitle: "Sea-Only A* Route (Land + MPA Avoidance)",
+    mapRouteDistanceEtaTemplate: "Distance: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · Detour {pct}% around {zones}",
+    mapRouteLandNoGoZones: "land/no-go zones",
+    vesselStatusSafeFishing: "SAFE FISHING",
+    vesselStatusBorderAlert: "BORDER ALERT",
+    vesselStatusBorderWarn: "BORDER WARN",
+    vesselStatusInTransit: "IN TRANSIT",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "Simulated -- no live AIS coverage near this port",
+    vesselLocateAction: "Locate ➔",
+    fleetVesselCountSuffix: "{count} vessels",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} live · {sim} sim)",
+    mapActiveVesselsBreakdownTemplate: "{total} Active Vessels ({live} live · {sim} simulated)",
+    mapActiveVesselsSimpleTemplate: "{total} Active Vessels",
+    mapTabTitle: "GIS Command Map · Indian Coastal Waters",
+    mapTabDesc: "Interactive high-contrast nautical map with real-time satellite PFZs, IMBL boundary corridors, and AIS vessel tracks.",
+    layerPfzZones: "PFZ Zones",
+    layerImblBuffer: "IMBL Buffer",
+    layerEcoReserves: "Eco Reserves (MPA)",
+    layerHarbours: "Harbours",
+    layerLiveVessels: "Live Vessels",
+    layerDensityHeatmap: "Density Heatmap",
+    layerIndiaBoundary: "India Boundary (Survey of India)",
+    routePlannerDesc: "A*-style path avoiding MPAs and border hazards",
+    routeVesselSpeedLabel: "Vessel Speed:",
+    fleetMonitorTitle: "Fleet Monitor · Live Vessel Telemetry",
+    fleetTotalActiveTitle: "Total Active Vessels",
+    fleetTotalActiveDesc: "Vessels currently broadcasting AIS transponder signals",
+    fleetZoneDistTitle: "Vessel Distribution per Zone",
+    imblAlertCardTitle: "IMBL Border Proximity Alert",
+    fleetTableSubDesc: "Live AIS positions from AISstream.io, backfilled with a clearly-tagged simulated fleet (see \"SIM\" badge) wherever there's currently no live receiver coverage",
+    vesselSearchPlaceholder: "Search vessel name or ID...",
+    filterAllStatuses: "All Statuses",
+    filterSafeFishing: "Safe Fishing",
+    filterInTransit: "In Transit",
+    filterBorderAlert: "Border Alert",
+    thVesselId: "Vessel ID",
+    thVesselName: "Vessel Name",
+    thType: "Type",
+    thCurrentZone: "Current Zone",
+    thSpeedHeading: "Speed / Heading",
+    thImblDist: "IMBL Dist",
+    thStatus: "Status",
+    thAction: "Action",
+    bulletinIssuedLabel: "Issued:",
+    bulletinRegionLabel: "Region:",
+    bulletinWavesLabel: "Waves:",
+    bulletinWindsLabel: "Winds:",
+    bulletinSourceLabel: "Source:",
+    bulletinListenBtn: "Listen Bulletin",
+    bulletinsTabTitle: "Official Marine & Fisheries Bulletins (ISRO - INCOIS)",
+    bulletinsTabDesc: "Numbered advisories, cyclone hazard warnings, and international boundary compliance alerts.",
+    bulletinNotifyToggleTitle: "Receive browser alerts only while this tab/PWA is open",
+    bulletinNotifyToggleLabel: "Notify while open",
+    bulletinFilterAll: "All Bulletins",
+    bulletinFilterCritical: "Critical",
+    bulletinFilterWarning: "Warnings",
+    bulletinFilterAdvisory: "Advisories",
+    bulletinsPushNote: "Hazard alerts are proactive only while this tab/PWA is open. Closed-app push notifications require a production push-subscription service and are not implemented in this prototype.",
+    sosModalTitle: "EMERGENCY DISTRESS BEACON (SOS)",
+    sosInstructions: "Activating emergency SOS will transmit an emergency 406 MHz distress signal via <strong>INSAT-3DR SAS&R</strong> to the Indian Coast Guard Maritime Rescue Coordination Centre (MRCC).",
+    sosCurrentPositionLabel: "Current Position:",
+    sosVhfChannelLabel: "Emergency VHF Channel:",
+    sosMrccHelplineLabel: "MRCC Helpline:",
+    sosConfirmBtn: "CONFIRM & BROADCAST DISTRESS BEACON",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R BEACON TRANSMITTING TO ISRO & COAST GUARD MRCC",
+    sosDistressRelayedMsg: "Distress packet relayed via INSAT-3DR SAS&R receiver. Maritime Rescue Coordination Centre (MRCC Chennai/Mumbai) alerted on VHF Ch 16.",
+    sosGpsVesselIdTemplate: "GPS Coordinates: {coords} · Vessel ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO Collaborative Marine Intelligence · Smart India Hackathon 2026",
+    landingSubtitle: "One collaborative marine-intelligence platform, two command decks: a fisherman's daily opportunity console, and the full ISRO satellite, AIS and geofencing insight suite.",
+    landingStripItem1: "Oceansat-3 SSTM Thermal Fronts",
+    landingStripItem2: "INSAT-3DR Satellite Oceanography",
+    landingStripItem3: "8-Node Collaborative Agent DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS Bridge",
+    landingStripItem5: "IMBL Border Geofencing Alerts",
+    landingStripItem6: "Live AIS Fleet & GIS Command",
+    landingStripItem7: "Sell Smarter Buyer Pricing",
+    landingStripItem8: "406 MHz SOS Distress Beacon",
+    landingFishermanCardTitle: "ORCA Fisherman",
+    landingFishermanCardDesc: "Today's Opportunity Score, Sell Smarter pricing, a trip-cost calculator and buyer leads for your catch — built for the boat.",
+    landingFishermanCardCta: "Open Fisherman Console",
+    landingFishermanCardTitleAttr: "Open the Fisherman Console",
+    landingInsightCardTitle: "ORCA Insight",
+    landingInsightCardDesc: "Full command deck: ISRO satellite oceanography, GIS map, the 8-node agent DAG, Safety Barometer, Fleet Monitor and NavIC bridge.",
+    landingInsightCardCta: "Open Insight Command Deck",
+    landingInsightCardTitleAttr: "Open the Insight command deck",
+    backToOverviewTitle: "Back to overview",
+    statSimulatedFleetLabel: "Simulated AIS fleet",
+    statSatellitesActiveTemplate: "{count} Active",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} Zones",
+    statPfzZonesListLabel: "Wadge Bank, Kochi, Veraval...",
+    statImblCorridorsCountTemplate: "{count} Corridors",
+    statImblBordersLabel: "India-Sri Lanka & Pak Borders",
+    pillarDagTitle: "8-Node Collaborative Agent DAG",
+    pillarDagDesc: "Multi-agent architecture decomposing queries into satellite, wave hazard, geofencing, vessel counting, ETA, and neural synthesis steps with sub-second latency.",
+    pillarEtaTitle: "Live Sea-State ETA & Dusk Safety",
+    pillarEtaDesc: "Hydrodynamic transit calculations adjusted for wave resistance with automated Return-by-Dusk safety alerts to prevent stranded fishermen after sunset.",
+    pillarFleetTitle: "Live Fleet Density & IMBL Alert",
+    pillarFleetDesc: "Real-time vessel counting per zone, overcrowding risk indicators, and automated 5 NM/2 NM geofence proximity alerts protecting maritime borders.",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · Built by <strong class=\"text-cyan-400\">{teamName}</strong> · Smart India Hackathon 2026 · Problem Statement 26176 (ISRO)",
+    sttListeningStatusTemplate: "Listening in <b>{lang}</b>... Speak now.",
+    sttUnsupportedTitle: "Speech Recognition not supported in this browser",
+    routeUnavailableLabel: " ROUTE UNAVAILABLE:",
+    routeUnavailableMsg: "ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.",
+    routeNoSafeRouteLabel: "✕ NO SAFE MARITIME ROUTE FOUND:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "The router could not find a path avoiding land and Marine Protected Areas for this harbour/PFZ pair.",
+    routeSafeReturnLabel: "✓ SAFE RETURN:",
+    routeSafeReturnTemplate: "Expected harbour arrival by {time} (Before 18:30 IST dusk).",
+    routeReturnAfterDuskLabel: " RETURN AFTER DUSK:",
+    routeReturnAfterDuskTemplate: "Expected return at {time} (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check."
   },
   hi: {
     appTitle: "ओर्का इनसाइट (ORCA INSIGHT)",
@@ -658,7 +990,339 @@ const translations = {
     fmClaimBtn: "यह लीड दावा करें",
     fmClaimPromptText: "अपना नाम और फ़ोन/संपर्क दर्ज करें ताकि खरीदार को पता चले कि इसे कौन पूरा कर रहा है:",
     fmClaimSuccess: "दावा किया गया — खरीदार को ऑफ-प्लेटफ़ॉर्म सूचित किया जाएगा।",
-    fmClaimFailed: "अभी यह लिस्टिंग दावा नहीं की जा सकी।"
+    fmClaimFailed: "अभी यह लिस्टिंग दावा नहीं की जा सकी।",
+    dagAgentSupervisorName: "मास्टर सुपरवाइज़र / DAG प्लानर",
+    dagAgentSupervisorRole: "बहु-मॉडल समुद्री प्रश्न को विभाजित करता है, सैटेलाइट, खतरा और जियोफेंस एजेंटों को उप-कार्य आवंटित करता है।",
+    dagAgentSatelliteName: "सैटेलाइट समुद्र विज्ञान एजेंट",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (क्लोरोफिल-a) और SSTM (थर्मल फ्रंट) के साथ-साथ INSAT-3DR क्लाउड इमेजरी को ग्रहण करता है।",
+    dagAgentWeatherName: "मौसम और समुद्री खतरा एजेंट",
+    dagAgentWeatherRole: "महत्वपूर्ण लहर ऊँचाई (SWH), पवन गस्ट वेक्टर और बिजली गिरने की संभावना का मूल्यांकन करता है, तथा समुद्र-क्लीयरेंस स्कोर उत्पन्न करता है।",
+    dagAgentPfzName: "समुद्री विश्लेषण और PFZ एजेंट",
+    dagAgentPfzRole: "थर्मल-क्लोरोफिल फ्रंट के प्रतिच्छेदन की पहचान करता है, पेलैजिक बायोमास घनत्व की गणना करता है और लक्षित मछली पकड़ने के क्षेत्रों को रैंक करता है।",
+    dagAgentGeofenceName: "जियोफेंसिंग और मार्ग निर्धारण एजेंट",
+    dagAgentGeofenceRole: "अंतरराष्ट्रीय समुद्री सीमा रेखाओं (IMBL) की निगरानी करता है, समुद्री संरक्षित क्षेत्रों को बफर करता है, और A* सुरक्षित वेपॉइंट की गणना करता है।",
+    dagAgentFleetName: "फ्लीट और यातायात एजेंट (नया)",
+    dagAgentFleetRole: "AIS और ARGOS-4 वेसल ट्रांसपोंडर को स्कैन करता है, फ्लीट वितरण को ट्रैक करता है, और भीड़भाड़ या सीमा जमावड़े को फ़्लैग करता है।",
+    dagAgentEtaName: "ETA और यात्रा सुरक्षा एजेंट (नया)",
+    dagAgentEtaRole: "वास्तविक समय की लहर प्रतिरोध के अनुसार यात्रा अवधि की गणना करता है और शाम से पहले वापसी की सुरक्षा विंडो का मूल्यांकन करता है।",
+    dagAgentSynthesisName: "न्यूरल सिंथेसिस एजेंट (आँकड़ा-संचालित)",
+    dagAgentSynthesisRole: "बहु-एजेंट टेलीमेट्री को उद्धरण टैग और TTS के साथ एक प्रामाणिक, आधारभूत प्राकृतिक-भाषा सलाह में एकत्रित करता है -- पूरी तरह नियम-आधारित, इस साइट के अपने लाइव टेलीमेट्री और अपने संचित आँकड़ा लेजर पर तर्क करते हुए। किसी बाहरी AI/LLM API का उपयोग नहीं किया जाता है।",
+    dagStatusIdle: "निष्क्रिय",
+    dagInspectLink: "निरीक्षण करें ➔",
+    dagInspectorLatencyTemplate: "निष्पादन विलंब: {latency} · उप-कार्य सत्यापित",
+    dagStatusQueued: "कतारबद्ध",
+    dagStatusExecuting: "निष्पादित हो रहा है...",
+    dagStatusCompleted: "पूर्ण",
+    dagStatusSkipped: "आमंत्रित नहीं — प्रश्न को इसकी आवश्यकता नहीं थी",
+    dagBtnReasoningActiveLive: "तर्कणा सक्रिय (लाइव बैकएंड)...",
+    dagBtnExecutedLive: "✓ लाइव बैकएंड के माध्यम से पाइपलाइन निष्पादित · फिर से चलाएँ",
+    dagBtnErrorRetry: "▶ लाइव पाइपलाइन सिमुलेशन चलाएँ",
+    dagBtnReasoningActiveOffline: "तर्कणा सक्रिय (स्थानीय सिमुलेशन)...",
+    dagBtnExecutedOffline: "✓ पाइपलाइन निष्पादित (स्थानीय सिमुलेशन) · फिर से चलाएँ",
+    dagTabTitle: "8-नोड सहयोगी बहु-एजेंट DAG",
+    dagInteractiveCanvasBadge: "इंटरैक्टिव रीज़निंग कैनवस",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL जियोफेंसिंग, फ्लीट घनत्व और यात्रा ETA पर तर्क करने वाली रीयल-टाइम बहु-एजेंट निष्पादन पाइपलाइन।",
+    backendCheckingStatus: "बैकएंड की जाँच हो रही है...",
+    dagZoomReset: "रीसेट",
+    dagRunSimulationBtn: "▶ लाइव पाइपलाइन सिमुलेशन चलाएँ",
+    dagClickToInspectHint: "किसी भी एजेंट कार्ड पर क्लिक करके उसका कच्चा टेलीमेट्री इनपुट, आंतरिक एल्गोरिद्म और JSON डेटा आउटपुट देखें।",
+    dagOrchestratorLabel: "ऑर्केस्ट्रेटर: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "एजेंट विवरण",
+    dagInspectorDefaultRole: "भूमिका विवरण",
+    dagInspectorLatencyPlaceholder: "विलंब: 24ms",
+    dagInspectorJsonLabel: "लाइव JSON पेलोड",
+    dagCloseInspector: "इंस्पेक्टर बंद करें",
+    chatNewConversationMsg: "नई बातचीत शुरू हुई। ORCA पिछले चैट संदर्भ का उपयोग नहीं करेगा।",
+    chatYouLabel: "आप",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR और Open-Meteo में 8 विशेष AI एजेंटों का समन्वय हो रहा है...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "बहु-एजेंट समुद्री सलाह",
+    chatGroundedConfidenceTemplate: "{confidence}% आधारित विश्वास",
+    chatLangDetectedTooltip: "संदेश से भाषा का पता लगाया गया",
+    chatListenTts: "सुनें (TTS)",
+    chatNavicMssBtn: "NavIC MSS कोड",
+    chatMetricZone: "अनुशंसित क्षेत्र",
+    chatMetricEta: "लाइव समुद्री स्थिति ETA",
+    chatMetricVessels: "सक्रिय वेसल",
+    chatVesselsSuffix: "{count} वेसल",
+    chatMetricImbl: "IMBL क्लीयरेंस",
+    chatReasoningTraceSummaryTemplate: "बहु-एजेंट तर्कणा ट्रेस देखें ({steps} चरण निष्पादित)",
+    chatNodeDagSuffixTemplate: "{count}-नोड DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT बैकएंड ने एक सलाह उत्पन्न की लेकिन कोई पाठ नहीं लौटाया।",
+    chatLiveAdvisoryLabel: "✓ लाइव बहु-एजेंट सलाह",
+    chatGroundedEngineFallback: "आधारित इंजन",
+    chatOceanSourceTierTemplate: "समुद्र स्रोत स्तर: {tier} · क्लोरोफिल: {chlorophyll}",
+    chatCitationsTemplate: "उद्धरण: {citations}",
+    chatOfflineBannerText: "ऑफ़लाइन सलाह इंजन — ORCA बैकएंड अनुपलब्ध है। नीचे दिए गए आँकड़े एक सिम्युलेटेड उदाहरणात्मक अनुमान हैं, लाइव टेलीमेट्री नहीं।",
+    chatOfflineImblPlainText: "ऑफ़लाइन सलाह (बैकएंड अनुपलब्ध, सिम्युलेटेड अनुमान): पाक जलडमरूमध्य / मन्नार की खाड़ी क्षेत्र के वेसल आमतौर पर भारत-श्रीलंका IMBL सीमा से कुछ नॉटिकल मील के भीतर होते हैं। पश्चिम दिशा में मार्ग बनाए रखें और VHF ट्रांसपोंडर को चैनल 16 पर सक्रिय रखें। सीमा की वास्तविक मापी गई दूरी के लिए ORCA बैकएंड से पुनः जुड़ें।",
+    chatOfflineImblHtmlHeading: "IMBL जियोफेंसिंग सलाह (सिम्युलेटेड ऑफ़लाइन अनुमान):",
+    chatOfflineImblHtmlBody1: "लाइव बैकएंड कनेक्शन के बिना, वेसल-से-सीमा की सटीक दूरी मापी नहीं जा सकती। पाक जलडमरूमध्य सेक्टर 4 के पास सामान्य सावधानी के रूप में, मंडपम की ओर पश्चिम दिशा में मार्ग बनाए रखें।",
+    chatOfflineImblHtmlBody2: "यह एक सामान्य ऑफ़लाइन सुरक्षा अनुस्मारक है, न कि मापी गई जियोफेंस रीडिंग। वास्तविक दूरी-से-IMBL गणना के लिए ORCA बैकएंड से पुनः जुड़ें।",
+    chatOfflineImblStep1: "बैकएंड अनुपलब्ध। स्थानीय कीवर्ड मिलान का उपयोग करके प्रश्न को IMBL_BOUNDARY के रूप में वर्गीकृत किया गया।",
+    chatOfflineImblStep2: "कोई लाइव जियोफेंसिंग टेलीमेट्री उपलब्ध नहीं -- केवल सामान्य सीमा-सुरक्षा मार्गदर्शन लौटाया जा रहा है।",
+    chatOfflineDensityPlainText: "ऑफ़लाइन सलाह (बैकएंड अनुपलब्ध, सिम्युलेटेड अनुमान): बैकएंड कनेक्शन के बिना लाइव वेसल गणना प्राप्त नहीं की जा सकती। ऐतिहासिक रूप से, वेज बैंक और कोच्चि डीप ऑफशोर में मध्यम मछली पकड़ने की गतिविधि देखी जाती है। वेसल डेटासेट से वास्तविक फ्लीट-घनत्व रीडिंग के लिए ORCA बैकएंड से पुनः जुड़ें।",
+    chatOfflineDensityHtmlHeading: "फ्लीट घनत्व (ऑफ़लाइन — सिम्युलेटेड प्लेसहोल्डर):",
+    chatOfflineDensityHtmlBody: "फ्लीट और यातायात एजेंट का लाइव वेसल डेटासेट अभी उपलब्ध नहीं है, इसलिए क्षेत्र में सटीक वेसल गणना अनुपलब्ध है।",
+    chatOfflineDensityListItem: "वास्तविक प्रति-क्षेत्र वेसल गणना और भीड़भाड़ के निर्णय के लिए ORCA बैकएंड से पुनः जुड़ें।",
+    chatOfflineDensityStep1: "बैकएंड अनुपलब्ध। स्थानीय कीवर्ड मिलान का उपयोग करके प्रश्न को FLEET_DENSITY के रूप में वर्गीकृत किया गया।",
+    chatOfflineDensityStep2: "कोई लाइव फ्लीट डेटासेट उपलब्ध नहीं -- एक मनगढ़ंत आँकड़ा प्रस्तुत करने से बचने के लिए वेसल गणना नहीं दिखाई गई।",
+    chatOfflineGenericPlainTextTemplate: "ऑफ़लाइन सलाह (बैकएंड अनुपलब्ध): ORCA के बहु-एजेंट बैकएंड तक नहीं पहुँचा जा सका, इसलिए यह उत्तर एक आधारित रीडिंग के बजाय एक सामान्य, गैर-लाइव प्लेसहोल्डर है। आपके ब्राउज़र का अपना Open-Meteo विजेट लगभग {liveWave}m की महत्वपूर्ण लहर ऊँचाई दर्शाता है, लेकिन PFZ रैंकिंग, मार्ग दूरी, ETA और फ्लीट गणना सभी को बैकएंड की आवश्यकता होती है और यहाँ नहीं दिखाई गई हैं। वास्तविक सलाह के लिए ORCA बैकएंड से पुनः जुड़ें।",
+    chatOfflineGenericHtmlHeading: "ऑफ़लाइन प्लेसहोल्डर सलाह",
+    chatOfflineGenericHtmlBody1Template: "ORCA का बहु-एजेंट बैकएंड (सैटेलाइट, मौसम, PFZ रैंकिंग, जियोफेंसिंग, फ्लीट, रूटिंग और न्यूरल सिंथेसिस) अभी अनुपलब्ध है। क्लाइंट-साइड पर, इस ब्राउज़र ने Open-Meteo से अंतिम बार <strong>{liveWave}m</strong> की लहर ऊँचाई देखी, लेकिन बाकी सभी आँकड़ों के लिए बैकएंड आवश्यक है।",
+    chatOfflineGenericHtmlBody2: "<strong>कोई PFZ अनुशंसा, मार्ग, ETA या फ्लीट गणना नहीं दिखाई गई है</strong> क्योंकि उन्हें गणना करने के बजाय गढ़ना पड़ता। पूर्ण आधारित सलाह के लिए ORCA बैकएंड से पुनः जुड़ें।",
+    chatOfflineGenericStep1: "बैकएंड अनुपलब्ध। कोई प्रश्न-विशिष्ट कीवर्ड मेल नहीं खाया -- GENERAL_VOYAGE_SAFETY ऑफ़लाइन प्लेसहोल्डर लौटाया जा रहा है।",
+    chatOfflineGenericStep2Template: "केवल क्लाइंट-दृश्य आँकड़ा उपलब्ध: अंतिम ज्ञात Open-Meteo लहर ऊँचाई {liveWave}m (सीधे ब्राउज़र द्वारा प्राप्त, बैकएंड के माध्यम से नहीं)।",
+    chatTtsUnsupportedAlert: "आपके ब्राउज़र द्वारा स्पीच सिंथेसिस समर्थित नहीं है।",
+    chatTtsWelcomeFallback: "ORCA INSIGHT में आपका स्वागत है। सभी सैटेलाइट फीड और तटीय समुद्र विज्ञान प्रणालियाँ सामान्य स्थिति में काम कर रही हैं।",
+    chatStopAudio: "ऑडियो रोकें",
+    chatListenAudioAdvisory: "ऑडियो सलाह सुनें",
+    chatTabTitle: "AI निर्णय स्टूडियो और बहु-एजेंट चैटबॉट",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR और तटीय जियोफेंसिंग पर तर्क करने वाले सहयोगी एजेंटों द्वारा संचालित",
+    chatNewConversationBtn: "नई बातचीत",
+    chatPromptPFZ: "कोच्चि हार्बर से निकटतम उच्च-उपज PFZ मछली पकड़ने का क्षेत्र, पकड़ने की संभावना और प्रजातियों सहित खोजें।",
+    chatPromptSafety: "आज के लिए समुद्र-यात्रा क्लीयरेंस स्कोर, महत्वपूर्ण लहर ऊँचाई और पवन खतरे की जाँच करें।",
+    chatPromptBorder: "भारत-श्रीलंका IMBL सीमा की दूरी जाँचें और 2 NM खतरा क्षेत्र में वेसलों की सूची दिखाएँ।",
+    chatPromptDensity: "वेज बैंक और कोच्चि डीप में वर्तमान वेसल गणना और घनत्व वितरण क्या है?",
+    chatPromptETA: "कोच्चि से PFZ-01 तक यात्रा ETA की गणना करें और सत्यापित करें कि राउंड-ट्रिप 18:30 की शाम से पहले सुरक्षित रूप से लौटती है या नहीं।",
+    chatConversationLabel: "बातचीत",
+    chatNeuralCoreActive: "ORCA INSIGHT न्यूरल कोर सक्रिय",
+    chatAgentsReadyUptime: "8 एजेंट तैयार · 99.94% अपटाइम",
+    chatWelcomeMessage: "वणक्कम / नमस्ते! मैं <strong>ORCA INSIGHT</strong> बहु-एजेंट संश्लेषण प्रणाली हूँ। आप सुरक्षित नौकायन क्लीयरेंस, भारत के तट के किनारे उच्च-उपज PFZ क्षेत्रों, लाइव वेसल यातायात, IMBL सीमा निकटता और समुद्री-स्थिति के अनुसार समायोजित ETA गणनाओं के बारे में बोल या टाइप कर सकते हैं।",
+    chatMicHint: "तमिल, हिन्दी, मलयालम या अंग्रेज़ी में बोलने के लिए नीचे माइक्रोफ़ोन आइकन पर क्लिक करें!",
+    chatVoiceInputTitle: "प्रश्न बोलें (स्पीच-टू-टेक्स्ट)",
+    chatLiveReasoningTraceTitle: "लाइव तर्कणा ट्रेस",
+    chatReasoningTraceEmptyHint: "बाईं ओर एक प्रश्न पूछें और देखें कि 8 सहयोगी एजेंटों में से प्रत्येक इसके माध्यम से लाइव कैसे तर्क करता है।",
+    chatLiveTelemetryTitle: "लाइव समुद्री टेलीमेट्री",
+    chatCurrentSeaClearance: "वर्तमान समुद्र क्लीयरेंस:",
+    chatSignificantWaves: "महत्वपूर्ण लहरें:",
+    chatSurfaceWind: "सतही हवा:",
+    chatActiveVessels: "सक्रिय वेसल:",
+    chatOpenDagVisualizerBtn: "पूर्ण एजेंट DAG विज़ुअलाइज़र खोलें ➔",
+    navicConnected: "NavIC रिसीवर: कनेक्टेड (L5/S-Band)",
+    navicDisconnected: "NavIC रिसीवर: डिस्कनेक्टेड",
+    navicTrackMyPosition: "मेरी स्थिति ट्रैक करें",
+    navicStopTracking: "ट्रैकिंग बंद करें",
+    navicSimulateMovement: "वेसल की गति सिम्युलेट करें",
+    navicStopSimulation: "सिमुलेशन बंद करें",
+    navicStatusTrackingOff: "ट्रैकिंग बंद · कोई स्थिति अनुरोधित नहीं की जा रही",
+    navicStatusGeoUnsupported: "इस ब्राउज़र द्वारा जियोलोकेशन समर्थित नहीं है। डेमो के लिए सिम्युलेटेड वेसल मूवमेंट का उपयोग करें।",
+    navicStatusRequestingPermission: "डिवाइस-स्थान अनुमति का अनुरोध किया जा रहा है…",
+    navicStatusLiveTrackingTemplate: "लाइव डिवाइस ट्रैकिंग · सटीकता ±{accuracy}m · संग्रहीत नहीं",
+    navicStatusPermissionErrorTemplate: "स्थान अनुमति अनुपलब्ध ({error})। कोई स्थिति नहीं भेजी गई।",
+    navicStatusBackendUnavailable: "बैकएंड अनुपलब्ध — स्थानीय सिमुलेशन में सटीक जियोफेंस दूरी का मूल्यांकन नहीं किया जा सकता।",
+    navicStatusSimStopped: "जियोफेंस सिमुलेशन बंद",
+    navicStatusSimMovingTemplate: "सिम्युलेटेड वेसल मूवमेंट · बिंदु {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-अक्षर सैटेलाइट आपातकालीन कोड कॉपी किया गया:\\n\\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) स्काईप्लॉट",
+    navicConstellationDesc: "7-सैटेलाइट जियोस्टेशनरी / IGSO नक्षत्र",
+    navicConnectedShort: "कनेक्टेड (L5/S)",
+    navicTrackedSatellitesTitle: "ट्रैक किए गए सैटेलाइट (SNR dB-Hz)",
+    navicNmeaStreamTitle: "लाइव NMEA-0183 हार्डवेयर स्ट्रीम ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "बॉड दर: 9600 bps · 1 Hz फ़ीड",
+    navicDopPrecisionLabel: "DOP परिशुद्धता",
+    navicDopValue: "HDOP 1.05 (उत्कृष्ट)",
+    navicDiffFixLabel: "डिफरेंशियल फिक्स",
+    navicDiffFixValue: "NavIC DGPS सक्रिय",
+    navicBorderHwLabel: "सीमा अलर्ट हार्डवेयर",
+    navicBorderHwValue: "बज़र आर्म्ड",
+    navicGeofenceTitle: "लाइव स्थिति जियोफेंसिंग",
+    navicGeofenceDesc: "आपके डिवाइस के स्थान का उपयोग केवल सत्र के दौरान IMBL/MPA जाँच के लिए किया जाता है और ORCA द्वारा कभी संग्रहीत नहीं किया जाता।",
+    navicGeofenceInitialStatus: "ट्रैकिंग बंद · 5 NM IMBL चेतावनी / MPA बफर चेतावनी",
+    safetyVerdictDescTemplate: "लाइव Open-Meteo समुद्री टेलीमेट्री आपके चयनित हार्बर के पास महत्वपूर्ण लहर ऊँचाई {wave}m और सतही हवा {wind}kn दर्शाती है, जिससे {score}/100 का गणना किया गया सुरक्षा स्कोर मिलता है।",
+    safetyWindDefaultDirection: "पश्चिमी",
+    safetyBreezeSuffix: "{direction} हवा",
+    severityLow: "कम",
+    severityModerate: "मध्यम",
+    severityHigh: "अधिक",
+    waveBandCalm: "शांत (< 0.5m)",
+    waveBandSlight: "हल्की (0.5 - 1.25m)",
+    waveBandModerate: "मध्यम (1.25 - 2.5m)",
+    waveBandRough: "उग्र (> 2.5m)",
+    seaStateCalm: "शांत",
+    seaStateSlight: "हल्की",
+    seaStateSlightModerate: "हल्की से मध्यम",
+    seaStateModerateRough: "मध्यम से उग्र",
+    seaStateUnknown: "अज्ञात",
+    lightningBandSafe: "सुरक्षित वायुमंडलीय प्रोफ़ाइल",
+    lightningBandElevated: "बढ़ा हुआ संवहनी जोखिम",
+    lightningBandSevere: "गंभीर तूफ़ान चेतावनी",
+    safetySyncLatencyLabel: "सिंक विलंब:",
+    safetyBatteryLabel: "बैटरी:",
+    safetyLastPassLabel: "अंतिम पास:",
+    safetyAltitudeLabel: "ऊँचाई:",
+    telemetryLiveOpenMeteoTemplate: "लाइव OPEN-METEO टेलीमेट्री ({wave}m SWH)",
+    telemetryCachedArchive: "टेलीमेट्री सक्रिय (संग्रहीत सैटेलाइट आर्काइव)",
+    backendOnlineStatus: "लाइव FASTAPI बैकएंड कनेक्टेड",
+    backendOfflineStatus: "बैकएंड ऑफ़लाइन · स्थानीय सिमुलेशन मोड",
+    aisLiveCountTemplate: "{count} लाइव AIS वेसल{plural}",
+    aisNoLiveVessels: "अभी कोई लाइव AIS वेसल नहीं",
+    aisBlendedBannerTemplate: "{liveText} + {simCount} सिम्युलेटेड वेसल{plural} दिखाए जा रहे हैं, उन बंदरगाहों में जहाँ अभी कोई लाइव AIS कवरेज नहीं है।",
+    aisUnavailableDefault: "लाइव AIS वेसल फ़ीड अनुपलब्ध -- 0 वेसल दिखाए जा रहे हैं।",
+    aisNotConfigured: "इस डिप्लॉयमेंट पर लाइव AIS वेसल फ़ीड कॉन्फ़िगर नहीं है।",
+    aisConnectedNotSending: "AIS प्रदाता (AISstream.io) से जुड़ा हुआ है, लेकिन यह अभी वेसल डेटा नहीं भेज रहा है — संभवतः प्रदाता-पक्ष की समस्या, स्थानीय दोष नहीं।",
+    aisDisconnectedReconnecting: "AIS प्रदाता (AISstream.io) से डिस्कनेक्ट; स्वचालित रूप से पुनः जुड़ रहा है।",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> भारत–श्रीलंका IMBL से <strong>{dist} NM</strong> की दूरी पर संचालित हो रहा है{simTag}। स्वचालित चेतावनी भेजी गई।",
+    imblAlertNoneTemplate: "फ़िलहाल {warnDist} NM IMBL चेतावनी दूरी के भीतर कोई वेसल नहीं है। निकटतम ट्रैक किया गया वेसल: <strong>{dist} NM</strong> दूर।",
+    imblAlertNoData: "अभी तक कोई वेसल टेलीमेट्री उपलब्ध नहीं है।",
+    simulatedSuffix: " (सिम्युलेटेड)",
+    notifUnavailableTitle: "ब्राउज़र सूचनाएँ अनुपलब्ध",
+    notifUnavailableMsg: "जब तक यह टैब खुला है तब तक इन-ऐप खतरा बैनर फिर भी दिखाए जाएँगे।",
+    notifNotEnabledTitle: "ब्राउज़र सूचनाएँ सक्षम नहीं हैं",
+    notifNotEnabledMsg: "जब तक यह टैब खुला है तब तक इन-ऐप खतरा बैनर सक्रिय रहते हैं।",
+    hazardHighWavesTitle: "ऊँची लहरें — स्थानीय सिमुलेशन",
+    hazardHighWavesMsgTemplate: "{wave}m, 2.5m सावधानी सीमा से अधिक है। स्रोत: ब्राउज़र Open-Meteo टेलीमेट्री।",
+    hazardHighWindTitle: "तेज़ हवा — स्थानीय सिमुलेशन",
+    hazardHighWindMsgTemplate: "{wind} kn, 25 kn सावधानी सीमा से अधिक है। स्रोत: ब्राउज़र Open-Meteo टेलीमेट्री।",
+    hazardLightningTitle: "बिजली गिरने का जोखिम — स्थानीय सिमुलेशन",
+    hazardLightningMsgTemplate: "बिजली प्रॉक्सी {pct}% है। स्रोत: ब्राउज़र Open-Meteo टेलीमेट्री।",
+    safetyOfficialClearanceLabel: "आधिकारिक समुद्री क्लीयरेंस",
+    safetyVerdictDescInitial: "सभी सैटेलाइट समुद्र विज्ञान संकेतक (Oceansat-3 SSTM थर्मल फ्रंट, Sentinel-3 लहर अल्टीमेट्री) केरल, कर्नाटक और तमिलनाडु के तटीय जल में अनुकूल मछली पकड़ने की स्थितियों की पुष्टि करते हैं।",
+    safetyIndexLabel: "सुरक्षा सूचकांक",
+    satConstellationTitle: "ISRO और अंतरराष्ट्रीय समुद्र विज्ञान सैटेलाइट नक्षत्र",
+    satStaticDataNote: "स्थिर संदर्भ डेटा (लाइव टेलीमेट्री नहीं)",
+    mapIndiaBoundaryPopup: "भारत — आधिकारिक सीमा (Survey of India)",
+    mapPfzYieldSuffix: "{rating} उपज ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "क्लोरोफिल:",
+    mapPfzDepthLabel: "गहराई:",
+    mapPfzVesselsLabel: "वेसल:",
+    mapPfzActiveSuffix: "{count} सक्रिय",
+    mapPfzTargetSpeciesLabel: "लक्षित प्रजातियाँ:",
+    mapPfzSimulateRouteBtn: "यहाँ मार्ग सिम्युलेट करें ➔",
+    mapImblPopupBodyTemplate: "सख्त अंतरराष्ट्रीय समुद्री सीमा रेखा। चेतावनी बफर: {warn} NM। गंभीर जियोफेंस: {danger} NM।",
+    mapImblPopupTreatyNote: "UNCLOS समुद्री संधि के तहत सीमा पार करना प्रतिबंधित है।",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL बफर कॉरिडोर",
+    mapMpaRestrictedBadge: "प्रतिबंधित इको-रिज़र्व",
+    mapHarbourCoastSuffix: "{state} तट",
+    mapHarbourCapacityLabel: "क्षमता:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "ईंधन स्टेशन:",
+    mapHarbourFuelAvailable: "उपलब्ध",
+    mapHarbourIceLabel: "बर्फ संयंत्र:",
+    mapHarbourIceActive: "सक्रिय",
+    mapHarbourSetOriginBtn: "मूल हार्बर के रूप में सेट करें",
+    mapVesselSimulatedBadge: "सिम्युलेटेड · यहाँ कोई लाइव AIS कवरेज नहीं",
+    mapVesselSpeedLabel: "गति:",
+    mapVesselHeadingLabel: "दिशा:",
+    mapVesselZoneLabel: "क्षेत्र:",
+    mapVesselImblDistLabel: "IMBL दूरी:",
+    mapVesselStatusLabel: "स्थिति:",
+    mapVesselFuelLabel: "ईंधन:",
+    mapVesselFuelNA: "उपलब्ध नहीं",
+    mapRoutePopupTitle: "समुद्र-केवल A* मार्ग (भूमि + MPA परिहार)",
+    mapRouteDistanceEtaTemplate: "दूरी: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} के आसपास {pct}% घुमाव",
+    mapRouteLandNoGoZones: "भूमि/निषिद्ध क्षेत्र",
+    vesselStatusSafeFishing: "सुरक्षित मछली पकड़ना",
+    vesselStatusBorderAlert: "सीमा चेतावनी",
+    vesselStatusBorderWarn: "सीमा सतर्कता",
+    vesselStatusInTransit: "यात्रा में",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "सिम्युलेटेड -- इस बंदरगाह के पास कोई लाइव AIS कवरेज नहीं",
+    vesselLocateAction: "पता लगाएँ ➔",
+    fleetVesselCountSuffix: "{count} वेसल",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} लाइव · {sim} सिम)",
+    mapActiveVesselsBreakdownTemplate: "{total} सक्रिय वेसल ({live} लाइव · {sim} सिम्युलेटेड)",
+    mapActiveVesselsSimpleTemplate: "{total} सक्रिय वेसल",
+    mapTabTitle: "GIS कमांड मैप · भारतीय तटीय जल",
+    mapTabDesc: "रीयल-टाइम सैटेलाइट PFZ, IMBL सीमा कॉरिडोर और AIS वेसल ट्रैक के साथ इंटरैक्टिव उच्च-कंट्रास्ट नॉटिकल मैप।",
+    layerPfzZones: "PFZ क्षेत्र",
+    layerImblBuffer: "IMBL बफर",
+    layerEcoReserves: "इको रिज़र्व (MPA)",
+    layerHarbours: "हार्बर",
+    layerLiveVessels: "लाइव वेसल",
+    layerDensityHeatmap: "घनत्व हीटमैप",
+    layerIndiaBoundary: "भारत सीमा (Survey of India)",
+    routePlannerDesc: "MPA और सीमा खतरों से बचने वाला A*-शैली मार्ग",
+    routeVesselSpeedLabel: "वेसल गति:",
+    fleetMonitorTitle: "फ्लीट मॉनिटर · लाइव वेसल टेलीमेट्री",
+    fleetTotalActiveTitle: "कुल सक्रिय वेसल",
+    fleetTotalActiveDesc: "वर्तमान में AIS ट्रांसपोंडर सिग्नल प्रसारित करने वाले वेसल",
+    fleetZoneDistTitle: "प्रति क्षेत्र वेसल वितरण",
+    imblAlertCardTitle: "IMBL सीमा निकटता चेतावनी",
+    fleetTableSubDesc: "AISstream.io से लाइव AIS स्थितियाँ, जहाँ भी अभी कोई लाइव रिसीवर कवरेज नहीं है वहाँ स्पष्ट रूप से टैग किए गए सिम्युलेटेड फ्लीट (\"SIM\" बैज देखें) से भरी गई",
+    vesselSearchPlaceholder: "वेसल का नाम या ID खोजें...",
+    filterAllStatuses: "सभी स्थितियाँ",
+    filterSafeFishing: "सुरक्षित मछली पकड़ना",
+    filterInTransit: "यात्रा में",
+    filterBorderAlert: "सीमा चेतावनी",
+    thVesselId: "वेसल ID",
+    thVesselName: "वेसल का नाम",
+    thType: "प्रकार",
+    thCurrentZone: "वर्तमान क्षेत्र",
+    thSpeedHeading: "गति / दिशा",
+    thImblDist: "IMBL दूरी",
+    thStatus: "स्थिति",
+    thAction: "कार्रवाई",
+    bulletinIssuedLabel: "जारी:",
+    bulletinRegionLabel: "क्षेत्र:",
+    bulletinWavesLabel: "लहरें:",
+    bulletinWindsLabel: "हवाएँ:",
+    bulletinSourceLabel: "स्रोत:",
+    bulletinListenBtn: "बुलेटिन सुनें",
+    bulletinsTabTitle: "आधिकारिक समुद्री और मत्स्य बुलेटिन (ISRO - INCOIS)",
+    bulletinsTabDesc: "क्रमांकित सलाह, चक्रवात खतरा चेतावनियाँ, और अंतरराष्ट्रीय सीमा अनुपालन अलर्ट।",
+    bulletinNotifyToggleTitle: "केवल जब यह टैब/PWA खुला हो तब ब्राउज़र अलर्ट प्राप्त करें",
+    bulletinNotifyToggleLabel: "खुले रहने पर सूचित करें",
+    bulletinFilterAll: "सभी बुलेटिन",
+    bulletinFilterCritical: "गंभीर",
+    bulletinFilterWarning: "चेतावनियाँ",
+    bulletinFilterAdvisory: "सलाह",
+    bulletinsPushNote: "खतरा अलर्ट केवल तब सक्रिय होते हैं जब यह टैब/PWA खुला हो। बंद-ऐप पुश सूचनाओं के लिए एक उत्पादन पुश-सब्सक्रिप्शन सेवा की आवश्यकता होती है और यह इस प्रोटोटाइप में लागू नहीं है।",
+    sosModalTitle: "आपातकालीन संकट बीकन (SOS)",
+    sosInstructions: "आपातकालीन SOS सक्रिय करने से <strong>INSAT-3DR SAS&R</strong> के माध्यम से भारतीय तटरक्षक समुद्री बचाव समन्वय केंद्र (MRCC) को एक आपातकालीन 406 MHz संकट सिग्नल प्रेषित किया जाएगा।",
+    sosCurrentPositionLabel: "वर्तमान स्थिति:",
+    sosVhfChannelLabel: "आपातकालीन VHF चैनल:",
+    sosMrccHelplineLabel: "MRCC हेल्पलाइन:",
+    sosConfirmBtn: "पुष्टि करें और संकट बीकन प्रसारित करें",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R बीकन ISRO और तटरक्षक MRCC को प्रेषित हो रहा है",
+    sosDistressRelayedMsg: "संकट पैकेट INSAT-3DR SAS&R रिसीवर के माध्यम से रिले किया गया। समुद्री बचाव समन्वय केंद्र (MRCC चेन्नई/मुंबई) को VHF चैनल 16 पर सतर्क किया गया।",
+    sosGpsVesselIdTemplate: "GPS निर्देशांक: {coords} · वेसल ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO सहयोगी समुद्री बुद्धिमत्ता · स्मार्ट इंडिया हैकाथॉन 2026",
+    landingSubtitle: "एक सहयोगी समुद्री-बुद्धिमत्ता मंच, दो कमांड डेक: मछुआरे का दैनिक अवसर कंसोल, और पूर्ण ISRO सैटेलाइट, AIS और जियोफेंसिंग इनसाइट सुइट।",
+    landingStripItem1: "Oceansat-3 SSTM थर्मल फ्रंट",
+    landingStripItem2: "INSAT-3DR सैटेलाइट समुद्र विज्ञान",
+    landingStripItem3: "8-नोड सहयोगी एजेंट DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS ब्रिज",
+    landingStripItem5: "IMBL सीमा जियोफेंसिंग अलर्ट",
+    landingStripItem6: "लाइव AIS फ्लीट और GIS कमांड",
+    landingStripItem7: "सेल स्मार्टर बायर प्राइसिंग",
+    landingStripItem8: "406 MHz SOS संकट बीकन",
+    landingFishermanCardTitle: "ORCA फिशरमैन",
+    landingFishermanCardDesc: "आज का अवसर स्कोर, सेल स्मार्टर प्राइसिंग, एक ट्रिप-लागत कैलकुलेटर और आपकी पकड़ के लिए खरीदार लीड — नाव के लिए बनाया गया।",
+    landingFishermanCardCta: "फिशरमैन कंसोल खोलें",
+    landingFishermanCardTitleAttr: "फिशरमैन कंसोल खोलें",
+    landingInsightCardTitle: "ORCA इनसाइट",
+    landingInsightCardDesc: "पूर्ण कमांड डेक: ISRO सैटेलाइट समुद्र विज्ञान, GIS मैप, 8-नोड एजेंट DAG, सुरक्षा बैरोमीटर, फ्लीट मॉनिटर और NavIC ब्रिज।",
+    landingInsightCardCta: "इनसाइट कमांड डेक खोलें",
+    landingInsightCardTitleAttr: "इनसाइट कमांड डेक खोलें",
+    backToOverviewTitle: "अवलोकन पर वापस जाएँ",
+    statSimulatedFleetLabel: "सिम्युलेटेड AIS फ्लीट",
+    statSatellitesActiveTemplate: "{count} सक्रिय",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} क्षेत्र",
+    statPfzZonesListLabel: "वेज बैंक, कोच्चि, वेरावल...",
+    statImblCorridorsCountTemplate: "{count} कॉरिडोर",
+    statImblBordersLabel: "भारत-श्रीलंका और पाक सीमाएँ",
+    pillarDagTitle: "8-नोड सहयोगी एजेंट DAG",
+    pillarDagDesc: "बहु-एजेंट आर्किटेक्चर जो प्रश्नों को सैटेलाइट, लहर खतरा, जियोफेंसिंग, वेसल गणना, ETA और न्यूरल सिंथेसिस चरणों में उप-सेकंड विलंबता के साथ विभाजित करता है।",
+    pillarEtaTitle: "लाइव समुद्री-स्थिति ETA और शाम सुरक्षा",
+    pillarEtaDesc: "लहर प्रतिरोध के अनुसार समायोजित हाइड्रोडायनामिक यात्रा गणनाएँ, सूर्यास्त के बाद फंसे मछुआरों को रोकने के लिए स्वचालित शाम-से-पहले-वापसी सुरक्षा अलर्ट के साथ।",
+    pillarFleetTitle: "लाइव फ्लीट घनत्व और IMBL अलर्ट",
+    pillarFleetDesc: "प्रति क्षेत्र रीयल-टाइम वेसल गणना, भीड़भाड़ जोखिम संकेतक, और समुद्री सीमाओं की रक्षा करने वाले स्वचालित 5 NM/2 NM जियोफेंस निकटता अलर्ट।",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · निर्मित <strong class=\"text-cyan-400\">{teamName}</strong> द्वारा · स्मार्ट इंडिया हैकाथॉन 2026 · समस्या विवरण 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b> में सुन रहा है... अभी बोलें।",
+    sttUnsupportedTitle: "इस ब्राउज़र में स्पीच रिकग्निशन समर्थित नहीं है",
+    routeUnavailableLabel: " मार्ग अनुपलब्ध:",
+    routeUnavailableMsg: "ORCA बैकएंड अनुपलब्ध है, इसलिए कोई रूटेड दूरी/ETA नहीं दिखाई जा सकती। स्थानीय फ़ॉलबैक मोड में चल रहा है।",
+    routeNoSafeRouteLabel: "✕ कोई सुरक्षित समुद्री मार्ग नहीं मिला:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "राउटर को इस हार्बर/PFZ जोड़ी के लिए भूमि और समुद्री संरक्षित क्षेत्रों से बचने वाला मार्ग नहीं मिल सका।",
+    routeSafeReturnLabel: "✓ सुरक्षित वापसी:",
+    routeSafeReturnTemplate: "अनुमानित हार्बर आगमन {time} तक (18:30 IST शाम से पहले)।",
+    routeReturnAfterDuskLabel: " शाम के बाद वापसी:",
+    routeReturnAfterDuskTemplate: "अनुमानित वापसी {time} पर (18:30 IST सूर्यास्त से अधिक)। पहले प्रस्थान या रात्रि नौवहन बीकन जाँच की सिफारिश की जाती है।"
   },
   ta: {
     appTitle: "ஆர்கா இன்சைட் (ORCA INSIGHT)",
@@ -891,7 +1555,339 @@ const translations = {
     fmClaimBtn: "இந்த லீட்டை உரிமை கோரவும்",
     fmClaimPromptText: "இதை நிறைவேற்றுவது யார் என்று வாங்குபவருக்குத் தெரிய உங்கள் பெயர் மற்றும் தொலைபேசி/தொடர்பை உள்ளிடவும்:",
     fmClaimSuccess: "உரிமை கோரப்பட்டது — வாங்குபவருக்கு தளத்திற்கு வெளியே தெரிவிக்கப்படும்.",
-    fmClaimFailed: "இப்போது இந்த பட்டியலை உரிமை கோர முடியவில்லை."
+    fmClaimFailed: "இப்போது இந்த பட்டியலை உரிமை கோர முடியவில்லை.",
+    dagAgentSupervisorName: "மாஸ்டர் சூப்பர்வைசர் / DAG திட்டமிடுபவர்",
+    dagAgentSupervisorRole: "பல்வகை கடல் வினவலைப் பிரிக்கிறது, செயற்கைக்கோள், அபாய மற்றும் ஜியோஃபென்ஸ் முகவர்களுக்கு துணைப்பணிகளை ஒதுக்குகிறது.",
+    dagAgentSatelliteName: "செயற்கைக்கோள் கடலியல் முகவர்",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (குளோரோஃபில்-a) மற்றும் SSTM (வெப்ப முனைகள்) உடன் INSAT-3DR மேக படங்களையும் உள்வாங்குகிறது.",
+    dagAgentWeatherName: "வானிலை & கடல் அபாய முகவர்",
+    dagAgentWeatherRole: "குறிப்பிடத்தக்க அலை உயரம் (SWH), காற்று வேக திசையன்கள், மின்னல் நிகழ்தகவை மதிப்பிட்டு, கடல்-அனுமதி மதிப்பெண்ணை உருவாக்குகிறது.",
+    dagAgentPfzName: "கடல் பகுப்பாய்வு & PFZ முகவர்",
+    dagAgentPfzRole: "வெப்ப-குளோரோஃபில் முனைகளின் சந்திப்புகளை அடையாளம் கண்டு, பெலஜிக் உயிர்பொருள் அடர்த்தியைக் கணக்கிட்டு, இலக்கு மீன்பிடி மண்டலங்களை தரவரிசைப்படுத்துகிறது.",
+    dagAgentGeofenceName: "ஜியோஃபென்சிங் & வழி முகவர்",
+    dagAgentGeofenceRole: "சர்வதேச கடல் எல்லைக் கோடுகளை (IMBL) கண்காணித்து, கடல் பாதுகாக்கப்பட்ட பகுதிகளை பஃபர் செய்து, A* பாதுகாப்பான வழிப்புள்ளிகளைக் கணக்கிடுகிறது.",
+    dagAgentFleetName: "கப்பல் கூட்டம் & போக்குவரத்து முகவர் (புதியது)",
+    dagAgentFleetRole: "AIS & ARGOS-4 கப்பல் டிரான்ஸ்பாண்டர்களை ஸ்கேன் செய்து, கப்பல் விநியோகத்தைக் கண்காணித்து, நெரிசல் அல்லது எல்லை கூட்டத்தைக் குறிக்கிறது.",
+    dagAgentEtaName: "ETA & பயண பாதுகாப்பு முகவர் (புதியது)",
+    dagAgentEtaRole: "நிகழ்நேர அலை எதிர்ப்புக்கு ஏற்ப பயண காலத்தைக் கணக்கிட்டு, மாலைக்கு முன் திரும்பும் பாதுகாப்பு காலப்பகுதியை மதிப்பிடுகிறது.",
+    dagAgentSynthesisName: "நியூரல் சிந்தசிஸ் முகவர் (புள்ளிவிவர-உந்துதல்)",
+    dagAgentSynthesisRole: "பல்-முகவர் தொலைநிலைத் தரவை மேற்கோள் குறிச்சொற்கள் மற்றும் TTS உடன் அதிகாரப்பூர்வமான, ஆதாரப்பூர்வ இயற்கை-மொழி ஆலோசனையாக ஒருங்கிணைக்கிறது -- முழுவதும் விதி-அடிப்படையிலானது, இந்த தளத்தின் சொந்த லைவ் தொலைநிலைத் தரவு மற்றும் அதன் சொந்த குவிந்த புள்ளிவிவர பதிவேட்டின் மீது தர்க்கம் செய்கிறது. வெளிப்புற AI/LLM API எதுவும் பயன்படுத்தப்படவில்லை.",
+    dagStatusIdle: "செயலற்றது",
+    dagInspectLink: "ஆய்வு செய் ➔",
+    dagInspectorLatencyTemplate: "செயல்படுத்தல் தாமதம்: {latency} · துணைப்பணிகள் சரிபார்க்கப்பட்டன",
+    dagStatusQueued: "வரிசையில்",
+    dagStatusExecuting: "செயல்படுத்தப்படுகிறது...",
+    dagStatusCompleted: "முடிந்தது",
+    dagStatusSkipped: "அழைக்கப்படவில்லை — நோக்கத்திற்கு இது தேவைப்படவில்லை",
+    dagBtnReasoningActiveLive: "தர்க்கம் செயலில் (லைவ் பேக்எண்ட்)...",
+    dagBtnExecutedLive: "✓ லைவ் பேக்எண்ட் வழியாக பைப்லைன் செயல்படுத்தப்பட்டது · மீண்டும் இயக்கு",
+    dagBtnErrorRetry: "▶ லைவ் பைப்லைன் சிமுலேஷனை இயக்கு",
+    dagBtnReasoningActiveOffline: "தர்க்கம் செயலில் (உள்ளூர் சிமுலேஷன்)...",
+    dagBtnExecutedOffline: "✓ பைப்லைன் செயல்படுத்தப்பட்டது (உள்ளூர் சிமுலேஷன்) · மீண்டும் இயக்கு",
+    dagTabTitle: "8-முனை கூட்டு பல்-முகவர் DAG",
+    dagInteractiveCanvasBadge: "ஊடாடும் தர்க்க கேன்வாஸ்",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL ஜியோஃபென்சிங், கப்பல் அடர்த்தி மற்றும் பயண ETA மீது தர்க்கம் செய்யும் நிகழ்நேர பல்-முகவர் செயல்படுத்தல் பைப்லைன்.",
+    backendCheckingStatus: "பேக்எண்ட் சரிபார்க்கப்படுகிறது...",
+    dagZoomReset: "மீட்டமை",
+    dagRunSimulationBtn: "▶ லைவ் பைப்லைன் சிமுலேஷனை இயக்கு",
+    dagClickToInspectHint: "எந்த முகவர் அட்டையையும் கிளிக் செய்து அதன் மூல தொலைநிலைத் தரவு உள்ளீடு, உள் அல்காரிதம்கள் மற்றும் JSON தரவு வெளியீட்டை ஆய்வு செய்யவும்.",
+    dagOrchestratorLabel: "ஆர்கெஸ்ட்ரேட்டர்: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "முகவர் விவரங்கள்",
+    dagInspectorDefaultRole: "பங்கு விளக்கம்",
+    dagInspectorLatencyPlaceholder: "தாமதம்: 24ms",
+    dagInspectorJsonLabel: "லைவ் JSON பேலோட்",
+    dagCloseInspector: "ஆய்வாளரை மூடு",
+    chatNewConversationMsg: "புதிய உரையாடல் தொடங்கியது. ORCA முந்தைய அரட்டை சூழலைப் பயன்படுத்தாது.",
+    chatYouLabel: "நீங்கள்",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR & Open-Meteo முழுவதும் 8 சிறப்பு AI முகவர்கள் ஒருங்கிணைக்கப்படுகின்றன...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "பல்-முகவர் கடல் ஆலோசனை",
+    chatGroundedConfidenceTemplate: "{confidence}% ஆதாரப்பூர்வ நம்பிக்கை",
+    chatLangDetectedTooltip: "செய்தியிலிருந்து மொழி கண்டறியப்பட்டது",
+    chatListenTts: "கேளுங்கள் (TTS)",
+    chatNavicMssBtn: "NavIC MSS குறியீடு",
+    chatMetricZone: "பரிந்துரைக்கப்பட்ட மண்டலம்",
+    chatMetricEta: "லைவ் கடல் நிலை ETA",
+    chatMetricVessels: "செயலில் உள்ள கப்பல்கள்",
+    chatVesselsSuffix: "{count} கப்பல்கள்",
+    chatMetricImbl: "IMBL அனுமதி",
+    chatReasoningTraceSummaryTemplate: "பல்-முகவர் தர்க்க தடத்தைக் காண்க ({steps} படிகள் செயல்படுத்தப்பட்டன)",
+    chatNodeDagSuffixTemplate: "{count}-முனை DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT பேக்எண்ட் ஒரு ஆலோசனையை உருவாக்கியது ஆனால் எந்த உரையையும் திரும்பவில்லை.",
+    chatLiveAdvisoryLabel: "✓ லைவ் பல்-முகவர் ஆலோசனை",
+    chatGroundedEngineFallback: "ஆதாரப்பூர்வ இயந்திரம்",
+    chatOceanSourceTierTemplate: "கடல் மூல அடுக்கு: {tier} · குளோரோஃபில்: {chlorophyll}",
+    chatCitationsTemplate: "மேற்கோள்கள்: {citations}",
+    chatOfflineBannerText: "ஆஃப்லைன் ஆலோசனை இயந்திரம் — ORCA பேக்எண்ட் அணுக முடியவில்லை. கீழே உள்ள புள்ளிவிவரங்கள் ஒரு உருவகப்படுத்தப்பட்ட உதாரண மதிப்பீடு, லைவ் தொலைநிலைத் தரவு அல்ல.",
+    chatOfflineImblPlainText: "ஆஃப்லைன் ஆலோசனை (பேக்எண்ட் அணுக முடியவில்லை, உருவகப்படுத்தப்பட்ட மதிப்பீடு): பாக் நீரிணை / மன்னார் வளைகுடா பகுதியில் உள்ள கப்பல்கள் பொதுவாக இந்தியா-இலங்கை IMBL எல்லையிலிருந்து சில கடல் மைல்களுக்குள் இருக்கும். மேற்கு நோக்கிய திசையைப் பராமரித்து VHF டிரான்ஸ்பாண்டர்களை சேனல் 16-இல் செயலில் வைத்திருங்கள். எல்லைக்கான உண்மையான அளவிடப்பட்ட தூரத்திற்கு ORCA பேக்எண்டுடன் மீண்டும் இணையவும்.",
+    chatOfflineImblHtmlHeading: "IMBL ஜியோஃபென்சிங் ஆலோசனை (உருவகப்படுத்தப்பட்ட ஆஃப்லைன் மதிப்பீடு):",
+    chatOfflineImblHtmlBody1: "லைவ் பேக்எண்ட் இணைப்பு இல்லாமல், கப்பல்-முதல்-எல்லை துல்லியமான தூரங்களை அளவிட முடியாது. பாக் நீரிணை பிரிவு 4-க்கு அருகில் பொதுவான முன்னெச்சரிக்கையாக, மண்டபம் நோக்கி மேற்கு திசையைப் பராமரிக்கவும்.",
+    chatOfflineImblHtmlBody2: "இது ஒரு பொதுவான ஆஃப்லைன் பாதுகாப்பு நினைவூட்டல், அளவிடப்பட்ட ஜியோஃபென்ஸ் அளவீடு அல்ல. உண்மையான தூரம்-முதல்-IMBL கணக்கீட்டிற்கு ORCA பேக்எண்டுடன் மீண்டும் இணையவும்.",
+    chatOfflineImblStep1: "பேக்எண்ட் அணுக முடியவில்லை. உள்ளூர் முக்கியச்சொல் பொருத்தத்தைப் பயன்படுத்தி வினவல் IMBL_BOUNDARY என வகைப்படுத்தப்பட்டது.",
+    chatOfflineImblStep2: "லைவ் ஜியோஃபென்சிங் தொலைநிலைத் தரவு இல்லை -- பொதுவான எல்லை-பாதுகாப்பு வழிகாட்டுதலை மட்டும் திருப்பி அளிக்கிறது.",
+    chatOfflineDensityPlainText: "ஆஃப்லைன் ஆலோசனை (பேக்எண்ட் அணுக முடியவில்லை, உருவகப்படுத்தப்பட்ட மதிப்பீடு): பேக்எண்ட் இணைப்பு இல்லாமல் லைவ் கப்பல் எண்ணிக்கையைப் பெற முடியாது. வரலாற்று ரீதியாக, வேஜ் பேங்க் மற்றும் கொச்சி டீப் ஆஃப்ஷோரில் மிதமான மீன்பிடி நடவடிக்கை காணப்படுகிறது. கப்பல் தரவுத்தொகுப்பிலிருந்து உண்மையான கப்பல் கூட்ட-அடர்த்தி அளவீட்டிற்கு ORCA பேக்எண்டுடன் மீண்டும் இணையவும்.",
+    chatOfflineDensityHtmlHeading: "கப்பல் கூட்ட அடர்த்தி (ஆஃப்லைன் — உருவகப்படுத்தப்பட்ட இடப்பிடி):",
+    chatOfflineDensityHtmlBody: "கப்பல் கூட்டம் & போக்குவரத்து முகவரின் லைவ் கப்பல் தரவுத்தொகுப்பு தற்போது அணுக முடியாது, எனவே மண்டலத்திற்குள் துல்லியமான கப்பல் எண்ணிக்கை கிடைக்கவில்லை.",
+    chatOfflineDensityListItem: "உண்மையான மண்டல வாரியான கப்பல் எண்ணிக்கை மற்றும் நெரிசல் தீர்ப்பிற்கு ORCA பேக்எண்டுடன் மீண்டும் இணையவும்.",
+    chatOfflineDensityStep1: "பேக்எண்ட் அணுக முடியவில்லை. உள்ளூர் முக்கியச்சொல் பொருத்தத்தைப் பயன்படுத்தி வினவல் FLEET_DENSITY என வகைப்படுத்தப்பட்டது.",
+    chatOfflineDensityStep2: "லைவ் கப்பல் கூட்ட தரவுத்தொகுப்பு இல்லை -- தவறான புள்ளிவிவரத்தை காட்டுவதைத் தவிர்க்க கப்பல் எண்ணிக்கை காட்டப்படவில்லை.",
+    chatOfflineGenericPlainTextTemplate: "ஆஃப்லைன் ஆலோசனை (பேக்எண்ட் அணுக முடியவில்லை): ORCA-வின் பல்-முகவர் பேக்எண்டை அணுக முடியவில்லை, எனவே இந்த பதில் ஒரு ஆதாரப்பூர்வ அளவீட்டைக் காட்டிலும் ஒரு பொதுவான, லைவ் அல்லாத இடப்பிடி ஆகும். உங்கள் உலாவியின் சொந்த Open-Meteo விட்ஜெட் சுமார் {liveWave}m குறிப்பிடத்தக்க அலை உயரத்தைக் காட்டுகிறது, ஆனால் PFZ தரவரிசை, வழி தூரம், ETA மற்றும் கப்பல் எண்ணிக்கை அனைத்திற்கும் பேக்எண்ட் தேவை, அவை இங்கே காட்டப்படவில்லை. உண்மையான ஆலோசனைக்கு ORCA பேக்எண்டுடன் மீண்டும் இணையவும்.",
+    chatOfflineGenericHtmlHeading: "ஆஃப்லைன் இடப்பிடி ஆலோசனை",
+    chatOfflineGenericHtmlBody1Template: "ORCA-வின் பல்-முகவர் பேக்எண்ட் (செயற்கைக்கோள், வானிலை, PFZ தரவரிசை, ஜியோஃபென்சிங், கப்பல் கூட்டம், வழிசெலுத்தல் மற்றும் நியூரல் சிந்தசிஸ்) தற்போது அணுக முடியாது. கிளையன்ட் தரப்பில், இந்த உலாவி Open-Meteo-விலிருந்து கடைசியாக <strong>{liveWave}m</strong> அலை உயரத்தைக் கண்டது, ஆனால் மற்ற ஒவ்வொரு புள்ளிவிவரத்திற்கும் பேக்எண்ட் தேவை.",
+    chatOfflineGenericHtmlBody2: "<strong>எந்த PFZ பரிந்துரையும், வழியும், ETA-வும் அல்லது கப்பல் எண்ணிக்கையும் காட்டப்படவில்லை</strong> ஏனெனில் அவை கணக்கிடப்படுவதற்குப் பதிலாக கற்பனை செய்யப்பட வேண்டும். முழுமையான ஆதாரப்பூர்வ ஆலோசனைக்கு ORCA பேக்எண்டுடன் மீண்டும் இணையவும்.",
+    chatOfflineGenericStep1: "பேக்எண்ட் அணுக முடியவில்லை. நோக்கம்-குறிப்பிட்ட முக்கியச்சொல் எதுவும் பொருந்தவில்லை -- GENERAL_VOYAGE_SAFETY ஆஃப்லைன் இடப்பிடி திருப்பி அளிக்கப்படுகிறது.",
+    chatOfflineGenericStep2Template: "கிளையன்ட்-பார்வைக்குக் கிடைக்கும் புள்ளிவிவரம் மட்டும்: கடைசியாக அறியப்பட்ட Open-Meteo அலை உயரம் {liveWave}m (உலாவியால் நேரடியாகப் பெறப்பட்டது, பேக்எண்ட் வழியாக அல்ல).",
+    chatTtsUnsupportedAlert: "உங்கள் உலாவியால் பேச்சு தொகுப்பு ஆதரிக்கப்படவில்லை.",
+    chatTtsWelcomeFallback: "ORCA INSIGHT-க்கு வரவேற்கிறோம். அனைத்து செயற்கைக்கோள் ஊட்டங்களும் கடலோர கடலியல் அமைப்புகளும் இயல்பான நிலையில் இயங்குகின்றன.",
+    chatStopAudio: "ஆடியோவை நிறுத்து",
+    chatListenAudioAdvisory: "ஆடியோ ஆலோசனையைக் கேளுங்கள்",
+    chatTabTitle: "AI முடிவு ஸ்டூடியோ & பல்-முகவர் அரட்டைப்பொறி",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR மற்றும் கடலோர ஜியோஃபென்சிங் மீது தர்க்கம் செய்யும் கூட்டு முகவர்களால் இயக்கப்படுகிறது",
+    chatNewConversationBtn: "புதிய உரையாடல்",
+    chatPromptPFZ: "கொச்சி துறைமுகத்திலிருந்து அருகிலுள்ள அதிக-மகசூல் PFZ மீன்பிடி மண்டலத்தை பிடிப்பு சாத்தியம் மற்றும் இனங்களுடன் கண்டறியவும்.",
+    chatPromptSafety: "இன்றைக்கான கடல்-பயண அனுமதி மதிப்பெண், குறிப்பிடத்தக்க அலை உயரம் மற்றும் காற்று அபாயத்தை சரிபார்க்கவும்.",
+    chatPromptBorder: "இந்தியா-இலங்கை IMBL எல்லைக்கான தூரத்தைச் சரிபார்த்து 2 NM ஆபத்து மண்டலத்தில் உள்ள கப்பல்களைப் பட்டியலிடவும்.",
+    chatPromptDensity: "வேஜ் பேங்க் மற்றும் கொச்சி டீப் முழுவதும் தற்போதைய கப்பல் எண்ணிக்கை மற்றும் அடர்த்தி விநியோகம் என்ன?",
+    chatPromptETA: "கொச்சியிலிருந்து PFZ-01 வரை பயண ETA-வைக் கணக்கிட்டு, 18:30 மாலைக்கு முன் இருவழிப் பயணம் பாதுகாப்பாகத் திரும்புமா என்று சரிபார்க்கவும்.",
+    chatConversationLabel: "உரையாடல்",
+    chatNeuralCoreActive: "ORCA INSIGHT நியூரல் கோர் செயலில்",
+    chatAgentsReadyUptime: "8 முகவர்கள் தயார் · 99.94% இயக்க நேரம்",
+    chatWelcomeMessage: "வணக்கம் / நமஸ்தே! நான் <strong>ORCA INSIGHT</strong> பல்-முகவர் தொகுப்பு அமைப்பு. பாதுகாப்பான கடல் பயண அனுமதி, இந்தியாவின் கடற்கரையோரம் அதிக-மகசூல் PFZ மண்டலங்கள், லைவ் கப்பல் போக்குவரத்து, IMBL எல்லை அருகாமை மற்றும் கடல்-நிலை சரிசெய்யப்பட்ட ETA கணக்கீடுகள் பற்றி நீங்கள் பேசலாம் அல்லது தட்டச்சு செய்யலாம்.",
+    chatMicHint: "தமிழ், இந்தி, மலையாளம் அல்லது ஆங்கிலத்தில் பேச கீழே உள்ள மைக்ரோஃபோன் ஐகானைக் கிளிக் செய்யவும்!",
+    chatVoiceInputTitle: "வினவலைப் பேசுங்கள் (பேச்சிலிருந்து உரை)",
+    chatLiveReasoningTraceTitle: "லைவ் தர்க்க தடம்",
+    chatReasoningTraceEmptyHint: "8 கூட்டு முகவர்களில் ஒவ்வொன்றும் இதன் மூலம் லைவ் ஆக எப்படி தர்க்கம் செய்கிறது என்பதைக் காண இடதுபுறத்தில் ஒரு கேள்வியைக் கேளுங்கள்.",
+    chatLiveTelemetryTitle: "லைவ் கடல் தொலைநிலைத் தரவு",
+    chatCurrentSeaClearance: "தற்போதைய கடல் அனுமதி:",
+    chatSignificantWaves: "குறிப்பிடத்தக்க அலைகள்:",
+    chatSurfaceWind: "மேற்பரப்பு காற்று:",
+    chatActiveVessels: "செயலில் உள்ள கப்பல்கள்:",
+    chatOpenDagVisualizerBtn: "முழு முகவர் DAG விஷுவலைசரைத் திற ➔",
+    navicConnected: "NavIC ரிசீவர்: இணைக்கப்பட்டது (L5/S-Band)",
+    navicDisconnected: "NavIC ரிசீவர்: துண்டிக்கப்பட்டது",
+    navicTrackMyPosition: "எனது நிலையைக் கண்காணி",
+    navicStopTracking: "கண்காணிப்பை நிறுத்து",
+    navicSimulateMovement: "கப்பல் இயக்கத்தை உருவகப்படுத்து",
+    navicStopSimulation: "உருவகப்படுத்துதலை நிறுத்து",
+    navicStatusTrackingOff: "கண்காணிப்பு நிறுத்தப்பட்டது · எந்த நிலையும் கோரப்படவில்லை",
+    navicStatusGeoUnsupported: "இந்த உலாவியால் இருப்பிடம் ஆதரிக்கப்படவில்லை. டெமோவிற்கு உருவகப்படுத்தப்பட்ட கப்பல் இயக்கத்தைப் பயன்படுத்தவும்.",
+    navicStatusRequestingPermission: "சாதன-இருப்பிட அனுமதி கோரப்படுகிறது…",
+    navicStatusLiveTrackingTemplate: "லைவ் சாதன கண்காணிப்பு · துல்லியம் ±{accuracy}m · சேமிக்கப்படவில்லை",
+    navicStatusPermissionErrorTemplate: "இருப்பிட அனுமதி கிடைக்கவில்லை ({error}). எந்த நிலையும் அனுப்பப்படவில்லை.",
+    navicStatusBackendUnavailable: "பேக்எண்ட் கிடைக்கவில்லை — உள்ளூர் உருவகப்படுத்துதலில் துல்லியமான ஜியோஃபென்ஸ் தூரத்தை மதிப்பிட முடியாது.",
+    navicStatusSimStopped: "ஜியோஃபென்ஸ் உருவகப்படுத்துதல் நிறுத்தப்பட்டது",
+    navicStatusSimMovingTemplate: "உருவகப்படுத்தப்பட்ட கப்பல் இயக்கம் · புள்ளி {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-எழுத்து செயற்கைக்கோள் அவசர குறியீடு நகலெடுக்கப்பட்டது:\\n\\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) ஸ்கைப்ளாட்",
+    navicConstellationDesc: "7-செயற்கைக்கோள் புவிநிலை / IGSO தொகுப்பு",
+    navicConnectedShort: "இணைக்கப்பட்டது (L5/S)",
+    navicTrackedSatellitesTitle: "கண்காணிக்கப்படும் செயற்கைக்கோள்கள் (SNR dB-Hz)",
+    navicNmeaStreamTitle: "லைவ் NMEA-0183 வன்பொருள் ஸ்ட்ரீம் ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "பாட் விகிதம்: 9600 bps · 1 Hz ஊட்டம்",
+    navicDopPrecisionLabel: "DOP துல்லியம்",
+    navicDopValue: "HDOP 1.05 (சிறந்தது)",
+    navicDiffFixLabel: "வேறுபாட்டு நிர்ணயம்",
+    navicDiffFixValue: "NavIC DGPS செயலில்",
+    navicBorderHwLabel: "எல்லை அலர்ட் வன்பொருள்",
+    navicBorderHwValue: "பஸ்ஸர் தயார்நிலையில்",
+    navicGeofenceTitle: "லைவ் நிலை ஜியோஃபென்சிங்",
+    navicGeofenceDesc: "உங்கள் சாதன இருப்பிடம் அமர்வுக்குள் IMBL/MPA சரிபார்ப்புகளுக்கு மட்டுமே பயன்படுத்தப்படுகிறது, ORCA-வால் ஒருபோதும் சேமிக்கப்படாது.",
+    navicGeofenceInitialStatus: "கண்காணிப்பு நிறுத்தப்பட்டது · 5 NM IMBL எச்சரிக்கை / MPA பஃபர் எச்சரிக்கை",
+    safetyVerdictDescTemplate: "லைவ் Open-Meteo கடல் தொலைநிலைத் தரவு உங்கள் தேர்ந்தெடுக்கப்பட்ட துறைமுகத்திற்கு அருகில் குறிப்பிடத்தக்க அலை உயரம் {wave}m மற்றும் மேற்பரப்பு காற்று {wind}kn ஆக வைக்கிறது, இது கணக்கிடப்பட்ட {score}/100 பாதுகாப்பு மதிப்பெண்ணைத் தருகிறது.",
+    safetyWindDefaultDirection: "மேற்கு",
+    safetyBreezeSuffix: "{direction} தென்றல்",
+    severityLow: "குறைவு",
+    severityModerate: "மிதமான",
+    severityHigh: "அதிக",
+    waveBandCalm: "அமைதியான (< 0.5m)",
+    waveBandSlight: "லேசான (0.5 - 1.25m)",
+    waveBandModerate: "மிதமான (1.25 - 2.5m)",
+    waveBandRough: "கடுமையான (> 2.5m)",
+    seaStateCalm: "அமைதியான",
+    seaStateSlight: "லேசான",
+    seaStateSlightModerate: "லேசானது முதல் மிதமானது வரை",
+    seaStateModerateRough: "மிதமானது முதல் கடுமையானது வரை",
+    seaStateUnknown: "தெரியவில்லை",
+    lightningBandSafe: "பாதுகாப்பான வளிமண்டல விவரக்குறிப்பு",
+    lightningBandElevated: "உயர்ந்த வெப்பச்சலன ஆபத்து",
+    lightningBandSevere: "கடுமையான புயல் எச்சரிக்கை",
+    safetySyncLatencyLabel: "ஒத்திசைவு தாமதம்:",
+    safetyBatteryLabel: "பேட்டரி:",
+    safetyLastPassLabel: "கடைசி கடப்பு:",
+    safetyAltitudeLabel: "உயரம்:",
+    telemetryLiveOpenMeteoTemplate: "லைவ் OPEN-METEO தொலைநிலைத் தரவு ({wave}m SWH)",
+    telemetryCachedArchive: "தொலைநிலைத் தரவு செயலில் (சேமிக்கப்பட்ட செயற்கைக்கோள் காப்பகம்)",
+    backendOnlineStatus: "லைவ் FASTAPI பேக்எண்ட் இணைக்கப்பட்டது",
+    backendOfflineStatus: "பேக்எண்ட் ஆஃப்லைன் · உள்ளூர் உருவகப்படுத்துதல் முறை",
+    aisLiveCountTemplate: "{count} லைவ் AIS கப்பல்{plural}",
+    aisNoLiveVessels: "தற்போது லைவ் AIS கப்பல்கள் இல்லை",
+    aisBlendedBannerTemplate: "தற்போது லைவ் AIS கவரேஜ் இல்லாத துறைமுகங்களை நிரப்ப {liveText} + {simCount} உருவகப்படுத்தப்பட்ட கப்பல்{plural} காட்டப்படுகின்றன.",
+    aisUnavailableDefault: "லைவ் AIS கப்பல் ஊட்டம் கிடைக்கவில்லை -- 0 கப்பல்கள் காட்டப்படுகின்றன.",
+    aisNotConfigured: "இந்த வரிசைப்படுத்தலில் லைவ் AIS கப்பல் ஊட்டம் கட்டமைக்கப்படவில்லை.",
+    aisConnectedNotSending: "AIS வழங்குநருடன் (AISstream.io) இணைக்கப்பட்டுள்ளது, ஆனால் அது தற்போது கப்பல் தரவை அனுப்பவில்லை — வழங்குநர்-தரப்பு தடையாக இருக்கலாம், உள்ளூர் கோளாறு அல்ல.",
+    aisDisconnectedReconnecting: "AIS வழங்குநரிலிருந்து (AISstream.io) துண்டிக்கப்பட்டது; தானாக மீண்டும் இணைக்கிறது.",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> இந்தியா–இலங்கை IMBL-லிருந்து <strong>{dist} NM</strong> தூரத்தில் இயங்குகிறது{simTag}. தானியங்கி எச்சரிக்கை அனுப்பப்பட்டது.",
+    imblAlertNoneTemplate: "தற்போது {warnDist} NM IMBL எச்சரிக்கை தூரத்திற்குள் எந்த கப்பலும் இல்லை. அருகிலுள்ள கண்காணிக்கப்பட்ட கப்பல்: <strong>{dist} NM</strong> தொலைவில்.",
+    imblAlertNoData: "இதுவரை கப்பல் தொலைநிலைத் தரவு கிடைக்கவில்லை.",
+    simulatedSuffix: " (உருவகப்படுத்தப்பட்டது)",
+    notifUnavailableTitle: "உலாவி அறிவிப்புகள் கிடைக்கவில்லை",
+    notifUnavailableMsg: "இந்த தாவல் திறந்திருக்கும் வரை பயன்பாட்டு-உள் அபாய பேனர்கள் காட்டப்படும்.",
+    notifNotEnabledTitle: "உலாவி அறிவிப்புகள் இயக்கப்படவில்லை",
+    notifNotEnabledMsg: "இந்த தாவல் திறந்திருக்கும் வரை பயன்பாட்டு-உள் அபாய பேனர்கள் செயலில் இருக்கும்.",
+    hazardHighWavesTitle: "உயர் அலைகள் — உள்ளூர் உருவகப்படுத்துதல்",
+    hazardHighWavesMsgTemplate: "{wave}m, 2.5m எச்சரிக்கை வரம்பை மீறுகிறது. மூலம்: உலாவி Open-Meteo தொலைநிலைத் தரவு.",
+    hazardHighWindTitle: "அதிக காற்று — உள்ளூர் உருவகப்படுத்துதல்",
+    hazardHighWindMsgTemplate: "{wind} kn, 25 kn எச்சரிக்கை வரம்பை மீறுகிறது. மூலம்: உலாவி Open-Meteo தொலைநிலைத் தரவு.",
+    hazardLightningTitle: "மின்னல் ஆபத்து — உள்ளூர் உருவகப்படுத்துதல்",
+    hazardLightningMsgTemplate: "மின்னல் ப்ராக்ஸி {pct}% ஆகும். மூலம்: உலாவி Open-Meteo தொலைநிலைத் தரவு.",
+    safetyOfficialClearanceLabel: "அதிகாரப்பூர்வ கடல் அனுமதி",
+    safetyVerdictDescInitial: "அனைத்து செயற்கைக்கோள் கடலியல் குறிகாட்டிகளும் (Oceansat-3 SSTM வெப்ப முனைகள், Sentinel-3 அலை உயரமானி) கேரளா, கர்நாடகா மற்றும் தமிழ்நாடு கடலோர நீரில் சாதகமான மீன்பிடி நிலைமைகளை உறுதிப்படுத்துகின்றன.",
+    safetyIndexLabel: "பாதுகாப்பு குறியீடு",
+    satConstellationTitle: "ISRO & சர்வதேச கடலியல் செயற்கைக்கோள் தொகுப்பு",
+    satStaticDataNote: "நிலையான குறிப்புத் தரவு (லைவ் தொலைநிலைத் தரவு அல்ல)",
+    mapIndiaBoundaryPopup: "இந்தியா — அதிகாரப்பூர்வ எல்லை (Survey of India)",
+    mapPfzYieldSuffix: "{rating} மகசூல் ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "குளோரோஃபில்:",
+    mapPfzDepthLabel: "ஆழம்:",
+    mapPfzVesselsLabel: "கப்பல்கள்:",
+    mapPfzActiveSuffix: "{count} செயலில்",
+    mapPfzTargetSpeciesLabel: "இலக்கு இனங்கள்:",
+    mapPfzSimulateRouteBtn: "இங்கே வழியை உருவகப்படுத்து ➔",
+    mapImblPopupBodyTemplate: "கடுமையான சர்வதேச கடல் எல்லைக் கோடு. எச்சரிக்கை பஃபர்: {warn} NM. முக்கிய ஜியோஃபென்ஸ்: {danger} NM.",
+    mapImblPopupTreatyNote: "UNCLOS கடல் ஒப்பந்தத்தின் கீழ் எல்லை கடத்தல் தடைசெய்யப்பட்டுள்ளது.",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL பஃபர் காரிடார்",
+    mapMpaRestrictedBadge: "தடைசெய்யப்பட்ட சுற்றுச்சூழல் காப்பகம்",
+    mapHarbourCoastSuffix: "{state} கடற்கரை",
+    mapHarbourCapacityLabel: "கொள்ளளவு:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "எரிபொருள் நிலையம்:",
+    mapHarbourFuelAvailable: "கிடைக்கிறது",
+    mapHarbourIceLabel: "பனிக்கட்டி ஆலை:",
+    mapHarbourIceActive: "செயலில்",
+    mapHarbourSetOriginBtn: "தொடக்க துறைமுகமாக அமை",
+    mapVesselSimulatedBadge: "உருவகப்படுத்தப்பட்டது · இங்கே லைவ் AIS கவரேஜ் இல்லை",
+    mapVesselSpeedLabel: "வேகம்:",
+    mapVesselHeadingLabel: "திசை:",
+    mapVesselZoneLabel: "மண்டலம்:",
+    mapVesselImblDistLabel: "IMBL தூரம்:",
+    mapVesselStatusLabel: "நிலை:",
+    mapVesselFuelLabel: "எரிபொருள்:",
+    mapVesselFuelNA: "இல்லை",
+    mapRoutePopupTitle: "கடல்-மட்டும் A* வழி (நிலம் + MPA தவிர்ப்பு)",
+    mapRouteDistanceEtaTemplate: "தூரம்: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} சுற்றி {pct}% சுற்றுவழி",
+    mapRouteLandNoGoZones: "நிலம்/தடைசெய்யப்பட்ட மண்டலங்கள்",
+    vesselStatusSafeFishing: "பாதுகாப்பான மீன்பிடி",
+    vesselStatusBorderAlert: "எல்லை எச்சரிக்கை",
+    vesselStatusBorderWarn: "எல்லை கவனம்",
+    vesselStatusInTransit: "பயணத்தில்",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "உருவகப்படுத்தப்பட்டது -- இந்த துறைமுகத்திற்கு அருகில் லைவ் AIS கவரேஜ் இல்லை",
+    vesselLocateAction: "கண்டறி ➔",
+    fleetVesselCountSuffix: "{count} கப்பல்கள்",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} லைவ் · {sim} சிம்)",
+    mapActiveVesselsBreakdownTemplate: "{total} செயலில் உள்ள கப்பல்கள் ({live} லைவ் · {sim} உருவகப்படுத்தப்பட்டது)",
+    mapActiveVesselsSimpleTemplate: "{total} செயலில் உள்ள கப்பல்கள்",
+    mapTabTitle: "GIS கட்டளை வரைபடம் · இந்திய கடலோர நீர்",
+    mapTabDesc: "நிகழ்நேர செயற்கைக்கோள் PFZ-கள், IMBL எல்லை காரிடார்கள் மற்றும் AIS கப்பல் தடங்களுடன் ஊடாடும் உயர்-மாறுபாடு கடல்சார் வரைபடம்.",
+    layerPfzZones: "PFZ மண்டலங்கள்",
+    layerImblBuffer: "IMBL பஃபர்",
+    layerEcoReserves: "சுற்றுச்சூழல் காப்பகங்கள் (MPA)",
+    layerHarbours: "துறைமுகங்கள்",
+    layerLiveVessels: "லைவ் கப்பல்கள்",
+    layerDensityHeatmap: "அடர்த்தி வெப்பப் படம்",
+    layerIndiaBoundary: "இந்திய எல்லை (Survey of India)",
+    routePlannerDesc: "MPA-க்கள் மற்றும் எல்லை அபாயங்களைத் தவிர்க்கும் A*-பாணி பாதை",
+    routeVesselSpeedLabel: "கப்பல் வேகம்:",
+    fleetMonitorTitle: "கப்பல் கூட்ட கண்காணிப்பு · லைவ் கப்பல் தொலைநிலைத் தரவு",
+    fleetTotalActiveTitle: "மொத்த செயலில் உள்ள கப்பல்கள்",
+    fleetTotalActiveDesc: "தற்போது AIS டிரான்ஸ்பாண்டர் சிக்னல்களை ஒளிபரப்பும் கப்பல்கள்",
+    fleetZoneDistTitle: "மண்டலத்திற்கு கப்பல் விநியோகம்",
+    imblAlertCardTitle: "IMBL எல்லை அருகாமை எச்சரிக்கை",
+    fleetTableSubDesc: "AISstream.io-விலிருந்து லைவ் AIS நிலைகள், தற்போது லைவ் ரிசீவர் கவரேஜ் இல்லாத இடங்களில் தெளிவாக-குறிக்கப்பட்ட உருவகப்படுத்தப்பட்ட கப்பல் கூட்டத்துடன் (\"SIM\" பேட்ஜைப் பார்க்கவும்) நிரப்பப்பட்டது",
+    vesselSearchPlaceholder: "கப்பல் பெயர் அல்லது ID-ஐத் தேடு...",
+    filterAllStatuses: "அனைத்து நிலைகள்",
+    filterSafeFishing: "பாதுகாப்பான மீன்பிடி",
+    filterInTransit: "பயணத்தில்",
+    filterBorderAlert: "எல்லை எச்சரிக்கை",
+    thVesselId: "கப்பல் ID",
+    thVesselName: "கப்பல் பெயர்",
+    thType: "வகை",
+    thCurrentZone: "தற்போதைய மண்டலம்",
+    thSpeedHeading: "வேகம் / திசை",
+    thImblDist: "IMBL தூரம்",
+    thStatus: "நிலை",
+    thAction: "செயல்",
+    bulletinIssuedLabel: "வெளியிடப்பட்டது:",
+    bulletinRegionLabel: "பகுதி:",
+    bulletinWavesLabel: "அலைகள்:",
+    bulletinWindsLabel: "காற்று:",
+    bulletinSourceLabel: "மூலம்:",
+    bulletinListenBtn: "அறிவிப்பைக் கேளுங்கள்",
+    bulletinsTabTitle: "அதிகாரப்பூர்வ கடல் & மீன்வள அறிவிப்புகள் (ISRO - INCOIS)",
+    bulletinsTabDesc: "எண்ணிடப்பட்ட ஆலோசனைகள், சூறாவளி அபாய எச்சரிக்கைகள் மற்றும் சர்வதேச எல்லை இணக்க எச்சரிக்கைகள்.",
+    bulletinNotifyToggleTitle: "இந்த தாவல்/PWA திறந்திருக்கும் போது மட்டுமே உலாவி எச்சரிக்கைகளைப் பெறுங்கள்",
+    bulletinNotifyToggleLabel: "திறந்திருக்கும் போது அறிவி",
+    bulletinFilterAll: "அனைத்து அறிவிப்புகள்",
+    bulletinFilterCritical: "முக்கியமான",
+    bulletinFilterWarning: "எச்சரிக்கைகள்",
+    bulletinFilterAdvisory: "ஆலோசனைகள்",
+    bulletinsPushNote: "இந்த தாவல்/PWA திறந்திருக்கும் போது மட்டுமே அபாய எச்சரிக்கைகள் செயலில் இருக்கும். மூடப்பட்ட-பயன்பாட்டு புஷ் அறிவிப்புகளுக்கு உற்பத்தி புஷ்-சந்தா சேவை தேவை, இது இந்த முன்மாதிரியில் செயல்படுத்தப்படவில்லை.",
+    sosModalTitle: "அவசர அபாய பீக்கன் (SOS)",
+    sosInstructions: "அவசர SOS-ஐ செயல்படுத்துவது <strong>INSAT-3DR SAS&R</strong> வழியாக இந்திய கடலோர காவல்படை கடல் மீட்பு ஒருங்கிணைப்பு மையத்திற்கு (MRCC) அவசர 406 MHz அபாய சிக்னலை அனுப்பும்.",
+    sosCurrentPositionLabel: "தற்போதைய நிலை:",
+    sosVhfChannelLabel: "அவசர VHF சேனல்:",
+    sosMrccHelplineLabel: "MRCC உதவி எண்:",
+    sosConfirmBtn: "உறுதிப்படுத்தி அபாய பீக்கனை ஒளிபரப்பு",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R பீக்கன் ISRO & கடலோர காவல்படை MRCC-க்கு அனுப்பப்படுகிறது",
+    sosDistressRelayedMsg: "அபாய பாக்கெட் INSAT-3DR SAS&R ரிசீவர் வழியாக அனுப்பப்பட்டது. கடல் மீட்பு ஒருங்கிணைப்பு மையத்திற்கு (MRCC சென்னை/மும்பை) VHF சேனல் 16-இல் தெரிவிக்கப்பட்டது.",
+    sosGpsVesselIdTemplate: "GPS ஆயத்தொலைவுகள்: {coords} · கப்பல் ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO கூட்டு கடல் நுண்ணறிவு · ஸ்மார்ட் இந்தியா ஹேக்கத்தான் 2026",
+    landingSubtitle: "ஒரு கூட்டு கடல்-நுண்ணறிவு தளம், இரண்டு கட்டளை மையங்கள்: ஒரு மீனவரின் தினசரி வாய்ப்பு கன்சோல், மற்றும் முழு ISRO செயற்கைக்கோள், AIS மற்றும் ஜியோஃபென்சிங் நுண்ணறிவு தொகுப்பு.",
+    landingStripItem1: "Oceansat-3 SSTM வெப்ப முனைகள்",
+    landingStripItem2: "INSAT-3DR செயற்கைக்கோள் கடலியல்",
+    landingStripItem3: "8-முனை கூட்டு முகவர் DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS பாலம்",
+    landingStripItem5: "IMBL எல்லை ஜியோஃபென்சிங் எச்சரிக்கைகள்",
+    landingStripItem6: "லைவ் AIS கப்பல் கூட்டம் & GIS கட்டளை",
+    landingStripItem7: "சிறந்த விற்பனை வாங்குபவர் விலை நிர்ணயம்",
+    landingStripItem8: "406 MHz SOS அபாய பீக்கன்",
+    landingFishermanCardTitle: "ORCA மீனவர்",
+    landingFishermanCardDesc: "இன்றைய வாய்ப்பு மதிப்பெண், சிறந்த விற்பனை விலை நிர்ணயம், ஒரு பயண-செலவு கால்குலேட்டர் மற்றும் உங்கள் பிடிப்புக்கான வாங்குபவர் தொடர்புகள் — படகுக்காக உருவாக்கப்பட்டது.",
+    landingFishermanCardCta: "மீனவர் கன்சோலைத் திற",
+    landingFishermanCardTitleAttr: "மீனவர் கன்சோலைத் திற",
+    landingInsightCardTitle: "ORCA இன்சைட்",
+    landingInsightCardDesc: "முழு கட்டளை மையம்: ISRO செயற்கைக்கோள் கடலியல், GIS வரைபடம், 8-முனை முகவர் DAG, பாதுகாப்பு பாரோமீட்டர், கப்பல் கூட்ட கண்காணிப்பு மற்றும் NavIC பாலம்.",
+    landingInsightCardCta: "இன்சைட் கட்டளை மையத்தைத் திற",
+    landingInsightCardTitleAttr: "இன்சைட் கட்டளை மையத்தைத் திற",
+    backToOverviewTitle: "மேலோட்டத்திற்குத் திரும்பு",
+    statSimulatedFleetLabel: "உருவகப்படுத்தப்பட்ட AIS கப்பல் கூட்டம்",
+    statSatellitesActiveTemplate: "{count} செயலில்",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} மண்டலங்கள்",
+    statPfzZonesListLabel: "வேஜ் பேங்க், கொச்சி, வேரவல்...",
+    statImblCorridorsCountTemplate: "{count} காரிடார்கள்",
+    statImblBordersLabel: "இந்தியா-இலங்கை & பாகிஸ்தான் எல்லைகள்",
+    pillarDagTitle: "8-முனை கூட்டு முகவர் DAG",
+    pillarDagDesc: "வினவல்களை செயற்கைக்கோள், அலை அபாயம், ஜியோஃபென்சிங், கப்பல் எண்ணிக்கை, ETA மற்றும் நியூரல் சிந்தசிஸ் படிகளாக துணை-வினாடி தாமதத்துடன் பிரிக்கும் பல்-முகவர் கட்டமைப்பு.",
+    pillarEtaTitle: "லைவ் கடல்-நிலை ETA & மாலை பாதுகாப்பு",
+    pillarEtaDesc: "அலை எதிர்ப்புக்கு ஏற்ப சரிசெய்யப்பட்ட ஹைட்ரோடைனமிக் பயண கணக்கீடுகள், சூரிய அஸ்தமனத்திற்குப் பிறகு சிக்கிய மீனவர்களைத் தடுக்க தானியங்கி மாலைக்கு-முன்-திரும்பும் பாதுகாப்பு எச்சரிக்கைகளுடன்.",
+    pillarFleetTitle: "லைவ் கப்பல் கூட்ட அடர்த்தி & IMBL எச்சரிக்கை",
+    pillarFleetDesc: "மண்டலத்திற்கு நிகழ்நேர கப்பல் எண்ணிக்கை, நெரிசல் ஆபத்து குறிகாட்டிகள், மற்றும் கடல் எல்லைகளைப் பாதுகாக்கும் தானியங்கி 5 NM/2 NM ஜியோஃபென்ஸ் அருகாமை எச்சரிக்கைகள்.",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · உருவாக்கியவர் <strong class=\"text-cyan-400\">{teamName}</strong> · ஸ்மார்ட் இந்தியா ஹேக்கத்தான் 2026 · பிரச்சனை அறிக்கை 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b>-இல் கேட்கிறது... இப்போது பேசுங்கள்.",
+    sttUnsupportedTitle: "இந்த உலாவியில் பேச்சு அங்கீகாரம் ஆதரிக்கப்படவில்லை",
+    routeUnavailableLabel: " வழி கிடைக்கவில்லை:",
+    routeUnavailableMsg: "ORCA பேக்எண்ட் அணுக முடியாது, எனவே எந்த வழிநடத்தப்பட்ட தூரம்/ETA-வும் காட்ட முடியாது. உள்ளூர் மாற்று முறையில் இயங்குகிறது.",
+    routeNoSafeRouteLabel: "✕ பாதுகாப்பான கடல் வழி எதுவும் கிடைக்கவில்லை:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "இந்த துறைமுகம்/PFZ இணைக்கு நிலம் மற்றும் கடல் பாதுகாக்கப்பட்ட பகுதிகளைத் தவிர்க்கும் பாதையை ரூட்டரால் கண்டறிய முடியவில்லை.",
+    routeSafeReturnLabel: "✓ பாதுகாப்பான திரும்புதல்:",
+    routeSafeReturnTemplate: "எதிர்பார்க்கப்படும் துறைமுக வருகை {time}க்குள் (18:30 IST மாலைக்கு முன்).",
+    routeReturnAfterDuskLabel: " மாலைக்குப் பின் திரும்புதல்:",
+    routeReturnAfterDuskTemplate: "எதிர்பார்க்கப்படும் திரும்புதல் {time}-இல் (18:30 IST சூரிய அஸ்தமனத்தை மீறுகிறது). முன்கூட்டிய புறப்பாடு அல்லது இரவு வழிசெலுத்தல் பீக்கன் சரிபார்ப்பை பரிந்துரைக்கிறோம்."
   },
   ml: {
     appTitle: "ഓർക്ക ഇൻസൈറ്റ് (ORCA INSIGHT)",
@@ -1124,7 +2120,339 @@ const translations = {
     fmClaimBtn: "ഈ ലീഡ് അവകാശപ്പെടുക",
     fmClaimPromptText: "ഇത് ആരാണ് നിറവേറ്റുന്നതെന്ന് വാങ്ങുന്നയാൾ അറിയാൻ നിങ്ങളുടെ പേരും ഫോൺ/ബന്ധപ്പെടാനുള്ള വിവരവും നൽകുക:",
     fmClaimSuccess: "അവകാശപ്പെട്ടു — വാങ്ങുന്നയാളെ പ്ലാറ്റ്‌ഫോമിന് പുറത്ത് അറിയിക്കും.",
-    fmClaimFailed: "ഇപ്പോൾ ഈ ലിസ്റ്റിംഗ് അവകാശപ്പെടാൻ കഴിഞ്ഞില്ല."
+    fmClaimFailed: "ഇപ്പോൾ ഈ ലിസ്റ്റിംഗ് അവകാശപ്പെടാൻ കഴിഞ്ഞില്ല.",
+    dagAgentSupervisorName: "മാസ്റ്റർ സൂപ്പർവൈസർ / DAG പ്ലാനർ",
+    dagAgentSupervisorRole: "മൾട്ടി-മോഡൽ സമുദ്ര അന്വേഷണത്തെ വിഭജിക്കുന്നു, സാറ്റലൈറ്റ്, അപകട, ജിയോഫെൻസ് ഏജന്റുമാർക്ക് ഉപജോലികൾ അനുവദിക്കുന്നു.",
+    dagAgentSatelliteName: "സാറ്റലൈറ്റ് സമുദ്രശാസ്ത്ര ഏജന്റ്",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (ക്ലോറോഫിൽ-a) & SSTM (താപ മുന്നണികൾ) എന്നിവയോടൊപ്പം INSAT-3DR ക്ലൗഡ് ഇമേജറിയും സ്വീകരിക്കുന്നു.",
+    dagAgentWeatherName: "കാലാവസ്ഥ & സമുദ്ര അപകട ഏജന്റ്",
+    dagAgentWeatherRole: "പ്രധാന തരംഗ ഉയരം (SWH), കാറ്റ് ഗസ്റ്റ് വെക്ടറുകൾ, മിന്നൽ സാധ്യത എന്നിവ വിലയിരുത്തി, കടൽ-ക്ലിയറൻസ് സ്കോർ സൃഷ്ടിക്കുന്നു.",
+    dagAgentPfzName: "സമുദ്ര വിശകലനം & PFZ ഏജന്റ്",
+    dagAgentPfzRole: "താപ-ക്ലോറോഫിൽ മുന്നണികളുടെ കവലകൾ തിരിച്ചറിഞ്ഞ്, പെലാജിക് ബയോമാസ് സാന്ദ്രത കണക്കാക്കി, ലക്ഷ്യ മത്സ്യബന്ധന മേഖലകൾ റാങ്ക് ചെയ്യുന്നു.",
+    dagAgentGeofenceName: "ജിയോഫെൻസിംഗ് & റൂട്ടിംഗ് ഏജന്റ്",
+    dagAgentGeofenceRole: "അന്താരാഷ്ട്ര സമുദ്ര അതിർത്തി രേഖകൾ (IMBL) നിരീക്ഷിക്കുന്നു, സമുദ്ര സംരക്ഷിത പ്രദേശങ്ങൾ ബഫർ ചെയ്യുന്നു, A* സുരക്ഷിത വേപോയിന്റുകൾ കണക്കാക്കുന്നു.",
+    dagAgentFleetName: "ഫ്ലീറ്റ് & ട്രാഫിക് ഏജന്റ് (പുതിയത്)",
+    dagAgentFleetRole: "AIS & ARGOS-4 വെസൽ ട്രാൻസ്‌പോണ്ടറുകൾ സ്കാൻ ചെയ്ത്, ഫ്ലീറ്റ് വിതരണം ട്രാക്ക് ചെയ്ത്, തിരക്ക് അല്ലെങ്കിൽ അതിർത്തി തിരക്ക് ഫ്ലാഗ് ചെയ്യുന്നു.",
+    dagAgentEtaName: "ETA & യാത്രാ സുരക്ഷാ ഏജന്റ് (പുതിയത്)",
+    dagAgentEtaRole: "തത്സമയ തരംഗ പ്രതിരോധത്തിനനുസരിച്ച് യാത്രാ ദൈർഘ്യം കണക്കാക്കി, സന്ധ്യയ്ക്ക് മുമ്പുള്ള തിരിച്ചുവരവ് സുരക്ഷാ ജാലകം വിലയിരുത്തുന്നു.",
+    dagAgentSynthesisName: "ന്യൂറൽ സിന്തസിസ് ഏജന്റ് (സ്ഥിതിവിവര-അധിഷ്ഠിതം)",
+    dagAgentSynthesisRole: "മൾട്ടി-ഏജന്റ് ടെലിമെട്രിയെ സൈറ്റേഷൻ ടാഗുകളും TTS-ഉം സഹിതം ആധികാരികവും അടിസ്ഥാനപരവുമായ സ്വാഭാവിക-ഭാഷാ ഉപദേശമായി സമാഹരിക്കുന്നു -- പൂർണ്ണമായും നിയമാധിഷ്ഠിതം, ഈ സൈറ്റിന്റെ സ്വന്തം തത്സമയ ടെലിമെട്രിയിലും അതിന്റെ ശേഖരിച്ച സ്ഥിതിവിവര രേഖയിലും യുക്തി ഉപയോഗിക്കുന്നു. ബാഹ്യ AI/LLM API ഒന്നും ഉപയോഗിക്കുന്നില്ല.",
+    dagStatusIdle: "നിഷ്‌ക്രിയം",
+    dagInspectLink: "പരിശോധിക്കുക ➔",
+    dagInspectorLatencyTemplate: "എക്സിക്യൂഷൻ ലേറ്റൻസി: {latency} · ഉപജോലികൾ പരിശോധിച്ചു",
+    dagStatusQueued: "ക്യൂവിൽ",
+    dagStatusExecuting: "നടപ്പിലാക്കുന്നു...",
+    dagStatusCompleted: "പൂർത്തിയായി",
+    dagStatusSkipped: "വിളിച്ചില്ല — ഉദ്ദേശ്യത്തിന് ഇത് ആവശ്യമില്ലായിരുന്നു",
+    dagBtnReasoningActiveLive: "യുക്തി സജീവം (തത്സമയ ബാക്കെൻഡ്)...",
+    dagBtnExecutedLive: "✓ തത്സമയ ബാക്കെൻഡ് വഴി പൈപ്പ്‌ലൈൻ നടപ്പിലാക്കി · വീണ്ടും പ്രവർത്തിപ്പിക്കുക",
+    dagBtnErrorRetry: "▶ തത്സമയ പൈപ്പ്‌ലൈൻ സിമുലേഷൻ പ്രവർത്തിപ്പിക്കുക",
+    dagBtnReasoningActiveOffline: "യുക്തി സജീവം (പ്രാദേശിക സിമുലേഷൻ)...",
+    dagBtnExecutedOffline: "✓ പൈപ്പ്‌ലൈൻ നടപ്പിലാക്കി (പ്രാദേശിക സിമുലേഷൻ) · വീണ്ടും പ്രവർത്തിപ്പിക്കുക",
+    dagTabTitle: "8-നോഡ് സഹകരണ മൾട്ടി-ഏജന്റ് DAG",
+    dagInteractiveCanvasBadge: "ഇന്ററാക്ടീവ് റീസണിംഗ് കാൻവാസ്",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL ജിയോഫെൻസിംഗ്, ഫ്ലീറ്റ് സാന്ദ്രത, യാത്രാ ETA എന്നിവയിൽ യുക്തി ഉപയോഗിക്കുന്ന തത്സമയ മൾട്ടി-ഏജന്റ് എക്സിക്യൂഷൻ പൈപ്പ്‌ലൈൻ.",
+    backendCheckingStatus: "ബാക്കെൻഡ് പരിശോധിക്കുന്നു...",
+    dagZoomReset: "റീസെറ്റ്",
+    dagRunSimulationBtn: "▶ തത്സമയ പൈപ്പ്‌ലൈൻ സിമുലേഷൻ പ്രവർത്തിപ്പിക്കുക",
+    dagClickToInspectHint: "ഏതെങ്കിലും ഏജന്റ് കാർഡിൽ ക്ലിക്ക് ചെയ്ത് അതിന്റെ അസംസ്കൃത ടെലിമെട്രി ഇൻപുട്ട്, ആന്തരിക അൽഗോരിതങ്ങൾ, JSON ഡാറ്റ ഔട്ട്‌പുട്ട് എന്നിവ പരിശോധിക്കുക.",
+    dagOrchestratorLabel: "ഓർക്കസ്ട്രേറ്റർ: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "ഏജന്റ് വിശദാംശങ്ങൾ",
+    dagInspectorDefaultRole: "റോൾ വിവരണം",
+    dagInspectorLatencyPlaceholder: "ലേറ്റൻസി: 24ms",
+    dagInspectorJsonLabel: "തത്സമയ JSON പേലോഡ്",
+    dagCloseInspector: "ഇൻസ്പെക്ടർ അടയ്ക്കുക",
+    chatNewConversationMsg: "പുതിയ സംഭാഷണം ആരംഭിച്ചു. ORCA മുൻ ചാറ്റ് സന്ദർഭം ഉപയോഗിക്കില്ല.",
+    chatYouLabel: "നിങ്ങൾ",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR & Open-Meteo എന്നിവയിലുടനീളം 8 പ്രത്യേക AI ഏജന്റുമാരെ ഏകോപിപ്പിക്കുന്നു...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "മൾട്ടി-ഏജന്റ് സമുദ്ര ഉപദേശം",
+    chatGroundedConfidenceTemplate: "{confidence}% അടിസ്ഥാനപരമായ വിശ്വാസ്യത",
+    chatLangDetectedTooltip: "സന്ദേശത്തിൽ നിന്ന് ഭാഷ കണ്ടെത്തി",
+    chatListenTts: "കേൾക്കുക (TTS)",
+    chatNavicMssBtn: "NavIC MSS കോഡ്",
+    chatMetricZone: "ശുപാർശ ചെയ്യപ്പെട്ട മേഖല",
+    chatMetricEta: "തത്സമയ സമുദ്ര നില ETA",
+    chatMetricVessels: "സജീവ വെസലുകൾ",
+    chatVesselsSuffix: "{count} വെസലുകൾ",
+    chatMetricImbl: "IMBL ക്ലിയറൻസ്",
+    chatReasoningTraceSummaryTemplate: "മൾട്ടി-ഏജന്റ് യുക്തി ട്രെയ്സ് കാണുക ({steps} ഘട്ടങ്ങൾ നടപ്പിലാക്കി)",
+    chatNodeDagSuffixTemplate: "{count}-നോഡ് DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT ബാക്കെൻഡ് ഒരു ഉപദേശം സൃഷ്ടിച്ചെങ്കിലും ഒരു വാചകവും തിരികെ നൽകിയില്ല.",
+    chatLiveAdvisoryLabel: "✓ തത്സമയ മൾട്ടി-ഏജന്റ് ഉപദേശം",
+    chatGroundedEngineFallback: "അടിസ്ഥാനപരമായ എഞ്ചിൻ",
+    chatOceanSourceTierTemplate: "സമുദ്ര ഉറവിട നില: {tier} · ക്ലോറോഫിൽ: {chlorophyll}",
+    chatCitationsTemplate: "സൈറ്റേഷനുകൾ: {citations}",
+    chatOfflineBannerText: "ഓഫ്‌ലൈൻ ഉപദേശ എഞ്ചിൻ — ORCA ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല. താഴെയുള്ള കണക്കുകൾ ഒരു അനുകരണ ഉദാഹരണ കണക്കാണ്, തത്സമയ ടെലിമെട്രി അല്ല.",
+    chatOfflineImblPlainText: "ഓഫ്‌ലൈൻ ഉപദേശം (ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല, അനുകരണ കണക്ക്): പാക്ക് കടലിടുക്ക് / മന്നാർ ഉൾക്കടൽ പ്രദേശത്തെ വെസലുകൾ സാധാരണയായി ഇന്ത്യ-ശ്രീലങ്ക IMBL അതിർത്തിയിൽ നിന്ന് ചില നോട്ടിക്കൽ മൈലുകൾക്കുള്ളിലാണ്. പടിഞ്ഞാറൻ ദിശ നിലനിർത്തുകയും VHF ട്രാൻസ്‌പോണ്ടറുകൾ ചാനൽ 16-ൽ സജീവമായി സൂക്ഷിക്കുകയും ചെയ്യുക. അതിർത്തിയിലേക്കുള്ള യഥാർത്ഥ അളന്ന ദൂരത്തിന് ORCA ബാക്കെൻഡിലേക്ക് വീണ്ടും ബന്ധിപ്പിക്കുക.",
+    chatOfflineImblHtmlHeading: "IMBL ജിയോഫെൻസിംഗ് ഉപദേശം (അനുകരണ ഓഫ്‌ലൈൻ കണക്ക്):",
+    chatOfflineImblHtmlBody1: "തത്സമയ ബാക്കെൻഡ് കണക്ഷൻ ഇല്ലാതെ, കൃത്യമായ വെസൽ-മുതൽ-അതിർത്തി ദൂരങ്ങൾ അളക്കാൻ കഴിയില്ല. പാക്ക് കടലിടുക്ക് സെക്ടർ 4-നടുത്ത് ഒരു പൊതു മുൻകരുതൽ എന്ന നിലയിൽ, മണ്ഡപത്തിലേക്ക് പടിഞ്ഞാറൻ ദിശ നിലനിർത്തുക.",
+    chatOfflineImblHtmlBody2: "ഇത് ഒരു പൊതു ഓഫ്‌ലൈൻ സുരക്ഷാ ഓർമ്മപ്പെടുത്തലാണ്, അളന്ന ജിയോഫെൻസ് റീഡിംഗ് അല്ല. യഥാർത്ഥ ദൂരം-മുതൽ-IMBL കണക്കുകൂട്ടലിന് ORCA ബാക്കെൻഡിലേക്ക് വീണ്ടും ബന്ധിപ്പിക്കുക.",
+    chatOfflineImblStep1: "ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല. പ്രാദേശിക കീവേഡ് പൊരുത്തം ഉപയോഗിച്ച് അന്വേഷണം IMBL_BOUNDARY ആയി തരംതിരിച്ചു.",
+    chatOfflineImblStep2: "തത്സമയ ജിയോഫെൻസിംഗ് ടെലിമെട്രി ലഭ്യമല്ല -- പൊതുവായ അതിർത്തി-സുരക്ഷാ മാർഗ്ഗനിർദ്ദേശം മാത്രം തിരികെ നൽകുന്നു.",
+    chatOfflineDensityPlainText: "ഓഫ്‌ലൈൻ ഉപദേശം (ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല, അനുകരണ കണക്ക്): ബാക്കെൻഡ് കണക്ഷൻ ഇല്ലാതെ തത്സമയ വെസൽ എണ്ണം ലഭ്യമല്ല. ചരിത്രപരമായി, വെജ് ബാങ്കിലും കൊച്ചി ഡീപ് ഓഫ്‌ഷോറിലും മിതമായ മത്സ്യബന്ധന പ്രവർത്തനം കാണപ്പെടുന്നു. വെസൽ ഡാറ്റാസെറ്റിൽ നിന്ന് യഥാർത്ഥ ഫ്ലീറ്റ്-സാന്ദ്രത റീഡിംഗിന് ORCA ബാക്കെൻഡിലേക്ക് വീണ്ടും ബന്ധിപ്പിക്കുക.",
+    chatOfflineDensityHtmlHeading: "ഫ്ലീറ്റ് സാന്ദ്രത (ഓഫ്‌ലൈൻ — അനുകരണ പ്ലേസ്‌ഹോൾഡർ):",
+    chatOfflineDensityHtmlBody: "ഫ്ലീറ്റ് & ട്രാഫിക് ഏജന്റിന്റെ തത്സമയ വെസൽ ഡാറ്റാസെറ്റ് ഇപ്പോൾ ലഭ്യമല്ല, അതിനാൽ മേഖലയിലെ കൃത്യമായ വെസൽ എണ്ണം ലഭ്യമല്ല.",
+    chatOfflineDensityListItem: "യഥാർത്ഥ മേഖല-തിരിച്ചുള്ള വെസൽ എണ്ണത്തിനും തിരക്ക് വിധിക്കും ORCA ബാക്കെൻഡിലേക്ക് വീണ്ടും ബന്ധിപ്പിക്കുക.",
+    chatOfflineDensityStep1: "ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല. പ്രാദേശിക കീവേഡ് പൊരുത്തം ഉപയോഗിച്ച് അന്വേഷണം FLEET_DENSITY ആയി തരംതിരിച്ചു.",
+    chatOfflineDensityStep2: "തത്സമയ ഫ്ലീറ്റ് ഡാറ്റാസെറ്റ് ലഭ്യമല്ല -- വ്യാജ കണക്ക് അവതരിപ്പിക്കുന്നത് ഒഴിവാക്കാൻ വെസൽ എണ്ണം കാണിച്ചിട്ടില്ല.",
+    chatOfflineGenericPlainTextTemplate: "ഓഫ്‌ലൈൻ ഉപദേശം (ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല): ORCA യുടെ മൾട്ടി-ഏജന്റ് ബാക്കെൻഡിലേക്ക് എത്തിച്ചേരാൻ കഴിഞ്ഞില്ല, അതിനാൽ ഈ ഉത്തരം ഒരു അടിസ്ഥാനപരമായ റീഡിംഗിനു പകരം ഒരു പൊതു, തത്സമയമല്ലാത്ത പ്ലേസ്‌ഹോൾഡറാണ്. നിങ്ങളുടെ ബ്രൗസറിന്റെ സ്വന്തം Open-Meteo വിജറ്റ് ഏകദേശം {liveWave}m പ്രധാന തരംഗ ഉയരം കാണിക്കുന്നു, എന്നാൽ PFZ റാങ്കിംഗ്, റൂട്ട് ദൂരം, ETA, ഫ്ലീറ്റ് എണ്ണം എന്നിവയ്‌ക്കെല്ലാം ബാക്കെൻഡ് ആവശ്യമാണ്, അവ ഇവിടെ കാണിക്കുന്നില്ല. യഥാർത്ഥ ഉപദേശത്തിന് ORCA ബാക്കെൻഡിലേക്ക് വീണ്ടും ബന്ധിപ്പിക്കുക.",
+    chatOfflineGenericHtmlHeading: "ഓഫ്‌ലൈൻ പ്ലേസ്‌ഹോൾഡർ ഉപദേശം",
+    chatOfflineGenericHtmlBody1Template: "ORCA യുടെ മൾട്ടി-ഏജന്റ് ബാക്കെൻഡ് (സാറ്റലൈറ്റ്, കാലാവസ്ഥ, PFZ റാങ്കിംഗ്, ജിയോഫെൻസിംഗ്, ഫ്ലീറ്റ്, റൂട്ടിംഗ്, ന്യൂറൽ സിന്തസിസ്) നിലവിൽ എത്തിച്ചേരാനാവുന്നില്ല. ക്ലയന്റ്-സൈഡിൽ, ഈ ബ്രൗസർ Open-Meteo-യിൽ നിന്ന് അവസാനമായി കണ്ട തരംഗ ഉയരം <strong>{liveWave}m</strong> ആണ്, എന്നാൽ മറ്റെല്ലാ കണക്കുകൾക്കും ബാക്കെൻഡ് ആവശ്യമാണ്.",
+    chatOfflineGenericHtmlBody2: "<strong>PFZ ശുപാർശയോ റൂട്ടോ ETA-യോ ഫ്ലീറ്റ് എണ്ണമോ കാണിക്കുന്നില്ല</strong> കാരണം അവ കണക്കാക്കുന്നതിന് പകരം കെട്ടിച്ചമയ്ക്കേണ്ടിവരും. പൂർണ്ണമായ അടിസ്ഥാനപരമായ ഉപദേശത്തിന് ORCA ബാക്കെൻഡിലേക്ക് വീണ്ടും ബന്ധിപ്പിക്കുക.",
+    chatOfflineGenericStep1: "ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല. ഉദ്ദേശ്യ-നിർദ്ദിഷ്ട കീവേഡ് ഒന്നും പൊരുത്തപ്പെട്ടില്ല -- GENERAL_VOYAGE_SAFETY ഓഫ്‌ലൈൻ പ്ലേസ്‌ഹോൾഡർ തിരികെ നൽകുന്നു.",
+    chatOfflineGenericStep2Template: "ക്ലയന്റ്-ദൃശ്യമായ കണക്ക് മാത്രം ലഭ്യമാണ്: അവസാനം അറിയപ്പെട്ട Open-Meteo തരംഗ ഉയരം {liveWave}m (ബ്രൗസർ നേരിട്ട് നേടിയത്, ബാക്കെൻഡ് വഴിയല്ല).",
+    chatTtsUnsupportedAlert: "നിങ്ങളുടെ ബ്രൗസർ സ്പീച്ച് സിന്തസിസ് പിന്തുണയ്ക്കുന്നില്ല.",
+    chatTtsWelcomeFallback: "ORCA INSIGHT-ലേക്ക് സ്വാഗതം. എല്ലാ സാറ്റലൈറ്റ് ഫീഡുകളും തീരദേശ സമുദ്രശാസ്ത്ര സംവിധാനങ്ങളും സാധാരണ നിലയിൽ പ്രവർത്തിക്കുന്നു.",
+    chatStopAudio: "ഓഡിയോ നിർത്തുക",
+    chatListenAudioAdvisory: "ഓഡിയോ ഉപദേശം കേൾക്കുക",
+    chatTabTitle: "AI തീരുമാന സ്റ്റുഡിയോ & മൾട്ടി-ഏജന്റ് ചാറ്റ്ബോട്ട്",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR, തീരദേശ ജിയോഫെൻസിംഗ് എന്നിവയിൽ യുക്തി ഉപയോഗിക്കുന്ന സഹകരണ ഏജന്റുമാർ പ്രവർത്തിപ്പിക്കുന്നു",
+    chatNewConversationBtn: "പുതിയ സംഭാഷണം",
+    chatPromptPFZ: "കൊച്ചി ഹാർബറിൽ നിന്ന് ഏറ്റവും അടുത്തുള്ള ഉയർന്ന-വിളവ് PFZ മത്സ്യബന്ധന മേഖല, പിടിക്കാനുള്ള സാധ്യതയും ഇനങ്ങളും സഹിതം കണ്ടെത്തുക.",
+    chatPromptSafety: "ഇന്നത്തേക്കുള്ള കടൽ-യാത്രാ ക്ലിയറൻസ് സ്കോർ, പ്രധാന തരംഗ ഉയരം, കാറ്റ് അപകടം എന്നിവ പരിശോധിക്കുക.",
+    chatPromptBorder: "ഇന്ത്യ-ശ്രീലങ്ക IMBL അതിർത്തിയിലേക്കുള്ള ദൂരം പരിശോധിച്ച് 2 NM അപകട മേഖലയിലെ വെസലുകളുടെ പട്ടിക നൽകുക.",
+    chatPromptDensity: "വെജ് ബാങ്കിലും കൊച്ചി ഡീപ്പിലും ഉടനീളമുള്ള നിലവിലെ വെസൽ എണ്ണവും സാന്ദ്രത വിതരണവും എന്താണ്?",
+    chatPromptETA: "കൊച്ചിയിൽ നിന്ന് PFZ-01 ലേക്കുള്ള യാത്രാ ETA കണക്കാക്കി, റൗണ്ട്-ട്രിപ്പ് 18:30 സന്ധ്യയ്ക്ക് മുമ്പ് സുരക്ഷിതമായി മടങ്ങുമോ എന്ന് പരിശോധിക്കുക.",
+    chatConversationLabel: "സംഭാഷണം",
+    chatNeuralCoreActive: "ORCA INSIGHT ന്യൂറൽ കോർ സജീവം",
+    chatAgentsReadyUptime: "8 ഏജന്റുമാർ തയ്യാർ · 99.94% അപ്‌ടൈം",
+    chatWelcomeMessage: "വണക്കം / നമസ്തേ! ഞാൻ <strong>ORCA INSIGHT</strong> മൾട്ടി-ഏജന്റ് സിന്തസിസ് സിസ്റ്റമാണ്. സുരക്ഷിതമായ യാത്രാ ക്ലിയറൻസ്, ഇന്ത്യയുടെ തീരത്തുള്ള ഉയർന്ന-വിളവ് PFZ മേഖലകൾ, തത്സമയ വെസൽ ട്രാഫിക്, IMBL അതിർത്തി സാമീപ്യം, കടൽ-നില അനുസരിച്ച് ക്രമീകരിച്ച ETA കണക്കുകൂട്ടലുകൾ എന്നിവയെക്കുറിച്ച് നിങ്ങൾക്ക് സംസാരിക്കാം അല്ലെങ്കിൽ ടൈപ്പ് ചെയ്യാം.",
+    chatMicHint: "തമിഴ്, ഹിന്ദി, മലയാളം അല്ലെങ്കിൽ ഇംഗ്ലീഷിൽ സംസാരിക്കാൻ താഴെയുള്ള മൈക്രോഫോൺ ഐക്കണിൽ ക്ലിക്ക് ചെയ്യുക!",
+    chatVoiceInputTitle: "അന്വേഷണം സംസാരിക്കുക (സ്പീച്ച്-ടു-ടെക്സ്റ്റ്)",
+    chatLiveReasoningTraceTitle: "തത്സമയ യുക്തി ട്രെയ്സ്",
+    chatReasoningTraceEmptyHint: "8 സഹകരണ ഏജന്റുമാരിൽ ഓരോന്നും ഇത് എങ്ങനെ തത്സമയം യുക്തി ഉപയോഗിക്കുന്നു എന്ന് കാണാൻ ഇടതുവശത്ത് ഒരു ചോദ്യം ചോദിക്കുക.",
+    chatLiveTelemetryTitle: "തത്സമയ സമുദ്ര ടെലിമെട്രി",
+    chatCurrentSeaClearance: "നിലവിലെ കടൽ ക്ലിയറൻസ്:",
+    chatSignificantWaves: "പ്രധാന തരംഗങ്ങൾ:",
+    chatSurfaceWind: "ഉപരിതല കാറ്റ്:",
+    chatActiveVessels: "സജീവ വെസലുകൾ:",
+    chatOpenDagVisualizerBtn: "പൂർണ്ണ ഏജന്റ് DAG വിഷ്വലൈസർ തുറക്കുക ➔",
+    navicConnected: "NavIC റിസീവർ: ബന്ധിപ്പിച്ചു (L5/S-Band)",
+    navicDisconnected: "NavIC റിസീവർ: വിച്ഛേദിച്ചു",
+    navicTrackMyPosition: "എന്റെ സ്ഥാനം ട്രാക്ക് ചെയ്യുക",
+    navicStopTracking: "ട്രാക്കിംഗ് നിർത്തുക",
+    navicSimulateMovement: "വെസൽ ചലനം അനുകരിക്കുക",
+    navicStopSimulation: "സിമുലേഷൻ നിർത്തുക",
+    navicStatusTrackingOff: "ട്രാക്കിംഗ് ഓഫ് · ഒരു സ്ഥാനവും അഭ്യർത്ഥിക്കുന്നില്ല",
+    navicStatusGeoUnsupported: "ഈ ബ്രൗസർ ജിയോലൊക്കേഷൻ പിന്തുണയ്ക്കുന്നില്ല. ഡെമോയ്ക്ക് അനുകരണ വെസൽ ചലനം ഉപയോഗിക്കുക.",
+    navicStatusRequestingPermission: "ഡിവൈസ്-ലൊക്കേഷൻ അനുമതി അഭ്യർത്ഥിക്കുന്നു…",
+    navicStatusLiveTrackingTemplate: "തത്സമയ ഡിവൈസ് ട്രാക്കിംഗ് · കൃത്യത ±{accuracy}m · സൂക്ഷിക്കുന്നില്ല",
+    navicStatusPermissionErrorTemplate: "ലൊക്കേഷൻ അനുമതി ലഭ്യമല്ല ({error}). ഒരു സ്ഥാനവും അയച്ചില്ല.",
+    navicStatusBackendUnavailable: "ബാക്കെൻഡ് ലഭ്യമല്ല — പ്രാദേശിക സിമുലേഷനിൽ കൃത്യമായ ജിയോഫെൻസ് ദൂരം വിലയിരുത്താൻ കഴിയില്ല.",
+    navicStatusSimStopped: "ജിയോഫെൻസ് സിമുലേഷൻ നിർത്തി",
+    navicStatusSimMovingTemplate: "അനുകരണ വെസൽ ചലനം · പോയിന്റ് {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-അക്ഷര സാറ്റലൈറ്റ് അടിയന്തര കോഡ് പകർത്തി:\\n\\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) സ്കൈപ്ലോട്ട്",
+    navicConstellationDesc: "7-സാറ്റലൈറ്റ് ജിയോസ്റ്റേഷണറി / IGSO നക്ഷത്രസമൂഹം",
+    navicConnectedShort: "ബന്ധിപ്പിച്ചു (L5/S)",
+    navicTrackedSatellitesTitle: "ട്രാക്ക് ചെയ്ത സാറ്റലൈറ്റുകൾ (SNR dB-Hz)",
+    navicNmeaStreamTitle: "തത്സമയ NMEA-0183 ഹാർഡ്‌വെയർ സ്ട്രീം ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "ബോഡ് നിരക്ക്: 9600 bps · 1 Hz ഫീഡ്",
+    navicDopPrecisionLabel: "DOP കൃത്യത",
+    navicDopValue: "HDOP 1.05 (മികച്ചത്)",
+    navicDiffFixLabel: "ഡിഫറൻഷ്യൽ ഫിക്സ്",
+    navicDiffFixValue: "NavIC DGPS സജീവം",
+    navicBorderHwLabel: "അതിർത്തി അലേർട്ട് ഹാർഡ്‌വെയർ",
+    navicBorderHwValue: "ബസ്സർ സജ്ജം",
+    navicGeofenceTitle: "തത്സമയ സ്ഥാന ജിയോഫെൻസിംഗ്",
+    navicGeofenceDesc: "നിങ്ങളുടെ ഡിവൈസ് ലൊക്കേഷൻ സെഷനിൽ IMBL/MPA പരിശോധനകൾക്ക് മാത്രം ഉപയോഗിക്കുന്നു, ORCA ഒരിക്കലും ഇത് സൂക്ഷിക്കുന്നില്ല.",
+    navicGeofenceInitialStatus: "ട്രാക്കിംഗ് ഓഫ് · 5 NM IMBL മുന്നറിയിപ്പ് / MPA ബഫർ മുന്നറിയിപ്പ്",
+    safetyVerdictDescTemplate: "തത്സമയ Open-Meteo സമുദ്ര ടെലിമെട്രി നിങ്ങളുടെ തിരഞ്ഞെടുത്ത ഹാർബറിനടുത്ത് പ്രധാന തരംഗ ഉയരം {wave}m ഉം ഉപരിതല കാറ്റ് {wind}kn ഉം ആയി കാണിക്കുന്നു, ഇത് കണക്കാക്കിയ {score}/100 സുരക്ഷാ സ്കോർ നൽകുന്നു.",
+    safetyWindDefaultDirection: "പടിഞ്ഞാറൻ",
+    safetyBreezeSuffix: "{direction} കാറ്റ്",
+    severityLow: "കുറവ്",
+    severityModerate: "മിതം",
+    severityHigh: "ഉയർന്നത്",
+    waveBandCalm: "ശാന്തം (< 0.5m)",
+    waveBandSlight: "ലഘു (0.5 - 1.25m)",
+    waveBandModerate: "മിതം (1.25 - 2.5m)",
+    waveBandRough: "പരുഷം (> 2.5m)",
+    seaStateCalm: "ശാന്തം",
+    seaStateSlight: "ലഘു",
+    seaStateSlightModerate: "ലഘു മുതൽ മിതം വരെ",
+    seaStateModerateRough: "മിതം മുതൽ പരുഷം വരെ",
+    seaStateUnknown: "അജ്ഞാതം",
+    lightningBandSafe: "സുരക്ഷിത അന്തരീക്ഷ പ്രൊഫൈൽ",
+    lightningBandElevated: "ഉയർന്ന സംവഹന അപകടസാധ്യത",
+    lightningBandSevere: "കടുത്ത കൊടുങ്കാറ്റ് മുന്നറിയിപ്പ്",
+    safetySyncLatencyLabel: "സിങ്ക് ലേറ്റൻസി:",
+    safetyBatteryLabel: "ബാറ്ററി:",
+    safetyLastPassLabel: "അവസാന പാസ്:",
+    safetyAltitudeLabel: "ഉയരം:",
+    telemetryLiveOpenMeteoTemplate: "തത്സമയ OPEN-METEO ടെലിമെട്രി ({wave}m SWH)",
+    telemetryCachedArchive: "ടെലിമെട്രി സജീവം (സൂക്ഷിച്ച സാറ്റലൈറ്റ് ആർക്കൈവ്)",
+    backendOnlineStatus: "തത്സമയ FASTAPI ബാക്കെൻഡ് ബന്ധിപ്പിച്ചു",
+    backendOfflineStatus: "ബാക്കെൻഡ് ഓഫ്‌ലൈൻ · പ്രാദേശിക സിമുലേഷൻ മോഡ്",
+    aisLiveCountTemplate: "{count} തത്സമയ AIS വെസൽ{plural}",
+    aisNoLiveVessels: "ഇപ്പോൾ തത്സമയ AIS വെസലുകൾ ഇല്ല",
+    aisBlendedBannerTemplate: "തത്സമയ AIS കവറേജ് ഇല്ലാത്ത തുറമുഖങ്ങൾ നിറയ്ക്കാൻ {liveText} + {simCount} അനുകരണ വെസൽ{plural} കാണിക്കുന്നു.",
+    aisUnavailableDefault: "തത്സമയ AIS വെസൽ ഫീഡ് ലഭ്യമല്ല -- 0 വെസലുകൾ കാണിക്കുന്നു.",
+    aisNotConfigured: "ഈ ഡിപ്ലോയ്‌മെന്റിൽ തത്സമയ AIS വെസൽ ഫീഡ് കോൺഫിഗർ ചെയ്തിട്ടില്ല.",
+    aisConnectedNotSending: "AIS ദാതാവുമായി (AISstream.io) ബന്ധിപ്പിച്ചിരിക്കുന്നു, പക്ഷേ ഇപ്പോൾ വെസൽ ഡാറ്റ അയയ്ക്കുന്നില്ല — ഒരു ദാതാവ്-ഭാഗ തകരാറാകാം, പ്രാദേശിക തകരാറല്ല.",
+    aisDisconnectedReconnecting: "AIS ദാതാവിൽ നിന്ന് (AISstream.io) വിച്ഛേദിച്ചു; സ്വയമേവ വീണ്ടും ബന്ധിപ്പിക്കുന്നു.",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> ഇന്ത്യ–ശ്രീലങ്ക IMBL-ൽ നിന്ന് <strong>{dist} NM</strong> അകലെ പ്രവർത്തിക്കുന്നു{simTag}. സ്വയമേവയുള്ള മുന്നറിയിപ്പ് അയച്ചു.",
+    imblAlertNoneTemplate: "നിലവിൽ {warnDist} NM IMBL മുന്നറിയിപ്പ് ദൂരത്തിനുള്ളിൽ വെസലുകൾ ഒന്നുമില്ല. ഏറ്റവും അടുത്ത ട്രാക്ക് ചെയ്ത വെസൽ: <strong>{dist} NM</strong> അകലെ.",
+    imblAlertNoData: "ഇതുവരെ വെസൽ ടെലിമെട്രി ലഭ്യമല്ല.",
+    simulatedSuffix: " (അനുകരണം)",
+    notifUnavailableTitle: "ബ്രൗസർ അറിയിപ്പുകൾ ലഭ്യമല്ല",
+    notifUnavailableMsg: "ഈ ടാബ് തുറന്നിരിക്കുന്നിടത്തോളം ആപ്പ്-ഉള്ളിലെ അപകട ബാനറുകൾ കാണിക്കും.",
+    notifNotEnabledTitle: "ബ്രൗസർ അറിയിപ്പുകൾ പ്രവർത്തനക്ഷമമല്ല",
+    notifNotEnabledMsg: "ഈ ടാബ് തുറന്നിരിക്കുന്നിടത്തോളം ആപ്പ്-ഉള്ളിലെ അപകട ബാനറുകൾ സജീവമായി തുടരും.",
+    hazardHighWavesTitle: "ഉയർന്ന തരംഗങ്ങൾ — പ്രാദേശിക സിമുലേഷൻ",
+    hazardHighWavesMsgTemplate: "{wave}m, 2.5m മുന്നറിയിപ്പ് പരിധി കവിയുന്നു. ഉറവിടം: ബ്രൗസർ Open-Meteo ടെലിമെട്രി.",
+    hazardHighWindTitle: "ശക്തമായ കാറ്റ് — പ്രാദേശിക സിമുലേഷൻ",
+    hazardHighWindMsgTemplate: "{wind} kn, 25 kn മുന്നറിയിപ്പ് പരിധി കവിയുന്നു. ഉറവിടം: ബ്രൗസർ Open-Meteo ടെലിമെട്രി.",
+    hazardLightningTitle: "മിന്നൽ അപകടസാധ്യത — പ്രാദേശിക സിമുലേഷൻ",
+    hazardLightningMsgTemplate: "മിന്നൽ പ്രോക്സി {pct}% ആണ്. ഉറവിടം: ബ്രൗസർ Open-Meteo ടെലിമെട്രി.",
+    safetyOfficialClearanceLabel: "ഔദ്യോഗിക സമുദ്ര ക്ലിയറൻസ്",
+    safetyVerdictDescInitial: "എല്ലാ സാറ്റലൈറ്റ് സമുദ്രശാസ്ത്ര സൂചകങ്ങളും (Oceansat-3 SSTM താപ മുന്നണികൾ, Sentinel-3 തരംഗ ആൾട്ടിമെട്രി) കേരളം, കർണാടക, തമിഴ്നാട് തീരദേശ ജലങ്ങളിൽ അനുകൂലമായ മത്സ്യബന്ധന സാഹചര്യങ്ങൾ സ്ഥിരീകരിക്കുന്നു.",
+    safetyIndexLabel: "സുരക്ഷാ സൂചിക",
+    satConstellationTitle: "ISRO & അന്താരാഷ്ട്ര സമുദ്രശാസ്ത്ര സാറ്റലൈറ്റ് നക്ഷത്രസമൂഹം",
+    satStaticDataNote: "സ്ഥിര റഫറൻസ് ഡാറ്റ (തത്സമയ ടെലിമെട്രി അല്ല)",
+    mapIndiaBoundaryPopup: "ഇന്ത്യ — ഔദ്യോഗിക അതിർത്തി (Survey of India)",
+    mapPfzYieldSuffix: "{rating} വിളവ് ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "ക്ലോറോഫിൽ:",
+    mapPfzDepthLabel: "ആഴം:",
+    mapPfzVesselsLabel: "വെസലുകൾ:",
+    mapPfzActiveSuffix: "{count} സജീവം",
+    mapPfzTargetSpeciesLabel: "ലക്ഷ്യ ഇനങ്ങൾ:",
+    mapPfzSimulateRouteBtn: "ഇവിടെ റൂട്ട് അനുകരിക്കുക ➔",
+    mapImblPopupBodyTemplate: "കർശനമായ അന്താരാഷ്ട്ര സമുദ്ര അതിർത്തി രേഖ. മുന്നറിയിപ്പ് ബഫർ: {warn} NM. നിർണായക ജിയോഫെൻസ്: {danger} NM.",
+    mapImblPopupTreatyNote: "UNCLOS സമുദ്ര ഉടമ്പടി പ്രകാരം അതിർത്തി കടക്കൽ നിരോധിച്ചിരിക്കുന്നു.",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL ബഫർ ഇടനാഴി",
+    mapMpaRestrictedBadge: "നിയന്ത്രിത ഇക്കോ-റിസർവ്",
+    mapHarbourCoastSuffix: "{state} തീരം",
+    mapHarbourCapacityLabel: "ശേഷി:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "ഇന്ധന സ്റ്റേഷൻ:",
+    mapHarbourFuelAvailable: "ലഭ്യമാണ്",
+    mapHarbourIceLabel: "ഐസ് പ്ലാന്റ്:",
+    mapHarbourIceActive: "സജീവം",
+    mapHarbourSetOriginBtn: "ഉത്ഭവ ഹാർബറായി സജ്ജമാക്കുക",
+    mapVesselSimulatedBadge: "അനുകരണം · ഇവിടെ തത്സമയ AIS കവറേജ് ഇല്ല",
+    mapVesselSpeedLabel: "വേഗത:",
+    mapVesselHeadingLabel: "ദിശ:",
+    mapVesselZoneLabel: "മേഖല:",
+    mapVesselImblDistLabel: "IMBL ദൂരം:",
+    mapVesselStatusLabel: "നില:",
+    mapVesselFuelLabel: "ഇന്ധനം:",
+    mapVesselFuelNA: "ലഭ്യമല്ല",
+    mapRoutePopupTitle: "സമുദ്രം-മാത്രം A* റൂട്ട് (ഭൂമി + MPA ഒഴിവാക്കൽ)",
+    mapRouteDistanceEtaTemplate: "ദൂരം: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} ചുറ്റും {pct}% വഴിതിരിവ്",
+    mapRouteLandNoGoZones: "ഭൂമി/നിരോധിത മേഖലകൾ",
+    vesselStatusSafeFishing: "സുരക്ഷിത മത്സ്യബന്ധനം",
+    vesselStatusBorderAlert: "അതിർത്തി മുന്നറിയിപ്പ്",
+    vesselStatusBorderWarn: "അതിർത്തി ജാഗ്രത",
+    vesselStatusInTransit: "യാത്രയിൽ",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "അനുകരണം -- ഈ തുറമുഖത്തിനടുത്ത് തത്സമയ AIS കവറേജ് ഇല്ല",
+    vesselLocateAction: "കണ്ടെത്തുക ➔",
+    fleetVesselCountSuffix: "{count} വെസലുകൾ",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} തത്സമയം · {sim} അനുകരണം)",
+    mapActiveVesselsBreakdownTemplate: "{total} സജീവ വെസലുകൾ ({live} തത്സമയം · {sim} അനുകരണം)",
+    mapActiveVesselsSimpleTemplate: "{total} സജീവ വെസലുകൾ",
+    mapTabTitle: "GIS കമാൻഡ് മാപ്പ് · ഇന്ത്യൻ തീരദേശ ജലം",
+    mapTabDesc: "തത്സമയ സാറ്റലൈറ്റ് PFZ-കൾ, IMBL അതിർത്തി ഇടനാഴികൾ, AIS വെസൽ ട്രാക്കുകൾ എന്നിവയുള്ള ഇന്ററാക്ടീവ് ഉയർന്ന-കോൺട്രാസ്റ്റ് നോട്ടിക്കൽ മാപ്പ്.",
+    layerPfzZones: "PFZ മേഖലകൾ",
+    layerImblBuffer: "IMBL ബഫർ",
+    layerEcoReserves: "ഇക്കോ റിസർവുകൾ (MPA)",
+    layerHarbours: "ഹാർബറുകൾ",
+    layerLiveVessels: "തത്സമയ വെസലുകൾ",
+    layerDensityHeatmap: "സാന്ദ്രത ഹീറ്റ്മാപ്പ്",
+    layerIndiaBoundary: "ഇന്ത്യ അതിർത്തി (Survey of India)",
+    routePlannerDesc: "MPA-കളും അതിർത്തി അപകടങ്ങളും ഒഴിവാക്കുന്ന A*-ശൈലി പാത",
+    routeVesselSpeedLabel: "വെസൽ വേഗത:",
+    fleetMonitorTitle: "ഫ്ലീറ്റ് മോണിറ്റർ · തത്സമയ വെസൽ ടെലിമെട്രി",
+    fleetTotalActiveTitle: "മൊത്തം സജീവ വെസലുകൾ",
+    fleetTotalActiveDesc: "നിലവിൽ AIS ട്രാൻസ്‌പോണ്ടർ സിഗ്നലുകൾ പ്രക്ഷേപണം ചെയ്യുന്ന വെസലുകൾ",
+    fleetZoneDistTitle: "മേഖല തിരിച്ചുള്ള വെസൽ വിതരണം",
+    imblAlertCardTitle: "IMBL അതിർത്തി സാമീപ്യ മുന്നറിയിപ്പ്",
+    fleetTableSubDesc: "AISstream.io-യിൽ നിന്നുള്ള തത്സമയ AIS സ്ഥാനങ്ങൾ, തത്സമയ റിസീവർ കവറേജ് ഇല്ലാത്തിടത്തെല്ലാം വ്യക്തമായി-ടാഗ് ചെയ്ത അനുകരണ ഫ്ലീറ്റ് (\"SIM\" ബാഡ്ജ് കാണുക) കൊണ്ട് നിറച്ചത്",
+    vesselSearchPlaceholder: "വെസൽ പേരോ ID-യോ തിരയുക...",
+    filterAllStatuses: "എല്ലാ നിലകളും",
+    filterSafeFishing: "സുരക്ഷിത മത്സ്യബന്ധനം",
+    filterInTransit: "യാത്രയിൽ",
+    filterBorderAlert: "അതിർത്തി മുന്നറിയിപ്പ്",
+    thVesselId: "വെസൽ ID",
+    thVesselName: "വെസൽ പേര്",
+    thType: "തരം",
+    thCurrentZone: "നിലവിലെ മേഖല",
+    thSpeedHeading: "വേഗത / ദിശ",
+    thImblDist: "IMBL ദൂരം",
+    thStatus: "നില",
+    thAction: "നടപടി",
+    bulletinIssuedLabel: "പുറപ്പെടുവിച്ചത്:",
+    bulletinRegionLabel: "മേഖല:",
+    bulletinWavesLabel: "തരംഗങ്ങൾ:",
+    bulletinWindsLabel: "കാറ്റുകൾ:",
+    bulletinSourceLabel: "ഉറവിടം:",
+    bulletinListenBtn: "ബുള്ളറ്റിൻ കേൾക്കുക",
+    bulletinsTabTitle: "ഔദ്യോഗിക സമുദ്ര & മത്സ്യബന്ധന ബുള്ളറ്റിനുകൾ (ISRO - INCOIS)",
+    bulletinsTabDesc: "നമ്പറിട്ട ഉപദേശങ്ങൾ, ചുഴലിക്കാറ്റ് അപകട മുന്നറിയിപ്പുകൾ, അന്താരാഷ്ട്ര അതിർത്തി അനുസരണ അലേർട്ടുകൾ.",
+    bulletinNotifyToggleTitle: "ഈ ടാബ്/PWA തുറന്നിരിക്കുമ്പോൾ മാത്രം ബ്രൗസർ അലേർട്ടുകൾ സ്വീകരിക്കുക",
+    bulletinNotifyToggleLabel: "തുറന്നിരിക്കുമ്പോൾ അറിയിക്കുക",
+    bulletinFilterAll: "എല്ലാ ബുള്ളറ്റിനുകളും",
+    bulletinFilterCritical: "നിർണായകം",
+    bulletinFilterWarning: "മുന്നറിയിപ്പുകൾ",
+    bulletinFilterAdvisory: "ഉപദേശങ്ങൾ",
+    bulletinsPushNote: "ഈ ടാബ്/PWA തുറന്നിരിക്കുമ്പോൾ മാത്രം അപകട അലേർട്ടുകൾ സജീവമാണ്. അടച്ച-ആപ്പ് പുഷ് അറിയിപ്പുകൾക്ക് ഒരു പ്രൊഡക്ഷൻ പുഷ്-സബ്സ്ക്രിപ്ഷൻ സേവനം ആവശ്യമാണ്, ഇത് ഈ പ്രോട്ടോടൈപ്പിൽ നടപ്പിലാക്കിയിട്ടില്ല.",
+    sosModalTitle: "അടിയന്തര ദുരിതസൂചന ബീക്കൺ (SOS)",
+    sosInstructions: "അടിയന്തര SOS സജീവമാക്കുന്നത് <strong>INSAT-3DR SAS&R</strong> വഴി ഇന്ത്യൻ കോസ്റ്റ് ഗാർഡ് സമുദ്ര രക്ഷാ ഏകോപന കേന്ദ്രത്തിലേക്ക് (MRCC) ഒരു അടിയന്തര 406 MHz ദുരിതസൂചന സിഗ്നൽ കൈമാറും.",
+    sosCurrentPositionLabel: "നിലവിലെ സ്ഥാനം:",
+    sosVhfChannelLabel: "അടിയന്തര VHF ചാനൽ:",
+    sosMrccHelplineLabel: "MRCC ഹെൽപ്‌ലൈൻ:",
+    sosConfirmBtn: "സ്ഥിരീകരിച്ച് ദുരിതസൂചന ബീക്കൺ പ്രക്ഷേപണം ചെയ്യുക",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R ബീക്കൺ ISRO & കോസ്റ്റ് ഗാർഡ് MRCC-ലേക്ക് കൈമാറുന്നു",
+    sosDistressRelayedMsg: "ദുരിതസൂചന പാക്കറ്റ് INSAT-3DR SAS&R റിസീവർ വഴി റിലേ ചെയ്തു. സമുദ്ര രക്ഷാ ഏകോപന കേന്ദ്രത്തെ (MRCC ചെന്നൈ/മുംബൈ) VHF ചാനൽ 16-ൽ അറിയിച്ചു.",
+    sosGpsVesselIdTemplate: "GPS കോർഡിനേറ്റുകൾ: {coords} · വെസൽ ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO സഹകരണ സമുദ്ര ഇന്റലിജൻസ് · സ്മാർട്ട് ഇന്ത്യ ഹാക്കത്തോൺ 2026",
+    landingSubtitle: "ഒരു സഹകരണ സമുദ്ര-ഇന്റലിജൻസ് പ്ലാറ്റ്‌ഫോം, രണ്ട് കമാൻഡ് ഡെക്കുകൾ: ഒരു മത്സ്യത്തൊഴിലാളിയുടെ ദൈനംദിന അവസര കൺസോൾ, പൂർണ്ണ ISRO സാറ്റലൈറ്റ്, AIS, ജിയോഫെൻസിംഗ് ഇൻസൈറ്റ് സ്യൂട്ട്.",
+    landingStripItem1: "Oceansat-3 SSTM താപ മുന്നണികൾ",
+    landingStripItem2: "INSAT-3DR സാറ്റലൈറ്റ് സമുദ്രശാസ്ത്രം",
+    landingStripItem3: "8-നോഡ് സഹകരണ ഏജന്റ് DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS ബ്രിഡ്ജ്",
+    landingStripItem5: "IMBL അതിർത്തി ജിയോഫെൻസിംഗ് അലേർട്ടുകൾ",
+    landingStripItem6: "തത്സമയ AIS ഫ്ലീറ്റ് & GIS കമാൻഡ്",
+    landingStripItem7: "സെൽ സ്മാർട്ടർ ബയർ പ്രൈസിംഗ്",
+    landingStripItem8: "406 MHz SOS ദുരിതസൂചന ബീക്കൺ",
+    landingFishermanCardTitle: "ORCA ഫിഷർമാൻ",
+    landingFishermanCardDesc: "ഇന്നത്തെ അവസര സ്കോർ, സെൽ സ്മാർട്ടർ പ്രൈസിംഗ്, ഒരു യാത്രാ-ചെലവ് കാൽക്കുലേറ്റർ, നിങ്ങളുടെ പിടിത്തത്തിനുള്ള ബയർ ലീഡുകൾ — ബോട്ടിനായി നിർമ്മിച്ചത്.",
+    landingFishermanCardCta: "ഫിഷർമാൻ കൺസോൾ തുറക്കുക",
+    landingFishermanCardTitleAttr: "ഫിഷർമാൻ കൺസോൾ തുറക്കുക",
+    landingInsightCardTitle: "ORCA ഇൻസൈറ്റ്",
+    landingInsightCardDesc: "പൂർണ്ണ കമാൻഡ് ഡെക്ക്: ISRO സാറ്റലൈറ്റ് സമുദ്രശാസ്ത്രം, GIS മാപ്പ്, 8-നോഡ് ഏജന്റ് DAG, സേഫ്റ്റി ബാരോമീറ്റർ, ഫ്ലീറ്റ് മോണിറ്റർ, NavIC ബ്രിഡ്ജ്.",
+    landingInsightCardCta: "ഇൻസൈറ്റ് കമാൻഡ് ഡെക്ക് തുറക്കുക",
+    landingInsightCardTitleAttr: "ഇൻസൈറ്റ് കമാൻഡ് ഡെക്ക് തുറക്കുക",
+    backToOverviewTitle: "അവലോകനത്തിലേക്ക് മടങ്ങുക",
+    statSimulatedFleetLabel: "അനുകരണ AIS ഫ്ലീറ്റ്",
+    statSatellitesActiveTemplate: "{count} സജീവം",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} മേഖലകൾ",
+    statPfzZonesListLabel: "വെജ് ബാങ്ക്, കൊച്ചി, വേരാവൽ...",
+    statImblCorridorsCountTemplate: "{count} ഇടനാഴികൾ",
+    statImblBordersLabel: "ഇന്ത്യ-ശ്രീലങ്ക & പാക് അതിർത്തികൾ",
+    pillarDagTitle: "8-നോഡ് സഹകരണ ഏജന്റ് DAG",
+    pillarDagDesc: "അന്വേഷണങ്ങളെ സാറ്റലൈറ്റ്, തരംഗ അപകടം, ജിയോഫെൻസിംഗ്, വെസൽ എണ്ണൽ, ETA, ന്യൂറൽ സിന്തസിസ് ഘട്ടങ്ങളായി ഉപ-സെക്കൻഡ് ലേറ്റൻസിയോടെ വിഭജിക്കുന്ന മൾട്ടി-ഏജന്റ് ആർക്കിടെക്ചർ.",
+    pillarEtaTitle: "തത്സമയ സമുദ്ര-നില ETA & സന്ധ്യാ സുരക്ഷ",
+    pillarEtaDesc: "തരംഗ പ്രതിരോധത്തിനനുസരിച്ച് ക്രമീകരിച്ച ഹൈഡ്രോഡൈനാമിക് യാത്രാ കണക്കുകൂട്ടലുകൾ, സൂര്യാസ്തമയത്തിനുശേഷം കുടുങ്ങിപ്പോയ മത്സ്യത്തൊഴിലാളികളെ തടയാൻ സ്വയമേവയുള്ള സന്ധ്യയ്ക്ക്-മുമ്പ്-മടക്കം സുരക്ഷാ അലേർട്ടുകളോടെ.",
+    pillarFleetTitle: "തത്സമയ ഫ്ലീറ്റ് സാന്ദ്രത & IMBL അലേർട്ട്",
+    pillarFleetDesc: "മേഖല തിരിച്ചുള്ള തത്സമയ വെസൽ എണ്ണൽ, തിരക്ക് അപകടസാധ്യതാ സൂചകങ്ങൾ, സമുദ്ര അതിർത്തികളെ സംരക്ഷിക്കുന്ന സ്വയമേവയുള്ള 5 NM/2 NM ജിയോഫെൻസ് സാമീപ്യ അലേർട്ടുകൾ.",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · നിർമ്മിച്ചത് <strong class=\"text-cyan-400\">{teamName}</strong> · സ്മാർട്ട് ഇന്ത്യ ഹാക്കത്തോൺ 2026 · പ്രശ്ന പ്രസ്താവന 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b>-ൽ കേൾക്കുന്നു... ഇപ്പോൾ സംസാരിക്കുക.",
+    sttUnsupportedTitle: "ഈ ബ്രൗസറിൽ സ്പീച്ച് റെക്കഗ്നിഷൻ പിന്തുണയ്ക്കുന്നില്ല",
+    routeUnavailableLabel: " റൂട്ട് ലഭ്യമല്ല:",
+    routeUnavailableMsg: "ORCA ബാക്കെൻഡ് എത്തിച്ചേരാനാവുന്നില്ല, അതിനാൽ റൂട്ട് ചെയ്ത ദൂരം/ETA കാണിക്കാൻ കഴിയില്ല. പ്രാദേശിക ഫോൾബാക്ക് മോഡിൽ പ്രവർത്തിക്കുന്നു.",
+    routeNoSafeRouteLabel: "✕ സുരക്ഷിതമായ സമുദ്ര റൂട്ട് കണ്ടെത്തിയില്ല:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "ഈ ഹാർബർ/PFZ ജോടിക്ക് ഭൂമിയും സമുദ്ര സംരക്ഷിത പ്രദേശങ്ങളും ഒഴിവാക്കുന്ന പാത റൂട്ടറിന് കണ്ടെത്താനായില്ല.",
+    routeSafeReturnLabel: "✓ സുരക്ഷിത മടക്കം:",
+    routeSafeReturnTemplate: "പ്രതീക്ഷിക്കുന്ന ഹാർബർ വരവ് {time}-ന് മുമ്പ് (18:30 IST സന്ധ്യയ്ക്ക് മുമ്പ്).",
+    routeReturnAfterDuskLabel: " സന്ധ്യയ്ക്ക് ശേഷമുള്ള മടക്കം:",
+    routeReturnAfterDuskTemplate: "പ്രതീക്ഷിക്കുന്ന മടക്കം {time}-ന് (18:30 IST സൂര്യാസ്തമയം കവിയുന്നു). നേരത്തെയുള്ള പുറപ്പാട് അല്ലെങ്കിൽ രാത്രി നാവിഗേഷൻ ബീക്കൺ പരിശോധന ശുപാർശ ചെയ്യുന്നു."
   },
   gu: {
     appTitle: "ઓર્કા ઇનસાઇટ (ORCA INSIGHT)",
@@ -1355,7 +2683,339 @@ const translations = {
     fmClaimBtn: "આ લીડ ક્લેમ કરો",
     fmClaimPromptText: "આ કોણ પૂરું કરે છે તે ખરીદદારને ખબર પડે તે માટે તમારું નામ અને ફોન/સંપર્ક દાખલ કરો:",
     fmClaimSuccess: "ક્લેમ થયું — ખરીદદારને પ્લેટફોર્મની બહાર જાણ કરવામાં આવશે.",
-    fmClaimFailed: "અત્યારે આ લિસ્ટિંગ ક્લેમ કરી શકાયું નથી."
+    fmClaimFailed: "અત્યારે આ લિસ્ટિંગ ક્લેમ કરી શકાયું નથી.",
+    dagAgentSupervisorName: "માસ્ટર સુપરવાઇઝર / DAG પ્લાનર",
+    dagAgentSupervisorRole: "બહુ-મોડલ દરિયાઈ પ્રશ્નને વિભાજિત કરે છે, સેટેલાઇટ, જોખમ અને જિયોફેન્સ એજન્ટોને પેટા-કાર્યો સોંપે છે.",
+    dagAgentSatelliteName: "સેટેલાઇટ સમુદ્રશાસ્ત્ર એજન્ટ",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (ક્લોરોફિલ-a) અને SSTM (થર્મલ ફ્રન્ટ્સ) ની સાથે INSAT-3DR ક્લાઉડ ઇમેજરી ગ્રહણ કરે છે.",
+    dagAgentWeatherName: "હવામાન અને દરિયાઈ જોખમ એજન્ટ",
+    dagAgentWeatherRole: "નોંધપાત્ર તરંગ ઊંચાઈ (SWH), પવન ગસ્ટ વેક્ટર, વીજળીની સંભાવનાનું મૂલ્યાંકન કરે છે, અને દરિયા-ક્લિયરન્સ સ્કોર બનાવે છે.",
+    dagAgentPfzName: "સમુદ્ર વિશ્લેષણ અને PFZ એજન્ટ",
+    dagAgentPfzRole: "થર્મલ-ક્લોરોફિલ ફ્રન્ટ્સના આંતરછેદોને ઓળખે છે, પેલેજિક બાયોમાસ ઘનતાની ગણતરી કરે છે, અને લક્ષ્ય મત્સ્યપાલન ઝોનને ક્રમાંકિત કરે છે.",
+    dagAgentGeofenceName: "જિયોફેન્સિંગ અને રૂટિંગ એજન્ટ",
+    dagAgentGeofenceRole: "આંતરરાષ્ટ્રીય દરિયાઈ સીમા રેખાઓ (IMBL) પર નજર રાખે છે, દરિયાઈ સંરક્ષિત વિસ્તારોને બફર કરે છે, અને A* સુરક્ષિત વેપોઇન્ટની ગણતરી કરે છે.",
+    dagAgentFleetName: "ફ્લીટ અને ટ્રાફિક એજન્ટ (નવું)",
+    dagAgentFleetRole: "AIS અને ARGOS-4 વેસલ ટ્રાન્સપોન્ડરને સ્કેન કરે છે, ફ્લીટ વિતરણને ટ્રેક કરે છે, અને ભીડ અથવા સીમા ભીડને ફ્લેગ કરે છે.",
+    dagAgentEtaName: "ETA અને પ્રવાસ સુરક્ષા એજન્ટ (નવું)",
+    dagAgentEtaRole: "વાસ્તવિક-સમય તરંગ પ્રતિકારને અનુરૂપ પ્રવાસ સમયગાળાની ગણતરી કરે છે અને સંધ્યા પહેલા પાછા ફરવાની સુરક્ષા વિન્ડોનું મૂલ્યાંકન કરે છે.",
+    dagAgentSynthesisName: "ન્યુરલ સિન્થેસિસ એજન્ટ (આંકડા-આધારિત)",
+    dagAgentSynthesisRole: "બહુ-એજન્ટ ટેલિમેટ્રીને સાઇટેશન ટેગ્સ અને TTS સાથે એક અધિકૃત, આધારભૂત કુદરતી-ભાષા સલાહમાં એકત્રિત કરે છે -- સંપૂર્ણપણે નિયમ-આધારિત, આ સાઇટના પોતાના લાઇવ ટેલિમેટ્રી અને તેના પોતાના સંચિત આંકડા લેજર પર તર્ક કરે છે. કોઈ બાહ્ય AI/LLM API નો ઉપયોગ થતો નથી.",
+    dagStatusIdle: "નિષ્ક્રિય",
+    dagInspectLink: "નિરીક્ષણ કરો ➔",
+    dagInspectorLatencyTemplate: "એક્ઝિક્યુશન લેટન્સી: {latency} · પેટા-કાર્યો ચકાસાયેલા",
+    dagStatusQueued: "કતારમાં",
+    dagStatusExecuting: "એક્ઝિક્યુટ થઈ રહ્યું છે...",
+    dagStatusCompleted: "પૂર્ણ",
+    dagStatusSkipped: "આમંત્રિત નથી — હેતુને આની જરૂર નહોતી",
+    dagBtnReasoningActiveLive: "તર્ક સક્રિય (લાઇવ બેકએન્ડ)...",
+    dagBtnExecutedLive: "✓ લાઇવ બેકએન્ડ દ્વારા પાઇપલાઇન એક્ઝિક્યુટ કરી · ફરીથી ચલાવો",
+    dagBtnErrorRetry: "▶ લાઇવ પાઇપલાઇન સિમ્યુલેશન ચલાવો",
+    dagBtnReasoningActiveOffline: "તર્ક સક્રિય (સ્થાનિક સિમ્યુલેશન)...",
+    dagBtnExecutedOffline: "✓ પાઇપલાઇન એક્ઝિક્યુટ કરી (સ્થાનિક સિમ્યુલેશન) · ફરીથી ચલાવો",
+    dagTabTitle: "8-નોડ સહયોગી બહુ-એજન્ટ DAG",
+    dagInteractiveCanvasBadge: "ઇન્ટરેક્ટિવ રિઝનિંગ કેનવાસ",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL જિયોફેન્સિંગ, ફ્લીટ ઘનતા અને પ્રવાસ ETA પર તર્ક કરતી રીયલ-ટાઇમ બહુ-એજન્ટ એક્ઝિક્યુશન પાઇપલાઇન.",
+    backendCheckingStatus: "બેકએન્ડ તપાસી રહ્યા છીએ...",
+    dagZoomReset: "રીસેટ",
+    dagRunSimulationBtn: "▶ લાઇવ પાઇપલાઇન સિમ્યુલેશન ચલાવો",
+    dagClickToInspectHint: "કોઈપણ એજન્ટ કાર્ડ પર ક્લિક કરીને તેનું કાચું ટેલિમેટ્રી ઇનપુટ, આંતરિક અલ્ગોરિધમ્સ અને JSON ડેટા આઉટપુટ તપાસો.",
+    dagOrchestratorLabel: "ઓર્કેસ્ટ્રેટર: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "એજન્ટ વિગતો",
+    dagInspectorDefaultRole: "ભૂમિકા વર્ણન",
+    dagInspectorLatencyPlaceholder: "લેટન્સી: 24ms",
+    dagInspectorJsonLabel: "લાઇવ JSON પેલોડ",
+    dagCloseInspector: "ઇન્સ્પેક્ટર બંધ કરો",
+    chatNewConversationMsg: "નવી વાતચીત શરૂ થઈ. ORCA અગાઉના ચેટ સંદર્ભનો ઉપયોગ કરશે નહીં.",
+    chatYouLabel: "તમે",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR અને Open-Meteo પર 8 વિશિષ્ટ AI એજન્ટોનું સંકલન થઈ રહ્યું છે...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "બહુ-એજન્ટ દરિયાઈ સલાહ",
+    chatGroundedConfidenceTemplate: "{confidence}% આધારભૂત વિશ્વાસ",
+    chatLangDetectedTooltip: "સંદેશ પરથી ભાષા શોધાઈ",
+    chatListenTts: "સાંભળો (TTS)",
+    chatNavicMssBtn: "NavIC MSS કોડ",
+    chatMetricZone: "ભલામણ કરેલ ઝોન",
+    chatMetricEta: "લાઇવ દરિયાઈ સ્થિતિ ETA",
+    chatMetricVessels: "સક્રિય વેસલ",
+    chatVesselsSuffix: "{count} વેસલ",
+    chatMetricImbl: "IMBL ક્લિયરન્સ",
+    chatReasoningTraceSummaryTemplate: "બહુ-એજન્ટ તર્ક ટ્રેસ જુઓ ({steps} પગલાં ચલાવ્યા)",
+    chatNodeDagSuffixTemplate: "{count}-નોડ DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT બેકએન્ડે એક સલાહ બનાવી પરંતુ કોઈ ટેક્સ્ટ પરત કર્યું નહીં.",
+    chatLiveAdvisoryLabel: "✓ લાઇવ બહુ-એજન્ટ સલાહ",
+    chatGroundedEngineFallback: "આધારભૂત એન્જિન",
+    chatOceanSourceTierTemplate: "સમુદ્ર સ્રોત સ્તર: {tier} · ક્લોરોફિલ: {chlorophyll}",
+    chatCitationsTemplate: "સાઇટેશન: {citations}",
+    chatOfflineBannerText: "ઓફલાઇન સલાહ એન્જિન — ORCA બેકએન્ડ પહોંચી શકાય તેમ નથી. નીચેના આંકડા સિમ્યુલેટેડ ઉદાહરણરૂપ અંદાજ છે, લાઇવ ટેલિમેટ્રી નથી.",
+    chatOfflineImblPlainText: "ઓફલાઇન સલાહ (બેકએન્ડ પહોંચી શકાય તેમ નથી, સિમ્યુલેટેડ અંદાજ): પાક સામુદ્રધુની / મન્નારના અખાત વિસ્તારના વેસલ સામાન્ય રીતે ભારત-શ્રીલંકા IMBL સીમાથી થોડા નોટિકલ માઈલની અંદર હોય છે. પશ્ચિમ દિશા જાળવી રાખો અને VHF ટ્રાન્સપોન્ડરને ચેનલ 16 પર સક્રિય રાખો. સીમાના વાસ્તવિક માપેલા અંતર માટે ORCA બેકએન્ડ સાથે ફરીથી જોડાઓ.",
+    chatOfflineImblHtmlHeading: "IMBL જિયોફેન્સિંગ સલાહ (સિમ્યુલેટેડ ઓફલાઇન અંદાજ):",
+    chatOfflineImblHtmlBody1: "લાઇવ બેકએન્ડ કનેક્શન વિના, ચોક્કસ વેસલ-થી-સીમા અંતર માપી શકાતું નથી. પાક સામુદ્રધુની સેક્ટર 4 નજીક સામાન્ય સાવચેતી તરીકે, મંડપમ તરફ પશ્ચિમ દિશા જાળવી રાખો.",
+    chatOfflineImblHtmlBody2: "આ એક સામાન્ય ઓફલાઇન સુરક્ષા રિમાઇન્ડર છે, માપેલ જિયોફેન્સ રીડિંગ નથી. વાસ્તવિક અંતર-થી-IMBL ગણતરી માટે ORCA બેકએન્ડ સાથે ફરીથી જોડાઓ.",
+    chatOfflineImblStep1: "બેકએન્ડ પહોંચી શકાય તેમ નથી. સ્થાનિક કીવર્ડ મેચનો ઉપયોગ કરીને પ્રશ્નને IMBL_BOUNDARY તરીકે વર્ગીકૃત કર્યો.",
+    chatOfflineImblStep2: "કોઈ લાઇવ જિયોફેન્સિંગ ટેલિમેટ્રી ઉપલબ્ધ નથી -- ફક્ત સામાન્ય સીમા-સુરક્ષા માર્ગદર્શન પરત કરી રહ્યા છીએ.",
+    chatOfflineDensityPlainText: "ઓફલાઇન સલાહ (બેકએન્ડ પહોંચી શકાય તેમ નથી, સિમ્યુલેટેડ અંદાજ): બેકએન્ડ કનેક્શન વિના લાઇવ વેસલ ગણતરી મેળવી શકાતી નથી. ઐતિહાસિક રીતે, વેજ બેંક અને કોચી ડીપ ઓફશોરમાં મધ્યમ મત્સ્યપાલન પ્રવૃત્તિ જોવા મળે છે. વેસલ ડેટાસેટમાંથી વાસ્તવિક ફ્લીટ-ઘનતા રીડિંગ માટે ORCA બેકએન્ડ સાથે ફરીથી જોડાઓ.",
+    chatOfflineDensityHtmlHeading: "ફ્લીટ ઘનતા (ઓફલાઇન — સિમ્યુલેટેડ પ્લેસહોલ્ડર):",
+    chatOfflineDensityHtmlBody: "ફ્લીટ અને ટ્રાફિક એજન્ટનો લાઇવ વેસલ ડેટાસેટ હાલમાં પહોંચી શકાય તેમ નથી, તેથી ઝોનમાં ચોક્કસ વેસલ ગણતરી અનુપલબ્ધ છે.",
+    chatOfflineDensityListItem: "વાસ્તવિક પ્રતિ-ઝોન વેસલ ગણતરી અને ભીડના ચુકાદા માટે ORCA બેકએન્ડ સાથે ફરીથી જોડાઓ.",
+    chatOfflineDensityStep1: "બેકએન્ડ પહોંચી શકાય તેમ નથી. સ્થાનિક કીવર્ડ મેચનો ઉપયોગ કરીને પ્રશ્નને FLEET_DENSITY તરીકે વર્ગીકૃત કર્યો.",
+    chatOfflineDensityStep2: "કોઈ લાઇવ ફ્લીટ ડેટાસેટ ઉપલબ્ધ નથી -- ખોટો આંકડો રજૂ કરવાનું ટાળવા વેસલ ગણતરી બતાવી નથી.",
+    chatOfflineGenericPlainTextTemplate: "ઓફલાઇન સલાહ (બેકએન્ડ પહોંચી શકાય તેમ નથી): ORCA ના બહુ-એજન્ટ બેકએન્ડ સુધી પહોંચી શકાયું નથી, તેથી આ જવાબ આધારભૂત રીડિંગને બદલે એક સામાન્ય, બિન-લાઇવ પ્લેસહોલ્ડર છે. તમારા બ્રાઉઝરનું પોતાનું Open-Meteo વિજેટ લગભગ {liveWave}m ની નોંધપાત્ર તરંગ ઊંચાઈ દર્શાવે છે, પરંતુ PFZ ક્રમાંકન, રૂટ અંતર, ETA અને ફ્લીટ ગણતરી બધાને બેકએન્ડની જરૂર છે અને તે અહીં બતાવવામાં આવ્યા નથી. વાસ્તવિક સલાહ માટે ORCA બેકએન્ડ સાથે ફરીથી જોડાઓ.",
+    chatOfflineGenericHtmlHeading: "ઓફલાઇન પ્લેસહોલ્ડર સલાહ",
+    chatOfflineGenericHtmlBody1Template: "ORCA નું બહુ-એજન્ટ બેકએન્ડ (સેટેલાઇટ, હવામાન, PFZ ક્રમાંકન, જિયોફેન્સિંગ, ફ્લીટ, રૂટિંગ, અને ન્યુરલ સિન્થેસિસ) હાલમાં પહોંચી શકાય તેમ નથી. ક્લાયન્ટ-સાઇડ પર, આ બ્રાઉઝરે Open-Meteo પરથી છેલ્લે <strong>{liveWave}m</strong> ની તરંગ ઊંચાઈ જોઈ, પરંતુ બાકીના દરેક આંકડા માટે બેકએન્ડ જરૂરી છે.",
+    chatOfflineGenericHtmlBody2: "<strong>કોઈ PFZ ભલામણ, રૂટ, ETA, અથવા ફ્લીટ ગણતરી બતાવવામાં આવી નથી</strong> કારણ કે તેની ગણતરી કરવાને બદલે તેને બનાવવી પડશે. સંપૂર્ણ આધારભૂત સલાહ માટે ORCA બેકએન્ડ સાથે ફરીથી જોડાઓ.",
+    chatOfflineGenericStep1: "બેકએન્ડ પહોંચી શકાય તેમ નથી. કોઈ હેતુ-વિશિષ્ટ કીવર્ડ મેચ થયો નથી -- GENERAL_VOYAGE_SAFETY ઓફલાઇન પ્લેસહોલ્ડર પરત કરી રહ્યા છીએ.",
+    chatOfflineGenericStep2Template: "ફક્ત ક્લાયન્ટ-દૃશ્યમાન આંકડો ઉપલબ્ધ: છેલ્લે જાણીતી Open-Meteo તરંગ ઊંચાઈ {liveWave}m (સીધા બ્રાઉઝર દ્વારા મેળવેલ, બેકએન્ડ મારફતે નહીં).",
+    chatTtsUnsupportedAlert: "તમારા બ્રાઉઝર દ્વારા સ્પીચ સિન્થેસિસ સપોર્ટેડ નથી.",
+    chatTtsWelcomeFallback: "ORCA INSIGHT માં આપનું સ્વાગત છે. બધા સેટેલાઇટ ફીડ અને દરિયાકાંઠાની સમુદ્રશાસ્ત્ર સિસ્ટમો સામાન્ય સ્થિતિમાં કાર્યરત છે.",
+    chatStopAudio: "ઓડિયો બંધ કરો",
+    chatListenAudioAdvisory: "ઓડિયો સલાહ સાંભળો",
+    chatTabTitle: "AI નિર્ણય સ્ટુડિયો અને બહુ-એજન્ટ ચેટબોટ",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR અને દરિયાકાંઠાની જિયોફેન્સિંગ પર તર્ક કરતા સહયોગી એજન્ટો દ્વારા સંચાલિત",
+    chatNewConversationBtn: "નવી વાતચીત",
+    chatPromptPFZ: "કોચી હાર્બરથી નજીકનું ઉચ્ચ-ઉપજ PFZ મત્સ્યપાલન ઝોન, પકડની સંભાવના અને પ્રજાતિઓ સાથે શોધો.",
+    chatPromptSafety: "આજ માટે સી-વેન્ચર ક્લિયરન્સ સ્કોર, નોંધપાત્ર તરંગ ઊંચાઈ, અને પવન જોખમ તપાસો.",
+    chatPromptBorder: "ભારત-શ્રીલંકા IMBL સીમાનું અંતર તપાસો અને 2 NM ડેન્જર ઝોનમાં વેસલની યાદી બતાવો.",
+    chatPromptDensity: "વેજ બેંક અને કોચી ડીપમાં વર્તમાન વેસલ ગણતરી અને ઘનતા વિતરણ શું છે?",
+    chatPromptETA: "કોચીથી PFZ-01 સુધીના પ્રવાસ ETA ની ગણતરી કરો અને ચકાસો કે રાઉન્ડ-ટ્રિપ 18:30 ના સંધ્યા પહેલા સુરક્ષિત રીતે પાછું ફરે છે કે નહીં.",
+    chatConversationLabel: "વાતચીત",
+    chatNeuralCoreActive: "ORCA INSIGHT ન્યુરલ કોર સક્રિય",
+    chatAgentsReadyUptime: "8 એજન્ટ તૈયાર · 99.94% અપટાઇમ",
+    chatWelcomeMessage: "વણક્કમ / નમસ્તે! હું <strong>ORCA INSIGHT</strong> બહુ-એજન્ટ સંશ્લેષણ સિસ્ટમ છું. તમે સુરક્ષિત સફર ક્લિયરન્સ, ભારતના દરિયાકાંઠે ઉચ્ચ-ઉપજ PFZ ઝોન, લાઇવ વેસલ ટ્રાફિક, IMBL સીમા નિકટતા, અને દરિયા-સ્થિતિ પ્રમાણે એડજસ્ટ કરેલ ETA ગણતરીઓ વિશે બોલી અથવા ટાઇપ કરી શકો છો.",
+    chatMicHint: "તમિલ, હિન્દી, મલયાલમ અથવા અંગ્રેજીમાં બોલવા માટે નીચે માઇક્રોફોન આઇકોન પર ક્લિક કરો!",
+    chatVoiceInputTitle: "પ્રશ્ન બોલો (સ્પીચ-ટુ-ટેક્સ્ટ)",
+    chatLiveReasoningTraceTitle: "લાઇવ તર્ક ટ્રેસ",
+    chatReasoningTraceEmptyHint: "ડાબી બાજુએ પ્રશ્ન પૂછો અને જુઓ કે 8 સહયોગી એજન્ટોમાંથી દરેક તેના દ્વારા લાઇવ કેવી રીતે તર્ક કરે છે.",
+    chatLiveTelemetryTitle: "લાઇવ સમુદ્ર ટેલિમેટ્રી",
+    chatCurrentSeaClearance: "વર્તમાન દરિયા ક્લિયરન્સ:",
+    chatSignificantWaves: "નોંધપાત્ર તરંગો:",
+    chatSurfaceWind: "સપાટી પવન:",
+    chatActiveVessels: "સક્રિય વેસલ:",
+    chatOpenDagVisualizerBtn: "સંપૂર્ણ એજન્ટ DAG વિઝ્યુલાઇઝર ખોલો ➔",
+    navicConnected: "NavIC રિસીવર: કનેક્ટેડ (L5/S-Band)",
+    navicDisconnected: "NavIC રિસીવર: ડિસ્કનેક્ટેડ",
+    navicTrackMyPosition: "મારું સ્થાન ટ્રેક કરો",
+    navicStopTracking: "ટ્રેકિંગ બંધ કરો",
+    navicSimulateMovement: "વેસલ ગતિ સિમ્યુલેટ કરો",
+    navicStopSimulation: "સિમ્યુલેશન બંધ કરો",
+    navicStatusTrackingOff: "ટ્રેકિંગ બંધ · કોઈ સ્થાનની વિનંતી કરવામાં આવી રહી નથી",
+    navicStatusGeoUnsupported: "આ બ્રાઉઝર દ્વારા જિયોલોકેશન સપોર્ટેડ નથી. ડેમો માટે સિમ્યુલેટેડ વેસલ મૂવમેન્ટનો ઉપયોગ કરો.",
+    navicStatusRequestingPermission: "ડિવાઇસ-સ્થાન પરવાનગીની વિનંતી કરી રહ્યા છીએ…",
+    navicStatusLiveTrackingTemplate: "લાઇવ ડિવાઇસ ટ્રેકિંગ · ચોકસાઈ ±{accuracy}m · સંગ્રહિત નથી",
+    navicStatusPermissionErrorTemplate: "સ્થાન પરવાનગી અનુપલબ્ધ ({error}). કોઈ સ્થાન મોકલવામાં આવ્યું નથી.",
+    navicStatusBackendUnavailable: "બેકએન્ડ અનુપલબ્ધ — સ્થાનિક સિમ્યુલેશનમાં ચોક્કસ જિયોફેન્સ અંતરનું મૂલ્યાંકન કરી શકાતું નથી.",
+    navicStatusSimStopped: "જિયોફેન્સ સિમ્યુલેશન બંધ",
+    navicStatusSimMovingTemplate: "સિમ્યુલેટેડ વેસલ મૂવમેન્ટ · બિંદુ {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-અક્ષર સેટેલાઇટ ઇમરજન્સી કોડ કોપી કર્યો:\\n\\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) સ્કાયપ્લોટ",
+    navicConstellationDesc: "7-સેટેલાઇટ જિયોસ્ટેશનરી / IGSO નક્ષત્ર",
+    navicConnectedShort: "કનેક્ટેડ (L5/S)",
+    navicTrackedSatellitesTitle: "ટ્રેક કરેલા સેટેલાઇટ (SNR dB-Hz)",
+    navicNmeaStreamTitle: "લાઇવ NMEA-0183 હાર્ડવેર સ્ટ્રીમ ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "બોડ દર: 9600 bps · 1 Hz ફીડ",
+    navicDopPrecisionLabel: "DOP ચોકસાઈ",
+    navicDopValue: "HDOP 1.05 (ઉત્કૃષ્ટ)",
+    navicDiffFixLabel: "ડિફરેન્શિયલ ફિક્સ",
+    navicDiffFixValue: "NavIC DGPS સક્રિય",
+    navicBorderHwLabel: "સીમા એલર્ટ હાર્ડવેર",
+    navicBorderHwValue: "બઝર આર્મ્ડ",
+    navicGeofenceTitle: "લાઇવ સ્થાન જિયોફેન્સિંગ",
+    navicGeofenceDesc: "તમારા ડિવાઇસના સ્થાનનો ઉપયોગ ફક્ત સેશન દરમિયાન IMBL/MPA તપાસ માટે થાય છે અને ORCA દ્વારા ક્યારેય સંગ્રહિત થતો નથી.",
+    navicGeofenceInitialStatus: "ટ્રેકિંગ બંધ · 5 NM IMBL ચેતવણી / MPA બફર ચેતવણી",
+    safetyVerdictDescTemplate: "લાઇવ Open-Meteo દરિયાઈ ટેલિમેટ્રી તમારા પસંદ કરેલા હાર્બર નજીક નોંધપાત્ર તરંગ ઊંચાઈ {wave}m અને સપાટી પવન {wind}kn દર્શાવે છે, જે {score}/100 નો ગણતરી કરેલ સુરક્ષા સ્કોર આપે છે.",
+    safetyWindDefaultDirection: "પશ્ચિમી",
+    safetyBreezeSuffix: "{direction} પવન",
+    severityLow: "ઓછું",
+    severityModerate: "મધ્યમ",
+    severityHigh: "ઊંચું",
+    waveBandCalm: "શાંત (< 0.5m)",
+    waveBandSlight: "હળવું (0.5 - 1.25m)",
+    waveBandModerate: "મધ્યમ (1.25 - 2.5m)",
+    waveBandRough: "તોફાની (> 2.5m)",
+    seaStateCalm: "શાંત",
+    seaStateSlight: "હળવું",
+    seaStateSlightModerate: "હળવાથી મધ્યમ",
+    seaStateModerateRough: "મધ્યમથી તોફાની",
+    seaStateUnknown: "અજ્ઞાત",
+    lightningBandSafe: "સુરક્ષિત વાતાવરણીય પ્રોફાઇલ",
+    lightningBandElevated: "વધેલું સંવહન જોખમ",
+    lightningBandSevere: "ગંભીર તોફાન ચેતવણી",
+    safetySyncLatencyLabel: "સિંક લેટન્સી:",
+    safetyBatteryLabel: "બેટરી:",
+    safetyLastPassLabel: "છેલ્લો પાસ:",
+    safetyAltitudeLabel: "ઊંચાઈ:",
+    telemetryLiveOpenMeteoTemplate: "લાઇવ OPEN-METEO ટેલિમેટ્રી ({wave}m SWH)",
+    telemetryCachedArchive: "ટેલિમેટ્રી સક્રિય (સંગ્રહિત સેટેલાઇટ આર્કાઇવ)",
+    backendOnlineStatus: "લાઇવ FASTAPI બેકએન્ડ કનેક્ટેડ",
+    backendOfflineStatus: "બેકએન્ડ ઓફલાઇન · સ્થાનિક સિમ્યુલેશન મોડ",
+    aisLiveCountTemplate: "{count} લાઇવ AIS વેસલ{plural}",
+    aisNoLiveVessels: "હાલમાં કોઈ લાઇવ AIS વેસલ નથી",
+    aisBlendedBannerTemplate: "{liveText} + {simCount} સિમ્યુલેટેડ વેસલ{plural} બતાવી રહ્યા છીએ, જ્યાં હાલમાં કોઈ લાઇવ AIS કવરેજ નથી તેવા બંદરો ભરવા માટે.",
+    aisUnavailableDefault: "લાઇવ AIS વેસલ ફીડ અનુપલબ્ધ -- 0 વેસલ બતાવી રહ્યા છીએ.",
+    aisNotConfigured: "આ ડિપ્લોયમેન્ટ પર લાઇવ AIS વેસલ ફીડ કન્ફિગર કરેલ નથી.",
+    aisConnectedNotSending: "AIS પ્રદાતા (AISstream.io) સાથે જોડાયેલ છે, પરંતુ તે હાલમાં વેસલ ડેટા મોકલી રહ્યું નથી — સંભવતઃ પ્રદાતા-બાજુનો વિક્ષેપ, સ્થાનિક ખામી નથી.",
+    aisDisconnectedReconnecting: "AIS પ્રદાતા (AISstream.io) થી ડિસ્કનેક્ટેડ; આપમેળે ફરીથી જોડાઈ રહ્યા છીએ.",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> ભારત–શ્રીલંકા IMBL થી <strong>{dist} NM</strong> ના અંતરે કાર્યરત છે{simTag}. સ્વચાલિત ચેતવણી મોકલવામાં આવી.",
+    imblAlertNoneTemplate: "હાલમાં {warnDist} NM IMBL ચેતવણી અંતરની અંદર કોઈ વેસલ નથી. સૌથી નજીકનું ટ્રેક કરેલ વેસલ: <strong>{dist} NM</strong> દૂર.",
+    imblAlertNoData: "હજુ સુધી કોઈ વેસલ ટેલિમેટ્રી ઉપલબ્ધ નથી.",
+    simulatedSuffix: " (સિમ્યુલેટેડ)",
+    notifUnavailableTitle: "બ્રાઉઝર સૂચનાઓ અનુપલબ્ધ",
+    notifUnavailableMsg: "જ્યાં સુધી આ ટેબ ખુલ્લું છે ત્યાં સુધી ઇન-એપ જોખમ બેનર બતાવવામાં આવશે.",
+    notifNotEnabledTitle: "બ્રાઉઝર સૂચનાઓ સક્ષમ નથી",
+    notifNotEnabledMsg: "જ્યાં સુધી આ ટેબ ખુલ્લું છે ત્યાં સુધી ઇન-એપ જોખમ બેનર સક્રિય રહે છે.",
+    hazardHighWavesTitle: "ઊંચા તરંગો — સ્થાનિક સિમ્યુલેશન",
+    hazardHighWavesMsgTemplate: "{wave}m, 2.5m સાવચેતી મર્યાદા કરતાં વધારે છે. સ્રોત: બ્રાઉઝર Open-Meteo ટેલિમેટ્રી.",
+    hazardHighWindTitle: "તેજ પવન — સ્થાનિક સિમ્યુલેશન",
+    hazardHighWindMsgTemplate: "{wind} kn, 25 kn સાવચેતી મર્યાદા કરતાં વધારે છે. સ્રોત: બ્રાઉઝર Open-Meteo ટેલિમેટ્રી.",
+    hazardLightningTitle: "વીજળીનું જોખમ — સ્થાનિક સિમ્યુલેશન",
+    hazardLightningMsgTemplate: "વીજળી પ્રોક્સી {pct}% છે. સ્રોત: બ્રાઉઝર Open-Meteo ટેલિમેટ્રી.",
+    safetyOfficialClearanceLabel: "સત્તાવાર દરિયાઈ ક્લિયરન્સ",
+    safetyVerdictDescInitial: "બધા સેટેલાઇટ સમુદ્રશાસ્ત્ર સૂચકો (Oceansat-3 SSTM થર્મલ ફ્રન્ટ્સ, Sentinel-3 તરંગ અલ્ટીમેટ્રી) કેરળ, કર્ણાટક, અને તમિલનાડુના દરિયાકાંઠાના પાણીમાં અનુકૂળ મત્સ્યપાલન સ્થિતિની પુષ્ટિ કરે છે.",
+    safetyIndexLabel: "સુરક્ષા સૂચકાંક",
+    satConstellationTitle: "ISRO અને આંતરરાષ્ટ્રીય સમુદ્રશાસ્ત્ર સેટેલાઇટ નક્ષત્ર",
+    satStaticDataNote: "સ્થિર સંદર્ભ ડેટા (લાઇવ ટેલિમેટ્રી નથી)",
+    mapIndiaBoundaryPopup: "ભારત — સત્તાવાર સીમા (Survey of India)",
+    mapPfzYieldSuffix: "{rating} ઉપજ ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "ક્લોરોફિલ:",
+    mapPfzDepthLabel: "ઊંડાઈ:",
+    mapPfzVesselsLabel: "વેસલ:",
+    mapPfzActiveSuffix: "{count} સક્રિય",
+    mapPfzTargetSpeciesLabel: "લક્ષ્ય પ્રજાતિઓ:",
+    mapPfzSimulateRouteBtn: "અહીં રૂટ સિમ્યુલેટ કરો ➔",
+    mapImblPopupBodyTemplate: "કડક આંતરરાષ્ટ્રીય દરિયાઈ સીમા રેખા. ચેતવણી બફર: {warn} NM. જટિલ જિયોફેન્સ: {danger} NM.",
+    mapImblPopupTreatyNote: "UNCLOS દરિયાઈ સંધિ હેઠળ સીમા પાર કરવી પ્રતિબંધિત છે.",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL બફર કોરિડોર",
+    mapMpaRestrictedBadge: "પ્રતિબંધિત ઇકો-રિઝર્વ",
+    mapHarbourCoastSuffix: "{state} કિનારો",
+    mapHarbourCapacityLabel: "ક્ષમતા:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "ઇંધણ સ્ટેશન:",
+    mapHarbourFuelAvailable: "ઉપલબ્ધ",
+    mapHarbourIceLabel: "બરફ પ્લાન્ટ:",
+    mapHarbourIceActive: "સક્રિય",
+    mapHarbourSetOriginBtn: "મૂળ હાર્બર તરીકે સેટ કરો",
+    mapVesselSimulatedBadge: "સિમ્યુલેટેડ · અહીં કોઈ લાઇવ AIS કવરેજ નથી",
+    mapVesselSpeedLabel: "ઝડપ:",
+    mapVesselHeadingLabel: "દિશા:",
+    mapVesselZoneLabel: "ઝોન:",
+    mapVesselImblDistLabel: "IMBL અંતર:",
+    mapVesselStatusLabel: "સ્થિતિ:",
+    mapVesselFuelLabel: "ઇંધણ:",
+    mapVesselFuelNA: "ઉપલબ્ધ નથી",
+    mapRoutePopupTitle: "દરિયા-ફક્ત A* રૂટ (જમીન + MPA ટાળવું)",
+    mapRouteDistanceEtaTemplate: "અંતર: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} ની આસપાસ {pct}% ડિટૂર",
+    mapRouteLandNoGoZones: "જમીન/નિષિદ્ધ ઝોન",
+    vesselStatusSafeFishing: "સુરક્ષિત મત્સ્યપાલન",
+    vesselStatusBorderAlert: "સીમા ચેતવણી",
+    vesselStatusBorderWarn: "સીમા સાવધાની",
+    vesselStatusInTransit: "પ્રવાસમાં",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "સિમ્યુલેટેડ -- આ બંદર નજીક કોઈ લાઇવ AIS કવરેજ નથી",
+    vesselLocateAction: "શોધો ➔",
+    fleetVesselCountSuffix: "{count} વેસલ",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} લાઇવ · {sim} સિમ)",
+    mapActiveVesselsBreakdownTemplate: "{total} સક્રિય વેસલ ({live} લાઇવ · {sim} સિમ્યુલેટેડ)",
+    mapActiveVesselsSimpleTemplate: "{total} સક્રિય વેસલ",
+    mapTabTitle: "GIS કમાન્ડ મેપ · ભારતીય દરિયાકાંઠાના પાણી",
+    mapTabDesc: "રીયલ-ટાઇમ સેટેલાઇટ PFZ, IMBL સીમા કોરિડોર, અને AIS વેસલ ટ્રેક સાથે ઇન્ટરેક્ટિવ ઉચ્ચ-કોન્ટ્રાસ્ટ નોટિકલ મેપ.",
+    layerPfzZones: "PFZ ઝોન",
+    layerImblBuffer: "IMBL બફર",
+    layerEcoReserves: "ઇકો રિઝર્વ (MPA)",
+    layerHarbours: "હાર્બર",
+    layerLiveVessels: "લાઇવ વેસલ",
+    layerDensityHeatmap: "ઘનતા હીટમેપ",
+    layerIndiaBoundary: "ભારત સીમા (Survey of India)",
+    routePlannerDesc: "MPA અને સીમા જોખમોને ટાળતો A*-શૈલી પાથ",
+    routeVesselSpeedLabel: "વેસલ ઝડપ:",
+    fleetMonitorTitle: "ફ્લીટ મોનિટર · લાઇવ વેસલ ટેલિમેટ્રી",
+    fleetTotalActiveTitle: "કુલ સક્રિય વેસલ",
+    fleetTotalActiveDesc: "હાલમાં AIS ટ્રાન્સપોન્ડર સિગ્નલ પ્રસારિત કરતા વેસલ",
+    fleetZoneDistTitle: "પ્રતિ ઝોન વેસલ વિતરણ",
+    imblAlertCardTitle: "IMBL સીમા નિકટતા ચેતવણી",
+    fleetTableSubDesc: "AISstream.io માંથી લાઇવ AIS સ્થિતિઓ, જ્યાં પણ હાલમાં કોઈ લાઇવ રિસીવર કવરેજ નથી ત્યાં સ્પષ્ટ રીતે-ટેગ કરેલ સિમ્યુલેટેડ ફ્લીટ (\"SIM\" બેજ જુઓ) સાથે ભરેલી",
+    vesselSearchPlaceholder: "વેસલનું નામ અથવા ID શોધો...",
+    filterAllStatuses: "બધી સ્થિતિઓ",
+    filterSafeFishing: "સુરક્ષિત મત્સ્યપાલન",
+    filterInTransit: "પ્રવાસમાં",
+    filterBorderAlert: "સીમા ચેતવણી",
+    thVesselId: "વેસલ ID",
+    thVesselName: "વેસલનું નામ",
+    thType: "પ્રકાર",
+    thCurrentZone: "વર્તમાન ઝોન",
+    thSpeedHeading: "ઝડપ / દિશા",
+    thImblDist: "IMBL અંતર",
+    thStatus: "સ્થિતિ",
+    thAction: "ક્રિયા",
+    bulletinIssuedLabel: "જારી:",
+    bulletinRegionLabel: "પ્રદેશ:",
+    bulletinWavesLabel: "તરંગો:",
+    bulletinWindsLabel: "પવનો:",
+    bulletinSourceLabel: "સ્રોત:",
+    bulletinListenBtn: "બુલેટિન સાંભળો",
+    bulletinsTabTitle: "સત્તાવાર દરિયાઈ અને મત્સ્યપાલન બુલેટિન (ISRO - INCOIS)",
+    bulletinsTabDesc: "ક્રમાંકિત સલાહ, ચક્રવાત જોખમ ચેતવણીઓ, અને આંતરરાષ્ટ્રીય સીમા પાલન એલર્ટ.",
+    bulletinNotifyToggleTitle: "ફક્ત આ ટેબ/PWA ખુલ્લું હોય ત્યારે જ બ્રાઉઝર એલર્ટ મેળવો",
+    bulletinNotifyToggleLabel: "ખુલ્લું હોય ત્યારે સૂચિત કરો",
+    bulletinFilterAll: "બધા બુલેટિન",
+    bulletinFilterCritical: "ગંભીર",
+    bulletinFilterWarning: "ચેતવણીઓ",
+    bulletinFilterAdvisory: "સલાહ",
+    bulletinsPushNote: "જોખમ એલર્ટ ફક્ત ત્યારે જ સક્રિય છે જ્યારે આ ટેબ/PWA ખુલ્લું હોય. બંધ-એપ પુશ સૂચનાઓ માટે એક પ્રોડક્શન પુશ-સબ્સ્ક્રિપ્શન સેવાની જરૂર છે અને તે આ પ્રોટોટાઇપમાં લાગુ કરેલ નથી.",
+    sosModalTitle: "કટોકટી ડિસ્ટ્રેસ બીકોન (SOS)",
+    sosInstructions: "કટોકટી SOS સક્રિય કરવાથી <strong>INSAT-3DR SAS&R</strong> મારફતે ભારતીય કોસ્ટ ગાર્ડ મરીટાઇમ રેસ્ક્યુ કોઓર્ડિનેશન સેન્ટર (MRCC) ને એક કટોકટી 406 MHz ડિસ્ટ્રેસ સિગ્નલ પ્રસારિત કરવામાં આવશે.",
+    sosCurrentPositionLabel: "વર્તમાન સ્થાન:",
+    sosVhfChannelLabel: "કટોકટી VHF ચેનલ:",
+    sosMrccHelplineLabel: "MRCC હેલ્પલાઇન:",
+    sosConfirmBtn: "પુષ્ટિ કરો અને ડિસ્ટ્રેસ બીકોન પ્રસારિત કરો",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R બીકોન ISRO અને કોસ્ટ ગાર્ડ MRCC ને પ્રસારિત થઈ રહ્યું છે",
+    sosDistressRelayedMsg: "ડિસ્ટ્રેસ પેકેટ INSAT-3DR SAS&R રિસીવર મારફતે રિલે કરવામાં આવ્યું. મરીટાઇમ રેસ્ક્યુ કોઓર્ડિનેશન સેન્ટર (MRCC ચેન્નાઈ/મુંબઈ) ને VHF ચેનલ 16 પર ચેતવણી આપવામાં આવી.",
+    sosGpsVesselIdTemplate: "GPS કોઓર્ડિનેટ્સ: {coords} · વેસલ ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO સહયોગી દરિયાઈ બુદ્ધિમત્તા · સ્માર્ટ ઇન્ડિયા હેકાથોન 2026",
+    landingSubtitle: "એક સહયોગી દરિયાઈ-બુદ્ધિમત્તા પ્લેટફોર્મ, બે કમાન્ડ ડેક: માછીમારનું દૈનિક તક કન્સોલ, અને સંપૂર્ણ ISRO સેટેલાઇટ, AIS અને જિયોફેન્સિંગ ઇનસાઇટ સ્યુટ.",
+    landingStripItem1: "Oceansat-3 SSTM થર્મલ ફ્રન્ટ્સ",
+    landingStripItem2: "INSAT-3DR સેટેલાઇટ સમુદ્રશાસ્ત્ર",
+    landingStripItem3: "8-નોડ સહયોગી એજન્ટ DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS બ્રિજ",
+    landingStripItem5: "IMBL સીમા જિયોફેન્સિંગ એલર્ટ",
+    landingStripItem6: "લાઇવ AIS ફ્લીટ અને GIS કમાન્ડ",
+    landingStripItem7: "સેલ સ્માર્ટર બાયર પ્રાઇસિંગ",
+    landingStripItem8: "406 MHz SOS ડિસ્ટ્રેસ બીકોન",
+    landingFishermanCardTitle: "ORCA ફિશરમેન",
+    landingFishermanCardDesc: "આજનો તક સ્કોર, સેલ સ્માર્ટર પ્રાઇસિંગ, એક ટ્રિપ-ખર્ચ કેલ્ક્યુલેટર, અને તમારી પકડ માટે ખરીદનાર લીડ — બોટ માટે બનાવેલ.",
+    landingFishermanCardCta: "ફિશરમેન કન્સોલ ખોલો",
+    landingFishermanCardTitleAttr: "ફિશરમેન કન્સોલ ખોલો",
+    landingInsightCardTitle: "ORCA ઇનસાઇટ",
+    landingInsightCardDesc: "સંપૂર્ણ કમાન્ડ ડેક: ISRO સેટેલાઇટ સમુદ્રશાસ્ત્ર, GIS મેપ, 8-નોડ એજન્ટ DAG, સેફ્ટી બેરોમીટર, ફ્લીટ મોનિટર, અને NavIC બ્રિજ.",
+    landingInsightCardCta: "ઇનસાઇટ કમાન્ડ ડેક ખોલો",
+    landingInsightCardTitleAttr: "ઇનસાઇટ કમાન્ડ ડેક ખોલો",
+    backToOverviewTitle: "ઓવરવ્યૂ પર પાછા જાઓ",
+    statSimulatedFleetLabel: "સિમ્યુલેટેડ AIS ફ્લીટ",
+    statSatellitesActiveTemplate: "{count} સક્રિય",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} ઝોન",
+    statPfzZonesListLabel: "વેજ બેંક, કોચી, વેરાવળ...",
+    statImblCorridorsCountTemplate: "{count} કોરિડોર",
+    statImblBordersLabel: "ભારત-શ્રીલંકા અને પાક સીમાઓ",
+    pillarDagTitle: "8-નોડ સહયોગી એજન્ટ DAG",
+    pillarDagDesc: "પ્રશ્નોને સેટેલાઇટ, તરંગ જોખમ, જિયોફેન્સિંગ, વેસલ ગણતરી, ETA, અને ન્યુરલ સિન્થેસિસ પગલાંમાં સબ-સેકન્ડ લેટન્સી સાથે વિભાજિત કરતું બહુ-એજન્ટ આર્કિટેક્ચર.",
+    pillarEtaTitle: "લાઇવ દરિયા-સ્થિતિ ETA અને સંધ્યા સુરક્ષા",
+    pillarEtaDesc: "તરંગ પ્રતિકારને અનુરૂપ એડજસ્ટ કરેલ હાઇડ્રોડાયનેમિક પ્રવાસ ગણતરીઓ, સૂર્યાસ્ત પછી ફસાયેલા માછીમારોને અટકાવવા સ્વચાલિત સંધ્યા-પહેલા-પાછા ફરવાની સુરક્ષા એલર્ટ સાથે.",
+    pillarFleetTitle: "લાઇવ ફ્લીટ ઘનતા અને IMBL એલર્ટ",
+    pillarFleetDesc: "પ્રતિ ઝોન રીયલ-ટાઇમ વેસલ ગણતરી, ભીડ જોખમ સૂચકો, અને દરિયાઈ સીમાઓનું રક્ષણ કરતા સ્વચાલિત 5 NM/2 NM જિયોફેન્સ નિકટતા એલર્ટ.",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · દ્વારા નિર્મિત <strong class=\"text-cyan-400\">{teamName}</strong> · સ્માર્ટ ઇન્ડિયા હેકાથોન 2026 · સમસ્યા નિવેદન 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b> માં સાંભળી રહ્યા છીએ... હવે બોલો.",
+    sttUnsupportedTitle: "આ બ્રાઉઝરમાં સ્પીચ રેકગ્નિશન સપોર્ટેડ નથી",
+    routeUnavailableLabel: " રૂટ અનુપલબ્ધ:",
+    routeUnavailableMsg: "ORCA બેકએન્ડ પહોંચી શકાય તેમ નથી, તેથી કોઈ રૂટેડ અંતર/ETA બતાવી શકાતું નથી. સ્થાનિક ફોલબેક મોડમાં ચાલી રહ્યું છે.",
+    routeNoSafeRouteLabel: "✕ કોઈ સુરક્ષિત દરિયાઈ રૂટ મળ્યો નથી:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "રાઉટર આ હાર્બર/PFZ જોડી માટે જમીન અને દરિયાઈ સંરક્ષિત વિસ્તારોને ટાળતો પાથ શોધી શક્યું નથી.",
+    routeSafeReturnLabel: "✓ સુરક્ષિત વળતર:",
+    routeSafeReturnTemplate: "અંદાજિત હાર્બર આગમન {time} સુધીમાં (18:30 IST સંધ્યા પહેલા).",
+    routeReturnAfterDuskLabel: " સંધ્યા પછી વળતર:",
+    routeReturnAfterDuskTemplate: "અંદાજિત વળતર {time} વાગ્યે (18:30 IST સૂર્યાસ્ત કરતાં વધારે). વહેલા પ્રસ્થાન અથવા રાત્રિ નેવિગેશન બીકોન તપાસની ભલામણ કરવામાં આવે છે."
   },
   mr: {
     appTitle: "ऑर्का इनसाइट (ORCA INSIGHT)",
@@ -1586,7 +3246,339 @@ const translations = {
     fmClaimBtn: "ही लीड दावा करा",
     fmClaimPromptText: "हे कोण पूर्ण करत आहे हे खरेदीदाराला कळावे यासाठी तुमचे नाव आणि फोन/संपर्क टाका:",
     fmClaimSuccess: "दावा केला — खरेदीदाराला प्लॅटफॉर्मबाहेर कळवले जाईल.",
-    fmClaimFailed: "सध्या ही लिस्टिंग दावा करता आली नाही."
+    fmClaimFailed: "सध्या ही लिस्टिंग दावा करता आली नाही.",
+    dagAgentSupervisorName: "मास्टर सुपरवायझर / DAG प्लॅनर",
+    dagAgentSupervisorRole: "बहु-मॉडेल सागरी प्रश्न विभाजित करतो, सॅटेलाइट, धोका आणि जिओफेन्स एजंटना उप-कामे नियुक्त करतो.",
+    dagAgentSatelliteName: "सॅटेलाइट सागरशास्त्र एजंट",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (क्लोरोफिल-a) आणि SSTM (थर्मल फ्रंट्स) यांच्यासोबत INSAT-3DR ढग प्रतिमा घेतो.",
+    dagAgentWeatherName: "हवामान आणि सागरी धोका एजंट",
+    dagAgentWeatherRole: "लक्षणीय लाट उंची (SWH), वारा झोत सदिश, वीज पडण्याची शक्यता यांचे मूल्यांकन करतो आणि समुद्र-क्लिअरन्स स्कोअर तयार करतो.",
+    dagAgentPfzName: "सागरी विश्लेषण आणि PFZ एजंट",
+    dagAgentPfzRole: "थर्मल-क्लोरोफिल फ्रंट्सचे छेदनबिंदू ओळखतो, पेलेजिक बायोमास घनतेची गणना करतो आणि लक्ष्य मासेमारी क्षेत्रांना क्रमवारी देतो.",
+    dagAgentGeofenceName: "जिओफेन्सिंग आणि मार्ग एजंट",
+    dagAgentGeofenceRole: "आंतरराष्ट्रीय सागरी सीमारेषांवर (IMBL) लक्ष ठेवतो, सागरी संरक्षित क्षेत्रांना बफर करतो आणि A* सुरक्षित वेपॉइंट्सची गणना करतो.",
+    dagAgentFleetName: "फ्लीट आणि वाहतूक एजंट (नवीन)",
+    dagAgentFleetRole: "AIS आणि ARGOS-4 वेसल ट्रान्सपॉन्डर स्कॅन करतो, फ्लीट वितरणाचा मागोवा घेतो आणि गर्दी किंवा सीमा गर्दी फ्लॅग करतो.",
+    dagAgentEtaName: "ETA आणि प्रवास सुरक्षा एजंट (नवीन)",
+    dagAgentEtaRole: "रिअल-टाइम लाट प्रतिकारानुसार प्रवास कालावधीची गणना करतो आणि संध्याकाळपूर्वी परतण्याच्या सुरक्षा विंडोचे मूल्यांकन करतो.",
+    dagAgentSynthesisName: "न्यूरल सिंथेसिस एजंट (आकडेवारी-आधारित)",
+    dagAgentSynthesisRole: "बहु-एजंट टेलिमेट्रीला उद्धरण टॅग आणि TTS सह एका अधिकृत, आधारभूत नैसर्गिक-भाषा सल्ल्यात एकत्रित करतो -- पूर्णपणे नियम-आधारित, या साइटच्या स्वतःच्या लाइव्ह टेलिमेट्री आणि तिच्या स्वतःच्या संचित आकडेवारी नोंदवहीवर तर्क करतो. कोणतेही बाह्य AI/LLM API वापरले जात नाही.",
+    dagStatusIdle: "निष्क्रिय",
+    dagInspectLink: "तपासा ➔",
+    dagInspectorLatencyTemplate: "अंमलबजावणी विलंब: {latency} · उप-कामे सत्यापित",
+    dagStatusQueued: "रांगेत",
+    dagStatusExecuting: "अंमलात आणले जात आहे...",
+    dagStatusCompleted: "पूर्ण",
+    dagStatusSkipped: "आमंत्रित नाही — हेतूला याची गरज नव्हती",
+    dagBtnReasoningActiveLive: "तर्क सक्रिय (लाइव्ह बॅकएंड)...",
+    dagBtnExecutedLive: "✓ लाइव्ह बॅकएंडद्वारे पाइपलाइन अंमलात आणली · पुन्हा चालवा",
+    dagBtnErrorRetry: "▶ लाइव्ह पाइपलाइन सिम्युलेशन चालवा",
+    dagBtnReasoningActiveOffline: "तर्क सक्रिय (स्थानिक सिम्युलेशन)...",
+    dagBtnExecutedOffline: "✓ पाइपलाइन अंमलात आणली (स्थानिक सिम्युलेशन) · पुन्हा चालवा",
+    dagTabTitle: "8-नोड सहयोगी बहु-एजंट DAG",
+    dagInteractiveCanvasBadge: "परस्परसंवादी तर्क कॅनव्हास",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL जिओफेन्सिंग, फ्लीट घनता आणि प्रवास ETA वर तर्क करणारी रिअल-टाइम बहु-एजंट अंमलबजावणी पाइपलाइन.",
+    backendCheckingStatus: "बॅकएंड तपासत आहे...",
+    dagZoomReset: "रीसेट",
+    dagRunSimulationBtn: "▶ लाइव्ह पाइपलाइन सिम्युलेशन चालवा",
+    dagClickToInspectHint: "कोणत्याही एजंट कार्डवर क्लिक करून त्याचे कच्चे टेलिमेट्री इनपुट, अंतर्गत अल्गोरिदम आणि JSON डेटा आउटपुट तपासा.",
+    dagOrchestratorLabel: "ऑर्केस्ट्रेटर: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "एजंट तपशील",
+    dagInspectorDefaultRole: "भूमिका वर्णन",
+    dagInspectorLatencyPlaceholder: "विलंब: 24ms",
+    dagInspectorJsonLabel: "लाइव्ह JSON पेलोड",
+    dagCloseInspector: "इन्स्पेक्टर बंद करा",
+    chatNewConversationMsg: "नवीन संभाषण सुरू झाले. ORCA मागील चॅट संदर्भ वापरणार नाही.",
+    chatYouLabel: "तुम्ही",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR आणि Open-Meteo वर 8 विशेष AI एजंट समन्वयित केले जात आहेत...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "बहु-एजंट सागरी सल्ला",
+    chatGroundedConfidenceTemplate: "{confidence}% आधारभूत विश्वास",
+    chatLangDetectedTooltip: "संदेशावरून भाषा ओळखली",
+    chatListenTts: "ऐका (TTS)",
+    chatNavicMssBtn: "NavIC MSS कोड",
+    chatMetricZone: "शिफारस केलेले क्षेत्र",
+    chatMetricEta: "लाइव्ह सागरी स्थिती ETA",
+    chatMetricVessels: "सक्रिय वेसल",
+    chatVesselsSuffix: "{count} वेसल",
+    chatMetricImbl: "IMBL क्लिअरन्स",
+    chatReasoningTraceSummaryTemplate: "बहु-एजंट तर्क ट्रेस पहा ({steps} पायऱ्या अंमलात आणल्या)",
+    chatNodeDagSuffixTemplate: "{count}-नोड DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT बॅकएंडने एक सल्ला तयार केला पण कोणताही मजकूर परत केला नाही.",
+    chatLiveAdvisoryLabel: "✓ लाइव्ह बहु-एजंट सल्ला",
+    chatGroundedEngineFallback: "आधारभूत इंजिन",
+    chatOceanSourceTierTemplate: "सागरी स्रोत स्तर: {tier} · क्लोरोफिल: {chlorophyll}",
+    chatCitationsTemplate: "उद्धरणे: {citations}",
+    chatOfflineBannerText: "ऑफलाइन सल्ला इंजिन — ORCA बॅकएंड पोहोचता येत नाही. खालील आकडेवारी एक सिम्युलेटेड उदाहरण अंदाज आहे, लाइव्ह टेलिमेट्री नाही.",
+    chatOfflineImblPlainText: "ऑफलाइन सल्ला (बॅकएंड पोहोचता येत नाही, सिम्युलेटेड अंदाज): पाक सामुद्रधुनी / मन्नारच्या आखाती भागातील वेसल सहसा भारत-श्रीलंका IMBL सीमेपासून काही सागरी मैलांच्या आत असतात. पश्चिम दिशा राखा आणि VHF ट्रान्सपॉन्डर चॅनेल 16 वर सक्रिय ठेवा. सीमेच्या प्रत्यक्ष मोजलेल्या अंतरासाठी ORCA बॅकएंडशी पुन्हा जोडा.",
+    chatOfflineImblHtmlHeading: "IMBL जिओफेन्सिंग सल्ला (सिम्युलेटेड ऑफलाइन अंदाज):",
+    chatOfflineImblHtmlBody1: "लाइव्ह बॅकएंड कनेक्शनशिवाय, अचूक वेसल-ते-सीमा अंतर मोजता येत नाही. पाक सामुद्रधुनी सेक्टर 4 जवळ सामान्य खबरदारी म्हणून, मंडपमच्या दिशेने पश्चिम दिशा राखा.",
+    chatOfflineImblHtmlBody2: "हा एक सामान्य ऑफलाइन सुरक्षा स्मरणपत्र आहे, मोजलेले जिओफेन्स रीडिंग नाही. प्रत्यक्ष अंतर-ते-IMBL गणनेसाठी ORCA बॅकएंडशी पुन्हा जोडा.",
+    chatOfflineImblStep1: "बॅकएंड पोहोचता येत नाही. स्थानिक कीवर्ड जुळणी वापरून प्रश्न IMBL_BOUNDARY म्हणून वर्गीकृत केला.",
+    chatOfflineImblStep2: "कोणतीही लाइव्ह जिओफेन्सिंग टेलिमेट्री उपलब्ध नाही -- फक्त सामान्य सीमा-सुरक्षा मार्गदर्शन परत करत आहे.",
+    chatOfflineDensityPlainText: "ऑफलाइन सल्ला (बॅकएंड पोहोचता येत नाही, सिम्युलेटेड अंदाज): बॅकएंड कनेक्शनशिवाय लाइव्ह वेसल संख्या मिळवता येत नाही. ऐतिहासिकदृष्ट्या, वेज बँक आणि कोची डीप ऑफशोअरमध्ये मध्यम मासेमारी क्रियाकलाप दिसतो. वेसल डेटासेटमधून प्रत्यक्ष फ्लीट-घनता रीडिंगसाठी ORCA बॅकएंडशी पुन्हा जोडा.",
+    chatOfflineDensityHtmlHeading: "फ्लीट घनता (ऑफलाइन — सिम्युलेटेड प्लेसहोल्डर):",
+    chatOfflineDensityHtmlBody: "फ्लीट आणि वाहतूक एजंटचा लाइव्ह वेसल डेटासेट सध्या पोहोचता येत नाही, त्यामुळे क्षेत्रातील अचूक वेसल संख्या अनुपलब्ध आहे.",
+    chatOfflineDensityListItem: "प्रत्यक्ष प्रति-क्षेत्र वेसल संख्या आणि गर्दीच्या निर्णयासाठी ORCA बॅकएंडशी पुन्हा जोडा.",
+    chatOfflineDensityStep1: "बॅकएंड पोहोचता येत नाही. स्थानिक कीवर्ड जुळणी वापरून प्रश्न FLEET_DENSITY म्हणून वर्गीकृत केला.",
+    chatOfflineDensityStep2: "कोणताही लाइव्ह फ्लीट डेटासेट उपलब्ध नाही -- खोटी आकडेवारी सादर करणे टाळण्यासाठी वेसल संख्या दाखवली नाही.",
+    chatOfflineGenericPlainTextTemplate: "ऑफलाइन सल्ला (बॅकएंड पोहोचता येत नाही): ORCA च्या बहु-एजंट बॅकएंडपर्यंत पोहोचता आले नाही, त्यामुळे हे उत्तर आधारभूत रीडिंगऐवजी एक सामान्य, लाइव्ह नसलेले प्लेसहोल्डर आहे. तुमच्या ब्राउझरचे स्वतःचे Open-Meteo विजेट सुमारे {liveWave}m ची लक्षणीय लाट उंची दाखवते, पण PFZ क्रमवारी, मार्ग अंतर, ETA आणि फ्लीट संख्या या सर्वांना बॅकएंडची गरज आहे आणि ते इथे दाखवलेले नाहीत. प्रत्यक्ष सल्ल्यासाठी ORCA बॅकएंडशी पुन्हा जोडा.",
+    chatOfflineGenericHtmlHeading: "ऑफलाइन प्लेसहोल्डर सल्ला",
+    chatOfflineGenericHtmlBody1Template: "ORCA चा बहु-एजंट बॅकएंड (सॅटेलाइट, हवामान, PFZ क्रमवारी, जिओफेन्सिंग, फ्लीट, मार्गनिश्चिती आणि न्यूरल सिंथेसिस) सध्या पोहोचता येत नाही. क्लायंट-साइडवर, या ब्राउझरने Open-Meteo वरून शेवटी <strong>{liveWave}m</strong> ची लाट उंची पाहिली, पण इतर प्रत्येक आकडेवारीसाठी बॅकएंड आवश्यक आहे.",
+    chatOfflineGenericHtmlBody2: "<strong>कोणतीही PFZ शिफारस, मार्ग, ETA किंवा फ्लीट संख्या दाखवलेली नाही</strong> कारण त्यांची गणना करण्याऐवजी ती रचावी लागेल. संपूर्ण आधारभूत सल्ल्यासाठी ORCA बॅकएंडशी पुन्हा जोडा.",
+    chatOfflineGenericStep1: "बॅकएंड पोहोचता येत नाही. कोणताही हेतू-विशिष्ट कीवर्ड जुळला नाही -- GENERAL_VOYAGE_SAFETY ऑफलाइन प्लेसहोल्डर परत करत आहे.",
+    chatOfflineGenericStep2Template: "फक्त क्लायंट-दृश्यमान आकडेवारी उपलब्ध: शेवटची ज्ञात Open-Meteo लाट उंची {liveWave}m (ब्राउझरद्वारे थेट मिळवलेली, बॅकएंडमार्गे नाही).",
+    chatTtsUnsupportedAlert: "तुमच्या ब्राउझरद्वारे स्पीच सिंथेसिस समर्थित नाही.",
+    chatTtsWelcomeFallback: "ORCA INSIGHT मध्ये आपले स्वागत आहे. सर्व सॅटेलाइट फीड आणि किनारी सागरशास्त्र प्रणाली सामान्य स्थितीत कार्यरत आहेत.",
+    chatStopAudio: "ऑडिओ थांबवा",
+    chatListenAudioAdvisory: "ऑडिओ सल्ला ऐका",
+    chatTabTitle: "AI निर्णय स्टुडिओ आणि बहु-एजंट चॅटबॉट",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR आणि किनारी जिओफेन्सिंगवर तर्क करणाऱ्या सहयोगी एजंट्सद्वारे चालवलेले",
+    chatNewConversationBtn: "नवीन संभाषण",
+    chatPromptPFZ: "कोची हार्बरपासून जवळचे उच्च-उत्पादन PFZ मासेमारी क्षेत्र, पकडण्याची शक्यता आणि प्रजातींसह शोधा.",
+    chatPromptSafety: "आजसाठी सी-व्हेंचर क्लिअरन्स स्कोअर, लक्षणीय लाट उंची आणि वारा धोका तपासा.",
+    chatPromptBorder: "भारत-श्रीलंका IMBL सीमेचे अंतर तपासा आणि 2 NM धोका क्षेत्रातील वेसलची यादी दाखवा.",
+    chatPromptDensity: "वेज बँक आणि कोची डीपमध्ये सध्याची वेसल संख्या आणि घनता वितरण काय आहे?",
+    chatPromptETA: "कोचीपासून PFZ-01 पर्यंतच्या प्रवास ETA ची गणना करा आणि पडताळा की राउंड-ट्रिप 18:30 च्या संध्याकाळपूर्वी सुरक्षितपणे परत येते का.",
+    chatConversationLabel: "संभाषण",
+    chatNeuralCoreActive: "ORCA INSIGHT न्यूरल कोअर सक्रिय",
+    chatAgentsReadyUptime: "8 एजंट तयार · 99.94% अपटाइम",
+    chatWelcomeMessage: "वणक्कम / नमस्ते! मी <strong>ORCA INSIGHT</strong> बहु-एजंट संश्लेषण प्रणाली आहे. तुम्ही सुरक्षित प्रवास क्लिअरन्स, भारताच्या किनाऱ्यावरील उच्च-उत्पादन PFZ क्षेत्रे, लाइव्ह वेसल वाहतूक, IMBL सीमा जवळीक आणि सागरी-स्थिती समायोजित ETA गणनांबद्दल बोलू किंवा टाइप करू शकता.",
+    chatMicHint: "तमिळ, हिंदी, मल्याळम किंवा इंग्रजीत बोलण्यासाठी खालील मायक्रोफोन आयकॉनवर क्लिक करा!",
+    chatVoiceInputTitle: "प्रश्न बोला (स्पीच-टू-टेक्स्ट)",
+    chatLiveReasoningTraceTitle: "लाइव्ह तर्क ट्रेस",
+    chatReasoningTraceEmptyHint: "8 सहयोगी एजंट्सपैकी प्रत्येक याद्वारे लाइव्ह कसा तर्क करतो हे पाहण्यासाठी डावीकडे एक प्रश्न विचारा.",
+    chatLiveTelemetryTitle: "लाइव्ह सागरी टेलिमेट्री",
+    chatCurrentSeaClearance: "सध्याचा समुद्र क्लिअरन्स:",
+    chatSignificantWaves: "लक्षणीय लाटा:",
+    chatSurfaceWind: "पृष्ठभाग वारा:",
+    chatActiveVessels: "सक्रिय वेसल:",
+    chatOpenDagVisualizerBtn: "संपूर्ण एजंट DAG व्हिज्युअलायझर उघडा ➔",
+    navicConnected: "NavIC रिसीव्हर: जोडलेले (L5/S-Band)",
+    navicDisconnected: "NavIC रिसीव्हर: डिस्कनेक्ट केलेले",
+    navicTrackMyPosition: "माझे स्थान ट्रॅक करा",
+    navicStopTracking: "ट्रॅकिंग थांबवा",
+    navicSimulateMovement: "वेसल हालचाल सिम्युलेट करा",
+    navicStopSimulation: "सिम्युलेशन थांबवा",
+    navicStatusTrackingOff: "ट्रॅकिंग बंद · कोणतेही स्थान विनंती केलेले नाही",
+    navicStatusGeoUnsupported: "या ब्राउझरद्वारे जिओलोकेशन समर्थित नाही. डेमोसाठी सिम्युलेटेड वेसल हालचाल वापरा.",
+    navicStatusRequestingPermission: "डिव्हाइस-स्थान परवानगीची विनंती केली जात आहे…",
+    navicStatusLiveTrackingTemplate: "लाइव्ह डिव्हाइस ट्रॅकिंग · अचूकता ±{accuracy}m · संग्रहित नाही",
+    navicStatusPermissionErrorTemplate: "स्थान परवानगी अनुपलब्ध ({error}). कोणतेही स्थान पाठवले गेले नाही.",
+    navicStatusBackendUnavailable: "बॅकएंड अनुपलब्ध — स्थानिक सिम्युलेशनमध्ये अचूक जिओफेन्स अंतराचे मूल्यांकन करता येत नाही.",
+    navicStatusSimStopped: "जिओफेन्स सिम्युलेशन थांबले",
+    navicStatusSimMovingTemplate: "सिम्युलेटेड वेसल हालचाल · बिंदू {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-अक्षर सॅटेलाइट आणीबाणी कोड कॉपी केला:\\n\\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) स्कायप्लॉट",
+    navicConstellationDesc: "7-सॅटेलाइट जिओस्टेशनरी / IGSO तारकासमूह",
+    navicConnectedShort: "जोडलेले (L5/S)",
+    navicTrackedSatellitesTitle: "ट्रॅक केलेले सॅटेलाइट (SNR dB-Hz)",
+    navicNmeaStreamTitle: "लाइव्ह NMEA-0183 हार्डवेअर स्ट्रीम ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "बॉड दर: 9600 bps · 1 Hz फीड",
+    navicDopPrecisionLabel: "DOP अचूकता",
+    navicDopValue: "HDOP 1.05 (उत्कृष्ट)",
+    navicDiffFixLabel: "डिफरेन्शियल फिक्स",
+    navicDiffFixValue: "NavIC DGPS सक्रिय",
+    navicBorderHwLabel: "सीमा अलर्ट हार्डवेअर",
+    navicBorderHwValue: "बझर सज्ज",
+    navicGeofenceTitle: "लाइव्ह स्थान जिओफेन्सिंग",
+    navicGeofenceDesc: "तुमच्या डिव्हाइसचे स्थान फक्त सत्रादरम्यान IMBL/MPA तपासणीसाठी वापरले जाते आणि ORCA द्वारे कधीही संग्रहित केले जात नाही.",
+    navicGeofenceInitialStatus: "ट्रॅकिंग बंद · 5 NM IMBL इशारा / MPA बफर इशारा",
+    safetyVerdictDescTemplate: "लाइव्ह Open-Meteo सागरी टेलिमेट्री तुमच्या निवडलेल्या हार्बरजवळ लक्षणीय लाट उंची {wave}m आणि पृष्ठभाग वारा {wind}kn दाखवते, ज्यामुळे {score}/100 चा गणना केलेला सुरक्षा स्कोअर मिळतो.",
+    safetyWindDefaultDirection: "पश्चिमी",
+    safetyBreezeSuffix: "{direction} वारा",
+    severityLow: "कमी",
+    severityModerate: "मध्यम",
+    severityHigh: "जास्त",
+    waveBandCalm: "शांत (< 0.5m)",
+    waveBandSlight: "सौम्य (0.5 - 1.25m)",
+    waveBandModerate: "मध्यम (1.25 - 2.5m)",
+    waveBandRough: "खवळलेला (> 2.5m)",
+    seaStateCalm: "शांत",
+    seaStateSlight: "सौम्य",
+    seaStateSlightModerate: "सौम्य ते मध्यम",
+    seaStateModerateRough: "मध्यम ते खवळलेला",
+    seaStateUnknown: "अज्ञात",
+    lightningBandSafe: "सुरक्षित वातावरणीय प्रोफाइल",
+    lightningBandElevated: "वाढलेला संवहन धोका",
+    lightningBandSevere: "गंभीर वादळ इशारा",
+    safetySyncLatencyLabel: "सिंक विलंब:",
+    safetyBatteryLabel: "बॅटरी:",
+    safetyLastPassLabel: "शेवटचा पास:",
+    safetyAltitudeLabel: "उंची:",
+    telemetryLiveOpenMeteoTemplate: "लाइव्ह OPEN-METEO टेलिमेट्री ({wave}m SWH)",
+    telemetryCachedArchive: "टेलिमेट्री सक्रिय (संग्रहित सॅटेलाइट आर्काइव्ह)",
+    backendOnlineStatus: "लाइव्ह FASTAPI बॅकएंड जोडलेले",
+    backendOfflineStatus: "बॅकएंड ऑफलाइन · स्थानिक सिम्युलेशन मोड",
+    aisLiveCountTemplate: "{count} लाइव्ह AIS वेसल{plural}",
+    aisNoLiveVessels: "सध्या कोणतेही लाइव्ह AIS वेसल नाहीत",
+    aisBlendedBannerTemplate: "सध्या लाइव्ह AIS कव्हरेज नसलेली बंदरे भरण्यासाठी {liveText} + {simCount} सिम्युलेटेड वेसल{plural} दाखवत आहोत.",
+    aisUnavailableDefault: "लाइव्ह AIS वेसल फीड अनुपलब्ध -- 0 वेसल दाखवत आहोत.",
+    aisNotConfigured: "या डिप्लॉयमेंटवर लाइव्ह AIS वेसल फीड कॉन्फिगर केलेले नाही.",
+    aisConnectedNotSending: "AIS पुरवठादाराशी (AISstream.io) जोडलेले आहे, पण ते सध्या वेसल डेटा पाठवत नाही — बहुधा पुरवठादार-बाजूचा अडथळा, स्थानिक दोष नाही.",
+    aisDisconnectedReconnecting: "AIS पुरवठादारापासून (AISstream.io) डिस्कनेक्ट केलेले; आपोआप पुन्हा जोडत आहे.",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> भारत–श्रीलंका IMBL पासून <strong>{dist} NM</strong> अंतरावर कार्यरत आहे{simTag}. स्वयंचलित इशारा पाठवला.",
+    imblAlertNoneTemplate: "सध्या {warnDist} NM IMBL इशारा अंतराच्या आत कोणतेही वेसल नाही. सर्वात जवळचे ट्रॅक केलेले वेसल: <strong>{dist} NM</strong> दूर.",
+    imblAlertNoData: "अद्याप कोणतीही वेसल टेलिमेट्री उपलब्ध नाही.",
+    simulatedSuffix: " (सिम्युलेटेड)",
+    notifUnavailableTitle: "ब्राउझर सूचना अनुपलब्ध",
+    notifUnavailableMsg: "हे टॅब उघडे असेपर्यंत इन-अॅप धोका बॅनर तरीही दाखवले जातील.",
+    notifNotEnabledTitle: "ब्राउझर सूचना सक्षम नाहीत",
+    notifNotEnabledMsg: "हे टॅब उघडे असेपर्यंत इन-अॅप धोका बॅनर सक्रिय राहतील.",
+    hazardHighWavesTitle: "उंच लाटा — स्थानिक सिम्युलेशन",
+    hazardHighWavesMsgTemplate: "{wave}m, 2.5m खबरदारी मर्यादेपेक्षा जास्त आहे. स्रोत: ब्राउझर Open-Meteo टेलिमेट्री.",
+    hazardHighWindTitle: "तीव्र वारा — स्थानिक सिम्युलेशन",
+    hazardHighWindMsgTemplate: "{wind} kn, 25 kn खबरदारी मर्यादेपेक्षा जास्त आहे. स्रोत: ब्राउझर Open-Meteo टेलिमेट्री.",
+    hazardLightningTitle: "वीज पडण्याचा धोका — स्थानिक सिम्युलेशन",
+    hazardLightningMsgTemplate: "वीज प्रॉक्सी {pct}% आहे. स्रोत: ब्राउझर Open-Meteo टेलिमेट्री.",
+    safetyOfficialClearanceLabel: "अधिकृत सागरी क्लिअरन्स",
+    safetyVerdictDescInitial: "सर्व सॅटेलाइट सागरशास्त्र निर्देशक (Oceansat-3 SSTM थर्मल फ्रंट्स, Sentinel-3 लाट अल्टिमेट्री) केरळ, कर्नाटक आणि तमिळनाडूच्या किनारी पाण्यात अनुकूल मासेमारी परिस्थितीची पुष्टी करतात.",
+    safetyIndexLabel: "सुरक्षा निर्देशांक",
+    satConstellationTitle: "ISRO आणि आंतरराष्ट्रीय सागरशास्त्र सॅटेलाइट तारकासमूह",
+    satStaticDataNote: "स्थिर संदर्भ डेटा (लाइव्ह टेलिमेट्री नाही)",
+    mapIndiaBoundaryPopup: "भारत — अधिकृत सीमा (Survey of India)",
+    mapPfzYieldSuffix: "{rating} उत्पादन ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "क्लोरोफिल:",
+    mapPfzDepthLabel: "खोली:",
+    mapPfzVesselsLabel: "वेसल:",
+    mapPfzActiveSuffix: "{count} सक्रिय",
+    mapPfzTargetSpeciesLabel: "लक्ष्य प्रजाती:",
+    mapPfzSimulateRouteBtn: "इथे मार्ग सिम्युलेट करा ➔",
+    mapImblPopupBodyTemplate: "कडक आंतरराष्ट्रीय सागरी सीमारेषा. इशारा बफर: {warn} NM. गंभीर जिओफेन्स: {danger} NM.",
+    mapImblPopupTreatyNote: "UNCLOS सागरी कराराअंतर्गत सीमा ओलांडणे प्रतिबंधित आहे.",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL बफर कॉरिडोर",
+    mapMpaRestrictedBadge: "प्रतिबंधित इको-रिझर्व्ह",
+    mapHarbourCoastSuffix: "{state} किनारा",
+    mapHarbourCapacityLabel: "क्षमता:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "इंधन स्टेशन:",
+    mapHarbourFuelAvailable: "उपलब्ध",
+    mapHarbourIceLabel: "बर्फ प्रकल्प:",
+    mapHarbourIceActive: "सक्रिय",
+    mapHarbourSetOriginBtn: "मूळ हार्बर म्हणून सेट करा",
+    mapVesselSimulatedBadge: "सिम्युलेटेड · इथे कोणतेही लाइव्ह AIS कव्हरेज नाही",
+    mapVesselSpeedLabel: "वेग:",
+    mapVesselHeadingLabel: "दिशा:",
+    mapVesselZoneLabel: "क्षेत्र:",
+    mapVesselImblDistLabel: "IMBL अंतर:",
+    mapVesselStatusLabel: "स्थिती:",
+    mapVesselFuelLabel: "इंधन:",
+    mapVesselFuelNA: "उपलब्ध नाही",
+    mapRoutePopupTitle: "फक्त-समुद्र A* मार्ग (जमीन + MPA टाळणे)",
+    mapRouteDistanceEtaTemplate: "अंतर: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} भोवती {pct}% वळसा",
+    mapRouteLandNoGoZones: "जमीन/निषिद्ध क्षेत्रे",
+    vesselStatusSafeFishing: "सुरक्षित मासेमारी",
+    vesselStatusBorderAlert: "सीमा इशारा",
+    vesselStatusBorderWarn: "सीमा सावधानता",
+    vesselStatusInTransit: "प्रवासात",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "सिम्युलेटेड -- या बंदराजवळ कोणतेही लाइव्ह AIS कव्हरेज नाही",
+    vesselLocateAction: "शोधा ➔",
+    fleetVesselCountSuffix: "{count} वेसल",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} लाइव्ह · {sim} सिम)",
+    mapActiveVesselsBreakdownTemplate: "{total} सक्रिय वेसल ({live} लाइव्ह · {sim} सिम्युलेटेड)",
+    mapActiveVesselsSimpleTemplate: "{total} सक्रिय वेसल",
+    mapTabTitle: "GIS कमांड नकाशा · भारतीय किनारी पाणी",
+    mapTabDesc: "रिअल-टाइम सॅटेलाइट PFZ, IMBL सीमा कॉरिडोर आणि AIS वेसल ट्रॅकसह परस्परसंवादी उच्च-कॉन्ट्रास्ट नॉटिकल नकाशा.",
+    layerPfzZones: "PFZ क्षेत्रे",
+    layerImblBuffer: "IMBL बफर",
+    layerEcoReserves: "इको रिझर्व्ह (MPA)",
+    layerHarbours: "हार्बर",
+    layerLiveVessels: "लाइव्ह वेसल",
+    layerDensityHeatmap: "घनता हीटमॅप",
+    layerIndiaBoundary: "भारत सीमा (Survey of India)",
+    routePlannerDesc: "MPA आणि सीमा धोके टाळणारा A*-शैली मार्ग",
+    routeVesselSpeedLabel: "वेसल वेग:",
+    fleetMonitorTitle: "फ्लीट मॉनिटर · लाइव्ह वेसल टेलिमेट्री",
+    fleetTotalActiveTitle: "एकूण सक्रिय वेसल",
+    fleetTotalActiveDesc: "सध्या AIS ट्रान्सपॉन्डर सिग्नल प्रसारित करणारे वेसल",
+    fleetZoneDistTitle: "प्रति क्षेत्र वेसल वितरण",
+    imblAlertCardTitle: "IMBL सीमा जवळीक इशारा",
+    fleetTableSubDesc: "AISstream.io वरून लाइव्ह AIS स्थिती, जिथे सध्या कोणतेही लाइव्ह रिसीव्हर कव्हरेज नाही तिथे स्पष्टपणे-टॅग केलेल्या सिम्युलेटेड फ्लीटसह (\"SIM\" बॅज पहा) भरलेली",
+    vesselSearchPlaceholder: "वेसलचे नाव किंवा ID शोधा...",
+    filterAllStatuses: "सर्व स्थिती",
+    filterSafeFishing: "सुरक्षित मासेमारी",
+    filterInTransit: "प्रवासात",
+    filterBorderAlert: "सीमा इशारा",
+    thVesselId: "वेसल ID",
+    thVesselName: "वेसलचे नाव",
+    thType: "प्रकार",
+    thCurrentZone: "सध्याचे क्षेत्र",
+    thSpeedHeading: "वेग / दिशा",
+    thImblDist: "IMBL अंतर",
+    thStatus: "स्थिती",
+    thAction: "कृती",
+    bulletinIssuedLabel: "जारी:",
+    bulletinRegionLabel: "प्रदेश:",
+    bulletinWavesLabel: "लाटा:",
+    bulletinWindsLabel: "वारे:",
+    bulletinSourceLabel: "स्रोत:",
+    bulletinListenBtn: "बुलेटिन ऐका",
+    bulletinsTabTitle: "अधिकृत सागरी आणि मत्स्यव्यवसाय बुलेटिन (ISRO - INCOIS)",
+    bulletinsTabDesc: "क्रमांकित सल्ला, चक्रीवादळ धोका इशारे, आणि आंतरराष्ट्रीय सीमा अनुपालन अलर्ट.",
+    bulletinNotifyToggleTitle: "फक्त हे टॅब/PWA उघडे असताना ब्राउझर अलर्ट मिळवा",
+    bulletinNotifyToggleLabel: "उघडे असताना सूचित करा",
+    bulletinFilterAll: "सर्व बुलेटिन",
+    bulletinFilterCritical: "गंभीर",
+    bulletinFilterWarning: "इशारे",
+    bulletinFilterAdvisory: "सल्ला",
+    bulletinsPushNote: "हे टॅब/PWA उघडे असतानाच धोका इशारे सक्रिय असतात. बंद-अॅप पुश सूचनांसाठी उत्पादन पुश-सबस्क्रिप्शन सेवा आवश्यक आहे आणि ती या प्रोटोटाइपमध्ये लागू केलेली नाही.",
+    sosModalTitle: "आणीबाणी संकट बीकन (SOS)",
+    sosInstructions: "आणीबाणी SOS सक्रिय केल्याने <strong>INSAT-3DR SAS&R</strong> द्वारे भारतीय तटरक्षक सागरी बचाव समन्वय केंद्राला (MRCC) एक आणीबाणी 406 MHz संकट सिग्नल प्रसारित केला जाईल.",
+    sosCurrentPositionLabel: "सध्याचे स्थान:",
+    sosVhfChannelLabel: "आणीबाणी VHF चॅनेल:",
+    sosMrccHelplineLabel: "MRCC हेल्पलाइन:",
+    sosConfirmBtn: "पुष्टी करा आणि संकट बीकन प्रसारित करा",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R बीकन ISRO आणि तटरक्षक MRCC कडे प्रसारित होत आहे",
+    sosDistressRelayedMsg: "संकट पॅकेट INSAT-3DR SAS&R रिसीव्हरद्वारे रिले केले. सागरी बचाव समन्वय केंद्राला (MRCC चेन्नई/मुंबई) VHF चॅनेल 16 वर सतर्क केले.",
+    sosGpsVesselIdTemplate: "GPS निर्देशांक: {coords} · वेसल ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO सहयोगी सागरी बुद्धिमत्ता · स्मार्ट इंडिया हॅकाथॉन 2026",
+    landingSubtitle: "एक सहयोगी सागरी-बुद्धिमत्ता प्लॅटफॉर्म, दोन कमांड डेक: मच्छिमाराचे दैनंदिन संधी कन्सोल, आणि संपूर्ण ISRO सॅटेलाइट, AIS आणि जिओफेन्सिंग इनसाइट सुइट.",
+    landingStripItem1: "Oceansat-3 SSTM थर्मल फ्रंट्स",
+    landingStripItem2: "INSAT-3DR सॅटेलाइट सागरशास्त्र",
+    landingStripItem3: "8-नोड सहयोगी एजंट DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS पूल",
+    landingStripItem5: "IMBL सीमा जिओफेन्सिंग इशारे",
+    landingStripItem6: "लाइव्ह AIS फ्लीट आणि GIS कमांड",
+    landingStripItem7: "सेल स्मार्टर बायर प्राइसिंग",
+    landingStripItem8: "406 MHz SOS संकट बीकन",
+    landingFishermanCardTitle: "ORCA फिशरमन",
+    landingFishermanCardDesc: "आजचा संधी स्कोअर, सेल स्मार्टर प्राइसिंग, ट्रिप-खर्च कॅल्क्युलेटर, आणि तुमच्या पकडीसाठी खरेदीदार लीड — बोटीसाठी तयार केलेले.",
+    landingFishermanCardCta: "फिशरमन कन्सोल उघडा",
+    landingFishermanCardTitleAttr: "फिशरमन कन्सोल उघडा",
+    landingInsightCardTitle: "ORCA इनसाइट",
+    landingInsightCardDesc: "संपूर्ण कमांड डेक: ISRO सॅटेलाइट सागरशास्त्र, GIS नकाशा, 8-नोड एजंट DAG, सेफ्टी बॅरोमीटर, फ्लीट मॉनिटर, आणि NavIC पूल.",
+    landingInsightCardCta: "इनसाइट कमांड डेक उघडा",
+    landingInsightCardTitleAttr: "इनसाइट कमांड डेक उघडा",
+    backToOverviewTitle: "आढाव्याकडे परत जा",
+    statSimulatedFleetLabel: "सिम्युलेटेड AIS फ्लीट",
+    statSatellitesActiveTemplate: "{count} सक्रिय",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} क्षेत्रे",
+    statPfzZonesListLabel: "वेज बँक, कोची, वेरावळ...",
+    statImblCorridorsCountTemplate: "{count} कॉरिडोर",
+    statImblBordersLabel: "भारत-श्रीलंका आणि पाक सीमा",
+    pillarDagTitle: "8-नोड सहयोगी एजंट DAG",
+    pillarDagDesc: "प्रश्नांना सॅटेलाइट, लाट धोका, जिओफेन्सिंग, वेसल गणना, ETA आणि न्यूरल सिंथेसिस पायऱ्यांमध्ये उप-सेकंद विलंबासह विभाजित करणारी बहु-एजंट रचना.",
+    pillarEtaTitle: "लाइव्ह सागरी-स्थिती ETA आणि संध्याकाळ सुरक्षा",
+    pillarEtaDesc: "लाट प्रतिकारानुसार समायोजित हायड्रोडायनामिक प्रवास गणना, सूर्यास्तानंतर अडकलेल्या मच्छिमारांना रोखण्यासाठी स्वयंचलित संध्याकाळपूर्वी-परतण्याच्या सुरक्षा इशाऱ्यांसह.",
+    pillarFleetTitle: "लाइव्ह फ्लीट घनता आणि IMBL इशारा",
+    pillarFleetDesc: "प्रति क्षेत्र रिअल-टाइम वेसल गणना, गर्दी धोका निर्देशक, आणि सागरी सीमांचे संरक्षण करणारे स्वयंचलित 5 NM/2 NM जिओफेन्स जवळीक इशारे.",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · निर्मित <strong class=\"text-cyan-400\">{teamName}</strong> द्वारे · स्मार्ट इंडिया हॅकाथॉन 2026 · समस्या विवरण 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b> मध्ये ऐकत आहे... आता बोला.",
+    sttUnsupportedTitle: "या ब्राउझरमध्ये स्पीच रेकग्निशन समर्थित नाही",
+    routeUnavailableLabel: " मार्ग अनुपलब्ध:",
+    routeUnavailableMsg: "ORCA बॅकएंड पोहोचता येत नाही, त्यामुळे कोणतेही मार्गबद्ध अंतर/ETA दाखवता येत नाही. स्थानिक फॉलबॅक मोडमध्ये चालत आहे.",
+    routeNoSafeRouteLabel: "✕ कोणताही सुरक्षित सागरी मार्ग सापडला नाही:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "या हार्बर/PFZ जोडीसाठी जमीन आणि सागरी संरक्षित क्षेत्रे टाळणारा मार्ग राउटरला सापडला नाही.",
+    routeSafeReturnLabel: "✓ सुरक्षित परतणे:",
+    routeSafeReturnTemplate: "अपेक्षित हार्बर आगमन {time} पर्यंत (18:30 IST संध्याकाळपूर्वी).",
+    routeReturnAfterDuskLabel: " संध्याकाळनंतर परतणे:",
+    routeReturnAfterDuskTemplate: "अपेक्षित परतणे {time} वाजता (18:30 IST सूर्यास्तापेक्षा जास्त). लवकर प्रस्थान किंवा रात्रीच्या नेव्हिगेशन बीकन तपासणीची शिफारस केली जाते."
   },
   kn: {
     appTitle: "ಓರ್ಕಾ ಇನ್‌ಸೈಟ್ (ORCA INSIGHT)",
@@ -1817,7 +3809,339 @@ const translations = {
     fmClaimBtn: "ಈ ಲೀಡ್ ಅನ್ನು ಕ್ಲೈಮ್ ಮಾಡಿ",
     fmClaimPromptText: "ಇದನ್ನು ಯಾರು ಪೂರೈಸುತ್ತಿದ್ದಾರೆ ಎಂದು ಖರೀದಿದಾರರಿಗೆ ತಿಳಿಯಲು ನಿಮ್ಮ ಹೆಸರು ಮತ್ತು ಫೋನ್/ಸಂಪರ್ಕವನ್ನು ನಮೂದಿಸಿ:",
     fmClaimSuccess: "ಕ್ಲೈಮ್ ಮಾಡಲಾಗಿದೆ — ಖರೀದಿದಾರರಿಗೆ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ನ ಹೊರಗೆ ತಿಳಿಸಲಾಗುತ್ತದೆ.",
-    fmClaimFailed: "ಸದ್ಯಕ್ಕೆ ಈ ಪಟ್ಟಿಯನ್ನು ಕ್ಲೈಮ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
+    fmClaimFailed: "ಸದ್ಯಕ್ಕೆ ಈ ಪಟ್ಟಿಯನ್ನು ಕ್ಲೈಮ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.",
+    dagAgentSupervisorName: "ಮಾಸ್ಟರ್ ಸೂಪರ್‌ವೈಸರ್ / DAG ಪ್ಲಾನರ್",
+    dagAgentSupervisorRole: "ಬಹು-ಮಾದರಿ ಸಾಗರ ಪ್ರಶ್ನೆಯನ್ನು ವಿಭಜಿಸುತ್ತದೆ, ಉಪಗ್ರಹ, ಅಪಾಯ ಮತ್ತು ಜಿಯೋಫೆನ್ಸ್ ಏಜೆಂಟ್‌ಗಳಿಗೆ ಉಪಕಾರ್ಯಗಳನ್ನು ಹಂಚುತ್ತದೆ.",
+    dagAgentSatelliteName: "ಉಪಗ್ರಹ ಸಾಗರಶಾಸ್ತ್ರ ಏಜೆಂಟ್",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (ಕ್ಲೋರೊಫಿಲ್-a) ಮತ್ತು SSTM (ಉಷ್ಣ ಮುಂಭಾಗಗಳು) ಜೊತೆಗೆ INSAT-3DR ಮೋಡದ ಚಿತ್ರಣವನ್ನೂ ಸ್ವೀಕರಿಸುತ್ತದೆ.",
+    dagAgentWeatherName: "ಹವಾಮಾನ ಮತ್ತು ಸಾಗರ ಅಪಾಯ ಏಜೆಂಟ್",
+    dagAgentWeatherRole: "ಗಮನಾರ್ಹ ಅಲೆ ಎತ್ತರ (SWH), ಗಾಳಿಯ ರಭಸ ವೆಕ್ಟರ್‌ಗಳು, ಮಿಂಚಿನ ಸಾಧ್ಯತೆಯನ್ನು ಮೌಲ್ಯಮಾಪನ ಮಾಡುತ್ತದೆ ಮತ್ತು ಸಮುದ್ರ-ಕ್ಲಿಯರೆನ್ಸ್ ಸ್ಕೋರ್ ಅನ್ನು ಸೃಷ್ಟಿಸುತ್ತದೆ.",
+    dagAgentPfzName: "ಸಾಗರ ವಿಶ್ಲೇಷಣೆ ಮತ್ತು PFZ ಏಜೆಂಟ್",
+    dagAgentPfzRole: "ಉಷ್ಣ-ಕ್ಲೋರೊಫಿಲ್ ಮುಂಭಾಗಗಳ ಛೇದನಗಳನ್ನು ಗುರುತಿಸುತ್ತದೆ, ಪೆಲಾಜಿಕ್ ಜೀವರಾಶಿ ಸಾಂದ್ರತೆಯನ್ನು ಲೆಕ್ಕಹಾಕುತ್ತದೆ ಮತ್ತು ಗುರಿ ಮೀನುಗಾರಿಕೆ ವಲಯಗಳನ್ನು ಶ್ರೇಣೀಕರಿಸುತ್ತದೆ.",
+    dagAgentGeofenceName: "ಜಿಯೋಫೆನ್ಸಿಂಗ್ ಮತ್ತು ಮಾರ್ಗ ಏಜೆಂಟ್",
+    dagAgentGeofenceRole: "ಅಂತಾರಾಷ್ಟ್ರೀಯ ಸಾಗರ ಗಡಿ ರೇಖೆಗಳನ್ನು (IMBL) ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡುತ್ತದೆ, ಸಾಗರ ಸಂರಕ್ಷಿತ ಪ್ರದೇಶಗಳನ್ನು ಬಫರ್ ಮಾಡುತ್ತದೆ ಮತ್ತು A* ಸುರಕ್ಷಿತ ವೇಪಾಯಿಂಟ್‌ಗಳನ್ನು ಲೆಕ್ಕಹಾಕುತ್ತದೆ.",
+    dagAgentFleetName: "ಫ್ಲೀಟ್ ಮತ್ತು ಸಂಚಾರ ಏಜೆಂಟ್ (ಹೊಸದು)",
+    dagAgentFleetRole: "AIS ಮತ್ತು ARGOS-4 ವೆಸೆಲ್ ಟ್ರಾನ್ಸ್‌ಪಾಂಡರ್‌ಗಳನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡುತ್ತದೆ, ಫ್ಲೀಟ್ ವಿತರಣೆಯನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡುತ್ತದೆ ಮತ್ತು ಜನದಟ್ಟಣೆ ಅಥವಾ ಗಡಿ ದಟ್ಟಣೆಯನ್ನು ಫ್ಲ್ಯಾಗ್ ಮಾಡುತ್ತದೆ.",
+    dagAgentEtaName: "ETA ಮತ್ತು ಪ್ರಯಾಣ ಸುರಕ್ಷತಾ ಏಜೆಂಟ್ (ಹೊಸದು)",
+    dagAgentEtaRole: "ನೈಜ-ಸಮಯದ ಅಲೆ ಪ್ರತಿರೋಧಕ್ಕೆ ಅನುಗುಣವಾಗಿ ಪ್ರಯಾಣದ ಅವಧಿಯನ್ನು ಲೆಕ್ಕಹಾಕುತ್ತದೆ ಮತ್ತು ಸಂಜೆಗೂ ಮುನ್ನ ಹಿಂತಿರುಗುವ ಸುರಕ್ಷತಾ ಕಿಟಕಿಯನ್ನು ಮೌಲ್ಯಮಾಪನ ಮಾಡುತ್ತದೆ.",
+    dagAgentSynthesisName: "ನ್ಯೂರಲ್ ಸಿಂಥೆಸಿಸ್ ಏಜೆಂಟ್ (ಅಂಕಿಅಂಶ-ಆಧಾರಿತ)",
+    dagAgentSynthesisRole: "ಬಹು-ಏಜೆಂಟ್ ಟೆಲಿಮೆಟ್ರಿಯನ್ನು ಉಲ್ಲೇಖ ಟ್ಯಾಗ್‌ಗಳು ಮತ್ತು TTS ಜೊತೆಗೆ ಅಧಿಕೃತ, ಆಧಾರಿತ ನೈಸರ್ಗಿಕ-ಭಾಷಾ ಸಲಹೆಯಾಗಿ ಒಟ್ಟುಗೂಡಿಸುತ್ತದೆ -- ಸಂಪೂರ್ಣವಾಗಿ ನಿಯಮ-ಆಧಾರಿತ, ಈ ಸೈಟ್‌ನ ಸ್ವಂತ ಲೈವ್ ಟೆಲಿಮೆಟ್ರಿ ಮತ್ತು ಅದರ ಸ್ವಂತ ಸಂಚಿತ ಅಂಕಿಅಂಶ ಲೆಡ್ಜರ್ ಮೇಲೆ ತರ್ಕಿಸುತ್ತದೆ. ಯಾವುದೇ ಬಾಹ್ಯ AI/LLM API ಬಳಸಲಾಗಿಲ್ಲ.",
+    dagStatusIdle: "ನಿಷ್ಕ್ರಿಯ",
+    dagInspectLink: "ಪರಿಶೀಲಿಸಿ ➔",
+    dagInspectorLatencyTemplate: "ಎಕ್ಸಿಕ್ಯೂಶನ್ ಲೇಟೆನ್ಸಿ: {latency} · ಉಪಕಾರ್ಯಗಳು ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+    dagStatusQueued: "ಸಾಲಿನಲ್ಲಿ",
+    dagStatusExecuting: "ಕಾರ್ಯಗತಗೊಳ್ಳುತ್ತಿದೆ...",
+    dagStatusCompleted: "ಪೂರ್ಣಗೊಂಡಿದೆ",
+    dagStatusSkipped: "ಆಹ್ವಾನಿಸಲಾಗಿಲ್ಲ — ಉದ್ದೇಶಕ್ಕೆ ಇದು ಅಗತ್ಯವಿರಲಿಲ್ಲ",
+    dagBtnReasoningActiveLive: "ತರ್ಕ ಸಕ್ರಿಯ (ಲೈವ್ ಬ್ಯಾಕೆಂಡ್)...",
+    dagBtnExecutedLive: "✓ ಲೈವ್ ಬ್ಯಾಕೆಂಡ್ ಮೂಲಕ ಪೈಪ್‌ಲೈನ್ ಕಾರ್ಯಗತಗೊಳಿಸಲಾಗಿದೆ · ಮತ್ತೆ ಚಲಾಯಿಸಿ",
+    dagBtnErrorRetry: "▶ ಲೈವ್ ಪೈಪ್‌ಲೈನ್ ಸಿಮ್ಯುಲೇಶನ್ ಚಲಾಯಿಸಿ",
+    dagBtnReasoningActiveOffline: "ತರ್ಕ ಸಕ್ರಿಯ (ಸ್ಥಳೀಯ ಸಿಮ್ಯುಲೇಶನ್)...",
+    dagBtnExecutedOffline: "✓ ಪೈಪ್‌ಲೈನ್ ಕಾರ್ಯಗತಗೊಳಿಸಲಾಗಿದೆ (ಸ್ಥಳೀಯ ಸಿಮ್ಯುಲೇಶನ್) · ಮತ್ತೆ ಚಲಾಯಿಸಿ",
+    dagTabTitle: "8-ನೋಡ್ ಸಹಯೋಗಿ ಬಹು-ಏಜೆಂಟ್ DAG",
+    dagInteractiveCanvasBadge: "ಸಂವಾದಾತ್ಮಕ ತರ್ಕ ಕ್ಯಾನ್ವಾಸ್",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL ಜಿಯೋಫೆನ್ಸಿಂಗ್, ಫ್ಲೀಟ್ ಸಾಂದ್ರತೆ ಮತ್ತು ಪ್ರಯಾಣ ETA ಕುರಿತು ತರ್ಕಿಸುವ ನೈಜ-ಸಮಯದ ಬಹು-ಏಜೆಂಟ್ ಕಾರ್ಯಗತ ಪೈಪ್‌ಲೈನ್.",
+    backendCheckingStatus: "ಬ್ಯಾಕೆಂಡ್ ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...",
+    dagZoomReset: "ಮರುಹೊಂದಿಸಿ",
+    dagRunSimulationBtn: "▶ ಲೈವ್ ಪೈಪ್‌ಲೈನ್ ಸಿಮ್ಯುಲೇಶನ್ ಚಲಾಯಿಸಿ",
+    dagClickToInspectHint: "ಯಾವುದೇ ಏಜೆಂಟ್ ಕಾರ್ಡ್ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ ಅದರ ಕಚ್ಚಾ ಟೆಲಿಮೆಟ್ರಿ ಇನ್‌ಪುಟ್, ಆಂತರಿಕ ಅಲ್ಗಾರಿದಮ್‌ಗಳು ಮತ್ತು JSON ಡೇಟಾ ಔಟ್‌ಪುಟ್ ಅನ್ನು ಪರಿಶೀಲಿಸಿ.",
+    dagOrchestratorLabel: "ಆರ್ಕೆಸ್ಟ್ರೇಟರ್: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "ಏಜೆಂಟ್ ವಿವರಗಳು",
+    dagInspectorDefaultRole: "ಪಾತ್ರ ವಿವರಣೆ",
+    dagInspectorLatencyPlaceholder: "ಲೇಟೆನ್ಸಿ: 24ms",
+    dagInspectorJsonLabel: "ಲೈವ್ JSON ಪೇಲೋಡ್",
+    dagCloseInspector: "ಇನ್ಸ್‌ಪೆಕ್ಟರ್ ಮುಚ್ಚಿ",
+    chatNewConversationMsg: "ಹೊಸ ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭವಾಗಿದೆ. ORCA ಹಿಂದಿನ ಚಾಟ್ ಸಂದರ್ಭವನ್ನು ಬಳಸುವುದಿಲ್ಲ.",
+    chatYouLabel: "ನೀವು",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR ಮತ್ತು Open-Meteo ಮೂಲಕ 8 ವಿಶೇಷ AI ಏಜೆಂಟ್‌ಗಳನ್ನು ಸಂಘಟಿಸಲಾಗುತ್ತಿದೆ...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "ಬಹು-ಏಜೆಂಟ್ ಸಾಗರ ಸಲಹೆ",
+    chatGroundedConfidenceTemplate: "{confidence}% ಆಧಾರಿತ ವಿಶ್ವಾಸ",
+    chatLangDetectedTooltip: "ಸಂದೇಶದಿಂದ ಭಾಷೆ ಪತ್ತೆಯಾಗಿದೆ",
+    chatListenTts: "ಆಲಿಸಿ (TTS)",
+    chatNavicMssBtn: "NavIC MSS ಕೋಡ್",
+    chatMetricZone: "ಶಿಫಾರಸು ಮಾಡಿದ ವಲಯ",
+    chatMetricEta: "ಲೈವ್ ಸಾಗರ ಸ್ಥಿತಿ ETA",
+    chatMetricVessels: "ಸಕ್ರಿಯ ವೆಸೆಲ್‌ಗಳು",
+    chatVesselsSuffix: "{count} ವೆಸೆಲ್‌ಗಳು",
+    chatMetricImbl: "IMBL ಕ್ಲಿಯರೆನ್ಸ್",
+    chatReasoningTraceSummaryTemplate: "ಬಹು-ಏಜೆಂಟ್ ತರ್ಕ ಜಾಡು ನೋಡಿ ({steps} ಹಂತಗಳು ಕಾರ್ಯಗತಗೊಂಡಿವೆ)",
+    chatNodeDagSuffixTemplate: "{count}-ನೋಡ್ DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT ಬ್ಯಾಕೆಂಡ್ ಒಂದು ಸಲಹೆಯನ್ನು ಸೃಷ್ಟಿಸಿತು ಆದರೆ ಯಾವುದೇ ಪಠ್ಯವನ್ನು ಹಿಂತಿರುಗಿಸಲಿಲ್ಲ.",
+    chatLiveAdvisoryLabel: "✓ ಲೈವ್ ಬಹು-ಏಜೆಂಟ್ ಸಲಹೆ",
+    chatGroundedEngineFallback: "ಆಧಾರಿತ ಎಂಜಿನ್",
+    chatOceanSourceTierTemplate: "ಸಾಗರ ಮೂಲ ಶ್ರೇಣಿ: {tier} · ಕ್ಲೋರೊಫಿಲ್: {chlorophyll}",
+    chatCitationsTemplate: "ಉಲ್ಲೇಖಗಳು: {citations}",
+    chatOfflineBannerText: "ಆಫ್‌ಲೈನ್ ಸಲಹಾ ಎಂಜಿನ್ — ORCA ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ. ಕೆಳಗಿನ ಅಂಕಿಅಂಶಗಳು ಸಿಮ್ಯುಲೇಟೆಡ್ ಉದಾಹರಣಾ ಅಂದಾಜು, ಲೈವ್ ಟೆಲಿಮೆಟ್ರಿ ಅಲ್ಲ.",
+    chatOfflineImblPlainText: "ಆಫ್‌ಲೈನ್ ಸಲಹೆ (ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ, ಸಿಮ್ಯುಲೇಟೆಡ್ ಅಂದಾಜು): ಪಾಕ್ ಜಲಸಂಧಿ / ಮನ್ನಾರ್ ಕೊಲ್ಲಿ ಪ್ರದೇಶದ ವೆಸೆಲ್‌ಗಳು ಸಾಮಾನ್ಯವಾಗಿ ಭಾರತ-ಶ್ರೀಲಂಕಾ IMBL ಗಡಿಯಿಂದ ಕೆಲವು ನಾಟಿಕಲ್ ಮೈಲುಗಳ ಒಳಗೆ ಇರುತ್ತವೆ. ಪಶ್ಚಿಮ ದಿಕ್ಕನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ ಮತ್ತು VHF ಟ್ರಾನ್ಸ್‌ಪಾಂಡರ್‌ಗಳನ್ನು ಚಾನೆಲ್ 16 ರಲ್ಲಿ ಸಕ್ರಿಯವಾಗಿರಿಸಿ. ಗಡಿಗೆ ನಿಜವಾದ ಅಳತೆ ಮಾಡಿದ ದೂರಕ್ಕಾಗಿ ORCA ಬ್ಯಾಕೆಂಡ್‌ಗೆ ಮರುಸಂಪರ್ಕಿಸಿ.",
+    chatOfflineImblHtmlHeading: "IMBL ಜಿಯೋಫೆನ್ಸಿಂಗ್ ಸಲಹೆ (ಸಿಮ್ಯುಲೇಟೆಡ್ ಆಫ್‌ಲೈನ್ ಅಂದಾಜು):",
+    chatOfflineImblHtmlBody1: "ಲೈವ್ ಬ್ಯಾಕೆಂಡ್ ಸಂಪರ್ಕವಿಲ್ಲದೆ, ನಿಖರವಾದ ವೆಸೆಲ್-ಗಡಿ ದೂರಗಳನ್ನು ಅಳೆಯಲಾಗುವುದಿಲ್ಲ. ಪಾಕ್ ಜಲಸಂಧಿ ಸೆಕ್ಟರ್ 4 ರ ಬಳಿ ಸಾಮಾನ್ಯ ಮುನ್ನೆಚ್ಚರಿಕೆಯಾಗಿ, ಮಂಡಪಂ ಕಡೆಗೆ ಪಶ್ಚಿಮ ದಿಕ್ಕನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಿ.",
+    chatOfflineImblHtmlBody2: "ಇದು ಸಾಮಾನ್ಯ ಆಫ್‌ಲೈನ್ ಸುರಕ್ಷತಾ ಜ್ಞಾಪನೆ, ಅಳತೆ ಮಾಡಿದ ಜಿಯೋಫೆನ್ಸ್ ವಾಚನ ಅಲ್ಲ. ನಿಜವಾದ ದೂರ-ಗೆ-IMBL ಲೆಕ್ಕಾಚಾರಕ್ಕಾಗಿ ORCA ಬ್ಯಾಕೆಂಡ್‌ಗೆ ಮರುಸಂಪರ್ಕಿಸಿ.",
+    chatOfflineImblStep1: "ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ. ಸ್ಥಳೀಯ ಕೀವರ್ಡ್ ಹೊಂದಾಣಿಕೆಯನ್ನು ಬಳಸಿ ಪ್ರಶ್ನೆಯನ್ನು IMBL_BOUNDARY ಎಂದು ವರ್ಗೀಕರಿಸಲಾಗಿದೆ.",
+    chatOfflineImblStep2: "ಯಾವುದೇ ಲೈವ್ ಜಿಯೋಫೆನ್ಸಿಂಗ್ ಟೆಲಿಮೆಟ್ರಿ ಲಭ್ಯವಿಲ್ಲ -- ಸಾಮಾನ್ಯ ಗಡಿ-ಸುರಕ್ಷತಾ ಮಾರ್ಗದರ್ಶನವನ್ನು ಮಾತ್ರ ಹಿಂತಿರುಗಿಸುತ್ತಿದೆ.",
+    chatOfflineDensityPlainText: "ಆಫ್‌ಲೈನ್ ಸಲಹೆ (ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ, ಸಿಮ್ಯುಲೇಟೆಡ್ ಅಂದಾಜು): ಬ್ಯಾಕೆಂಡ್ ಸಂಪರ್ಕವಿಲ್ಲದೆ ಲೈವ್ ವೆಸೆಲ್ ಎಣಿಕೆಗಳನ್ನು ಪಡೆಯಲಾಗುವುದಿಲ್ಲ. ಐತಿಹಾಸಿಕವಾಗಿ, ವೆಜ್ ಬ್ಯಾಂಕ್ ಮತ್ತು ಕೊಚ್ಚಿ ಡೀಪ್ ಆಫ್‌ಶೋರ್‌ನಲ್ಲಿ ಮಧ್ಯಮ ಮೀನುಗಾರಿಕೆ ಚಟುವಟಿಕೆ ಕಂಡುಬರುತ್ತದೆ. ವೆಸೆಲ್ ಡೇಟಾಸೆಟ್‌ನಿಂದ ನಿಜವಾದ ಫ್ಲೀಟ್-ಸಾಂದ್ರತೆ ವಾಚನಕ್ಕಾಗಿ ORCA ಬ್ಯಾಕೆಂಡ್‌ಗೆ ಮರುಸಂಪರ್ಕಿಸಿ.",
+    chatOfflineDensityHtmlHeading: "ಫ್ಲೀಟ್ ಸಾಂದ್ರತೆ (ಆಫ್‌ಲೈನ್ — ಸಿಮ್ಯುಲೇಟೆಡ್ ಪ್ಲೇಸ್‌ಹೋಲ್ಡರ್):",
+    chatOfflineDensityHtmlBody: "ಫ್ಲೀಟ್ ಮತ್ತು ಸಂಚಾರ ಏಜೆಂಟ್‌ನ ಲೈವ್ ವೆಸೆಲ್ ಡೇಟಾಸೆಟ್ ಸದ್ಯಕ್ಕೆ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ, ಆದ್ದರಿಂದ ವಲಯದೊಳಗಿನ ನಿಖರ ವೆಸೆಲ್ ಎಣಿಕೆ ಲಭ್ಯವಿಲ್ಲ.",
+    chatOfflineDensityListItem: "ನಿಜವಾದ ಪ್ರತಿ-ವಲಯ ವೆಸೆಲ್ ಎಣಿಕೆ ಮತ್ತು ಜನದಟ್ಟಣೆ ತೀರ್ಪಿಗಾಗಿ ORCA ಬ್ಯಾಕೆಂಡ್‌ಗೆ ಮರುಸಂಪರ್ಕಿಸಿ.",
+    chatOfflineDensityStep1: "ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ. ಸ್ಥಳೀಯ ಕೀವರ್ಡ್ ಹೊಂದಾಣಿಕೆಯನ್ನು ಬಳಸಿ ಪ್ರಶ್ನೆಯನ್ನು FLEET_DENSITY ಎಂದು ವರ್ಗೀಕರಿಸಲಾಗಿದೆ.",
+    chatOfflineDensityStep2: "ಯಾವುದೇ ಲೈವ್ ಫ್ಲೀಟ್ ಡೇಟಾಸೆಟ್ ಲಭ್ಯವಿಲ್ಲ -- ಸುಳ್ಳು ಅಂಕಿಅಂಶ ಪ್ರಸ್ತುತಪಡಿಸುವುದನ್ನು ತಪ್ಪಿಸಲು ವೆಸೆಲ್ ಎಣಿಕೆ ತೋರಿಸಲಾಗಿಲ್ಲ.",
+    chatOfflineGenericPlainTextTemplate: "ಆಫ್‌ಲೈನ್ ಸಲಹೆ (ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ): ORCA ಯ ಬಹು-ಏಜೆಂಟ್ ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗಲಿಲ್ಲ, ಆದ್ದರಿಂದ ಈ ಉತ್ತರ ಆಧಾರಿತ ವಾಚನದ ಬದಲು ಸಾಮಾನ್ಯ, ಲೈವ್ ಅಲ್ಲದ ಪ್ಲೇಸ್‌ಹೋಲ್ಡರ್ ಆಗಿದೆ. ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನ ಸ್ವಂತ Open-Meteo ವಿಜೆಟ್ ಸುಮಾರು {liveWave}m ಗಮನಾರ್ಹ ಅಲೆ ಎತ್ತರವನ್ನು ತೋರಿಸುತ್ತದೆ, ಆದರೆ PFZ ಶ್ರೇಣೀಕರಣ, ಮಾರ್ಗ ದೂರ, ETA ಮತ್ತು ಫ್ಲೀಟ್ ಎಣಿಕೆಗಳಿಗೆಲ್ಲಾ ಬ್ಯಾಕೆಂಡ್ ಅಗತ್ಯವಿದೆ ಮತ್ತು ಅವು ಇಲ್ಲಿ ತೋರಿಸಲಾಗಿಲ್ಲ. ನಿಜವಾದ ಸಲಹೆಗಾಗಿ ORCA ಬ್ಯಾಕೆಂಡ್‌ಗೆ ಮರುಸಂಪರ್ಕಿಸಿ.",
+    chatOfflineGenericHtmlHeading: "ಆಫ್‌ಲೈನ್ ಪ್ಲೇಸ್‌ಹೋಲ್ಡರ್ ಸಲಹೆ",
+    chatOfflineGenericHtmlBody1Template: "ORCA ಯ ಬಹು-ಏಜೆಂಟ್ ಬ್ಯಾಕೆಂಡ್ (ಉಪಗ್ರಹ, ಹವಾಮಾನ, PFZ ಶ್ರೇಣೀಕರಣ, ಜಿಯೋಫೆನ್ಸಿಂಗ್, ಫ್ಲೀಟ್, ರೂಟಿಂಗ್, ಮತ್ತು ನ್ಯೂರಲ್ ಸಿಂಥೆಸಿಸ್) ಪ್ರಸ್ತುತ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ. ಕ್ಲೈಂಟ್-ಸೈಡ್‌ನಲ್ಲಿ, ಈ ಬ್ರೌಸರ್ Open-Meteo ಇಂದ ಕೊನೆಯ ಬಾರಿಗೆ <strong>{liveWave}m</strong> ಅಲೆ ಎತ್ತರವನ್ನು ಕಂಡಿತು, ಆದರೆ ಇತರ ಪ್ರತಿಯೊಂದು ಅಂಕಿಅಂಶಕ್ಕೂ ಬ್ಯಾಕೆಂಡ್ ಅಗತ್ಯವಿದೆ.",
+    chatOfflineGenericHtmlBody2: "<strong>ಯಾವುದೇ PFZ ಶಿಫಾರಸು, ಮಾರ್ಗ, ETA ಅಥವಾ ಫ್ಲೀಟ್ ಎಣಿಕೆ ತೋರಿಸಲಾಗಿಲ್ಲ</strong> ಏಕೆಂದರೆ ಅವುಗಳನ್ನು ಲೆಕ್ಕಹಾಕುವ ಬದಲು ಕಲ್ಪಿಸಬೇಕಾಗುತ್ತದೆ. ಸಂಪೂರ್ಣ ಆಧಾರಿತ ಸಲಹೆಗಾಗಿ ORCA ಬ್ಯಾಕೆಂಡ್‌ಗೆ ಮರುಸಂಪರ್ಕಿಸಿ.",
+    chatOfflineGenericStep1: "ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ. ಯಾವುದೇ ಉದ್ದೇಶ-ನಿರ್ದಿಷ್ಟ ಕೀವರ್ಡ್ ಹೊಂದಾಣಿಕೆಯಾಗಲಿಲ್ಲ -- GENERAL_VOYAGE_SAFETY ಆಫ್‌ಲೈನ್ ಪ್ಲೇಸ್‌ಹೋಲ್ಡರ್ ಹಿಂತಿರುಗಿಸುತ್ತಿದೆ.",
+    chatOfflineGenericStep2Template: "ಕ್ಲೈಂಟ್-ಗೋಚರ ಅಂಕಿಅಂಶ ಮಾತ್ರ ಲಭ್ಯವಿದೆ: ಕೊನೆಯ ತಿಳಿದಿರುವ Open-Meteo ಅಲೆ ಎತ್ತರ {liveWave}m (ಬ್ರೌಸರ್‌ನಿಂದ ನೇರವಾಗಿ ಪಡೆಯಲಾಗಿದೆ, ಬ್ಯಾಕೆಂಡ್ ಮೂಲಕ ಅಲ್ಲ).",
+    chatTtsUnsupportedAlert: "ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಿಂದ ಸ್ಪೀಚ್ ಸಿಂಥೆಸಿಸ್ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.",
+    chatTtsWelcomeFallback: "ORCA INSIGHT ಗೆ ಸುಸ್ವಾಗತ. ಎಲ್ಲಾ ಉಪಗ್ರಹ ಫೀಡ್‌ಗಳು ಮತ್ತು ಕರಾವಳಿ ಸಾಗರಶಾಸ್ತ್ರ ವ್ಯವಸ್ಥೆಗಳು ಸಾಮಾನ್ಯ ಸ್ಥಿತಿಯಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿವೆ.",
+    chatStopAudio: "ಆಡಿಯೋ ನಿಲ್ಲಿಸಿ",
+    chatListenAudioAdvisory: "ಆಡಿಯೋ ಸಲಹೆ ಆಲಿಸಿ",
+    chatTabTitle: "AI ನಿರ್ಧಾರ ಸ್ಟುಡಿಯೋ ಮತ್ತು ಬಹು-ಏಜೆಂಟ್ ಚಾಟ್‌ಬಾಟ್",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR ಮತ್ತು ಕರಾವಳಿ ಜಿಯೋಫೆನ್ಸಿಂಗ್ ಕುರಿತು ತರ್ಕಿಸುವ ಸಹಯೋಗಿ ಏಜೆಂಟ್‌ಗಳಿಂದ ಚಾಲಿತ",
+    chatNewConversationBtn: "ಹೊಸ ಸಂಭಾಷಣೆ",
+    chatPromptPFZ: "ಕೊಚ್ಚಿ ಹಾರ್ಬರ್‌ನಿಂದ ಹತ್ತಿರದ ಅಧಿಕ-ಇಳುವರಿ PFZ ಮೀನುಗಾರಿಕೆ ವಲಯವನ್ನು ಹಿಡಿಯುವ ಸಾಧ್ಯತೆ ಮತ್ತು ಜಾತಿಗಳೊಂದಿಗೆ ಹುಡುಕಿ.",
+    chatPromptSafety: "ಇಂದಿಗಾಗಿ ಸಮುದ್ರ-ಪ್ರಯಾಣ ಕ್ಲಿಯರೆನ್ಸ್ ಸ್ಕೋರ್, ಗಮನಾರ್ಹ ಅಲೆ ಎತ್ತರ ಮತ್ತು ಗಾಳಿ ಅಪಾಯವನ್ನು ಪರಿಶೀಲಿಸಿ.",
+    chatPromptBorder: "ಭಾರತ-ಶ್ರೀಲಂಕಾ IMBL ಗಡಿಗೆ ದೂರವನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು 2 NM ಅಪಾಯ ವಲಯದಲ್ಲಿನ ವೆಸೆಲ್‌ಗಳ ಪಟ್ಟಿಯನ್ನು ನೀಡಿ.",
+    chatPromptDensity: "ವೆಜ್ ಬ್ಯಾಂಕ್ ಮತ್ತು ಕೊಚ್ಚಿ ಡೀಪ್‌ನಾದ್ಯಂತ ಪ್ರಸ್ತುತ ವೆಸೆಲ್ ಎಣಿಕೆ ಮತ್ತು ಸಾಂದ್ರತೆ ವಿತರಣೆ ಏನು?",
+    chatPromptETA: "ಕೊಚ್ಚಿಯಿಂದ PFZ-01 ಗೆ ಪ್ರಯಾಣ ETA ಅನ್ನು ಲೆಕ್ಕಹಾಕಿ ಮತ್ತು ರೌಂಡ್-ಟ್ರಿಪ್ 18:30 ಸಂಜೆಗೆ ಮುನ್ನ ಸುರಕ್ಷಿತವಾಗಿ ಹಿಂತಿರುಗುತ್ತದೆಯೇ ಎಂದು ಪರಿಶೀಲಿಸಿ.",
+    chatConversationLabel: "ಸಂಭಾಷಣೆ",
+    chatNeuralCoreActive: "ORCA INSIGHT ನ್ಯೂರಲ್ ಕೋರ್ ಸಕ್ರಿಯ",
+    chatAgentsReadyUptime: "8 ಏಜೆಂಟ್‌ಗಳು ಸಿದ್ಧ · 99.94% ಅಪ್‌ಟೈಮ್",
+    chatWelcomeMessage: "ವಣಕ್ಕಂ / ನಮಸ್ತೆ! ನಾನು <strong>ORCA INSIGHT</strong> ಬಹು-ಏಜೆಂಟ್ ಸಂಶ್ಲೇಷಣಾ ವ್ಯವಸ್ಥೆ. ಸುರಕ್ಷಿತ ಪ್ರಯಾಣ ಕ್ಲಿಯರೆನ್ಸ್, ಭಾರತದ ಕರಾವಳಿಯುದ್ದಕ್ಕೂ ಅಧಿಕ-ಇಳುವರಿ PFZ ವಲಯಗಳು, ಲೈವ್ ವೆಸೆಲ್ ಸಂಚಾರ, IMBL ಗಡಿ ಸಾಮೀಪ್ಯ ಮತ್ತು ಸಮುದ್ರ-ಸ್ಥಿತಿ ಹೊಂದಾಣಿಕೆಯ ETA ಲೆಕ್ಕಾಚಾರಗಳ ಬಗ್ಗೆ ನೀವು ಮಾತನಾಡಬಹುದು ಅಥವಾ ಟೈಪ್ ಮಾಡಬಹುದು.",
+    chatMicHint: "ತಮಿಳು, ಹಿಂದಿ, ಮಲಯಾಳಂ ಅಥವಾ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಮಾತನಾಡಲು ಕೆಳಗಿನ ಮೈಕ್ರೊಫೋನ್ ಐಕಾನ್ ಕ್ಲಿಕ್ ಮಾಡಿ!",
+    chatVoiceInputTitle: "ಪ್ರಶ್ನೆ ಹೇಳಿ (ಸ್ಪೀಚ್-ಟು-ಟೆಕ್ಸ್ಟ್)",
+    chatLiveReasoningTraceTitle: "ಲೈವ್ ತರ್ಕ ಜಾಡು",
+    chatReasoningTraceEmptyHint: "8 ಸಹಯೋಗಿ ಏಜೆಂಟ್‌ಗಳಲ್ಲಿ ಪ್ರತಿಯೊಂದೂ ಇದರ ಮೂಲಕ ಲೈವ್ ಆಗಿ ಹೇಗೆ ತರ್ಕಿಸುತ್ತದೆ ಎಂದು ನೋಡಲು ಎಡಭಾಗದಲ್ಲಿ ಪ್ರಶ್ನೆ ಕೇಳಿ.",
+    chatLiveTelemetryTitle: "ಲೈವ್ ಸಾಗರ ಟೆಲಿಮೆಟ್ರಿ",
+    chatCurrentSeaClearance: "ಪ್ರಸ್ತುತ ಸಮುದ್ರ ಕ್ಲಿಯರೆನ್ಸ್:",
+    chatSignificantWaves: "ಗಮನಾರ್ಹ ಅಲೆಗಳು:",
+    chatSurfaceWind: "ಮೇಲ್ಮೈ ಗಾಳಿ:",
+    chatActiveVessels: "ಸಕ್ರಿಯ ವೆಸೆಲ್‌ಗಳು:",
+    chatOpenDagVisualizerBtn: "ಪೂರ್ಣ ಏಜೆಂಟ್ DAG ವಿಷುವಲೈಸರ್ ತೆರೆಯಿರಿ ➔",
+    navicConnected: "NavIC ರಿಸೀವರ್: ಸಂಪರ್ಕಿತ (L5/S-Band)",
+    navicDisconnected: "NavIC ರಿಸೀವರ್: ಸಂಪರ್ಕ ಕಡಿತ",
+    navicTrackMyPosition: "ನನ್ನ ಸ್ಥಾನವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ",
+    navicStopTracking: "ಟ್ರ್ಯಾಕಿಂಗ್ ನಿಲ್ಲಿಸಿ",
+    navicSimulateMovement: "ವೆಸೆಲ್ ಚಲನೆಯನ್ನು ಸಿಮ್ಯುಲೇಟ್ ಮಾಡಿ",
+    navicStopSimulation: "ಸಿಮ್ಯುಲೇಶನ್ ನಿಲ್ಲಿಸಿ",
+    navicStatusTrackingOff: "ಟ್ರ್ಯಾಕಿಂಗ್ ಆಫ್ · ಯಾವುದೇ ಸ್ಥಾನವನ್ನು ವಿನಂತಿಸಲಾಗುತ್ತಿಲ್ಲ",
+    navicStatusGeoUnsupported: "ಈ ಬ್ರೌಸರ್ ಜಿಯೋಲೊಕೇಶನ್ ಬೆಂಬಲಿಸುವುದಿಲ್ಲ. ಡೆಮೊಗಾಗಿ ಸಿಮ್ಯುಲೇಟೆಡ್ ವೆಸೆಲ್ ಚಲನೆಯನ್ನು ಬಳಸಿ.",
+    navicStatusRequestingPermission: "ಸಾಧನ-ಸ್ಥಳ ಅನುಮತಿಯನ್ನು ವಿನಂತಿಸಲಾಗುತ್ತಿದೆ…",
+    navicStatusLiveTrackingTemplate: "ಲೈವ್ ಸಾಧನ ಟ್ರ್ಯಾಕಿಂಗ್ · ನಿಖರತೆ ±{accuracy}m · ಸಂಗ್ರಹಿಸಲಾಗಿಲ್ಲ",
+    navicStatusPermissionErrorTemplate: "ಸ್ಥಳ ಅನುಮತಿ ಲಭ್ಯವಿಲ್ಲ ({error}). ಯಾವುದೇ ಸ್ಥಾನವನ್ನು ಕಳುಹಿಸಲಾಗಿಲ್ಲ.",
+    navicStatusBackendUnavailable: "ಬ್ಯಾಕೆಂಡ್ ಲಭ್ಯವಿಲ್ಲ — ಸ್ಥಳೀಯ ಸಿಮ್ಯುಲೇಶನ್‌ನಲ್ಲಿ ನಿಖರ ಜಿಯೋಫೆನ್ಸ್ ದೂರವನ್ನು ಮೌಲ್ಯಮಾಪನ ಮಾಡಲಾಗುವುದಿಲ್ಲ.",
+    navicStatusSimStopped: "ಜಿಯೋಫೆನ್ಸ್ ಸಿಮ್ಯುಲೇಶನ್ ನಿಲ್ಲಿಸಲಾಗಿದೆ",
+    navicStatusSimMovingTemplate: "ಸಿಮ್ಯುಲೇಟೆಡ್ ವೆಸೆಲ್ ಚಲನೆ · ಬಿಂದು {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-ಅಕ್ಷರ ಉಪಗ್ರಹ ತುರ್ತು ಕೋಡ್ ನಕಲಿಸಲಾಗಿದೆ:\\n\\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) ಸ್ಕೈಪ್ಲಾಟ್",
+    navicConstellationDesc: "7-ಉಪಗ್ರಹ ಜಿಯೋಸ್ಟೇಶನರಿ / IGSO ನಕ್ಷತ್ರಪುಂಜ",
+    navicConnectedShort: "ಸಂಪರ್ಕಿತ (L5/S)",
+    navicTrackedSatellitesTitle: "ಟ್ರ್ಯಾಕ್ ಮಾಡಿದ ಉಪಗ್ರಹಗಳು (SNR dB-Hz)",
+    navicNmeaStreamTitle: "ಲೈವ್ NMEA-0183 ಹಾರ್ಡ್‌ವೇರ್ ಸ್ಟ್ರೀಮ್ ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "ಬಾಡ್ ದರ: 9600 bps · 1 Hz ಫೀಡ್",
+    navicDopPrecisionLabel: "DOP ನಿಖರತೆ",
+    navicDopValue: "HDOP 1.05 (ಅತ್ಯುತ್ತಮ)",
+    navicDiffFixLabel: "ಡಿಫರೆನ್ಷಿಯಲ್ ಫಿಕ್ಸ್",
+    navicDiffFixValue: "NavIC DGPS ಸಕ್ರಿಯ",
+    navicBorderHwLabel: "ಗಡಿ ಎಚ್ಚರಿಕೆ ಹಾರ್ಡ್‌ವೇರ್",
+    navicBorderHwValue: "ಬಝ್ಝರ್ ಸಿದ್ಧ",
+    navicGeofenceTitle: "ಲೈವ್ ಸ್ಥಾನ ಜಿಯೋಫೆನ್ಸಿಂಗ್",
+    navicGeofenceDesc: "ನಿಮ್ಮ ಸಾಧನದ ಸ್ಥಳವನ್ನು ಸೆಷನ್‌ನಲ್ಲಿ IMBL/MPA ಪರಿಶೀಲನೆಗಳಿಗೆ ಮಾತ್ರ ಬಳಸಲಾಗುತ್ತದೆ ಮತ್ತು ORCA ಎಂದಿಗೂ ಇದನ್ನು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ.",
+    navicGeofenceInitialStatus: "ಟ್ರ್ಯಾಕಿಂಗ್ ಆಫ್ · 5 NM IMBL ಎಚ್ಚರಿಕೆ / MPA ಬಫರ್ ಎಚ್ಚರಿಕೆ",
+    safetyVerdictDescTemplate: "ಲೈವ್ Open-Meteo ಸಾಗರ ಟೆಲಿಮೆಟ್ರಿ ನಿಮ್ಮ ಆಯ್ಕೆ ಮಾಡಿದ ಹಾರ್ಬರ್ ಬಳಿ ಗಮನಾರ್ಹ ಅಲೆ ಎತ್ತರ {wave}m ಮತ್ತು ಮೇಲ್ಮೈ ಗಾಳಿ {wind}kn ಎಂದು ತೋರಿಸುತ್ತದೆ, ಇದು ಲೆಕ್ಕಾಚಾರ ಮಾಡಿದ {score}/100 ಸುರಕ್ಷತಾ ಸ್ಕೋರ್ ನೀಡುತ್ತದೆ.",
+    safetyWindDefaultDirection: "ಪಶ್ಚಿಮ",
+    safetyBreezeSuffix: "{direction} ತಂಗಾಳಿ",
+    severityLow: "ಕಡಿಮೆ",
+    severityModerate: "ಮಧ್ಯಮ",
+    severityHigh: "ಹೆಚ್ಚು",
+    waveBandCalm: "ಶಾಂತ (< 0.5m)",
+    waveBandSlight: "ಸೌಮ್ಯ (0.5 - 1.25m)",
+    waveBandModerate: "ಮಧ್ಯಮ (1.25 - 2.5m)",
+    waveBandRough: "ಪ್ರಕ್ಷುಬ್ಧ (> 2.5m)",
+    seaStateCalm: "ಶಾಂತ",
+    seaStateSlight: "ಸೌಮ್ಯ",
+    seaStateSlightModerate: "ಸೌಮ್ಯದಿಂದ ಮಧ್ಯಮ",
+    seaStateModerateRough: "ಮಧ್ಯಮದಿಂದ ಪ್ರಕ್ಷುಬ್ಧ",
+    seaStateUnknown: "ಅಜ್ಞಾತ",
+    lightningBandSafe: "ಸುರಕ್ಷಿತ ವಾತಾವರಣ ಪ್ರೊಫೈಲ್",
+    lightningBandElevated: "ಹೆಚ್ಚಿದ ಸಂವಹನ ಅಪಾಯ",
+    lightningBandSevere: "ತೀವ್ರ ಬಿರುಗಾಳಿ ಎಚ್ಚರಿಕೆ",
+    safetySyncLatencyLabel: "ಸಿಂಕ್ ಲೇಟೆನ್ಸಿ:",
+    safetyBatteryLabel: "ಬ್ಯಾಟರಿ:",
+    safetyLastPassLabel: "ಕೊನೆಯ ಪಾಸ್:",
+    safetyAltitudeLabel: "ಎತ್ತರ:",
+    telemetryLiveOpenMeteoTemplate: "ಲೈವ್ OPEN-METEO ಟೆಲಿಮೆಟ್ರಿ ({wave}m SWH)",
+    telemetryCachedArchive: "ಟೆಲಿಮೆಟ್ರಿ ಸಕ್ರಿಯ (ಸಂಗ್ರಹಿಸಿದ ಉಪಗ್ರಹ ಆರ್ಕೈವ್)",
+    backendOnlineStatus: "ಲೈವ್ FASTAPI ಬ್ಯಾಕೆಂಡ್ ಸಂಪರ್ಕಿತ",
+    backendOfflineStatus: "ಬ್ಯಾಕೆಂಡ್ ಆಫ್‌ಲೈನ್ · ಸ್ಥಳೀಯ ಸಿಮ್ಯುಲೇಶನ್ ಮೋಡ್",
+    aisLiveCountTemplate: "{count} ಲೈವ್ AIS ವೆಸೆಲ್{plural}",
+    aisNoLiveVessels: "ಪ್ರಸ್ತುತ ಯಾವುದೇ ಲೈವ್ AIS ವೆಸೆಲ್‌ಗಳಿಲ್ಲ",
+    aisBlendedBannerTemplate: "ಪ್ರಸ್ತುತ ಲೈವ್ AIS ಕವರೇಜ್ ಇಲ್ಲದ ಬಂದರುಗಳನ್ನು ತುಂಬಲು {liveText} + {simCount} ಸಿಮ್ಯುಲೇಟೆಡ್ ವೆಸೆಲ್{plural} ತೋರಿಸಲಾಗುತ್ತಿದೆ.",
+    aisUnavailableDefault: "ಲೈವ್ AIS ವೆಸೆಲ್ ಫೀಡ್ ಲಭ್ಯವಿಲ್ಲ -- 0 ವೆಸೆಲ್‌ಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ.",
+    aisNotConfigured: "ಈ ಡಿಪ್ಲಾಯ್‌ಮೆಂಟ್‌ನಲ್ಲಿ ಲೈವ್ AIS ವೆಸೆಲ್ ಫೀಡ್ ಕಾನ್ಫಿಗರ್ ಮಾಡಿಲ್ಲ.",
+    aisConnectedNotSending: "AIS ಪೂರೈಕೆದಾರರೊಂದಿಗೆ (AISstream.io) ಸಂಪರ್ಕಿತವಾಗಿದೆ, ಆದರೆ ಇದು ಪ್ರಸ್ತುತ ವೆಸೆಲ್ ಡೇಟಾವನ್ನು ಕಳುಹಿಸುತ್ತಿಲ್ಲ — ಬಹುಶಃ ಪೂರೈಕೆದಾರ-ಬದಿಯ ಅಡಚಣೆ, ಸ್ಥಳೀಯ ದೋಷವಲ್ಲ.",
+    aisDisconnectedReconnecting: "AIS ಪೂರೈಕೆದಾರರಿಂದ (AISstream.io) ಸಂಪರ್ಕ ಕಡಿತಗೊಂಡಿದೆ; ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಮರುಸಂಪರ್ಕಿಸುತ್ತಿದೆ.",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> ಭಾರತ–ಶ್ರೀಲಂಕಾ IMBL ನಿಂದ <strong>{dist} NM</strong> ದೂರದಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿದೆ{simTag}. ಸ್ವಯಂಚಾಲಿತ ಎಚ್ಚರಿಕೆ ಕಳುಹಿಸಲಾಗಿದೆ.",
+    imblAlertNoneTemplate: "ಪ್ರಸ್ತುತ {warnDist} NM IMBL ಎಚ್ಚರಿಕೆ ದೂರದೊಳಗೆ ಯಾವುದೇ ವೆಸೆಲ್ ಇಲ್ಲ. ಹತ್ತಿರದ ಟ್ರ್ಯಾಕ್ ಮಾಡಿದ ವೆಸೆಲ್: <strong>{dist} NM</strong> ದೂರದಲ್ಲಿ.",
+    imblAlertNoData: "ಇನ್ನೂ ಯಾವುದೇ ವೆಸೆಲ್ ಟೆಲಿಮೆಟ್ರಿ ಲಭ್ಯವಿಲ್ಲ.",
+    simulatedSuffix: " (ಸಿಮ್ಯುಲೇಟೆಡ್)",
+    notifUnavailableTitle: "ಬ್ರೌಸರ್ ಅಧಿಸೂಚನೆಗಳು ಲಭ್ಯವಿಲ್ಲ",
+    notifUnavailableMsg: "ಈ ಟ್ಯಾಬ್ ತೆರೆದಿರುವವರೆಗೆ ಇನ್-ಆ್ಯಪ್ ಅಪಾಯ ಬ್ಯಾನರ್‌ಗಳು ಇನ್ನೂ ತೋರಿಸಲ್ಪಡುತ್ತವೆ.",
+    notifNotEnabledTitle: "ಬ್ರೌಸರ್ ಅಧಿಸೂಚನೆಗಳು ಸಕ್ರಿಯಗೊಂಡಿಲ್ಲ",
+    notifNotEnabledMsg: "ಈ ಟ್ಯಾಬ್ ತೆರೆದಿರುವವರೆಗೆ ಇನ್-ಆ್ಯಪ್ ಅಪಾಯ ಬ್ಯಾನರ್‌ಗಳು ಸಕ್ರಿಯವಾಗಿ ಉಳಿಯುತ್ತವೆ.",
+    hazardHighWavesTitle: "ಎತ್ತರದ ಅಲೆಗಳು — ಸ್ಥಳೀಯ ಸಿಮ್ಯುಲೇಶನ್",
+    hazardHighWavesMsgTemplate: "{wave}m, 2.5m ಎಚ್ಚರಿಕೆ ಮಿತಿಯನ್ನು ಮೀರಿದೆ. ಮೂಲ: ಬ್ರೌಸರ್ Open-Meteo ಟೆಲಿಮೆಟ್ರಿ.",
+    hazardHighWindTitle: "ಬಲವಾದ ಗಾಳಿ — ಸ್ಥಳೀಯ ಸಿಮ್ಯುಲೇಶನ್",
+    hazardHighWindMsgTemplate: "{wind} kn, 25 kn ಎಚ್ಚರಿಕೆ ಮಿತಿಯನ್ನು ಮೀರಿದೆ. ಮೂಲ: ಬ್ರೌಸರ್ Open-Meteo ಟೆಲಿಮೆಟ್ರಿ.",
+    hazardLightningTitle: "ಮಿಂಚಿನ ಅಪಾಯ — ಸ್ಥಳೀಯ ಸಿಮ್ಯುಲೇಶನ್",
+    hazardLightningMsgTemplate: "ಮಿಂಚಿನ ಪ್ರಾಕ್ಸಿ {pct}% ಆಗಿದೆ. ಮೂಲ: ಬ್ರೌಸರ್ Open-Meteo ಟೆಲಿಮೆಟ್ರಿ.",
+    safetyOfficialClearanceLabel: "ಅಧಿಕೃತ ಸಾಗರ ಕ್ಲಿಯರೆನ್ಸ್",
+    safetyVerdictDescInitial: "ಎಲ್ಲಾ ಉಪಗ್ರಹ ಸಾಗರಶಾಸ್ತ್ರ ಸೂಚಕಗಳು (Oceansat-3 SSTM ಉಷ್ಣ ಮುಂಭಾಗಗಳು, Sentinel-3 ಅಲೆ ಆಲ್ಟಿಮೆಟ್ರಿ) ಕೇರಳ, ಕರ್ನಾಟಕ ಮತ್ತು ತಮಿಳುನಾಡಿನ ಕರಾವಳಿ ನೀರಿನಲ್ಲಿ ಅನುಕೂಲಕರ ಮೀನುಗಾರಿಕೆ ಪರಿಸ್ಥಿತಿಗಳನ್ನು ದೃಢಪಡಿಸುತ್ತವೆ.",
+    safetyIndexLabel: "ಸುರಕ್ಷತಾ ಸೂಚ್ಯಂಕ",
+    satConstellationTitle: "ISRO ಮತ್ತು ಅಂತಾರಾಷ್ಟ್ರೀಯ ಸಾಗರಶಾಸ್ತ್ರ ಉಪಗ್ರಹ ನಕ್ಷತ್ರಪುಂಜ",
+    satStaticDataNote: "ಸ್ಥಿರ ಉಲ್ಲೇಖ ಡೇಟಾ (ಲೈವ್ ಟೆಲಿಮೆಟ್ರಿ ಅಲ್ಲ)",
+    mapIndiaBoundaryPopup: "ಭಾರತ — ಅಧಿಕೃತ ಗಡಿ (Survey of India)",
+    mapPfzYieldSuffix: "{rating} ಇಳುವರಿ ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "ಕ್ಲೋರೊಫಿಲ್:",
+    mapPfzDepthLabel: "ಆಳ:",
+    mapPfzVesselsLabel: "ವೆಸೆಲ್‌ಗಳು:",
+    mapPfzActiveSuffix: "{count} ಸಕ್ರಿಯ",
+    mapPfzTargetSpeciesLabel: "ಗುರಿ ಜಾತಿಗಳು:",
+    mapPfzSimulateRouteBtn: "ಇಲ್ಲಿ ಮಾರ್ಗ ಸಿಮ್ಯುಲೇಟ್ ಮಾಡಿ ➔",
+    mapImblPopupBodyTemplate: "ಕಠಿಣ ಅಂತಾರಾಷ್ಟ್ರೀಯ ಸಾಗರ ಗಡಿ ರೇಖೆ. ಎಚ್ಚರಿಕೆ ಬಫರ್: {warn} NM. ನಿರ್ಣಾಯಕ ಜಿಯೋಫೆನ್ಸ್: {danger} NM.",
+    mapImblPopupTreatyNote: "UNCLOS ಸಾಗರ ಒಪ್ಪಂದದ ಅಡಿಯಲ್ಲಿ ಗಡಿ ದಾಟುವುದನ್ನು ನಿಷೇಧಿಸಲಾಗಿದೆ.",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL ಬಫರ್ ಕಾರಿಡಾರ್",
+    mapMpaRestrictedBadge: "ನಿರ್ಬಂಧಿತ ಪರಿಸರ ಮೀಸಲು",
+    mapHarbourCoastSuffix: "{state} ಕರಾವಳಿ",
+    mapHarbourCapacityLabel: "ಸಾಮರ್ಥ್ಯ:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "ಇಂಧನ ನಿಲ್ದಾಣ:",
+    mapHarbourFuelAvailable: "ಲಭ್ಯವಿದೆ",
+    mapHarbourIceLabel: "ಐಸ್ ಪ್ಲಾಂಟ್:",
+    mapHarbourIceActive: "ಸಕ್ರಿಯ",
+    mapHarbourSetOriginBtn: "ಮೂಲ ಹಾರ್ಬರ್ ಆಗಿ ಹೊಂದಿಸಿ",
+    mapVesselSimulatedBadge: "ಸಿಮ್ಯುಲೇಟೆಡ್ · ಇಲ್ಲಿ ಲೈವ್ AIS ಕವರೇಜ್ ಇಲ್ಲ",
+    mapVesselSpeedLabel: "ವೇಗ:",
+    mapVesselHeadingLabel: "ದಿಕ್ಕು:",
+    mapVesselZoneLabel: "ವಲಯ:",
+    mapVesselImblDistLabel: "IMBL ದೂರ:",
+    mapVesselStatusLabel: "ಸ್ಥಿತಿ:",
+    mapVesselFuelLabel: "ಇಂಧನ:",
+    mapVesselFuelNA: "ಲಭ್ಯವಿಲ್ಲ",
+    mapRoutePopupTitle: "ಸಮುದ್ರ-ಮಾತ್ರ A* ಮಾರ್ಗ (ಭೂಮಿ + MPA ತಪ್ಪಿಸುವಿಕೆ)",
+    mapRouteDistanceEtaTemplate: "ದೂರ: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} ಸುತ್ತಲೂ {pct}% ಸುತ್ತುಮಾರ್ಗ",
+    mapRouteLandNoGoZones: "ಭೂಮಿ/ನಿಷೇಧಿತ ವಲಯಗಳು",
+    vesselStatusSafeFishing: "ಸುರಕ್ಷಿತ ಮೀನುಗಾರಿಕೆ",
+    vesselStatusBorderAlert: "ಗಡಿ ಎಚ್ಚರಿಕೆ",
+    vesselStatusBorderWarn: "ಗಡಿ ಜಾಗರೂಕತೆ",
+    vesselStatusInTransit: "ಸಾಗಣೆಯಲ್ಲಿ",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "ಸಿಮ್ಯುಲೇಟೆಡ್ -- ಈ ಬಂದರಿನ ಬಳಿ ಲೈವ್ AIS ಕವರೇಜ್ ಇಲ್ಲ",
+    vesselLocateAction: "ಪತ್ತೆ ಮಾಡಿ ➔",
+    fleetVesselCountSuffix: "{count} ವೆಸೆಲ್‌ಗಳು",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} ಲೈವ್ · {sim} ಸಿಮ್)",
+    mapActiveVesselsBreakdownTemplate: "{total} ಸಕ್ರಿಯ ವೆಸೆಲ್‌ಗಳು ({live} ಲೈವ್ · {sim} ಸಿಮ್ಯುಲೇಟೆಡ್)",
+    mapActiveVesselsSimpleTemplate: "{total} ಸಕ್ರಿಯ ವೆಸೆಲ್‌ಗಳು",
+    mapTabTitle: "GIS ಕಮಾಂಡ್ ನಕ್ಷೆ · ಭಾರತೀಯ ಕರಾವಳಿ ನೀರು",
+    mapTabDesc: "ನೈಜ-ಸಮಯದ ಉಪಗ್ರಹ PFZ ಗಳು, IMBL ಗಡಿ ಕಾರಿಡಾರ್‌ಗಳು ಮತ್ತು AIS ವೆಸೆಲ್ ಟ್ರ್ಯಾಕ್‌ಗಳೊಂದಿಗೆ ಸಂವಾದಾತ್ಮಕ ಹೆಚ್ಚಿನ-ಕಾಂಟ್ರಾಸ್ಟ್ ನಾಟಿಕಲ್ ನಕ್ಷೆ.",
+    layerPfzZones: "PFZ ವಲಯಗಳು",
+    layerImblBuffer: "IMBL ಬಫರ್",
+    layerEcoReserves: "ಪರಿಸರ ಮೀಸಲುಗಳು (MPA)",
+    layerHarbours: "ಹಾರ್ಬರ್‌ಗಳು",
+    layerLiveVessels: "ಲೈವ್ ವೆಸೆಲ್‌ಗಳು",
+    layerDensityHeatmap: "ಸಾಂದ್ರತೆ ಹೀಟ್‌ಮ್ಯಾಪ್",
+    layerIndiaBoundary: "ಭಾರತ ಗಡಿ (Survey of India)",
+    routePlannerDesc: "MPA ಗಳು ಮತ್ತು ಗಡಿ ಅಪಾಯಗಳನ್ನು ತಪ್ಪಿಸುವ A*-ಶೈಲಿಯ ಮಾರ್ಗ",
+    routeVesselSpeedLabel: "ವೆಸೆಲ್ ವೇಗ:",
+    fleetMonitorTitle: "ಫ್ಲೀಟ್ ಮಾನಿಟರ್ · ಲೈವ್ ವೆಸೆಲ್ ಟೆಲಿಮೆಟ್ರಿ",
+    fleetTotalActiveTitle: "ಒಟ್ಟು ಸಕ್ರಿಯ ವೆಸೆಲ್‌ಗಳು",
+    fleetTotalActiveDesc: "ಪ್ರಸ್ತುತ AIS ಟ್ರಾನ್ಸ್‌ಪಾಂಡರ್ ಸಂಕೇತಗಳನ್ನು ಪ್ರಸಾರ ಮಾಡುತ್ತಿರುವ ವೆಸೆಲ್‌ಗಳು",
+    fleetZoneDistTitle: "ಪ್ರತಿ ವಲಯ ವೆಸೆಲ್ ವಿತರಣೆ",
+    imblAlertCardTitle: "IMBL ಗಡಿ ಸಾಮೀಪ್ಯ ಎಚ್ಚರಿಕೆ",
+    fleetTableSubDesc: "AISstream.io ಇಂದ ಲೈವ್ AIS ಸ್ಥಾನಗಳು, ಪ್ರಸ್ತುತ ಲೈವ್ ರಿಸೀವರ್ ಕವರೇಜ್ ಇಲ್ಲದಿರುವಲ್ಲೆಲ್ಲಾ ಸ್ಪಷ್ಟವಾಗಿ-ಟ್ಯಾಗ್ ಮಾಡಿದ ಸಿಮ್ಯುಲೇಟೆಡ್ ಫ್ಲೀಟ್‌ನೊಂದಿಗೆ (\"SIM\" ಬ್ಯಾಡ್ಜ್ ನೋಡಿ) ತುಂಬಿಸಲಾಗಿದೆ",
+    vesselSearchPlaceholder: "ವೆಸೆಲ್ ಹೆಸರು ಅಥವಾ ID ಹುಡುಕಿ...",
+    filterAllStatuses: "ಎಲ್ಲಾ ಸ್ಥಿತಿಗಳು",
+    filterSafeFishing: "ಸುರಕ್ಷಿತ ಮೀನುಗಾರಿಕೆ",
+    filterInTransit: "ಸಾಗಣೆಯಲ್ಲಿ",
+    filterBorderAlert: "ಗಡಿ ಎಚ್ಚರಿಕೆ",
+    thVesselId: "ವೆಸೆಲ್ ID",
+    thVesselName: "ವೆಸೆಲ್ ಹೆಸರು",
+    thType: "ಪ್ರಕಾರ",
+    thCurrentZone: "ಪ್ರಸ್ತುತ ವಲಯ",
+    thSpeedHeading: "ವೇಗ / ದಿಕ್ಕು",
+    thImblDist: "IMBL ದೂರ",
+    thStatus: "ಸ್ಥಿತಿ",
+    thAction: "ಕ್ರಿಯೆ",
+    bulletinIssuedLabel: "ಬಿಡುಗಡೆ:",
+    bulletinRegionLabel: "ಪ್ರದೇಶ:",
+    bulletinWavesLabel: "ಅಲೆಗಳು:",
+    bulletinWindsLabel: "ಗಾಳಿಗಳು:",
+    bulletinSourceLabel: "ಮೂಲ:",
+    bulletinListenBtn: "ಬುಲೆಟಿನ್ ಆಲಿಸಿ",
+    bulletinsTabTitle: "ಅಧಿಕೃತ ಸಾಗರ ಮತ್ತು ಮೀನುಗಾರಿಕೆ ಬುಲೆಟಿನ್‌ಗಳು (ISRO - INCOIS)",
+    bulletinsTabDesc: "ಸಂಖ್ಯಿತ ಸಲಹೆಗಳು, ಚಂಡಮಾರುತ ಅಪಾಯ ಎಚ್ಚರಿಕೆಗಳು, ಮತ್ತು ಅಂತಾರಾಷ್ಟ್ರೀಯ ಗಡಿ ಅನುಸರಣೆ ಎಚ್ಚರಿಕೆಗಳು.",
+    bulletinNotifyToggleTitle: "ಈ ಟ್ಯಾಬ್/PWA ತೆರೆದಿರುವಾಗ ಮಾತ್ರ ಬ್ರೌಸರ್ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಸ್ವೀಕರಿಸಿ",
+    bulletinNotifyToggleLabel: "ತೆರೆದಿರುವಾಗ ಸೂಚಿಸಿ",
+    bulletinFilterAll: "ಎಲ್ಲಾ ಬುಲೆಟಿನ್‌ಗಳು",
+    bulletinFilterCritical: "ನಿರ್ಣಾಯಕ",
+    bulletinFilterWarning: "ಎಚ್ಚರಿಕೆಗಳು",
+    bulletinFilterAdvisory: "ಸಲಹೆಗಳು",
+    bulletinsPushNote: "ಈ ಟ್ಯಾಬ್/PWA ತೆರೆದಿರುವಾಗ ಮಾತ್ರ ಅಪಾಯ ಎಚ್ಚರಿಕೆಗಳು ಸಕ್ರಿಯವಾಗಿರುತ್ತವೆ. ಮುಚ್ಚಿದ-ಆ್ಯಪ್ ಪುಶ್ ಅಧಿಸೂಚನೆಗಳಿಗೆ ಉತ್ಪಾದನಾ ಪುಶ್-ಚಂದಾದಾರಿಕೆ ಸೇವೆ ಅಗತ್ಯವಿದೆ ಮತ್ತು ಇದನ್ನು ಈ ಮೂಲಮಾದರಿಯಲ್ಲಿ ಅಳವಡಿಸಲಾಗಿಲ್ಲ.",
+    sosModalTitle: "ತುರ್ತು ಸಂಕಷ್ಟ ಬೀಕಾನ್ (SOS)",
+    sosInstructions: "ತುರ್ತು SOS ಅನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುವುದರಿಂದ <strong>INSAT-3DR SAS&R</strong> ಮೂಲಕ ಭಾರತೀಯ ಕರಾವಳಿ ಕಾವಲು ಪಡೆ ಸಾಗರ ರಕ್ಷಣಾ ಸಮನ್ವಯ ಕೇಂದ್ರಕ್ಕೆ (MRCC) ತುರ್ತು 406 MHz ಸಂಕಷ್ಟ ಸಂಕೇತವನ್ನು ರವಾನಿಸಲಾಗುತ್ತದೆ.",
+    sosCurrentPositionLabel: "ಪ್ರಸ್ತುತ ಸ್ಥಾನ:",
+    sosVhfChannelLabel: "ತುರ್ತು VHF ಚಾನೆಲ್:",
+    sosMrccHelplineLabel: "MRCC ಸಹಾಯವಾಣಿ:",
+    sosConfirmBtn: "ದೃಢೀಕರಿಸಿ ಮತ್ತು ಸಂಕಷ್ಟ ಬೀಕಾನ್ ಪ್ರಸಾರ ಮಾಡಿ",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R ಬೀಕಾನ್ ISRO ಮತ್ತು ಕರಾವಳಿ ಕಾವಲು ಪಡೆ MRCC ಗೆ ರವಾನೆಯಾಗುತ್ತಿದೆ",
+    sosDistressRelayedMsg: "ಸಂಕಷ್ಟ ಪ್ಯಾಕೆಟ್ INSAT-3DR SAS&R ರಿಸೀವರ್ ಮೂಲಕ ರಿಲೇ ಮಾಡಲಾಗಿದೆ. ಸಾಗರ ರಕ್ಷಣಾ ಸಮನ್ವಯ ಕೇಂದ್ರಕ್ಕೆ (MRCC ಚೆನ್ನೈ/ಮುಂಬೈ) VHF ಚಾನೆಲ್ 16 ರಲ್ಲಿ ಎಚ್ಚರಿಸಲಾಗಿದೆ.",
+    sosGpsVesselIdTemplate: "GPS ನಿರ್ದೇಶಾಂಕಗಳು: {coords} · ವೆಸೆಲ್ ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO ಸಹಯೋಗಿ ಸಾಗರ ಇಂಟೆಲಿಜೆನ್ಸ್ · ಸ್ಮಾರ್ಟ್ ಇಂಡಿಯಾ ಹ್ಯಾಕಥಾನ್ 2026",
+    landingSubtitle: "ಒಂದು ಸಹಯೋಗಿ ಸಾಗರ-ಇಂಟೆಲಿಜೆನ್ಸ್ ವೇದಿಕೆ, ಎರಡು ಕಮಾಂಡ್ ಡೆಕ್‌ಗಳು: ಮೀನುಗಾರನ ದೈನಂದಿನ ಅವಕಾಶ ಕನ್ಸೋಲ್, ಮತ್ತು ಸಂಪೂರ್ಣ ISRO ಉಪಗ್ರಹ, AIS ಮತ್ತು ಜಿಯೋಫೆನ್ಸಿಂಗ್ ಇನ್‌ಸೈಟ್ ಸೂಟ್.",
+    landingStripItem1: "Oceansat-3 SSTM ಉಷ್ಣ ಮುಂಭಾಗಗಳು",
+    landingStripItem2: "INSAT-3DR ಉಪಗ್ರಹ ಸಾಗರಶಾಸ್ತ್ರ",
+    landingStripItem3: "8-ನೋಡ್ ಸಹಯೋಗಿ ಏಜೆಂಟ್ DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS ಸೇತುವೆ",
+    landingStripItem5: "IMBL ಗಡಿ ಜಿಯೋಫೆನ್ಸಿಂಗ್ ಎಚ್ಚರಿಕೆಗಳು",
+    landingStripItem6: "ಲೈವ್ AIS ಫ್ಲೀಟ್ ಮತ್ತು GIS ಕಮಾಂಡ್",
+    landingStripItem7: "ಸೆಲ್ ಸ್ಮಾರ್ಟರ್ ಬಯರ್ ಪ್ರೈಸಿಂಗ್",
+    landingStripItem8: "406 MHz SOS ಸಂಕಷ್ಟ ಬೀಕಾನ್",
+    landingFishermanCardTitle: "ORCA ಫಿಶರ್‌ಮ್ಯಾನ್",
+    landingFishermanCardDesc: "ಇಂದಿನ ಅವಕಾಶ ಸ್ಕೋರ್, ಸೆಲ್ ಸ್ಮಾರ್ಟರ್ ಪ್ರೈಸಿಂಗ್, ಟ್ರಿಪ್-ವೆಚ್ಚ ಕ್ಯಾಲ್ಕುಲೇಟರ್, ಮತ್ತು ನಿಮ್ಮ ಹಿಡಿತಕ್ಕಾಗಿ ಖರೀದಿದಾರ ಲೀಡ್‌ಗಳು — ದೋಣಿಗಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ.",
+    landingFishermanCardCta: "ಫಿಶರ್‌ಮ್ಯಾನ್ ಕನ್ಸೋಲ್ ತೆರೆಯಿರಿ",
+    landingFishermanCardTitleAttr: "ಫಿಶರ್‌ಮ್ಯಾನ್ ಕನ್ಸೋಲ್ ತೆರೆಯಿರಿ",
+    landingInsightCardTitle: "ORCA ಇನ್‌ಸೈಟ್",
+    landingInsightCardDesc: "ಸಂಪೂರ್ಣ ಕಮಾಂಡ್ ಡೆಕ್: ISRO ಉಪಗ್ರಹ ಸಾಗರಶಾಸ್ತ್ರ, GIS ನಕ್ಷೆ, 8-ನೋಡ್ ಏಜೆಂಟ್ DAG, ಸೇಫ್ಟಿ ಬ್ಯಾರೊಮೀಟರ್, ಫ್ಲೀಟ್ ಮಾನಿಟರ್, ಮತ್ತು NavIC ಸೇತುವೆ.",
+    landingInsightCardCta: "ಇನ್‌ಸೈಟ್ ಕಮಾಂಡ್ ಡೆಕ್ ತೆರೆಯಿರಿ",
+    landingInsightCardTitleAttr: "ಇನ್‌ಸೈಟ್ ಕಮಾಂಡ್ ಡೆಕ್ ತೆರೆಯಿರಿ",
+    backToOverviewTitle: "ಅವಲೋಕನಕ್ಕೆ ಹಿಂತಿರುಗಿ",
+    statSimulatedFleetLabel: "ಸಿಮ್ಯುಲೇಟೆಡ್ AIS ಫ್ಲೀಟ್",
+    statSatellitesActiveTemplate: "{count} ಸಕ್ರಿಯ",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} ವಲಯಗಳು",
+    statPfzZonesListLabel: "ವೆಜ್ ಬ್ಯಾಂಕ್, ಕೊಚ್ಚಿ, ವೆರಾವಲ್...",
+    statImblCorridorsCountTemplate: "{count} ಕಾರಿಡಾರ್‌ಗಳು",
+    statImblBordersLabel: "ಭಾರತ-ಶ್ರೀಲಂಕಾ ಮತ್ತು ಪಾಕ್ ಗಡಿಗಳು",
+    pillarDagTitle: "8-ನೋಡ್ ಸಹಯೋಗಿ ಏಜೆಂಟ್ DAG",
+    pillarDagDesc: "ಪ್ರಶ್ನೆಗಳನ್ನು ಉಪಗ್ರಹ, ಅಲೆ ಅಪಾಯ, ಜಿಯೋಫೆನ್ಸಿಂಗ್, ವೆಸೆಲ್ ಎಣಿಕೆ, ETA, ಮತ್ತು ನ್ಯೂರಲ್ ಸಿಂಥೆಸಿಸ್ ಹಂತಗಳಾಗಿ ಉಪ-ಸೆಕೆಂಡ್ ಲೇಟೆನ್ಸಿಯೊಂದಿಗೆ ವಿಭಜಿಸುವ ಬಹು-ಏಜೆಂಟ್ ವಾಸ್ತುಶಿಲ್ಪ.",
+    pillarEtaTitle: "ಲೈವ್ ಸಾಗರ-ಸ್ಥಿತಿ ETA ಮತ್ತು ಸಂಜೆ ಸುರಕ್ಷತೆ",
+    pillarEtaDesc: "ಅಲೆ ಪ್ರತಿರೋಧಕ್ಕೆ ಅನುಗುಣವಾಗಿ ಹೊಂದಿಸಲಾದ ಹೈಡ್ರೊಡೈನಾಮಿಕ್ ಪ್ರಯಾಣ ಲೆಕ್ಕಾಚಾರಗಳು, ಸೂರ್ಯಾಸ್ತದ ನಂತರ ಸಿಲುಕಿದ ಮೀನುಗಾರರನ್ನು ತಡೆಯಲು ಸ್ವಯಂಚಾಲಿತ ಸಂಜೆಗೂ-ಮುನ್ನ-ಹಿಂತಿರುಗುವ ಸುರಕ್ಷತಾ ಎಚ್ಚರಿಕೆಗಳೊಂದಿಗೆ.",
+    pillarFleetTitle: "ಲೈವ್ ಫ್ಲೀಟ್ ಸಾಂದ್ರತೆ ಮತ್ತು IMBL ಎಚ್ಚರಿಕೆ",
+    pillarFleetDesc: "ಪ್ರತಿ ವಲಯ ನೈಜ-ಸಮಯದ ವೆಸೆಲ್ ಎಣಿಕೆ, ಜನದಟ್ಟಣೆ ಅಪಾಯ ಸೂಚಕಗಳು, ಮತ್ತು ಸಾಗರ ಗಡಿಗಳನ್ನು ರಕ್ಷಿಸುವ ಸ್ವಯಂಚಾಲಿತ 5 NM/2 NM ಜಿಯೋಫೆನ್ಸ್ ಸಾಮೀಪ್ಯ ಎಚ್ಚರಿಕೆಗಳು.",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · ನಿರ್ಮಿಸಿದವರು <strong class=\"text-cyan-400\">{teamName}</strong> · ಸ್ಮಾರ್ಟ್ ಇಂಡಿಯಾ ಹ್ಯಾಕಥಾನ್ 2026 · ಸಮಸ್ಯಾ ಹೇಳಿಕೆ 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b> ನಲ್ಲಿ ಆಲಿಸುತ್ತಿದೆ... ಈಗ ಮಾತನಾಡಿ.",
+    sttUnsupportedTitle: "ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಪೀಚ್ ರೆಕಗ್ನಿಷನ್ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ",
+    routeUnavailableLabel: " ಮಾರ್ಗ ಲಭ್ಯವಿಲ್ಲ:",
+    routeUnavailableMsg: "ORCA ಬ್ಯಾಕೆಂಡ್ ತಲುಪಲಾಗುತ್ತಿಲ್ಲ, ಆದ್ದರಿಂದ ಯಾವುದೇ ಮಾರ್ಗಬದ್ಧ ದೂರ/ETA ತೋರಿಸಲಾಗುವುದಿಲ್ಲ. ಸ್ಥಳೀಯ ಫಾಲ್‌ಬ್ಯಾಕ್ ಮೋಡ್‌ನಲ್ಲಿ ಚಾಲನೆಯಲ್ಲಿದೆ.",
+    routeNoSafeRouteLabel: "✕ ಯಾವುದೇ ಸುರಕ್ಷಿತ ಸಾಗರ ಮಾರ್ಗ ಕಂಡುಬಂದಿಲ್ಲ:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "ಈ ಹಾರ್ಬರ್/PFZ ಜೋಡಿಗಾಗಿ ಭೂಮಿ ಮತ್ತು ಸಾಗರ ಸಂರಕ್ಷಿತ ಪ್ರದೇಶಗಳನ್ನು ತಪ್ಪಿಸುವ ಮಾರ್ಗವನ್ನು ರೂಟರ್ ಕಂಡುಹಿಡಿಯಲಾಗಲಿಲ್ಲ.",
+    routeSafeReturnLabel: "✓ ಸುರಕ್ಷಿತ ಹಿಂತಿರುಗುವಿಕೆ:",
+    routeSafeReturnTemplate: "ನಿರೀಕ್ಷಿತ ಹಾರ್ಬರ್ ಆಗಮನ {time} ರೊಳಗೆ (18:30 IST ಸಂಜೆಗೂ ಮುನ್ನ).",
+    routeReturnAfterDuskLabel: " ಸಂಜೆಯ ನಂತರ ಹಿಂತಿರುಗುವಿಕೆ:",
+    routeReturnAfterDuskTemplate: "ನಿರೀಕ್ಷಿತ ಹಿಂತಿರುಗುವಿಕೆ {time} ಕ್ಕೆ (18:30 IST ಸೂರ್ಯಾಸ್ತವನ್ನು ಮೀರಿದೆ). ಮುಂಚಿನ ಪ್ರಯಾಣ ಅಥವಾ ರಾತ್ರಿ ಸಂಚರಣೆ ಬೀಕಾನ್ ಪರಿಶೀಲನೆಯನ್ನು ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ."
   },
   te: {
     appTitle: "ఓర్కా ఇన్‌సైట్ (ORCA INSIGHT)",
@@ -2048,7 +4372,339 @@ const translations = {
     fmClaimBtn: "ఈ లీడ్‌ను క్లెయిమ్ చేయండి",
     fmClaimPromptText: "దీన్ని ఎవరు పూర్తి చేస్తున్నారో కొనుగోలుదారుకు తెలియజేయడానికి మీ పేరు మరియు ఫోన్/సంప్రదింపు వివరాలను నమోదు చేయండి:",
     fmClaimSuccess: "క్లెయిమ్ చేయబడింది — కొనుగోలుదారుకు ప్లాట్‌ఫారమ్ వెలుపల తెలియజేయబడుతుంది.",
-    fmClaimFailed: "ప్రస్తుతం ఈ లిస్టింగ్‌ను క్లెయిమ్ చేయలేకపోయింది."
+    fmClaimFailed: "ప్రస్తుతం ఈ లిస్టింగ్‌ను క్లెయిమ్ చేయలేకపోయింది.",
+    dagAgentSupervisorName: "మాస్టర్ సూపర్‌వైజర్ / DAG ప్లానర్",
+    dagAgentSupervisorRole: "బహుళ-మోడల్ సముద్ర ప్రశ్నను విభజించి, సబ్‌టాస్క్‌లను శాటిలైట్, ప్రమాద మరియు జియోఫెన్స్ ఏజెంట్లకు కేటాయిస్తుంది.",
+    dagAgentSatelliteName: "శాటిలైట్ ఓషనోగ్రఫీ ఏజెంట్",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (క్లోరోఫిల్-a) & SSTM (థర్మల్ ఫ్రంట్లు) డేటాను INSAT-3DR మేఘ చిత్రాలతో పాటు స్వీకరిస్తుంది.",
+    dagAgentWeatherName: "వాతావరణం & సముద్ర ప్రమాద ఏజెంట్",
+    dagAgentWeatherRole: "గణనీయమైన అల ఎత్తు (SWH), గాలి వేగ వెక్టర్లు, మెరుపు సంభావ్యతను అంచనా వేసి, సముద్ర-అనుమతి స్కోర్‌ను రూపొందిస్తుంది.",
+    dagAgentPfzName: "సముద్ర విశ్లేషణ & PFZ ఏజెంట్",
+    dagAgentPfzRole: "థర్మల్-క్లోరోఫిల్ ఫ్రంట్ ఖండనలను గుర్తించి, పెలాజిక్ బయోమాస్ సాంద్రతను లెక్కించి, లక్ష్య మత్స్య జోన్లను ర్యాంక్ చేస్తుంది.",
+    dagAgentGeofenceName: "జియోఫెన్సింగ్ & రూటింగ్ ఏజెంట్",
+    dagAgentGeofenceRole: "అంతర్జాతీయ సముద్ర సరిహద్దు రేఖలను (IMBL) పర్యవేక్షిస్తుంది, సముద్ర సంరక్షిత ప్రాంతాలకు బఫర్లు ఏర్పరుస్తుంది, మరియు A* సురక్షిత మార్గ బిందువులను లెక్కిస్తుంది.",
+    dagAgentFleetName: "ఫ్లీట్ & ట్రాఫిక్ ఏజెంట్ (కొత్తది)",
+    dagAgentFleetRole: "AIS & ARGOS-4 నౌకా ట్రాన్స్‌పాండర్లను స్కాన్ చేసి, ఫ్లీట్ పంపిణీని ట్రాక్ చేసి, రద్దీ లేదా సరిహద్దు కంజెషన్‌ను గుర్తిస్తుంది.",
+    dagAgentEtaName: "ETA & ప్రయాణ భద్రతా ఏజెంట్ (కొత్తది)",
+    dagAgentEtaRole: "రియల్-టైమ్ అల నిరోధానికి అనుగుణంగా ప్రయాణ వ్యవధిని లెక్కించి, సాయంత్రం లోపు తిరిగి రావడానికి భద్రతా విండోను అంచనా వేస్తుంది.",
+    dagAgentSynthesisName: "న్యూరల్ సింథసిస్ ఏజెంట్ (గణాంక ఆధారిత)",
+    dagAgentSynthesisRole: "బహుళ-ఏజెంట్ టెలిమెట్రీని ఒక ప్రామాణికమైన, ఆధారసహిత సహజ-భాషా సలహాగా సైటేషన్ ట్యాగ్‌లు మరియు TTSతో కలిపి సమీకరిస్తుంది -- ఇది పూర్తిగా నియమ-ఆధారితమైనది, ఈ సైట్ యొక్క స్వంత లైవ్ టెలిమెట్రీ మరియు దాని స్వంత సేకరించిన గణాంక లెడ్జర్‌పై ఆధారపడి తర్కిస్తుంది. బాహ్య AI/LLM API ఏదీ ఉపయోగించబడదు.",
+    dagStatusIdle: "ఖాళీగా",
+    dagInspectLink: "పరిశీలించండి ➔",
+    dagInspectorLatencyTemplate: "అమలు లేటెన్సీ: {latency} · సబ్‌టాస్క్‌లు ధృవీకరించబడ్డాయి",
+    dagStatusQueued: "క్యూలో ఉంది",
+    dagStatusExecuting: "అమలు జరుగుతోంది...",
+    dagStatusCompleted: "పూర్తయింది",
+    dagStatusSkipped: "పిలవబడలేదు — ఉద్దేశ్యానికి దీని అవసరం లేదు",
+    dagBtnReasoningActiveLive: "తర్కం క్రియాశీలంగా ఉంది (లైవ్ బ్యాకెండ్)...",
+    dagBtnExecutedLive: "✓ లైవ్ బ్యాకెండ్ ద్వారా పైప్‌లైన్ అమలు చేయబడింది · మళ్లీ రన్ చేయండి",
+    dagBtnErrorRetry: "▶ లైవ్ పైప్‌లైన్ సిమ్యులేషన్‌ను రన్ చేయండి",
+    dagBtnReasoningActiveOffline: "తర్కం క్రియాశీలంగా ఉంది (స్థానిక సిమ్యులేషన్)...",
+    dagBtnExecutedOffline: "✓ పైప్‌లైన్ అమలు చేయబడింది (స్థానిక సిమ్యులేషన్) · మళ్లీ రన్ చేయండి",
+    dagTabTitle: "8-నోడ్ సహకార బహుళ-ఏజెంట్ DAG",
+    dagInteractiveCanvasBadge: "ఇంటరాక్టివ్ రీజనింగ్ కాన్వాస్",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL జియోఫెన్సింగ్, ఫ్లీట్ సాంద్రత మరియు ప్రయాణ ETAపై తర్కించే రియల్-టైమ్ బహుళ-ఏజెంట్ అమలు పైప్‌లైన్.",
+    backendCheckingStatus: "బ్యాకెండ్‌ను తనిఖీ చేస్తోంది...",
+    dagZoomReset: "రీసెట్",
+    dagRunSimulationBtn: "▶ లైవ్ పైప్‌లైన్ సిమ్యులేషన్‌ను రన్ చేయండి",
+    dagClickToInspectHint: "దాని ముడి టెలిమెట్రీ ఇన్‌పుట్, అంతర్గత అల్గారిథమ్‌లు మరియు JSON డేటా అవుట్‌పుట్‌ను పరిశీలించడానికి ఏదైనా ఏజెంట్ కార్డ్‌పై క్లిక్ చేయండి.",
+    dagOrchestratorLabel: "ఆర్కెస్ట్రేటర్: LangGraph / Async ఏజెంట్ కోర్",
+    dagInspectorDefaultTitle: "ఏజెంట్ వివరాలు",
+    dagInspectorDefaultRole: "పాత్ర వివరణ",
+    dagInspectorLatencyPlaceholder: "లేటెన్సీ: 24ms",
+    dagInspectorJsonLabel: "లైవ్ JSON పేలోడ్",
+    dagCloseInspector: "ఇన్‌స్పెక్టర్‌ను మూసివేయండి",
+    chatNewConversationMsg: "కొత్త సంభాషణ ప్రారంభమైంది. ORCA మునుపటి చాట్ సందర్భాన్ని ఉపయోగించదు.",
+    chatYouLabel: "మీరు",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR & Open-Meteo అంతటా 8 ప్రత్యేక AI ఏజెంట్లను సమన్వయం చేస్తోంది...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "బహుళ-ఏజెంట్ సముద్ర సలహా",
+    chatGroundedConfidenceTemplate: "{confidence}% ఆధారసహిత విశ్వాసం",
+    chatLangDetectedTooltip: "సందేశం నుండి గుర్తించిన భాష",
+    chatListenTts: "వినండి (TTS)",
+    chatNavicMssBtn: "NavIC MSS కోడ్",
+    chatMetricZone: "సిఫార్సు చేసిన జోన్",
+    chatMetricEta: "లైవ్ సముద్ర స్థితి ETA",
+    chatMetricVessels: "క్రియాశీల నౌకలు",
+    chatVesselsSuffix: "{count} నౌకలు",
+    chatMetricImbl: "IMBL అనుమతి",
+    chatReasoningTraceSummaryTemplate: "బహుళ-ఏజెంట్ రీజనింగ్ ట్రేస్‌ను చూడండి ({steps} దశలు అమలు చేయబడ్డాయి)",
+    chatNodeDagSuffixTemplate: "{count}-నోడ్ DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT బ్యాకెండ్ ఒక సలహాను రూపొందించింది కానీ ఎలాంటి టెక్స్ట్‌ను తిరిగి ఇవ్వలేదు.",
+    chatLiveAdvisoryLabel: "✓ లైవ్ బహుళ-ఏజెంట్ సలహా",
+    chatGroundedEngineFallback: "ఆధారసహిత ఇంజిన్",
+    chatOceanSourceTierTemplate: "సముద్ర మూల స్థాయి: {tier} · క్లోరోఫిల్: {chlorophyll}",
+    chatCitationsTemplate: "సైటేషన్లు: {citations}",
+    chatOfflineBannerText: "ఆఫ్‌లైన్ సలహా ఇంజిన్ — ORCA బ్యాకెండ్ చేరుకోలేకపోయింది. దిగువ గణాంకాలు లైవ్ టెలిమెట్రీ కాదు, సిమ్యులేటెడ్ ఉదాహరణ అంచనా మాత్రమే.",
+    chatOfflineImblPlainText: "ఆఫ్‌లైన్ సలహా (బ్యాకెండ్ చేరుకోలేదు, సిమ్యులేటెడ్ అంచనా): Palk Strait / Gulf of Mannar ప్రాంతంలోని నౌకలు సాధారణంగా India-Sri Lanka IMBL సరిహద్దుకు కొన్ని నాటికల్ మైళ్ల దూరంలో ఉంటాయి. పశ్చిమ దిశగా గమనాన్ని కొనసాగించండి మరియు VHF ట్రాన్స్‌పాండర్లను ఛానల్ 16లో యాక్టివ్‌గా ఉంచండి. సరిహద్దుకు వాస్తవ కొలిచిన దూరం కోసం ORCA బ్యాకెండ్‌కు మళ్లీ కనెక్ట్ అవ్వండి.",
+    chatOfflineImblHtmlHeading: "IMBL జియోఫెన్సింగ్ సలహా (సిమ్యులేటెడ్ ఆఫ్‌లైన్ అంచనా):",
+    chatOfflineImblHtmlBody1: "లైవ్ బ్యాకెండ్ కనెక్షన్ లేకుండా, నౌక నుండి సరిహద్దుకు ఖచ్చితమైన దూరాలను కొలవలేము. Palk Strait Sector 4 సమీపంలో సాధారణ జాగ్రత్తగా, Mandapam వైపు పశ్చిమ దిశ గమనాన్ని కొనసాగించండి.",
+    chatOfflineImblHtmlBody2: "ఇది కొలిచిన జియోఫెన్స్ రీడింగ్ కాదు, ఒక సాధారణ ఆఫ్‌లైన్ భద్రతా రిమైండర్ మాత్రమే. IMBLకు నిజమైన దూర గణన కోసం ORCA బ్యాకెండ్‌కు మళ్లీ కనెక్ట్ అవ్వండి.",
+    chatOfflineImblStep1: "బ్యాకెండ్ చేరుకోలేదు. స్థానిక కీవర్డ్ మ్యాచ్‌ను ఉపయోగించి ప్రశ్నను IMBL_BOUNDARYగా వర్గీకరించారు.",
+    chatOfflineImblStep2: "లైవ్ జియోఫెన్సింగ్ టెలిమెట్రీ అందుబాటులో లేదు -- సాధారణ సరిహద్దు-భద్రతా మార్గదర్శకత్వాన్ని మాత్రమే తిరిగి ఇస్తోంది.",
+    chatOfflineDensityPlainText: "ఆఫ్‌లైన్ సలహా (బ్యాకెండ్ చేరుకోలేదు, సిమ్యులేటెడ్ అంచనా): బ్యాకెండ్ కనెక్షన్ లేకుండా లైవ్ నౌక లెక్కలను పొందలేము. చారిత్రకంగా, Wadge Bank మరియు Kochi Deep Offshore ప్రాంతాల్లో మధ్యస్థ మత్స్య రద్దీ కనిపిస్తుంది. నౌక డేటాసెట్ నుండి వాస్తవ ఫ్లీట్-సాంద్రత రీడింగ్ కోసం ORCA బ్యాకెండ్‌కు మళ్లీ కనెక్ట్ అవ్వండి.",
+    chatOfflineDensityHtmlHeading: "ఫ్లీట్ సాంద్రత (ఆఫ్‌లైన్ — సిమ్యులేటెడ్ ప్లేస్‌హోల్డర్):",
+    chatOfflineDensityHtmlBody: "ఫ్లీట్ & ట్రాఫిక్ ఏజెంట్ యొక్క లైవ్ నౌక డేటాసెట్ ప్రస్తుతం చేరుకోలేకపోతోంది, కాబట్టి జోన్‌లోని ఖచ్చితమైన నౌక లెక్క అందుబాటులో లేదు.",
+    chatOfflineDensityListItem: "నిజమైన జోన్-వారీ నౌక లెక్క మరియు రద్దీ నిర్ధారణ కోసం ORCA బ్యాకెండ్‌కు మళ్లీ కనెక్ట్ అవ్వండి.",
+    chatOfflineDensityStep1: "బ్యాకెండ్ చేరుకోలేదు. స్థానిక కీవర్డ్ మ్యాచ్‌ను ఉపయోగించి ప్రశ్నను FLEET_DENSITYగా వర్గీకరించారు.",
+    chatOfflineDensityStep2: "లైవ్ ఫ్లీట్ డేటాసెట్ అందుబాటులో లేదు -- కల్పిత గణాంకాన్ని చూపించకుండా ఉండటానికి నౌక లెక్కలు చూపబడలేదు.",
+    chatOfflineGenericPlainTextTemplate: "ఆఫ్‌లైన్ సలహా (బ్యాకెండ్ చేరుకోలేదు): ORCA యొక్క బహుళ-ఏజెంట్ బ్యాకెండ్‌ను చేరుకోలేకపోయాము, కాబట్టి ఈ సమాధానం ఆధారసహిత రీడింగ్ కాకుండా ఒక సాధారణ, లైవ్ కాని ప్లేస్‌హోల్డర్ మాత్రమే. మీ బ్రౌజర్ యొక్క స్వంత Open-Meteo విడ్జెట్ గణనీయమైన అల ఎత్తు దాదాపు {liveWave}m అని నివేదిస్తుంది, కానీ PFZ ర్యాంకింగ్, రూట్ దూరం, ETA మరియు ఫ్లీట్ లెక్కలు అన్నీ బ్యాకెండ్‌ను అవసరం చేస్తాయి మరియు ఇక్కడ చూపబడవు. నిజమైన సలహా కోసం ORCA బ్యాకెండ్‌కు మళ్లీ కనెక్ట్ అవ్వండి.",
+    chatOfflineGenericHtmlHeading: "ఆఫ్‌లైన్ ప్లేస్‌హోల్డర్ సలహా",
+    chatOfflineGenericHtmlBody1Template: "ORCA బహుళ-ఏజెంట్ బ్యాకెండ్ (శాటిలైట్, వాతావరణం, PFZ ర్యాంకింగ్, జియోఫెన్సింగ్, ఫ్లీట్, రూటింగ్ మరియు న్యూరల్ సింథసిస్) ప్రస్తుతం చేరుకోలేకపోతోంది. క్లయింట్-సైడ్‌లో, ఈ బ్రౌజర్ చివరిసారిగా Open-Meteo నుండి <strong>{liveWave}m</strong> అల ఎత్తును చూసింది, కానీ మిగతా ప్రతి గణాంకం బ్యాకెండ్‌ను అవసరం చేస్తుంది.",
+    chatOfflineGenericHtmlBody2: "<strong>ఎలాంటి PFZ సిఫార్సు, రూట్, ETA లేదా ఫ్లీట్ లెక్క చూపబడదు</strong> ఎందుకంటే వాటిని లెక్కించడం కాకుండా కల్పించవలసి వస్తుంది. పూర్తి ఆధారసహిత సలహా కోసం ORCA బ్యాకెండ్‌కు మళ్లీ కనెక్ట్ అవ్వండి.",
+    chatOfflineGenericStep1: "బ్యాకెండ్ చేరుకోలేదు. ఉద్దేశ్యానికి సంబంధించిన కీవర్డ్ ఏదీ సరిపోలలేదు -- GENERAL_VOYAGE_SAFETY ఆఫ్‌లైన్ ప్లేస్‌హోల్డర్‌ను తిరిగి ఇస్తోంది.",
+    chatOfflineGenericStep2Template: "క్లయింట్‌కు కనిపించే ఒకే గణాంకం అందుబాటులో ఉంది: చివరిగా తెలిసిన Open-Meteo అల ఎత్తు {liveWave}m (బ్యాకెండ్ ద్వారా కాకుండా బ్రౌజర్ నేరుగా పొందింది).",
+    chatTtsUnsupportedAlert: "మీ బ్రౌజర్ స్పీచ్ సింథసిస్‌కు మద్దతు ఇవ్వదు.",
+    chatTtsWelcomeFallback: "ORCA INSIGHTకు స్వాగతం. అన్ని శాటిలైట్ ఫీడ్‌లు మరియు తీర ఓషనోగ్రఫీ వ్యవస్థలు సాధారణ స్థితిలో పనిచేస్తున్నాయి.",
+    chatStopAudio: "ఆడియోను ఆపండి",
+    chatListenAudioAdvisory: "ఆడియో సలహాను వినండి",
+    chatTabTitle: "AI నిర్ణయ స్టూడియో & బహుళ-ఏజెంట్ చాట్‌బాట్",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR మరియు తీర జియోఫెన్సింగ్‌పై తర్కించే సహకార ఏజెంట్లచే శక్తినిస్తుంది",
+    chatNewConversationBtn: "కొత్త సంభాషణ",
+    chatPromptPFZ: "Kochi హార్బర్ నుండి క్యాచ్ సంభావ్యత మరియు జాతులతో సమీపంలోని అధిక-దిగుబడి PFZ మత్స్య జోన్‌ను కనుగొనండి.",
+    chatPromptSafety: "నేటికి సముద్ర-యాత్రా అనుమతి స్కోర్, గణనీయమైన అల ఎత్తు మరియు గాలి ప్రమాదాన్ని తనిఖీ చేయండి.",
+    chatPromptBorder: "India-Sri Lanka IMBL సరిహద్దుకు దూరాన్ని తనిఖీ చేసి, 2 NM ప్రమాద జోన్‌లోని నౌకలను జాబితా చేయండి.",
+    chatPromptDensity: "Wadge Bank మరియు Kochi Deep అంతటా ప్రస్తుత నౌక లెక్క మరియు సాంద్రత పంపిణీ ఏమిటి?",
+    chatPromptETA: "Kochi నుండి PFZ-01కు ప్రయాణ ETAను లెక్కించి, రౌండ్-ట్రిప్ 18:30 సాయంత్రం లోపు సురక్షితంగా తిరిగి వస్తుందో ధృవీకరించండి.",
+    chatConversationLabel: "సంభాషణ",
+    chatNeuralCoreActive: "ORCA INSIGHT న్యూరల్ కోర్ క్రియాశీలంగా ఉంది",
+    chatAgentsReadyUptime: "8 ఏజెంట్లు సిద్ధంగా ఉన్నాయి · 99.94% అప్‌టైమ్",
+    chatWelcomeMessage: "వణక్కం / నమస్తే! నేను <strong>ORCA INSIGHT</strong> బహుళ-ఏజెంట్ సింథసిస్ వ్యవస్థను. మీరు సురక్షిత ప్రయాణ అనుమతి, భారత తీరం వెంబడి అధిక-దిగుబడి PFZ జోన్లు, లైవ్ నౌకా రద్దీ, IMBL సరిహద్దు సామీప్యత మరియు సముద్ర-స్థితి సర్దుబాటు చేసిన ETA గణనల గురించి మీ ప్రశ్నను మాట్లాడవచ్చు లేదా టైప్ చేయవచ్చు.",
+    chatMicHint: "తమిళం, హిందీ, మలయాళం లేదా ఇంగ్లీష్‌లో మాట్లాడటానికి క్రింద ఉన్న మైక్రోఫోన్ చిహ్నాన్ని క్లిక్ చేయండి!",
+    chatVoiceInputTitle: "ప్రశ్న మాట్లాడండి (స్పీచ్-టు-టెక్స్ట్)",
+    chatLiveReasoningTraceTitle: "లైవ్ రీజనింగ్ ట్రేస్",
+    chatReasoningTraceEmptyHint: "8 సహకార ఏజెంట్లలో ప్రతి ఒక్కటి దీన్ని ఇక్కడ లైవ్‌గా తర్కించడాన్ని చూడటానికి ఎడమవైపు ఒక ప్రశ్న అడగండి.",
+    chatLiveTelemetryTitle: "లైవ్ సముద్ర టెలిమెట్రీ",
+    chatCurrentSeaClearance: "ప్రస్తుత సముద్ర అనుమతి:",
+    chatSignificantWaves: "గణనీయమైన అలలు:",
+    chatSurfaceWind: "ఉపరితల గాలి:",
+    chatActiveVessels: "క్రియాశీల నౌకలు:",
+    chatOpenDagVisualizerBtn: "పూర్తి ఏజెంట్ DAG విజువలైజర్‌ను తెరవండి ➔",
+    navicConnected: "NavIC రిసీవర్: కనెక్ట్ చేయబడింది (L5/S-బ్యాండ్)",
+    navicDisconnected: "NavIC రిసీవర్: డిస్‌కనెక్ట్ చేయబడింది",
+    navicTrackMyPosition: "నా స్థానాన్ని ట్రాక్ చేయండి",
+    navicStopTracking: "ట్రాకింగ్‌ను ఆపండి",
+    navicSimulateMovement: "నౌక కదలికను సిమ్యులేట్ చేయండి",
+    navicStopSimulation: "సిమ్యులేషన్‌ను ఆపండి",
+    navicStatusTrackingOff: "ట్రాకింగ్ ఆఫ్‌లో ఉంది · ఎలాంటి స్థానం అభ్యర్థించబడటం లేదు",
+    navicStatusGeoUnsupported: "ఈ బ్రౌజర్ జియోలొకేషన్‌కు మద్దతు ఇవ్వదు. డెమో కోసం సిమ్యులేటెడ్ నౌక కదలికను ఉపయోగించండి.",
+    navicStatusRequestingPermission: "పరికర-స్థాన అనుమతిని అభ్యర్థిస్తోంది…",
+    navicStatusLiveTrackingTemplate: "లైవ్ పరికర ట్రాకింగ్ · ఖచ్చితత్వం ±{accuracy}m · నిల్వ చేయబడదు",
+    navicStatusPermissionErrorTemplate: "స్థాన అనుమతి అందుబాటులో లేదు ({error}). ఎలాంటి స్థానం పంపబడలేదు.",
+    navicStatusBackendUnavailable: "బ్యాకెండ్ అందుబాటులో లేదు — స్థానిక సిమ్యులేషన్‌లో ఖచ్చితమైన జియోఫెన్స్ దూరాన్ని అంచనా వేయలేము.",
+    navicStatusSimStopped: "జియోఫెన్స్ సిమ్యులేషన్ ఆగిపోయింది",
+    navicStatusSimMovingTemplate: "సిమ్యులేటెడ్ నౌక కదలిక · పాయింట్ {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-అక్షరాల శాటిలైట్ అత్యవసర కోడ్ కాపీ చేయబడింది:\n\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) స్కైప్లాట్",
+    navicConstellationDesc: "7-శాటిలైట్ జియోస్టేషనరీ / IGSO కాన్‌స్టలేషన్",
+    navicConnectedShort: "కనెక్ట్ చేయబడింది (L5/S)",
+    navicTrackedSatellitesTitle: "ట్రాక్ చేయబడిన శాటిలైట్లు (SNR dB-Hz)",
+    navicNmeaStreamTitle: "లైవ్ NMEA-0183 హార్డ్‌వేర్ స్ట్రీమ్ ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "బాడ్ రేట్: 9600 bps · 1 Hz ఫీడ్",
+    navicDopPrecisionLabel: "DOP ఖచ్చితత్వం",
+    navicDopValue: "HDOP 1.05 (అద్భుతం)",
+    navicDiffFixLabel: "డిఫరెన్షియల్ ఫిక్స్",
+    navicDiffFixValue: "NavIC DGPS క్రియాశీలం",
+    navicBorderHwLabel: "సరిహద్దు హెచ్చరిక హార్డ్‌వేర్",
+    navicBorderHwValue: "బజర్ సిద్ధంగా ఉంది",
+    navicGeofenceTitle: "లైవ్ స్థాన జియోఫెన్సింగ్",
+    navicGeofenceDesc: "మీ పరికర స్థానం సెషన్-లోపల IMBL/MPA తనిఖీల కోసం మాత్రమే ఉపయోగించబడుతుంది మరియు ORCA దీన్ని ఎప్పుడూ నిల్వ చేయదు.",
+    navicGeofenceInitialStatus: "ట్రాకింగ్ ఆఫ్‌లో ఉంది · 5 NM IMBL హెచ్చరిక / MPA బఫర్ హెచ్చరిక",
+    safetyVerdictDescTemplate: "మీరు ఎంచుకున్న హార్బర్ సమీపంలో లైవ్ Open-Meteo సముద్ర టెలిమెట్రీ ప్రకారం గణనీయమైన అల ఎత్తు {wave}m మరియు ఉపరితల గాలి వేగం {wind}kn గా ఉంది, ఇది {score}/100 లెక్కించిన భద్రతా స్కోర్‌ను ఇస్తుంది.",
+    safetyWindDefaultDirection: "పశ్చిమ దిశ",
+    safetyBreezeSuffix: "{direction} గాలి",
+    severityLow: "తక్కువ",
+    severityModerate: "మధ్యస్థం",
+    severityHigh: "అధికం",
+    waveBandCalm: "ప్రశాంతం (< 0.5m)",
+    waveBandSlight: "కొద్దిగా (0.5 - 1.25m)",
+    waveBandModerate: "మధ్యస్థం (1.25 - 2.5m)",
+    waveBandRough: "కల్లోలం (> 2.5m)",
+    seaStateCalm: "ప్రశాంతం",
+    seaStateSlight: "కొద్దిగా",
+    seaStateSlightModerate: "కొద్దిగా నుండి మధ్యస్థం",
+    seaStateModerateRough: "మధ్యస్థం నుండి కల్లోలం",
+    seaStateUnknown: "తెలియదు",
+    lightningBandSafe: "సురక్షిత వాతావరణ ప్రొఫైల్",
+    lightningBandElevated: "పెరిగిన కన్వెక్టివ్ ప్రమాదం",
+    lightningBandSevere: "తీవ్రమైన తుఫాను హెచ్చరిక",
+    safetySyncLatencyLabel: "సింక్ లేటెన్సీ:",
+    safetyBatteryLabel: "బ్యాటరీ:",
+    safetyLastPassLabel: "చివరి పాస్:",
+    safetyAltitudeLabel: "ఎత్తు:",
+    telemetryLiveOpenMeteoTemplate: "లైవ్ OPEN-METEO టెలిమెట్రీ ({wave}m SWH)",
+    telemetryCachedArchive: "టెలిమెట్రీ క్రియాశీలం (కాష్ చేసిన శాటిలైట్ ఆర్కైవ్)",
+    backendOnlineStatus: "లైవ్ FASTAPI బ్యాకెండ్ కనెక్ట్ చేయబడింది",
+    backendOfflineStatus: "బ్యాకెండ్ ఆఫ్‌లైన్‌లో ఉంది · స్థానిక సిమ్యులేషన్ మోడ్",
+    aisLiveCountTemplate: "{count} లైవ్ AIS నౌక{plural}",
+    aisNoLiveVessels: "ప్రస్తుతం ఎలాంటి లైవ్ AIS నౌకలు లేవు",
+    aisBlendedBannerTemplate: "{liveText} + {simCount} సిమ్యులేటెడ్ నౌక{plural}ను చూపిస్తోంది, ఇవి ప్రస్తుతం లైవ్ AIS కవరేజ్ లేని పోర్టులను పూరిస్తున్నాయి.",
+    aisUnavailableDefault: "లైవ్ AIS నౌక ఫీడ్ అందుబాటులో లేదు -- 0 నౌకలను చూపిస్తోంది.",
+    aisNotConfigured: "ఈ డిప్లాయ్‌మెంట్‌లో లైవ్ AIS నౌక ఫీడ్ కాన్ఫిగర్ చేయబడలేదు.",
+    aisConnectedNotSending: "AIS ప్రొవైడర్‌కు (AISstream.io) కనెక్ట్ చేయబడింది, కానీ ఇది ప్రస్తుతం నౌక డేటాను పంపడం లేదు — ఇది స్థానిక లోపం కాదు, ప్రొవైడర్-వైపు అంతరాయం కావచ్చు.",
+    aisDisconnectedReconnecting: "AIS ప్రొవైడర్ (AISstream.io) నుండి డిస్‌కనెక్ట్ చేయబడింది; స్వయంచాలకంగా మళ్లీ కనెక్ట్ అవుతోంది.",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> India–Sri Lanka IMBL నుండి <strong>{dist} NM</strong> దూరంలో నడుస్తోంది{simTag}. స్వయంచాలక హెచ్చరిక పంపబడింది.",
+    imblAlertNoneTemplate: "ప్రస్తుతం {warnDist} NM IMBL హెచ్చరిక దూరంలో ఎలాంటి నౌకలు లేవు. సమీపంలో ట్రాక్ చేసిన నౌక: <strong>{dist} NM</strong> దూరంలో ఉంది.",
+    imblAlertNoData: "ఇంకా ఎలాంటి నౌక టెలిమెట్రీ అందుబాటులో లేదు.",
+    simulatedSuffix: " (సిమ్యులేటెడ్)",
+    notifUnavailableTitle: "బ్రౌజర్ నోటిఫికేషన్లు అందుబాటులో లేవు",
+    notifUnavailableMsg: "ఈ ట్యాబ్ తెరిచి ఉన్నంత వరకు యాప్-లోపల ప్రమాద బ్యానర్లు ఇప్పటికీ చూపబడతాయి.",
+    notifNotEnabledTitle: "బ్రౌజర్ నోటిఫికేషన్లు ప్రారంభించబడలేదు",
+    notifNotEnabledMsg: "ఈ ట్యాబ్ తెరిచి ఉన్నంత వరకు యాప్-లోపల ప్రమాద బ్యానర్లు క్రియాశీలంగా ఉంటాయి.",
+    hazardHighWavesTitle: "ఎత్తైన అలలు — స్థానిక సిమ్యులేషన్",
+    hazardHighWavesMsgTemplate: "{wave}m అనేది 2.5m జాగ్రత్తా పరిమితిని మించిపోయింది. మూలం: బ్రౌజర్ Open-Meteo టెలిమెట్రీ.",
+    hazardHighWindTitle: "అధిక గాలి — స్థానిక సిమ్యులేషన్",
+    hazardHighWindMsgTemplate: "{wind} kn అనేది 25 kn జాగ్రత్తా పరిమితిని మించిపోయింది. మూలం: బ్రౌజర్ Open-Meteo టెలిమెట్రీ.",
+    hazardLightningTitle: "మెరుపు ప్రమాదం — స్థానిక సిమ్యులేషన్",
+    hazardLightningMsgTemplate: "మెరుపు ప్రాక్సీ {pct}%గా ఉంది. మూలం: బ్రౌజర్ Open-Meteo టెలిమెట్రీ.",
+    safetyOfficialClearanceLabel: "అధికారిక సముద్ర అనుమతి",
+    safetyVerdictDescInitial: "అన్ని శాటిలైట్ ఓషనోగ్రఫీ సూచికలు (Oceansat-3 SSTM థర్మల్ ఫ్రంట్లు, Sentinel-3 అల ఆల్టిమెట్రీ) కేరళ, కర్ణాటక మరియు తమిళనాడు తీర జలాల వెంబడి అనుకూలమైన మత్స్య పరిస్థితులను ధృవీకరిస్తాయి.",
+    safetyIndexLabel: "భద్రతా సూచిక",
+    satConstellationTitle: "ISRO & అంతర్జాతీయ ఓషనోగ్రాఫిక్ శాటిలైట్ కాన్‌స్టలేషన్",
+    satStaticDataNote: "స్థిర సూచన డేటా (లైవ్ టెలిమెట్రీ కాదు)",
+    mapIndiaBoundaryPopup: "భారతదేశం — అధికారిక సరిహద్దు (Survey of India)",
+    mapPfzYieldSuffix: "{rating} దిగుబడి ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "క్లోరోఫిల్:",
+    mapPfzDepthLabel: "లోతు:",
+    mapPfzVesselsLabel: "నౌకలు:",
+    mapPfzActiveSuffix: "{count} క్రియాశీలం",
+    mapPfzTargetSpeciesLabel: "లక్ష్య జాతులు:",
+    mapPfzSimulateRouteBtn: "ఇక్కడ రూట్‌ను సిమ్యులేట్ చేయండి ➔",
+    mapImblPopupBodyTemplate: "కఠినమైన అంతర్జాతీయ సముద్ర సరిహద్దు. హెచ్చరిక బఫర్: {warn} NM. క్రిటికల్ జియోఫెన్స్: {danger} NM.",
+    mapImblPopupTreatyNote: "UNCLOS సముద్ర ఒప్పందం ప్రకారం సరిహద్దు దాటడం నిషేధించబడింది.",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL బఫర్ కారిడార్",
+    mapMpaRestrictedBadge: "నిషేధిత ఎకో-రిజర్వ్",
+    mapHarbourCoastSuffix: "{state} తీరం",
+    mapHarbourCapacityLabel: "సామర్థ్యం:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "ఇంధన స్టేషన్:",
+    mapHarbourFuelAvailable: "అందుబాటులో ఉంది",
+    mapHarbourIceLabel: "ఐస్ ప్లాంట్:",
+    mapHarbourIceActive: "క్రియాశీలం",
+    mapHarbourSetOriginBtn: "మూల హార్బర్‌గా సెట్ చేయండి",
+    mapVesselSimulatedBadge: "సిమ్యులేటెడ్ · ఇక్కడ లైవ్ AIS కవరేజ్ లేదు",
+    mapVesselSpeedLabel: "వేగం:",
+    mapVesselHeadingLabel: "దిశ:",
+    mapVesselZoneLabel: "జోన్:",
+    mapVesselImblDistLabel: "IMBL దూరం:",
+    mapVesselStatusLabel: "స్థితి:",
+    mapVesselFuelLabel: "ఇంధనం:",
+    mapVesselFuelNA: "N/A",
+    mapRoutePopupTitle: "సముద్రం-మాత్రమే A* రూట్ (భూమి + MPA నివారణ)",
+    mapRouteDistanceEtaTemplate: "దూరం: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} చుట్టూ {pct}% డిటూర్",
+    mapRouteLandNoGoZones: "భూమి/నిషేధిత జోన్లు",
+    vesselStatusSafeFishing: "సురక్షిత మత్స్యం",
+    vesselStatusBorderAlert: "సరిహద్దు హెచ్చరిక",
+    vesselStatusBorderWarn: "సరిహద్దు జాగ్రత్త",
+    vesselStatusInTransit: "ప్రయాణంలో",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "సిమ్యులేటెడ్ -- ఈ పోర్ట్ సమీపంలో లైవ్ AIS కవరేజ్ లేదు",
+    vesselLocateAction: "గుర్తించండి ➔",
+    fleetVesselCountSuffix: "{count} నౌకలు",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} లైవ్ · {sim} సిమ్)",
+    mapActiveVesselsBreakdownTemplate: "{total} క్రియాశీల నౌకలు ({live} లైవ్ · {sim} సిమ్యులేటెడ్)",
+    mapActiveVesselsSimpleTemplate: "{total} క్రియాశీల నౌకలు",
+    mapTabTitle: "GIS కమాండ్ మ్యాప్ · భారత తీర జలాలు",
+    mapTabDesc: "రియల్-టైమ్ శాటిలైట్ PFZలు, IMBL సరిహద్దు కారిడార్లు మరియు AIS నౌకా ట్రాక్‌లతో కూడిన ఇంటరాక్టివ్ హై-కాంట్రాస్ట్ నాటికల్ మ్యాప్.",
+    layerPfzZones: "PFZ జోన్లు",
+    layerImblBuffer: "IMBL బఫర్",
+    layerEcoReserves: "ఎకో రిజర్వ్‌లు (MPA)",
+    layerHarbours: "హార్బర్లు",
+    layerLiveVessels: "లైవ్ నౌకలు",
+    layerDensityHeatmap: "సాంద్రత హీట్‌మ్యాప్",
+    layerIndiaBoundary: "భారత సరిహద్దు (Survey of India)",
+    routePlannerDesc: "MPAలు మరియు సరిహద్దు ప్రమాదాలను నివారించే A*-శైలి మార్గం",
+    routeVesselSpeedLabel: "నౌక వేగం:",
+    fleetMonitorTitle: "ఫ్లీట్ మానిటర్ · లైవ్ నౌక టెలిమెట్రీ",
+    fleetTotalActiveTitle: "మొత్తం క్రియాశీల నౌకలు",
+    fleetTotalActiveDesc: "ప్రస్తుతం AIS ట్రాన్స్‌పాండర్ సిగ్నల్‌లను ప్రసారం చేస్తున్న నౌకలు",
+    fleetZoneDistTitle: "జోన్ వారీగా నౌక పంపిణీ",
+    imblAlertCardTitle: "IMBL సరిహద్దు సామీప్యత హెచ్చరిక",
+    fleetTableSubDesc: "AISstream.io నుండి లైవ్ AIS స్థానాలు, ప్రస్తుతం లైవ్ రిసీవర్ కవరేజ్ లేని చోట స్పష్టంగా ట్యాగ్ చేసిన సిమ్యులేటెడ్ ఫ్లీట్‌తో (\"SIM\" బ్యాడ్జ్ చూడండి) బ్యాక్‌ఫిల్ చేయబడింది",
+    vesselSearchPlaceholder: "నౌక పేరు లేదా IDని శోధించండి...",
+    filterAllStatuses: "అన్ని స్థితులు",
+    filterSafeFishing: "సురక్షిత మత్స్యం",
+    filterInTransit: "ప్రయాణంలో",
+    filterBorderAlert: "సరిహద్దు హెచ్చరిక",
+    thVesselId: "నౌక ID",
+    thVesselName: "నౌక పేరు",
+    thType: "రకం",
+    thCurrentZone: "ప్రస్తుత జోన్",
+    thSpeedHeading: "వేగం / దిశ",
+    thImblDist: "IMBL దూరం",
+    thStatus: "స్థితి",
+    thAction: "చర్య",
+    bulletinIssuedLabel: "జారీ చేయబడింది:",
+    bulletinRegionLabel: "ప్రాంతం:",
+    bulletinWavesLabel: "అలలు:",
+    bulletinWindsLabel: "గాలులు:",
+    bulletinSourceLabel: "మూలం:",
+    bulletinListenBtn: "బులెటిన్‌ను వినండి",
+    bulletinsTabTitle: "అధికారిక సముద్ర & మత్స్య బులెటిన్లు (ISRO - INCOIS)",
+    bulletinsTabDesc: "క్రమసంఖ్య గల సలహాలు, తుఫాను ప్రమాద హెచ్చరికలు మరియు అంతర్జాతీయ సరిహద్దు అనుసరణ హెచ్చరికలు.",
+    bulletinNotifyToggleTitle: "ఈ ట్యాబ్/PWA తెరిచి ఉన్నప్పుడు మాత్రమే బ్రౌజర్ హెచ్చరికలను స్వీకరించండి",
+    bulletinNotifyToggleLabel: "తెరిచి ఉన్నప్పుడు తెలియజేయండి",
+    bulletinFilterAll: "అన్ని బులెటిన్లు",
+    bulletinFilterCritical: "క్రిటికల్",
+    bulletinFilterWarning: "హెచ్చరికలు",
+    bulletinFilterAdvisory: "సలహాలు",
+    bulletinsPushNote: "ఈ ట్యాబ్/PWA తెరిచి ఉన్నప్పుడు మాత్రమే ప్రమాద హెచ్చరికలు చురుగ్గా పనిచేస్తాయి. యాప్ మూసివేయబడినప్పుడు పుష్ నోటిఫికేషన్లకు ప్రొడక్షన్ పుష్-సబ్‌స్క్రిప్షన్ సేవ అవసరం మరియు ఇది ఈ ప్రోటోటైప్‌లో అమలు చేయబడలేదు.",
+    sosModalTitle: "అత్యవసర ఆపద బీకాన్ (SOS)",
+    sosInstructions: "అత్యవసర SOSను ప్రారంభించడం వల్ల <strong>INSAT-3DR SAS&R</strong> ద్వారా భారత కోస్ట్ గార్డ్ మెరైన్ రెస్క్యూ కోఆర్డినేషన్ సెంటర్ (MRCC)కు అత్యవసర 406 MHz ఆపద సిగ్నల్ ప్రసారం చేయబడుతుంది.",
+    sosCurrentPositionLabel: "ప్రస్తుత స్థానం:",
+    sosVhfChannelLabel: "అత్యవసర VHF ఛానల్:",
+    sosMrccHelplineLabel: "MRCC హెల్ప్‌లైన్:",
+    sosConfirmBtn: "నిర్ధారించి ఆపద బీకాన్‌ను ప్రసారం చేయండి",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R బీకాన్ ISRO & కోస్ట్ గార్డ్ MRCCకు ప్రసారం అవుతోంది",
+    sosDistressRelayedMsg: "INSAT-3DR SAS&R రిసీవర్ ద్వారా ఆపద ప్యాకెట్ రిలే చేయబడింది. మెరైన్ రెస్క్యూ కోఆర్డినేషన్ సెంటర్ (MRCC చెన్నై/ముంబై) VHF Ch 16లో హెచ్చరించబడింది.",
+    sosGpsVesselIdTemplate: "GPS కోఆర్డినేట్లు: {coords} · నౌక ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO సహకార సముద్ర ఇంటెలిజెన్స్ · Smart India Hackathon 2026",
+    landingSubtitle: "ఒక సహకార సముద్ర-ఇంటెలిజెన్స్ ప్లాట్‌ఫారమ్, రెండు కమాండ్ డెక్‌లు: మత్స్యకారుని రోజువారీ అవకాశ కన్సోల్, మరియు పూర్తి ISRO శాటిలైట్, AIS మరియు జియోఫెన్సింగ్ ఇన్‌సైట్ సూట్.",
+    landingStripItem1: "Oceansat-3 SSTM థర్మల్ ఫ్రంట్లు",
+    landingStripItem2: "INSAT-3DR శాటిలైట్ ఓషనోగ్రఫీ",
+    landingStripItem3: "8-నోడ్ సహకార ఏజెంట్ DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS బ్రిడ్జ్",
+    landingStripItem5: "IMBL సరిహద్దు జియోఫెన్సింగ్ హెచ్చరికలు",
+    landingStripItem6: "లైవ్ AIS ఫ్లీట్ & GIS కమాండ్",
+    landingStripItem7: "Sell Smarter కొనుగోలుదారు ధర",
+    landingStripItem8: "406 MHz SOS ఆపద బీకాన్",
+    landingFishermanCardTitle: "ORCA Fisherman",
+    landingFishermanCardDesc: "నేటి అవకాశ స్కోర్, Sell Smarter ధర, ప్రయాణ-ఖర్చు కాలిక్యులేటర్ మరియు మీ క్యాచ్ కోసం కొనుగోలుదారు లీడ్‌లు — పడవ కోసం రూపొందించబడింది.",
+    landingFishermanCardCta: "Fisherman Console తెరవండి",
+    landingFishermanCardTitleAttr: "Fisherman Consoleను తెరవండి",
+    landingInsightCardTitle: "ORCA Insight",
+    landingInsightCardDesc: "పూర్తి కమాండ్ డెక్: ISRO శాటిలైట్ ఓషనోగ్రఫీ, GIS మ్యాప్, 8-నోడ్ ఏజెంట్ DAG, భద్రతా బారోమీటర్, ఫ్లీట్ మానిటర్ మరియు NavIC బ్రిడ్జ్.",
+    landingInsightCardCta: "Insight Command Deckను తెరవండి",
+    landingInsightCardTitleAttr: "Insight command deckను తెరవండి",
+    backToOverviewTitle: "అవలోకనానికి తిరిగి వెళ్ళండి",
+    statSimulatedFleetLabel: "సిమ్యులేటెడ్ AIS ఫ్లీట్",
+    statSatellitesActiveTemplate: "{count} క్రియాశీలం",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} జోన్లు",
+    statPfzZonesListLabel: "Wadge Bank, Kochi, Veraval...",
+    statImblCorridorsCountTemplate: "{count} కారిడార్లు",
+    statImblBordersLabel: "India-Sri Lanka & Pak సరిహద్దులు",
+    pillarDagTitle: "8-నోడ్ సహకార ఏజెంట్ DAG",
+    pillarDagDesc: "సబ్-సెకండ్ లేటెన్సీతో ప్రశ్నలను శాటిలైట్, అల ప్రమాదం, జియోఫెన్సింగ్, నౌక లెక్కింపు, ETA మరియు న్యూరల్ సింథసిస్ దశలుగా విభజించే బహుళ-ఏజెంట్ ఆర్కిటెక్చర్.",
+    pillarEtaTitle: "లైవ్ సముద్ర-స్థితి ETA & సాయంత్రం భద్రత",
+    pillarEtaDesc: "సూర్యాస్తమయం తర్వాత మత్స్యకారులు చిక్కుకుపోకుండా నిరోధించడానికి స్వయంచాలక Return-by-Dusk భద్రతా హెచ్చరికలతో అల నిరోధానికి సర్దుబాటు చేసిన హైడ్రోడైనమిక్ ప్రయాణ గణనలు.",
+    pillarFleetTitle: "లైవ్ ఫ్లీట్ సాంద్రత & IMBL హెచ్చరిక",
+    pillarFleetDesc: "సముద్ర సరిహద్దులను రక్షించే జోన్ వారీగా రియల్-టైమ్ నౌక లెక్కింపు, రద్దీ ప్రమాద సూచికలు మరియు స్వయంచాలక 5 NM/2 NM జియోఫెన్స్ సామీప్యత హెచ్చరికలు.",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · నిర్మించినవారు <strong class=\"text-cyan-400\">{teamName}</strong> · Smart India Hackathon 2026 · Problem Statement 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b>లో వింటోంది... ఇప్పుడు మాట్లాడండి.",
+    sttUnsupportedTitle: "ఈ బ్రౌజర్‌లో స్పీచ్ రికగ్నిషన్‌కు మద్దతు లేదు",
+    routeUnavailableLabel: " రూట్ అందుబాటులో లేదు:",
+    routeUnavailableMsg: "ORCA బ్యాకెండ్ చేరుకోలేకపోతోంది, కాబట్టి ఎలాంటి రూట్ దూరం/ETA చూపించలేము. స్థానిక ఫాల్‌బ్యాక్ మోడ్‌లో నడుస్తోంది.",
+    routeNoSafeRouteLabel: "✕ సురక్షిత సముద్ర రూట్ కనుగొనబడలేదు:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "ఈ హార్బర్/PFZ జతకు భూమి మరియు సముద్ర సంరక్షిత ప్రాంతాలను నివారించే మార్గాన్ని రూటర్ కనుగొనలేకపోయింది.",
+    routeSafeReturnLabel: "✓ సురక్షిత తిరిగి రాక:",
+    routeSafeReturnTemplate: "{time} నాటికి హార్బర్ చేరుకోవడం అంచనా (18:30 IST సాయంత్రం లోపు).",
+    routeReturnAfterDuskLabel: " సాయంత్రం తర్వాత తిరిగి రాక:",
+    routeReturnAfterDuskTemplate: "{time}కు తిరిగి రావడం అంచనా (18:30 IST సూర్యాస్తమయాన్ని మించిపోతుంది). ముందుగా బయలుదేరడం లేదా రాత్రి నావిగేషనల్ బీకాన్ తనిఖీని సిఫార్సు చేస్తున్నాము."
   },
   or: {
     appTitle: "ଓର୍କା ଇନସାଇଟ (ORCA INSIGHT)",
@@ -2279,7 +4935,339 @@ const translations = {
     fmClaimBtn: "ଏହି ଲିଡ୍ ଦାବି କରନ୍ତୁ",
     fmClaimPromptText: "ଏହା କିଏ ପୂରଣ କରୁଛି ତାହା କ୍ରେତା ଜାଣିବା ପାଇଁ ଆପଣଙ୍କର ନାମ ଏବଂ ଫୋନ/ଯୋଗାଯୋଗ ପ୍ରବେଶ କରନ୍ତୁ:",
     fmClaimSuccess: "ଦାବି ହେଲା — କ୍ରେତାଙ୍କୁ ପ୍ଲାଟଫର୍ମ ବାହାରେ ଜଣାଯିବ।",
-    fmClaimFailed: "ବର୍ତ୍ତମାନ ଏହି ତାଲିକା ଦାବି କରିହେଲା ନାହିଁ।"
+    fmClaimFailed: "ବର୍ତ୍ତମାନ ଏହି ତାଲିକା ଦାବି କରିହେଲା ନାହିଁ।",
+    dagAgentSupervisorName: "ମାଷ୍ଟର ସୁପରଭାଇଜର / DAG ପ୍ଲାନର",
+    dagAgentSupervisorRole: "ବହୁ-ମାଧ୍ୟମ ସାମୁଦ୍ରିକ ପ୍ରଶ୍ନକୁ ବିଭକ୍ତ କରି ଉପକାର୍ଯ୍ୟଗୁଡ଼ିକୁ ସାଟେଲାଇଟ୍, ବିପଦ ଓ ଜିଓଫେନ୍ସ ଏଜେଣ୍ଟଙ୍କୁ ପ୍ରଦାନ କରେ।",
+    dagAgentSatelliteName: "ସାଟେଲାଇଟ୍ ମହାସାଗର ବିଜ୍ଞାନ ଏଜେଣ୍ଟ",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (କ୍ଲୋରୋଫିଲ୍-a) ଓ SSTM (ତାପୀୟ ଫ୍ରଣ୍ଟ) ସହିତ INSAT-3DR ମେଘ ଚିତ୍ର ଗ୍ରହଣ କରେ।",
+    dagAgentWeatherName: "ପାଣିପାଗ ଓ ସାମୁଦ୍ରିକ ବିପଦ ଏଜେଣ୍ଟ",
+    dagAgentWeatherRole: "ଉଲ୍ଲେଖନୀୟ ତରଙ୍ଗ ଉଚ୍ଚତା (SWH), ପବନ ଝଡ଼ ଦିଗ, ବିଜୁଳି ସମ୍ଭାବନା ମୂଲ୍ୟାୟନ କରି ସମୁଦ୍ର-ଯାତ୍ରା ମଞ୍ଜୁରୀ ସ୍କୋର ତିଆରି କରେ।",
+    dagAgentPfzName: "ମହାସାଗର ବିଶ୍ଳେଷଣ ଓ PFZ ଏଜେଣ୍ଟ",
+    dagAgentPfzRole: "ତାପୀୟ-କ୍ଲୋରୋଫିଲ୍ ଫ୍ରଣ୍ଟ ମିଳନ ସ୍ଥଳ ଚିହ୍ନଟ କରି, ପେଲାଜିକ୍ ଜୈବ ପିଣ୍ଡ ଘନତା ଗଣନା କରି ଲକ୍ଷ୍ୟ ମତ୍ସ୍ୟ ଅଞ୍ଚଳଗୁଡ଼ିକୁ କ୍ରମାନ୍ୱୟ କରେ।",
+    dagAgentGeofenceName: "ଜିଓଫେନ୍ସିଂ ଓ ମାର୍ଗ ନିର୍ଦ୍ଧାରଣ ଏଜେଣ୍ଟ",
+    dagAgentGeofenceRole: "ଆନ୍ତର୍ଜାତୀୟ ସାମୁଦ୍ରିକ ସୀମା ରେଖା (IMBL) ନିରୀକ୍ଷଣ କରି, ସାମୁଦ୍ରିକ ସୁରକ୍ଷିତ ଅଞ୍ଚଳଗୁଡ଼ିକୁ ବଫର କରି A* ସୁରକ୍ଷିତ ୱେପଏଣ୍ଟ ଗଣନା କରେ।",
+    dagAgentFleetName: "ଫ୍ଲିଟ୍ ଓ ଯାତାୟାତ ଏଜେଣ୍ଟ (ନୂଆ)",
+    dagAgentFleetRole: "AIS ଓ ARGOS-4 ଜାହାଜ ଟ୍ରାନ୍ସପଣ୍ଡରକୁ ସ୍କାନ୍ କରି, ଫ୍ଲିଟ୍ ବଣ୍ଟନ ଟ୍ରାକ୍ କରି ଅତିରିକ୍ତ ଭିଡ଼ କିମ୍ବା ସୀମା ଯାନଜଟ ଚିହ୍ନଟ କରେ।",
+    dagAgentEtaName: "ETA ଓ ଯାତ୍ରା ସୁରକ୍ଷା ଏଜେଣ୍ଟ (ନୂଆ)",
+    dagAgentEtaRole: "ପ୍ରକୃତ-ସମୟ ତରଙ୍ଗ ପ୍ରତିରୋଧ ଅନୁସାରେ ପରିବହନ ଅବଧି ଗଣନା କରି ସନ୍ଧ୍ୟା ପୂର୍ବରୁ ଫେରିବାର ସୁରକ୍ଷା ସମୟସୀମା ମୂଲ୍ୟାୟନ କରେ।",
+    dagAgentSynthesisName: "ନ୍ୟୁରାଲ୍ ସିଣ୍ଥେସିସ୍ ଏଜେଣ୍ଟ (ପରିସଂଖ୍ୟାନ-ଚାଳିତ)",
+    dagAgentSynthesisRole: "ବହୁ-ଏଜେଣ୍ଟ ଟେଲିମେଟ୍ରିକୁ ଏକତ୍ର କରି ଉଦ୍ଧୃତି ଟ୍ୟାଗ ଓ TTS ସହିତ ଏକ ପ୍ରାମାଣିକ, ତଥ୍ୟ-ଆଧାରିତ ପ୍ରାକୃତିକ-ଭାଷା ପରାମର୍ଶ ପ୍ରସ୍ତୁତ କରେ -- ସମ୍ପୂର୍ଣ୍ଣ ନିୟମ-ଆଧାରିତ, ଏହି ସାଇଟର ନିଜ ଲାଇଭ୍ ଟେଲିମେଟ୍ରି ଓ ନିଜ ସଂଚିତ ପରିସଂଖ୍ୟାନ ଖାତା ଉପରେ ଚିନ୍ତନ କରି। କୌଣସି ବାହ୍ୟ AI/LLM API ବ୍ୟବହାର ହୁଏ ନାହିଁ।",
+    dagStatusIdle: "ନିଷ୍କ୍ରିୟ",
+    dagInspectLink: "ନିରୀକ୍ଷଣ କରନ୍ତୁ ➔",
+    dagInspectorLatencyTemplate: "ନିଷ୍ପାଦନ ବିଳମ୍ବ: {latency} · ଉପକାର୍ଯ୍ୟ ଯାଞ୍ଚ ହୋଇଛି",
+    dagStatusQueued: "ଧାଡ଼ିରେ",
+    dagStatusExecuting: "ନିଷ୍ପାଦନ ହେଉଛି...",
+    dagStatusCompleted: "ସମ୍ପୂର୍ଣ୍ଣ",
+    dagStatusSkipped: "ଆହ୍ୱାନ ହୋଇନାହିଁ — ଉଦ୍ଦେଶ୍ୟ ଏହାକୁ ଆବଶ୍ୟକ କରିନଥିଲା",
+    dagBtnReasoningActiveLive: "ତର୍କଣ ସକ୍ରିୟ (ଲାଇଭ୍ ବ୍ୟାକଏଣ୍ଡ)...",
+    dagBtnExecutedLive: "✓ ଲାଇଭ୍ ବ୍ୟାକଏଣ୍ଡ ମାଧ୍ୟମରେ ପାଇପଲାଇନ୍ ନିଷ୍ପାଦିତ · ପୁଣି ଚଲାନ୍ତୁ",
+    dagBtnErrorRetry: "▶ ଲାଇଭ୍ ପାଇପଲାଇନ୍ ସିମୁଲେସନ୍ ଚଲାନ୍ତୁ",
+    dagBtnReasoningActiveOffline: "ତର୍କଣ ସକ୍ରିୟ (ସ୍ଥାନୀୟ ସିମୁଲେସନ୍)...",
+    dagBtnExecutedOffline: "✓ ପାଇପଲାଇନ୍ ନିଷ୍ପାଦିତ (ସ୍ଥାନୀୟ ସିମୁଲେସନ୍) · ପୁଣି ଚଲାନ୍ତୁ",
+    dagTabTitle: "8-ନୋଡ୍ ସହଯୋଗୀ ବହୁ-ଏଜେଣ୍ଟ DAG",
+    dagInteractiveCanvasBadge: "ଇଣ୍ଟରାକ୍ଟିଭ୍ ତର୍କଣ କାନଭାସ୍",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL ଜିଓଫେନ୍ସିଂ, ଫ୍ଲିଟ୍ ଘନତା ଓ ଯାତ୍ରା ETA ଉପରେ ତର୍କଣ କରୁଥିବା ପ୍ରକୃତ-ସମୟ ବହୁ-ଏଜେଣ୍ଟ ନିଷ୍ପାଦନ ପାଇପଲାଇନ୍।",
+    backendCheckingStatus: "ବ୍ୟାକଏଣ୍ଡ ଯାଞ୍ଚ ହେଉଛି...",
+    dagZoomReset: "ପୁନଃସେଟ୍",
+    dagRunSimulationBtn: "▶ ଲାଇଭ୍ ପାଇପଲାଇନ୍ ସିମୁଲେସନ୍ ଚଲାନ୍ତୁ",
+    dagClickToInspectHint: "ଏହାର କଞ୍ଚା ଟେଲିମେଟ୍ରି ଇନପୁଟ୍, ଆଭ୍ୟନ୍ତରୀଣ ଆଲଗୋରିଦମ୍ ଓ JSON ତଥ୍ୟ ଆଉଟପୁଟ୍ ନିରୀକ୍ଷଣ କରିବାକୁ ଯେକୌଣସି ଏଜେଣ୍ଟ କାର୍ଡରେ କ୍ଲିକ୍ କରନ୍ତୁ।",
+    dagOrchestratorLabel: "ଅର୍କେଷ୍ଟ୍ରେଟର: LangGraph / ଏସିଙ୍କ୍ ଏଜେଣ୍ଟ କୋର୍",
+    dagInspectorDefaultTitle: "ଏଜେଣ୍ଟ ବିବରଣୀ",
+    dagInspectorDefaultRole: "ଭୂମିକା ବର୍ଣ୍ଣନା",
+    dagInspectorLatencyPlaceholder: "ବିଳମ୍ବ: 24ms",
+    dagInspectorJsonLabel: "ଲାଇଭ୍ JSON ପେଲୋଡ୍",
+    dagCloseInspector: "ନିରୀକ୍ଷକ ବନ୍ଦ କରନ୍ତୁ",
+    chatNewConversationMsg: "ନୂଆ ବାର୍ତ୍ତାଳାପ ଆରମ୍ଭ ହେଲା। ORCA ପୂର୍ବ ଚାଟ୍ ପ୍ରସଙ୍ଗ ବ୍ୟବହାର କରିବ ନାହିଁ।",
+    chatYouLabel: "ଆପଣ",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR ଓ Open-Meteo ଉପରେ 8ଟି ବିଶେଷଜ୍ଞ AI ଏଜେଣ୍ଟଙ୍କୁ ଅର୍କେଷ୍ଟ୍ରେଟ୍ କରୁଛି...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "ବହୁ-ଏଜେଣ୍ଟ ସାମୁଦ୍ରିକ ପରାମର୍ଶ",
+    chatGroundedConfidenceTemplate: "{confidence}% ତଥ୍ୟ-ଆଧାରିତ ବିଶ୍ୱାସ",
+    chatLangDetectedTooltip: "ବାର୍ତ୍ତାରୁ ଚିହ୍ନଟ ହୋଇଥିବା ଭାଷା",
+    chatListenTts: "ଶୁଣନ୍ତୁ (TTS)",
+    chatNavicMssBtn: "NavIC MSS କୋଡ୍",
+    chatMetricZone: "ସୁପାରିଶିତ ଅଞ୍ଚଳ",
+    chatMetricEta: "ଲାଇଭ୍ ସମୁଦ୍ର ସ୍ଥିତି ETA",
+    chatMetricVessels: "ସକ୍ରିୟ ଜାହାଜ",
+    chatVesselsSuffix: "{count} ଜାହାଜ",
+    chatMetricImbl: "IMBL ମଞ୍ଜୁରୀ",
+    chatReasoningTraceSummaryTemplate: "ବହୁ-ଏଜେଣ୍ଟ ତର୍କଣ ଟ୍ରେସ୍ ଦେଖନ୍ତୁ ({steps} ପାହାଚ ନିଷ୍ପାଦିତ)",
+    chatNodeDagSuffixTemplate: "{count}-ନୋଡ୍ DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT ବ୍ୟାକଏଣ୍ଡ ଏକ ପରାମର୍ଶ ତିଆରି କଲା କିନ୍ତୁ କୌଣସି ପାଠ୍ୟ ଫେରାଇଲା ନାହିଁ।",
+    chatLiveAdvisoryLabel: "✓ ଲାଇଭ୍ ବହୁ-ଏଜେଣ୍ଟ ପରାମର୍ଶ",
+    chatGroundedEngineFallback: "ତଥ୍ୟ-ଆଧାରିତ ଇଞ୍ଜିନ୍",
+    chatOceanSourceTierTemplate: "ମହାସାଗର ଉତ୍ସ ସ୍ତର: {tier} · କ୍ଲୋରୋଫିଲ୍: {chlorophyll}",
+    chatCitationsTemplate: "ଉଦ୍ଧୃତି: {citations}",
+    chatOfflineBannerText: "ଅଫଲାଇନ୍ ପରାମର୍ଶ ଇଞ୍ଜିନ୍ — ORCA ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ। ନିମ୍ନଲିଖିତ ଆଙ୍କଡ଼ା ଏକ ସିମୁଲେଟେଡ୍ ଉଦାହରଣମୂଳକ ଆକଳନ, ଲାଇଭ୍ ଟେଲିମେଟ୍ରି ନୁହେଁ।",
+    chatOfflineImblPlainText: "ଅଫଲାଇନ୍ ପରାମର୍ଶ (ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ, ସିମୁଲେଟେଡ୍ ଆକଳନ): Palk Strait / Gulf of Mannar ଅଞ୍ଚଳରେ ଜାହାଜଗୁଡ଼ିକ ସାଧାରଣତଃ ଭାରତ-ଶ୍ରୀଲଙ୍କା IMBL ସୀମାର କିଛି ନଟିକାଲ୍ ମାଇଲ ମଧ୍ୟରେ ରୁହନ୍ତି। ପଶ୍ଚିମ ଦିଗକୁ ଅଗ୍ରସର ହୁଅନ୍ତୁ ଏବଂ ଚ୍ୟାନେଲ 16ରେ VHF ଟ୍ରାନ୍ସପଣ୍ଡର ସକ୍ରିୟ ରଖନ୍ତୁ। ସୀମାର ପ୍ରକୃତ ମାପିତ ଦୂରତା ପାଇଁ ORCA ବ୍ୟାକଏଣ୍ଡ ସହିତ ପୁନଃସଂଯୋଗ କରନ୍ତୁ।",
+    chatOfflineImblHtmlHeading: "IMBL ଜିଓଫେନ୍ସିଂ ପରାମର୍ଶ (ସିମୁଲେଟେଡ୍ ଅଫଲାଇନ୍ ଆକଳନ):",
+    chatOfflineImblHtmlBody1: "ଲାଇଭ୍ ବ୍ୟାକଏଣ୍ଡ ସଂଯୋଗ ବିନା, ପ୍ରକୃତ ଜାହାଜ-ରୁ-ସୀମା ଦୂରତା ମାପିହେବ ନାହିଁ। Palk Strait ସେକ୍ଟର 4 ନିକଟରେ ଏକ ସାଧାରଣ ସତର୍କତା ଭାବେ, Mandapam ଆଡ଼କୁ ପଶ୍ଚିମ ଦିଗ ଧରି ରଖନ୍ତୁ।",
+    chatOfflineImblHtmlBody2: "ଏହା ଏକ ସାଧାରଣ ଅଫଲାଇନ୍ ସୁରକ୍ଷା ସ୍ମାରକ, ମାପିତ ଜିଓଫେନ୍ସ ରିଡିଂ ନୁହେଁ। ପ୍ରକୃତ IMBL ଦୂରତା ଗଣନା ପାଇଁ ORCA ବ୍ୟାକଏଣ୍ଡ ସହିତ ପୁନଃସଂଯୋଗ କରନ୍ତୁ।",
+    chatOfflineImblStep1: "ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ। ସ୍ଥାନୀୟ କୀୱାର୍ଡ ମେଳ ବ୍ୟବହାର କରି ପ୍ରଶ୍ନକୁ IMBL_BOUNDARY ଭାବେ ବର୍ଗୀକୃତ କରାଗଲା।",
+    chatOfflineImblStep2: "କୌଣସି ଲାଇଭ୍ ଜିଓଫେନ୍ସିଂ ଟେଲିମେଟ୍ରି ଉପଲବ୍ଧ ନାହିଁ -- କେବଳ ସାଧାରଣ ସୀମା-ସୁରକ୍ଷା ମାର୍ଗଦର୍ଶନ ଫେରାଯାଉଛି।",
+    chatOfflineDensityPlainText: "ଅଫଲାଇନ୍ ପରାମର୍ଶ (ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ, ସିମୁଲେଟେଡ୍ ଆକଳନ): ବ୍ୟାକଏଣ୍ଡ ସଂଯୋଗ ବିନା ଲାଇଭ୍ ଜାହାଜ ସଂଖ୍ୟା ପାଇହେବ ନାହିଁ। ଐତିହାସିକ ଭାବେ, Wadge Bank ଓ Kochi Deep Offshoreରେ ମଧ୍ୟମ ମତ୍ସ୍ୟ ଚଳାଚଳ ଦେଖାଯାଏ। ଜାହାଜ ତଥ୍ୟସେଟରୁ ପ୍ରକୃତ ଫ୍ଲିଟ୍-ଘନତା ରିଡିଂ ପାଇଁ ORCA ବ୍ୟାକଏଣ୍ଡ ସହିତ ପୁନଃସଂଯୋଗ କରନ୍ତୁ।",
+    chatOfflineDensityHtmlHeading: "ଫ୍ଲିଟ୍ ଘନତା (ଅଫଲାଇନ୍ — ସିମୁଲେଟେଡ୍ ପ୍ଲେସହୋଲଡର):",
+    chatOfflineDensityHtmlBody: "ଫ୍ଲିଟ୍ ଓ ଯାତାୟାତ ଏଜେଣ୍ଟର ଲାଇଭ୍ ଜାହାଜ ତଥ୍ୟସେଟ୍ ବର୍ତ୍ତମାନ ପହଞ୍ଚିହେଉ ନାହିଁ, ତେଣୁ ଅଞ୍ଚଳ-ଭିତରେ ପ୍ରକୃତ ଜାହାଜ ସଂଖ୍ୟା ଉପଲବ୍ଧ ନାହିଁ।",
+    chatOfflineDensityListItem: "ପ୍ରକୃତ ପ୍ରତି-ଅଞ୍ଚଳ ଜାହାଜ ସଂଖ୍ୟା ଓ ଭିଡ଼ ନିଷ୍କର୍ଷ ପାଇଁ ORCA ବ୍ୟାକଏଣ୍ଡ ସହିତ ପୁନଃସଂଯୋଗ କରନ୍ତୁ।",
+    chatOfflineDensityStep1: "ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ। ସ୍ଥାନୀୟ କୀୱାର୍ଡ ମେଳ ବ୍ୟବହାର କରି ପ୍ରଶ୍ନକୁ FLEET_DENSITY ଭାବେ ବର୍ଗୀକୃତ କରାଗଲା।",
+    chatOfflineDensityStep2: "କୌଣସି ଲାଇଭ୍ ଫ୍ଲିଟ୍ ତଥ୍ୟସେଟ୍ ଉପଲବ୍ଧ ନାହିଁ -- ମନଗଢ଼ା ଆଙ୍କଡ଼ା ଦେଖାଇବାକୁ ଏଡ଼ାଇବା ପାଇଁ ଜାହାଜ ସଂଖ୍ୟା ଦେଖାଯାଉ ନାହିଁ।",
+    chatOfflineGenericPlainTextTemplate: "ଅଫଲାଇନ୍ ପରାମର୍ଶ (ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ): ORCAର ବହୁ-ଏଜେଣ୍ଟ ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଲା ନାହିଁ, ତେଣୁ ଏହି ଉତ୍ତର ଏକ ତଥ୍ୟ-ଆଧାରିତ ରିଡିଂ ପରିବର୍ତ୍ତେ ଏକ ସାଧାରଣ, ଅଣ-ଲାଇଭ୍ ପ୍ଲେସହୋଲଡର। ଆପଣଙ୍କ ବ୍ରାଉଜରର ନିଜ Open-Meteo ୱିଜେଟ୍ ପ୍ରାୟ {liveWave}m ଉଲ୍ଲେଖନୀୟ ତରଙ୍ଗ ଉଚ୍ଚତା ଦେଖାଉଛି, କିନ୍ତୁ PFZ କ୍ରମାନ୍ୱୟ, ମାର୍ଗ ଦୂରତା, ETA ଓ ଫ୍ଲିଟ୍ ସଂଖ୍ୟା ସମସ୍ତେ ବ୍ୟାକଏଣ୍ଡ ଆବଶ୍ୟକ କରନ୍ତି ଏବଂ ଏଠାରେ ଦେଖାଯାଉ ନାହିଁ। ପ୍ରକୃତ ପରାମର୍ଶ ପାଇଁ ORCA ବ୍ୟାକଏଣ୍ଡ ସହିତ ପୁନଃସଂଯୋଗ କରନ୍ତୁ।",
+    chatOfflineGenericHtmlHeading: "ଅଫଲାଇନ୍ ପ୍ଲେସହୋଲଡର ପରାମର୍ଶ",
+    chatOfflineGenericHtmlBody1Template: "ORCA ବହୁ-ଏଜେଣ୍ଟ ବ୍ୟାକଏଣ୍ଡ (ସାଟେଲାଇଟ୍, ପାଣିପାଗ, PFZ କ୍ରମାନ୍ୱୟ, ଜିଓଫେନ୍ସିଂ, ଫ୍ଲିଟ୍, ମାର୍ଗ ନିର୍ଦ୍ଧାରଣ ଓ ନ୍ୟୁରାଲ୍ ସିଣ୍ଥେସିସ୍) ବର୍ତ୍ତମାନ ପହଞ୍ଚିହେଉ ନାହିଁ। କ୍ଲାଏଣ୍ଟ-ପାର୍ଶ୍ୱରେ, ଏହି ବ୍ରାଉଜର ଶେଷରେ Open-Meteoରୁ <strong>{liveWave}m</strong> ତରଙ୍ଗ ଉଚ୍ଚତା ଦେଖିଥିଲା, କିନ୍ତୁ ଅନ୍ୟ ସମସ୍ତ ଆଙ୍କଡ଼ା ବ୍ୟାକଏଣ୍ଡ ଆବଶ୍ୟକ କରନ୍ତି।",
+    chatOfflineGenericHtmlBody2: "<strong>କୌଣସି PFZ ସୁପାରିଶ, ମାର୍ଗ, ETA କିମ୍ବା ଫ୍ଲିଟ୍ ସଂଖ୍ୟା ଦେଖାଯାଉ ନାହିଁ</strong> କାରଣ ସେଗୁଡ଼ିକ ଗଣନା ପରିବର୍ତ୍ତେ ମନଗଢ଼ା ହେବ। ସମ୍ପୂର୍ଣ୍ଣ ତଥ୍ୟ-ଆଧାରିତ ପରାମର୍ଶ ପାଇଁ ORCA ବ୍ୟାକଏଣ୍ଡ ସହିତ ପୁନଃସଂଯୋଗ କରନ୍ତୁ।",
+    chatOfflineGenericStep1: "ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ। କୌଣସି ଉଦ୍ଦେଶ୍ୟ-ନିର୍ଦ୍ଦିଷ୍ଟ କୀୱାର୍ଡ ମେଳ ହେଲା ନାହିଁ -- GENERAL_VOYAGE_SAFETY ଅଫଲାଇନ୍ ପ୍ଲେସହୋଲଡର ଫେରାଯାଉଛି।",
+    chatOfflineGenericStep2Template: "କେବଳ କ୍ଲାଏଣ୍ଟ-ଦୃଶ୍ୟମାନ ଆଙ୍କଡ଼ା ଉପଲବ୍ଧ: ଶେଷ ଜଣା Open-Meteo ତରଙ୍ଗ ଉଚ୍ଚତା {liveWave}m (ବ୍ୟାକଏଣ୍ଡ ମାଧ୍ୟମରେ ନୁହେଁ, ସିଧାସଳଖ ବ୍ରାଉଜର ଦ୍ୱାରା ପ୍ରାପ୍ତ)।",
+    chatTtsUnsupportedAlert: "ଆପଣଙ୍କ ବ୍ରାଉଜର ଦ୍ୱାରା ସ୍ପିଚ୍ ସିଣ୍ଥେସିସ୍ ସମର୍ଥିତ ନୁହେଁ।",
+    chatTtsWelcomeFallback: "ORCA INSIGHTକୁ ସ୍ୱାଗତ। ସମସ୍ତ ସାଟେଲାଇଟ୍ ଫିଡ୍ ଓ ଉପକୂଳ ମହାସାଗର ବ୍ୟବସ୍ଥା ସ୍ୱାଭାବିକ ସ୍ଥିତିରେ କାର୍ଯ୍ୟ କରୁଛନ୍ତି।",
+    chatStopAudio: "ଅଡିଓ ବନ୍ଦ କରନ୍ତୁ",
+    chatListenAudioAdvisory: "ଅଡିଓ ପରାମର୍ଶ ଶୁଣନ୍ତୁ",
+    chatTabTitle: "AI ନିଷ୍ପତ୍ତି ଷ୍ଟୁଡିଓ ଓ ବହୁ-ଏଜେଣ୍ଟ ଚାଟବଟ୍",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR ଓ ଉପକୂଳ ଜିଓଫେନ୍ସିଂ ଉପରେ ତର୍କଣ କରୁଥିବା ସହଯୋଗୀ ଏଜେଣ୍ଟଙ୍କ ଦ୍ୱାରା ଚାଳିତ",
+    chatNewConversationBtn: "ନୂଆ ବାର୍ତ୍ତାଳାପ",
+    chatPromptPFZ: "Kochi ବନ୍ଦରଗାହରୁ ନିକଟତମ ଉଚ୍ଚ-ଉତ୍ପାଦନ PFZ ମତ୍ସ୍ୟ ଅଞ୍ଚଳ ତାହାର ମାଛ ଧରିବା ସମ୍ଭାବନା ଓ ପ୍ରଜାତି ସହିତ ଖୋଜନ୍ତୁ।",
+    chatPromptSafety: "ଆଜି ପାଇଁ ସମୁଦ୍ର-ଯାତ୍ରା ମଞ୍ଜୁରୀ ସ୍କୋର, ଉଲ୍ଲେଖନୀୟ ତରଙ୍ଗ ଉଚ୍ଚତା ଓ ପବନ ବିପଦ ଯାଞ୍ଚ କରନ୍ତୁ।",
+    chatPromptBorder: "ଭାରତ-ଶ୍ରୀଲଙ୍କା IMBL ସୀମାର ଦୂରତା ଯାଞ୍ଚ କରି 2 NM ବିପଦ ଅଞ୍ଚଳରେ ଥିବା ଜାହାଜଗୁଡ଼ିକୁ ତାଲିକାଭୁକ୍ତ କରନ୍ତୁ।",
+    chatPromptDensity: "Wadge Bank ଓ Kochi Deep ଉପରେ ବର୍ତ୍ତମାନର ଜାହାଜ ସଂଖ୍ୟା ଓ ଘନତା ବଣ୍ଟନ କ'ଣ?",
+    chatPromptETA: "Kochiରୁ PFZ-01କୁ ପରିବହନ ETA ଗଣନା କରି ଯାଞ୍ଚ କରନ୍ତୁ ଯେ ଆସାଯିବା ଯାତ୍ରା ସନ୍ଧ୍ୟା 18:30 ପୂର୍ବରୁ ସୁରକ୍ଷିତ ଭାବେ ଫେରେ କି ନାହିଁ।",
+    chatConversationLabel: "ବାର୍ତ୍ତାଳାପ",
+    chatNeuralCoreActive: "ORCA INSIGHT ନ୍ୟୁରାଲ୍ କୋର୍ ସକ୍ରିୟ",
+    chatAgentsReadyUptime: "8 ଏଜେଣ୍ଟ ପ୍ରସ୍ତୁତ · 99.94% ଅପଟାଇମ୍",
+    chatWelcomeMessage: "ବଣକ୍କମ୍ / ନମସ୍ତେ! ମୁଁ <strong>ORCA INSIGHT</strong> ବହୁ-ଏଜେଣ୍ଟ ସିଣ୍ଥେସିସ୍ ପ୍ରଣାଳୀ। ଆପଣ ସୁରକ୍ଷିତ ଯାତ୍ରା ମଞ୍ଜୁରୀ, ଭାରତ ଉପକୂଳରେ ଉଚ୍ଚ-ଉତ୍ପାଦନ PFZ ଅଞ୍ଚଳ, ଲାଇଭ୍ ଜାହାଜ ଯାତାୟାତ, IMBL ସୀମା ନିକଟତା ଓ ସମୁଦ୍ର-ସ୍ଥିତି ସଜାଡ଼ାଯାଇଥିବା ETA ଗଣନା ବିଷୟରେ ଆପଣଙ୍କ ପ୍ରଶ୍ନ କହିପାରିବେ କିମ୍ବା ଟାଇପ୍ କରିପାରିବେ।",
+    chatMicHint: "ତାମିଲ, ହିନ୍ଦୀ, ମାଲାୟାଲମ୍ କିମ୍ବା ଇଂରାଜୀରେ କହିବାକୁ ତଳେ ଥିବା ମାଇକ୍ରୋଫୋନ୍ ଆଇକନ୍‌ରେ କ୍ଲିକ୍ କରନ୍ତୁ!",
+    chatVoiceInputTitle: "ପ୍ରଶ୍ନ କୁହନ୍ତୁ (ସ୍ପିଚ୍-ଟୁ-ଟେକ୍ସଟ୍)",
+    chatLiveReasoningTraceTitle: "ଲାଇଭ୍ ତର୍କଣ ଟ୍ରେସ୍",
+    chatReasoningTraceEmptyHint: "ବାମରେ ଏକ ପ୍ରଶ୍ନ ପଚାରନ୍ତୁ ଏବଂ 8ଟି ସହଯୋଗୀ ଏଜେଣ୍ଟ ପ୍ରତ୍ୟେକ ଏହା ଉପରେ ଲାଇଭ୍ ତର୍କଣ କରୁଥିବା ଦେଖନ୍ତୁ।",
+    chatLiveTelemetryTitle: "ଲାଇଭ୍ ମହାସାଗର ଟେଲିମେଟ୍ରି",
+    chatCurrentSeaClearance: "ବର୍ତ୍ତମାନର ସମୁଦ୍ର ମଞ୍ଜୁରୀ:",
+    chatSignificantWaves: "ଉଲ୍ଲେଖନୀୟ ତରଙ୍ଗ:",
+    chatSurfaceWind: "ପୃଷ୍ଠ ପବନ:",
+    chatActiveVessels: "ସକ୍ରିୟ ଜାହାଜ:",
+    chatOpenDagVisualizerBtn: "ସମ୍ପୂର୍ଣ୍ଣ ଏଜେଣ୍ଟ DAG ଭିଜୁଆଲାଇଜର୍ ଖୋଲନ୍ତୁ ➔",
+    navicConnected: "NavIC ରିସିଭର୍: ସଂଯୁକ୍ତ (L5/S-Band)",
+    navicDisconnected: "NavIC ରିସିଭର୍: ବିଚ୍ଛିନ୍ନ",
+    navicTrackMyPosition: "ମୋର ସ୍ଥିତି ଟ୍ରାକ୍ କରନ୍ତୁ",
+    navicStopTracking: "ଟ୍ରାକିଂ ବନ୍ଦ କରନ୍ତୁ",
+    navicSimulateMovement: "ଜାହାଜ ଗତି ସିମୁଲେଟ୍ କରନ୍ତୁ",
+    navicStopSimulation: "ସିମୁଲେସନ୍ ବନ୍ଦ କରନ୍ତୁ",
+    navicStatusTrackingOff: "ଟ୍ରାକିଂ ବନ୍ଦ · କୌଣସି ସ୍ଥିତି ଅନୁରୋଧ ହେଉ ନାହିଁ",
+    navicStatusGeoUnsupported: "ଏହି ବ୍ରାଉଜର ଦ୍ୱାରା ଜିଓଲୋକେସନ୍ ସମର୍ଥିତ ନୁହେଁ। ଡେମୋ ପାଇଁ ସିମୁଲେଟେଡ୍ ଜାହାଜ ଗତି ବ୍ୟବହାର କରନ୍ତୁ।",
+    navicStatusRequestingPermission: "ଡିଭାଇସ୍-ସ୍ଥାନ ଅନୁମତି ଅନୁରୋଧ କରାଯାଉଛି…",
+    navicStatusLiveTrackingTemplate: "ଲାଇଭ୍ ଡିଭାଇସ୍ ଟ୍ରାକିଂ · ସଠିକତା ±{accuracy}m · ସଂରକ୍ଷିତ ନୁହେଁ",
+    navicStatusPermissionErrorTemplate: "ସ୍ଥାନ ଅନୁମତି ଉପଲବ୍ଧ ନାହିଁ ({error})। କୌଣସି ସ୍ଥିତି ପଠାଯାଇ ନାହିଁ।",
+    navicStatusBackendUnavailable: "ବ୍ୟାକଏଣ୍ଡ ଉପଲବ୍ଧ ନାହିଁ — ସ୍ଥାନୀୟ ସିମୁଲେସନ୍‌ରେ ପ୍ରକୃତ ଜିଓଫେନ୍ସ ଦୂରତା ମୂଲ୍ୟାୟନ ହୋଇପାରିବ ନାହିଁ।",
+    navicStatusSimStopped: "ଜିଓଫେନ୍ସ ସିମୁଲେସନ୍ ବନ୍ଦ ହେଲା",
+    navicStatusSimMovingTemplate: "ସିମୁଲେଟେଡ୍ ଜାହାଜ ଗତି · ବିନ୍ଦୁ {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-ଅକ୍ଷର ସାଟେଲାଇଟ୍ ଜରୁରୀ କୋଡ୍ କପି ହେଲା:\n\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) ସ୍କାଇପ୍ଲଟ୍",
+    navicConstellationDesc: "7-ସାଟେଲାଇଟ୍ ଜିଓଷ୍ଟେସନାରୀ / IGSO ନକ୍ଷତ୍ରମଣ୍ଡଳ",
+    navicConnectedShort: "ସଂଯୁକ୍ତ (L5/S)",
+    navicTrackedSatellitesTitle: "ଟ୍ରାକ୍ ହୋଇଥିବା ସାଟେଲାଇଟ୍ (SNR dB-Hz)",
+    navicNmeaStreamTitle: "ଲାଇଭ୍ NMEA-0183 ହାର୍ଡୱେର୍ ଷ୍ଟ୍ରିମ୍ ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "ବଡ୍ ରେଟ୍: 9600 bps · 1 Hz ଫିଡ୍",
+    navicDopPrecisionLabel: "DOP ସଠିକତା",
+    navicDopValue: "HDOP 1.05 (ଉତ୍କୃଷ୍ଟ)",
+    navicDiffFixLabel: "ଡିଫରେନ୍ସିଆଲ୍ ଫିକ୍ସ",
+    navicDiffFixValue: "NavIC DGPS ସକ୍ରିୟ",
+    navicBorderHwLabel: "ସୀମା ଆଲର୍ଟ ହାର୍ଡୱେର୍",
+    navicBorderHwValue: "ବଜର୍ ସଜ୍ଜିତ",
+    navicGeofenceTitle: "ଲାଇଭ୍ ସ୍ଥିତି ଜିଓଫେନ୍ସିଂ",
+    navicGeofenceDesc: "ଆପଣଙ୍କ ଡିଭାଇସ୍ ସ୍ଥାନ କେବଳ ସେସନ୍-ମଧ୍ୟରେ IMBL/MPA ଯାଞ୍ଚ ପାଇଁ ବ୍ୟବହୃତ ହୁଏ ଏବଂ ORCA ଦ୍ୱାରା କେବେ ସଂରକ୍ଷିତ ହୁଏ ନାହିଁ।",
+    navicGeofenceInitialStatus: "ଟ୍ରାକିଂ ବନ୍ଦ · 5 NM IMBL ଚେତାବନୀ / MPA ବଫର ଚେତାବନୀ",
+    safetyVerdictDescTemplate: "ଆପଣଙ୍କ ମନୋନୀତ ବନ୍ଦରଗାହ ନିକଟରେ ଲାଇଭ୍ Open-Meteo ସାମୁଦ୍ରିକ ଟେଲିମେଟ୍ରି ଅନୁସାରେ ଉଲ୍ଲେଖନୀୟ ତରଙ୍ଗ ଉଚ୍ଚତା {wave}m ଓ ପୃଷ୍ଠ ପବନ {wind}kn, ଯାହା ଗଣନା କରାଯାଇଥିବା {score}/100 ସୁରକ୍ଷା ସ୍କୋର ଦେଉଛି।",
+    safetyWindDefaultDirection: "ପଶ୍ଚିମାଞ୍ଚଳ",
+    safetyBreezeSuffix: "{direction} ପବନ",
+    severityLow: "ନିମ୍ନ",
+    severityModerate: "ମଧ୍ୟମ",
+    severityHigh: "ଉଚ୍ଚ",
+    waveBandCalm: "ଶାନ୍ତ (< 0.5m)",
+    waveBandSlight: "ହାଲୁକା (0.5 - 1.25m)",
+    waveBandModerate: "ମଧ୍ୟମ (1.25 - 2.5m)",
+    waveBandRough: "ଉଚ୍ଛୃଙ୍ଖଳ (> 2.5m)",
+    seaStateCalm: "ଶାନ୍ତ",
+    seaStateSlight: "ହାଲୁକା",
+    seaStateSlightModerate: "ହାଲୁକାରୁ ମଧ୍ୟମ",
+    seaStateModerateRough: "ମଧ୍ୟମରୁ ଉଚ୍ଛୃଙ୍ଖଳ",
+    seaStateUnknown: "ଅଜଣା",
+    lightningBandSafe: "ସୁରକ୍ଷିତ ବାୟୁମଣ୍ଡଳୀୟ ପ୍ରୋଫାଇଲ୍",
+    lightningBandElevated: "ବର୍ଦ୍ଧିତ ସଂଚାଳନ ବିପଦ",
+    lightningBandSevere: "ଗମ୍ଭୀର ଝଡ଼ ଚେତାବନୀ",
+    safetySyncLatencyLabel: "ସିଙ୍କ ବିଳମ୍ବ:",
+    safetyBatteryLabel: "ବ୍ୟାଟେରୀ:",
+    safetyLastPassLabel: "ଶେଷ ପାସ୍:",
+    safetyAltitudeLabel: "ଉଚ୍ଚତା:",
+    telemetryLiveOpenMeteoTemplate: "ଲାଇଭ୍ OPEN-METEO ଟେଲିମେଟ୍ରି ({wave}m SWH)",
+    telemetryCachedArchive: "ଟେଲିମେଟ୍ରି ସକ୍ରିୟ (କ୍ୟାଶ୍‌ ହୋଇଥିବା ସାଟେଲାଇଟ୍ ଆର୍କାଇଭ୍)",
+    backendOnlineStatus: "ଲାଇଭ୍ FASTAPI ବ୍ୟାକଏଣ୍ଡ ସଂଯୁକ୍ତ",
+    backendOfflineStatus: "ବ୍ୟାକଏଣ୍ଡ ଅଫଲାଇନ୍ · ସ୍ଥାନୀୟ ସିମୁଲେସନ୍ ମୋଡ୍",
+    aisLiveCountTemplate: "{count} ଲାଇଭ୍ AIS ଜାହାଜ{plural}",
+    aisNoLiveVessels: "ବର୍ତ୍ତମାନ କୌଣସି ଲାଇଭ୍ AIS ଜାହାଜ ନାହିଁ",
+    aisBlendedBannerTemplate: "{liveText} + {simCount} ସିମୁଲେଟେଡ୍ ଜାହାଜ{plural} ଦେଖାଉଛି ଯାହା ବର୍ତ୍ତମାନ ଲାଇଭ୍ AIS କଭରେଜ ନଥିବା ବନ୍ଦରଗାହଗୁଡ଼ିକୁ ପୂରଣ କରୁଛି।",
+    aisUnavailableDefault: "ଲାଇଭ୍ AIS ଜାହାଜ ଫିଡ୍ ଉପଲବ୍ଧ ନାହିଁ -- 0 ଜାହାଜ ଦେଖାଉଛି।",
+    aisNotConfigured: "ଏହି ଡିପ୍ଲୟମେଣ୍ଟରେ ଲାଇଭ୍ AIS ଜାହାଜ ଫିଡ୍ କନଫିଗର୍ ହୋଇନାହିଁ।",
+    aisConnectedNotSending: "AIS ପ୍ରଦାତା (AISstream.io) ସହିତ ସଂଯୁକ୍ତ, କିନ୍ତୁ ଏହା ବର୍ତ୍ତମାନ ଜାହାଜ ତଥ୍ୟ ପଠାଉ ନାହିଁ — ସମ୍ଭବତଃ ଏକ ପ୍ରଦାତା-ପାର୍ଶ୍ୱ ବିଭ୍ରାଟ, ସ୍ଥାନୀୟ ତ୍ରୁଟି ନୁହେଁ।",
+    aisDisconnectedReconnecting: "AIS ପ୍ରଦାତା (AISstream.io) ରୁ ବିଚ୍ଛିନ୍ନ; ସ୍ୱୟଂଚାଳିତ ଭାବେ ପୁନଃସଂଯୋଗ ହେଉଛି।",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> ଭାରତ–ଶ୍ରୀଲଙ୍କା IMBL{simTag}ରୁ <strong>{dist} NM</strong> ଦୂରରେ କାର୍ଯ୍ୟ କରୁଛି। ସ୍ୱୟଂଚାଳିତ ଚେତାବନୀ ପଠାଯାଇଛି।",
+    imblAlertNoneTemplate: "ବର୍ତ୍ତମାନ {warnDist} NM IMBL ଚେତାବନୀ ଦୂରତା ମଧ୍ୟରେ କୌଣସି ଜାହାଜ ନାହିଁ। ନିକଟତମ ଟ୍ରାକ୍ ହୋଇଥିବା ଜାହାଜ: <strong>{dist} NM</strong> ଦୂରରେ।",
+    imblAlertNoData: "ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଜାହାଜ ଟେଲିମେଟ୍ରି ଉପଲବ୍ଧ ନାହିଁ।",
+    simulatedSuffix: " (ସିମୁଲେଟେଡ୍)",
+    notifUnavailableTitle: "ବ୍ରାଉଜର ବିଜ୍ଞପ୍ତି ଉପଲବ୍ଧ ନାହିଁ",
+    notifUnavailableMsg: "ଏହି ଟ୍ୟାବ୍ ଖୋଲା ଥିବା ପର୍ଯ୍ୟନ୍ତ ଇନ୍-ଆପ୍ ବିପଦ ବ୍ୟାନର୍ ଦେଖାଯିବ।",
+    notifNotEnabledTitle: "ବ୍ରାଉଜର ବିଜ୍ଞପ୍ତି ସକ୍ଷମ ହୋଇନାହିଁ",
+    notifNotEnabledMsg: "ଏହି ଟ୍ୟାବ୍ ଖୋଲା ଥିବା ପର୍ଯ୍ୟନ୍ତ ଇନ୍-ଆପ୍ ବିପଦ ବ୍ୟାନର୍ ସକ୍ରିୟ ରୁହେ।",
+    hazardHighWavesTitle: "ଉଚ୍ଚ ତରଙ୍ଗ — ସ୍ଥାନୀୟ ସିମୁଲେସନ୍",
+    hazardHighWavesMsgTemplate: "{wave}m 2.5m ସତର୍କତା ସୀମାକୁ ଅତିକ୍ରମ କରୁଛି। ଉତ୍ସ: ବ୍ରାଉଜର Open-Meteo ଟେଲିମେଟ୍ରି।",
+    hazardHighWindTitle: "ଉଚ୍ଚ ପବନ — ସ୍ଥାନୀୟ ସିମୁଲେସନ୍",
+    hazardHighWindMsgTemplate: "{wind} kn 25 kn ସତର୍କତା ସୀମାକୁ ଅତିକ୍ରମ କରୁଛି। ଉତ୍ସ: ବ୍ରାଉଜର Open-Meteo ଟେଲିମେଟ୍ରି।",
+    hazardLightningTitle: "ବିଜୁଳି ବିପଦ — ସ୍ଥାନୀୟ ସିମୁଲେସନ୍",
+    hazardLightningMsgTemplate: "ବିଜୁଳି ପ୍ରକ୍ସି {pct}%। ଉତ୍ସ: ବ୍ରାଉଜର Open-Meteo ଟେଲିମେଟ୍ରି।",
+    safetyOfficialClearanceLabel: "ସରକାରୀ ସାମୁଦ୍ରିକ ମଞ୍ଜୁରୀ",
+    safetyVerdictDescInitial: "ସମସ୍ତ ସାଟେଲାଇଟ୍ ମହାସାଗର ବିଜ୍ଞାନ ସୂଚକ (Oceansat-3 SSTM ତାପୀୟ ଫ୍ରଣ୍ଟ, Sentinel-3 ତରଙ୍ଗ ଆଲ୍ଟିମେଟ୍ରି) Kerala, Karnataka ଓ Tamil Nadu ଉପକୂଳ ଜଳରାଶିରେ ଅନୁକୂଳ ମାଛ ଧରିବା ପରିସ୍ଥିତି ନିଶ୍ଚିତ କରୁଛନ୍ତି।",
+    safetyIndexLabel: "ସୁରକ୍ଷା ସୂଚକାଙ୍କ",
+    satConstellationTitle: "ISRO ଓ ଆନ୍ତର୍ଜାତୀୟ ମହାସାଗର ବିଜ୍ଞାନ ସାଟେଲାଇଟ୍ ନକ୍ଷତ୍ରମଣ୍ଡଳ",
+    satStaticDataNote: "ସ୍ଥିର ସନ୍ଦର୍ଭ ତଥ୍ୟ (ଲାଇଭ୍ ଟେଲିମେଟ୍ରି ନୁହେଁ)",
+    mapIndiaBoundaryPopup: "ଭାରତ — ସରକାରୀ ସୀମା (Survey of India)",
+    mapPfzYieldSuffix: "{rating} ଉତ୍ପାଦନ ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "କ୍ଲୋରୋଫିଲ୍:",
+    mapPfzDepthLabel: "ଗଭୀରତା:",
+    mapPfzVesselsLabel: "ଜାହାଜ:",
+    mapPfzActiveSuffix: "{count} ସକ୍ରିୟ",
+    mapPfzTargetSpeciesLabel: "ଲକ୍ଷ୍ୟ ପ୍ରଜାତି:",
+    mapPfzSimulateRouteBtn: "ଏଠାରୁ ମାର୍ଗ ସିମୁଲେଟ୍ କରନ୍ତୁ ➔",
+    mapImblPopupBodyTemplate: "କଠୋର ଆନ୍ତର୍ଜାତୀୟ ସାମୁଦ୍ରିକ ସୀମା। ଚେତାବନୀ ବଫର: {warn} NM। ଗମ୍ଭୀର ଜିଓଫେନ୍ସ: {danger} NM।",
+    mapImblPopupTreatyNote: "UNCLOS ସାମୁଦ୍ରିକ ଚୁକ୍ତି ଅନୁସାରେ ସୀମା-ପାର ଅତିକ୍ରମଣ ନିଷିଦ୍ଧ।",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL ବଫର କରିଡର",
+    mapMpaRestrictedBadge: "ପ୍ରତିବନ୍ଧିତ ଇକୋ-ରିଜର୍ଭ",
+    mapHarbourCoastSuffix: "{state} ଉପକୂଳ",
+    mapHarbourCapacityLabel: "କ୍ଷମତା:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "ଇନ୍ଧନ ଷ୍ଟେସନ୍:",
+    mapHarbourFuelAvailable: "ଉପଲବ୍ଧ",
+    mapHarbourIceLabel: "ବରଫ ପ୍ଲାଣ୍ଟ:",
+    mapHarbourIceActive: "ସକ୍ରିୟ",
+    mapHarbourSetOriginBtn: "ମୂଳ ବନ୍ଦରଗାହ ଭାବେ ସେଟ୍ କରନ୍ତୁ",
+    mapVesselSimulatedBadge: "ସିମୁଲେଟେଡ୍ · ଏଠାରେ ଲାଇଭ୍ AIS କଭରେଜ ନାହିଁ",
+    mapVesselSpeedLabel: "ଗତି:",
+    mapVesselHeadingLabel: "ଦିଗ:",
+    mapVesselZoneLabel: "ଅଞ୍ଚଳ:",
+    mapVesselImblDistLabel: "IMBL ଦୂରତା:",
+    mapVesselStatusLabel: "ସ୍ଥିତି:",
+    mapVesselFuelLabel: "ଇନ୍ଧନ:",
+    mapVesselFuelNA: "ଉପଲବ୍ଧ ନାହିଁ",
+    mapRoutePopupTitle: "କେବଳ-ସମୁଦ୍ର A* ମାର୍ଗ (ଭୂମି + MPA ଏଡ଼ାଇବା)",
+    mapRouteDistanceEtaTemplate: "ଦୂରତା: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones} ଚାରିପାଖରେ {pct}% ବିପଥ",
+    mapRouteLandNoGoZones: "ଭୂମି/ନିଷିଦ୍ଧ ଅଞ୍ଚଳ",
+    vesselStatusSafeFishing: "ସୁରକ୍ଷିତ ମାଛ ଧରିବା",
+    vesselStatusBorderAlert: "ସୀମା ଚେତାବନୀ",
+    vesselStatusBorderWarn: "ସୀମା ସତର୍କତା",
+    vesselStatusInTransit: "ପରିବହନରେ",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "ସିମୁଲେଟେଡ୍ -- ଏହି ବନ୍ଦରଗାହ ନିକଟରେ ଲାଇଭ୍ AIS କଭରେଜ ନାହିଁ",
+    vesselLocateAction: "ଅବସ୍ଥାନ ଚିହ୍ନଟ ➔",
+    fleetVesselCountSuffix: "{count} ଜାହାଜ",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} ଲାଇଭ୍ · {sim} ସିମ୍)",
+    mapActiveVesselsBreakdownTemplate: "{total} ସକ୍ରିୟ ଜାହାଜ ({live} ଲାଇଭ୍ · {sim} ସିମୁଲେଟେଡ୍)",
+    mapActiveVesselsSimpleTemplate: "{total} ସକ୍ରିୟ ଜାହାଜ",
+    mapTabTitle: "GIS କମାଣ୍ଡ ମାନଚିତ୍ର · ଭାରତୀୟ ଉପକୂଳ ଜଳରାଶି",
+    mapTabDesc: "ପ୍ରକୃତ-ସମୟ ସାଟେଲାଇଟ୍ PFZ, IMBL ସୀମା କରିଡର ଓ AIS ଜାହାଜ ଟ୍ରାକ୍ ସହିତ ଇଣ୍ଟରାକ୍ଟିଭ୍ ଉଚ୍ଚ-କଣ୍ଟ୍ରାଷ୍ଟ ନାବିକ ମାନଚିତ୍ର।",
+    layerPfzZones: "PFZ ଅଞ୍ଚଳ",
+    layerImblBuffer: "IMBL ବଫର",
+    layerEcoReserves: "ଇକୋ ରିଜର୍ଭ (MPA)",
+    layerHarbours: "ବନ୍ଦରଗାହ",
+    layerLiveVessels: "ଲାଇଭ୍ ଜାହାଜ",
+    layerDensityHeatmap: "ଘନତା ହିଟମ୍ୟାପ୍",
+    layerIndiaBoundary: "ଭାରତ ସୀମା (Survey of India)",
+    routePlannerDesc: "MPA ଓ ସୀମା ବିପଦ ଏଡ଼ାଇ A*-ଶୈଳୀ ମାର୍ଗ",
+    routeVesselSpeedLabel: "ଜାହାଜ ଗତି:",
+    fleetMonitorTitle: "ଫ୍ଲିଟ୍ ମନିଟର୍ · ଲାଇଭ୍ ଜାହାଜ ଟେଲିମେଟ୍ରି",
+    fleetTotalActiveTitle: "ମୋଟ ସକ୍ରିୟ ଜାହାଜ",
+    fleetTotalActiveDesc: "ବର୍ତ୍ତମାନ AIS ଟ୍ରାନ୍ସପଣ୍ଡର ସଙ୍କେତ ପ୍ରସାରଣ କରୁଥିବା ଜାହାଜ",
+    fleetZoneDistTitle: "ପ୍ରତି ଅଞ୍ଚଳ ଜାହାଜ ବଣ୍ଟନ",
+    imblAlertCardTitle: "IMBL ସୀମା ନିକଟତା ଚେତାବନୀ",
+    fleetTableSubDesc: "AISstream.io ରୁ ଲାଇଭ୍ AIS ସ୍ଥିତି, ଯେଉଁଠି ବର୍ତ୍ତମାନ ଲାଇଭ୍ ରିସିଭର୍ କଭରେଜ ନାହିଁ ସେଠାରେ ସ୍ପଷ୍ଟ-ଟ୍ୟାଗ୍ ହୋଇଥିବା ସିମୁଲେଟେଡ୍ ଫ୍ଲିଟ୍ (\"SIM\" ବ୍ୟାଜ୍ ଦେଖନ୍ତୁ) ସହିତ ପୂରଣ",
+    vesselSearchPlaceholder: "ଜାହାଜ ନାମ କିମ୍ବା ID ଖୋଜନ୍ତୁ...",
+    filterAllStatuses: "ସମସ୍ତ ସ୍ଥିତି",
+    filterSafeFishing: "ସୁରକ୍ଷିତ ମାଛ ଧରିବା",
+    filterInTransit: "ପରିବହନରେ",
+    filterBorderAlert: "ସୀମା ଚେତାବନୀ",
+    thVesselId: "ଜାହାଜ ID",
+    thVesselName: "ଜାହାଜ ନାମ",
+    thType: "ପ୍ରକାର",
+    thCurrentZone: "ବର୍ତ୍ତମାନର ଅଞ୍ଚଳ",
+    thSpeedHeading: "ଗତି / ଦିଗ",
+    thImblDist: "IMBL ଦୂରତା",
+    thStatus: "ସ୍ଥିତି",
+    thAction: "କାର୍ଯ୍ୟ",
+    bulletinIssuedLabel: "ଜାରି:",
+    bulletinRegionLabel: "ଅଞ୍ଚଳ:",
+    bulletinWavesLabel: "ତରଙ୍ଗ:",
+    bulletinWindsLabel: "ପବନ:",
+    bulletinSourceLabel: "ଉତ୍ସ:",
+    bulletinListenBtn: "ବୁଲେଟିନ୍ ଶୁଣନ୍ତୁ",
+    bulletinsTabTitle: "ସରକାରୀ ସାମୁଦ୍ରିକ ଓ ମତ୍ସ୍ୟଚାଷ ବୁଲେଟିନ୍ (ISRO - INCOIS)",
+    bulletinsTabDesc: "କ୍ରମାଙ୍କିତ ପରାମର୍ଶ, ଘୂର୍ଣ୍ଣିବାତ୍ୟା ବିପଦ ଚେତାବନୀ ଓ ଆନ୍ତର୍ଜାତୀୟ ସୀମା ପାଳନ ଆଲର୍ଟ।",
+    bulletinNotifyToggleTitle: "ଏହି ଟ୍ୟାବ୍/PWA ଖୋଲା ଥିବା ପର୍ଯ୍ୟନ୍ତ ହିଁ ବ୍ରାଉଜର ଆଲର୍ଟ ପାଆନ୍ତୁ",
+    bulletinNotifyToggleLabel: "ଖୋଲା ଥିବାବେଳେ ସୂଚିତ କରନ୍ତୁ",
+    bulletinFilterAll: "ସମସ୍ତ ବୁଲେଟିନ୍",
+    bulletinFilterCritical: "ଗମ୍ଭୀର",
+    bulletinFilterWarning: "ଚେତାବନୀ",
+    bulletinFilterAdvisory: "ପରାମର୍ଶ",
+    bulletinsPushNote: "ବିପଦ ଆଲର୍ଟ କେବଳ ଏହି ଟ୍ୟାବ୍/PWA ଖୋଲା ଥିବାବେଳେ ହିଁ ସକ୍ରିୟ। ବନ୍ଦ-ଆପ୍ ପୁଶ୍ ବିଜ୍ଞପ୍ତି ପାଇଁ ଏକ ପ୍ରୋଡକ୍ସନ୍ ପୁଶ୍-ସବ୍ସ୍କ୍ରିପ୍ସନ୍ ସେବା ଆବଶ୍ୟକ ଏବଂ ଏହି ପ୍ରୋଟୋଟାଇପ୍‌ରେ କାର୍ଯ୍ୟକାରୀ ହୋଇନାହିଁ।",
+    sosModalTitle: "ଜରୁରୀକାଳୀନ ବିପଦ ସଙ୍କେତ (SOS)",
+    sosInstructions: "ଜରୁରୀକାଳୀନ SOS ସକ୍ରିୟ କରିବା ଦ୍ୱାରା <strong>INSAT-3DR SAS&R</strong> ମାଧ୍ୟମରେ ଭାରତୀୟ ଉପକୂଳ ରକ୍ଷୀ ସାମୁଦ୍ରିକ ଉଦ୍ଧାର ସମନ୍ୱୟ କେନ୍ଦ୍ର (MRCC)କୁ ଏକ ଜରୁରୀ 406 MHz ବିପଦ ସଙ୍କେତ ପ୍ରସାରଣ ହେବ।",
+    sosCurrentPositionLabel: "ବର୍ତ୍ତମାନର ସ୍ଥିତି:",
+    sosVhfChannelLabel: "ଜରୁରୀକାଳୀନ VHF ଚ୍ୟାନେଲ୍:",
+    sosMrccHelplineLabel: "MRCC ହେଲ୍ପଲାଇନ୍:",
+    sosConfirmBtn: "ନିଶ୍ଚିତ କରନ୍ତୁ ଓ ବିପଦ ସଙ୍କେତ ପ୍ରସାରଣ କରନ୍ତୁ",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R ବିକନ୍ ISRO ଓ ଉପକୂଳ ରକ୍ଷୀ MRCCକୁ ପ୍ରସାରିତ ହେଉଛି",
+    sosDistressRelayedMsg: "INSAT-3DR SAS&R ରିସିଭର୍ ମାଧ୍ୟମରେ ବିପଦ ପ୍ୟାକେଟ୍ ପଠାଯାଇଛି। ସାମୁଦ୍ରିକ ଉଦ୍ଧାର ସମନ୍ୱୟ କେନ୍ଦ୍ର (MRCC Chennai/Mumbai) VHF ଚ୍ୟାନେଲ୍ 16ରେ ସତର୍କ କରାଯାଇଛି।",
+    sosGpsVesselIdTemplate: "GPS ସଂଯୋଜକ: {coords} · ଜାହାଜ ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO ସହଯୋଗୀ ସାମୁଦ୍ରିକ ବୁଦ୍ଧିମତ୍ତା · Smart India Hackathon 2026",
+    landingSubtitle: "ଏକ ସହଯୋଗୀ ସାମୁଦ୍ରିକ-ବୁଦ୍ଧିମତ୍ତା ପ୍ଲାଟଫର୍ମ, ଦୁଇଟି କମାଣ୍ଡ ଡେକ୍: ଏକ ମତ୍ସ୍ୟଜୀବୀଙ୍କ ଦୈନିକ ସୁଯୋଗ କୋନ୍ସୋଲ୍, ଏବଂ ସମ୍ପୂର୍ଣ୍ଣ ISRO ସାଟେଲାଇଟ୍, AIS ଓ ଜିଓଫେନ୍ସିଂ ଅନ୍ତର୍ଦୃଷ୍ଟି ସୁଟ୍।",
+    landingStripItem1: "Oceansat-3 SSTM ତାପୀୟ ଫ୍ରଣ୍ଟ",
+    landingStripItem2: "INSAT-3DR ସାଟେଲାଇଟ୍ ମହାସାଗର ବିଜ୍ଞାନ",
+    landingStripItem3: "8-ନୋଡ୍ ସହଯୋଗୀ ଏଜେଣ୍ଟ DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS ବ୍ରିଜ୍",
+    landingStripItem5: "IMBL ସୀମା ଜିଓଫେନ୍ସିଂ ଆଲର୍ଟ",
+    landingStripItem6: "ଲାଇଭ୍ AIS ଫ୍ଲିଟ୍ ଓ GIS କମାଣ୍ଡ",
+    landingStripItem7: "ଅଧିକ ସ୍ମାର୍ଟ ବିକ୍ରୟ ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣ",
+    landingStripItem8: "406 MHz SOS ବିପଦ ସଙ୍କେତ",
+    landingFishermanCardTitle: "ORCA ଫିଶରମ୍ୟାନ୍",
+    landingFishermanCardDesc: "ଆଜିର ସୁଯୋଗ ସ୍କୋର, ସ୍ମାର୍ଟ ବିକ୍ରୟ ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣ, ଏକ ଯାତ୍ରା-ମୂଲ୍ୟ କାଲକୁଲେଟର ଓ ଆପଣଙ୍କ ମାଛ ପାଇଁ କ୍ରେତା ଲିଡ୍ — ନୌକା ପାଇଁ ତିଆରି।",
+    landingFishermanCardCta: "ଫିଶରମ୍ୟାନ୍ କୋନ୍ସୋଲ୍ ଖୋଲନ୍ତୁ",
+    landingFishermanCardTitleAttr: "ଫିଶରମ୍ୟାନ୍ କୋନ୍ସୋଲ୍ ଖୋଲନ୍ତୁ",
+    landingInsightCardTitle: "ORCA ଇନସାଇଟ୍",
+    landingInsightCardDesc: "ସମ୍ପୂର୍ଣ୍ଣ କମାଣ୍ଡ ଡେକ୍: ISRO ସାଟେଲାଇଟ୍ ମହାସାଗର ବିଜ୍ଞାନ, GIS ମାନଚିତ୍ର, 8-ନୋଡ୍ ଏଜେଣ୍ଟ DAG, ସୁରକ୍ଷା ବାରୋମିଟର୍, ଫ୍ଲିଟ୍ ମନିଟର୍ ଓ NavIC ବ୍ରିଜ୍।",
+    landingInsightCardCta: "ଇନସାଇଟ୍ କମାଣ୍ଡ ଡେକ୍ ଖୋଲନ୍ତୁ",
+    landingInsightCardTitleAttr: "ଇନସାଇଟ୍ କମାଣ୍ଡ ଡେକ୍ ଖୋଲନ୍ତୁ",
+    backToOverviewTitle: "ସମୀକ୍ଷାକୁ ଫେରନ୍ତୁ",
+    statSimulatedFleetLabel: "ସିମୁଲେଟେଡ୍ AIS ଫ୍ଲିଟ୍",
+    statSatellitesActiveTemplate: "{count} ସକ୍ରିୟ",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count} ଅଞ୍ଚଳ",
+    statPfzZonesListLabel: "Wadge Bank, Kochi, Veraval...",
+    statImblCorridorsCountTemplate: "{count} କରିଡର",
+    statImblBordersLabel: "ଭାରତ-ଶ୍ରୀଲଙ୍କା ଓ ପାକିସ୍ତାନ ସୀମା",
+    pillarDagTitle: "8-ନୋଡ୍ ସହଯୋଗୀ ଏଜେଣ୍ଟ DAG",
+    pillarDagDesc: "ପ୍ରଶ୍ନଗୁଡ଼ିକୁ ସାଟେଲାଇଟ୍, ତରଙ୍ଗ ବିପଦ, ଜିଓଫେନ୍ସିଂ, ଜାହାଜ ଗଣନା, ETA ଓ ନ୍ୟୁରାଲ୍ ସିଣ୍ଥେସିସ୍ ପାହାଚରେ ବିଭକ୍ତ କରୁଥିବା ବହୁ-ଏଜେଣ୍ଟ ସ୍ଥାପତ୍ୟ, ଉପ-ସେକେଣ୍ଡ ବିଳମ୍ବ ସହିତ।",
+    pillarEtaTitle: "ଲାଇଭ୍ ସମୁଦ୍ର-ସ୍ଥିତି ETA ଓ ସନ୍ଧ୍ୟା ସୁରକ୍ଷା",
+    pillarEtaDesc: "ତରଙ୍ଗ ପ୍ରତିରୋଧ ଅନୁସାରେ ସଜାଡ଼ାଯାଇଥିବା ହାଇଡ୍ରୋଡାଇନାମିକ୍ ପରିବହନ ଗଣନା, ସ୍ୱୟଂଚାଳିତ ସନ୍ଧ୍ୟା-ପୂର୍ବ-ଫେରନ୍ତୁ ସୁରକ୍ଷା ଆଲର୍ଟ ସହିତ, ଯାହା ସୂର୍ଯ୍ୟାସ୍ତ ପରେ ମତ୍ସ୍ୟଜୀବୀଙ୍କୁ ଅଟକିବାରୁ ରୋକେ।",
+    pillarFleetTitle: "ଲାଇଭ୍ ଫ୍ଲିଟ୍ ଘନତା ଓ IMBL ଆଲର୍ଟ",
+    pillarFleetDesc: "ପ୍ରତି ଅଞ୍ଚଳ ପ୍ରକୃତ-ସମୟ ଜାହାଜ ଗଣନା, ଭିଡ଼ ବିପଦ ସୂଚକ ଓ ସାମୁଦ୍ରିକ ସୀମା ସୁରକ୍ଷା ପାଇଁ ସ୍ୱୟଂଚାଳିତ 5 NM/2 NM ଜିଓଫେନ୍ସ ନିକଟତା ଆଲର୍ଟ।",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · <strong class=\"text-cyan-400\">{teamName}</strong> ଦ୍ୱାରା ନିର୍ମିତ · Smart India Hackathon 2026 · ସମସ୍ୟା ବିବୃତ୍ତି 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b>ରେ ଶୁଣୁଛି... ବର୍ତ୍ତମାନ କୁହନ୍ତୁ।",
+    sttUnsupportedTitle: "ଏହି ବ୍ରାଉଜରରେ ସ୍ପିଚ୍ ରିକଗନିସନ୍ ସମର୍ଥିତ ନୁହେଁ",
+    routeUnavailableLabel: " ମାର୍ଗ ଉପଲବ୍ଧ ନାହିଁ:",
+    routeUnavailableMsg: "ORCA ବ୍ୟାକଏଣ୍ଡ ପହଞ୍ଚିହେଉ ନାହିଁ, ତେଣୁ କୌଣସି ମାର୍ଗ ଦୂରତା/ETA ଦେଖାଯାଇପାରିବ ନାହିଁ। ସ୍ଥାନୀୟ ଫଲବ୍ୟାକ୍ ମୋଡ୍‌ରେ ଚାଲୁଛି।",
+    routeNoSafeRouteLabel: "✕ କୌଣସି ସୁରକ୍ଷିତ ସାମୁଦ୍ରିକ ମାର୍ଗ ମିଳିଲା ନାହିଁ:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "ରାଉଟର୍ ଏହି ବନ୍ଦରଗାହ/PFZ ଯୋଡ଼ି ପାଇଁ ଭୂମି ଓ ସାମୁଦ୍ରିକ ସୁରକ୍ଷିତ ଅଞ୍ଚଳ ଏଡ଼ାଇ ଏକ ପଥ ଖୋଜିପାରିଲା ନାହିଁ।",
+    routeSafeReturnLabel: "✓ ସୁରକ୍ଷିତ ପ୍ରତ୍ୟାବର୍ତ୍ତନ:",
+    routeSafeReturnTemplate: "ଆଶାକରାଯାଉଥିବା ବନ୍ଦରଗାହ ପହଞ୍ଚିବା ସମୟ {time} (18:30 IST ସନ୍ଧ୍ୟା ପୂର୍ବରୁ)।",
+    routeReturnAfterDuskLabel: " ସନ୍ଧ୍ୟା ପରେ ପ୍ରତ୍ୟାବର୍ତ୍ତନ:",
+    routeReturnAfterDuskTemplate: "ଆଶାକରାଯାଉଥିବା ପ୍ରତ୍ୟାବର୍ତ୍ତନ ସମୟ {time} (18:30 IST ସୂର୍ଯ୍ୟାସ୍ତକୁ ଅତିକ୍ରମ କରୁଛି)। ଏକ ପୂର୍ବ ପ୍ରସ୍ଥାନ କିମ୍ବା ରାତି ନାବିକ ବିକନ୍ ଯାଞ୍ଚ ସୁପାରିଶ କରାଯାଏ।"
   },
   bn: {
     appTitle: "অর্কা ইনসাইট (ORCA INSIGHT)",
@@ -2510,7 +5498,339 @@ const translations = {
     fmClaimBtn: "এই লিড দাবি করুন",
     fmClaimPromptText: "এটি কে পূরণ করছে তা ক্রেতাকে জানাতে আপনার নাম এবং ফোন/যোগাযোগ লিখুন:",
     fmClaimSuccess: "দাবি করা হয়েছে — ক্রেতাকে প্ল্যাটফর্মের বাইরে জানানো হবে।",
-    fmClaimFailed: "এই মুহূর্তে এই তালিকা দাবি করা যায়নি।"
+    fmClaimFailed: "এই মুহূর্তে এই তালিকা দাবি করা যায়নি।",
+    dagAgentSupervisorName: "মাস্টার সুপারভাইজার / DAG প্ল্যানার",
+    dagAgentSupervisorRole: "বহু-মাধ্যম সামুদ্রিক প্রশ্নকে বিশ্লেষণ করে উপ-কাজে ভাগ করে এবং স্যাটেলাইট, বিপদ ও জিওফেন্স এজেন্টদের মধ্যে বণ্টন করে।",
+    dagAgentSatelliteName: "স্যাটেলাইট সমুদ্রবিজ্ঞান এজেন্ট",
+    dagAgentSatelliteRole: "Oceansat-3 OCM-3 (ক্লোরোফিল-a) ও SSTM (তাপীয় ফ্রন্ট) ডেটার পাশাপাশি INSAT-3DR মেঘ চিত্র গ্রহণ করে।",
+    dagAgentWeatherName: "আবহাওয়া ও সামুদ্রিক বিপদ এজেন্ট",
+    dagAgentWeatherRole: "উল্লেখযোগ্য ঢেউয়ের উচ্চতা (SWH), বাতাসের ঝাপটার দিক এবং বজ্রপাতের সম্ভাবনা মূল্যায়ন করে, এবং সমুদ্রযাত্রা-অনুমোদন স্কোর তৈরি করে।",
+    dagAgentPfzName: "সমুদ্র বিশ্লেষণ ও PFZ এজেন্ট",
+    dagAgentPfzRole: "তাপীয়-ক্লোরোফিল ফ্রন্টের সংযোগস্থল চিহ্নিত করে, উপরিভাগের জৈববস্তুর ঘনত্ব গণনা করে এবং লক্ষ্য মাছ ধরার অঞ্চলগুলিকে ক্রমানুসারে সাজায়।",
+    dagAgentGeofenceName: "জিওফেন্সিং ও রুটিং এজেন্ট",
+    dagAgentGeofenceRole: "আন্তর্জাতিক সামুদ্রিক সীমারেখা (IMBL) পর্যবেক্ষণ করে, সামুদ্রিক সংরক্ষিত অঞ্চলগুলির চারপাশে বাফার তৈরি করে এবং A* নিরাপদ পথ-বিন্দু গণনা করে।",
+    dagAgentFleetName: "নৌবহর ও ট্র্যাফিক এজেন্ট (নতুন)",
+    dagAgentFleetRole: "AIS ও ARGOS-4 জাহাজ ট্রান্সপন্ডার স্ক্যান করে, নৌবহরের বণ্টন ট্র্যাক করে এবং অতিরিক্ত ভিড় বা সীমান্ত যানজট চিহ্নিত করে।",
+    dagAgentEtaName: "ETA ও যাত্রা নিরাপত্তা এজেন্ট (নতুন)",
+    dagAgentEtaRole: "রিয়েল-টাইম ঢেউয়ের প্রতিরোধ অনুযায়ী সমন্বিত যাত্রার সময়কাল গণনা করে এবং সন্ধ্যার আগে ফেরার নিরাপত্তা সময়সীমা মূল্যায়ন করে।",
+    dagAgentSynthesisName: "নিউরাল সংশ্লেষণ এজেন্ট (পরিসংখ্যান-চালিত)",
+    dagAgentSynthesisRole: "একাধিক এজেন্টের টেলিমেট্রি একত্র করে উদ্ধৃতি ট্যাগ ও TTS সহ একটি নির্ভরযোগ্য, তথ্যভিত্তিক প্রাকৃতিক-ভাষার পরামর্শে রূপান্তর করে -- সম্পূর্ণরূপে নিয়ম-ভিত্তিক, এই সাইটের নিজস্ব লাইভ টেলিমেট্রি ও সঞ্চিত পরিসংখ্যান খতিয়ানের উপর ভিত্তি করে যুক্তি প্রয়োগ করে। কোনো বাহ্যিক AI/LLM API ব্যবহার করা হয় না।",
+    dagStatusIdle: "নিষ্ক্রিয়",
+    dagInspectLink: "পরীক্ষা করুন ➔",
+    dagInspectorLatencyTemplate: "এক্সিকিউশন লেটেন্সি: {latency} · উপ-কাজ যাচাইকৃত",
+    dagStatusQueued: "সারিবদ্ধ",
+    dagStatusExecuting: "চলছে...",
+    dagStatusCompleted: "সম্পন্ন",
+    dagStatusSkipped: "আহ্বান করা হয়নি — উদ্দেশ্যের জন্য এর প্রয়োজন ছিল না",
+    dagBtnReasoningActiveLive: "যুক্তি প্রক্রিয়া চলছে (লাইভ ব্যাকএন্ড)...",
+    dagBtnExecutedLive: "✓ লাইভ ব্যাকএন্ডের মাধ্যমে পাইপলাইন কার্যকর হয়েছে · আবার চালান",
+    dagBtnErrorRetry: "▶ লাইভ পাইপলাইন সিমুলেশন চালান",
+    dagBtnReasoningActiveOffline: "যুক্তি প্রক্রিয়া চলছে (স্থানীয় সিমুলেশন)...",
+    dagBtnExecutedOffline: "✓ পাইপলাইন কার্যকর হয়েছে (স্থানীয় সিমুলেশন) · আবার চালান",
+    dagTabTitle: "8-নোড সহযোগী মাল্টি-এজেন্ট DAG",
+    dagInteractiveCanvasBadge: "ইন্টারঅ্যাক্টিভ রিজনিং ক্যানভাস",
+    dagTabDesc: "Oceansat-3, INSAT-3DR, IMBL জিওফেন্সিং, নৌবহরের ঘনত্ব এবং যাত্রার ETA-এর উপর ভিত্তি করে রিয়েল-টাইম মাল্টি-এজেন্ট এক্সিকিউশন পাইপলাইন যুক্তি প্রক্রিয়া।",
+    backendCheckingStatus: "ব্যাকএন্ড পরীক্ষা করা হচ্ছে...",
+    dagZoomReset: "রিসেট",
+    dagRunSimulationBtn: "▶ লাইভ পাইপলাইন সিমুলেশন চালান",
+    dagClickToInspectHint: "যেকোনো এজেন্ট কার্ডে ক্লিক করে এর মূল টেলিমেট্রি ইনপুট, অভ্যন্তরীণ অ্যালগরিদম এবং JSON ডেটা আউটপুট পরীক্ষা করুন।",
+    dagOrchestratorLabel: "অর্কেস্ট্রেটর: LangGraph / Async Agent Core",
+    dagInspectorDefaultTitle: "এজেন্টের বিবরণ",
+    dagInspectorDefaultRole: "ভূমিকার বিবরণ",
+    dagInspectorLatencyPlaceholder: "লেটেন্সি: 24ms",
+    dagInspectorJsonLabel: "লাইভ JSON পেলোড",
+    dagCloseInspector: "ইনস্পেক্টর বন্ধ করুন",
+    chatNewConversationMsg: "নতুন কথোপকথন শুরু হয়েছে। ORCA পূর্ববর্তী চ্যাটের প্রসঙ্গ ব্যবহার করবে না।",
+    chatYouLabel: "আপনি",
+    chatOrcaLabel: "ORCA",
+    chatOrchestratingMsg: "Oceansat-3, INSAT-3DR ও Open-Meteo জুড়ে 8টি বিশেষায়িত AI এজেন্ট পরিচালনা করা হচ্ছে...",
+    chatAiLabel: "AI",
+    chatAdvisoryHeader: "মাল্টি-এজেন্ট সামুদ্রিক পরামর্শ",
+    chatGroundedConfidenceTemplate: "{confidence}% তথ্যভিত্তিক আস্থা",
+    chatLangDetectedTooltip: "বার্তা থেকে শনাক্ত করা ভাষা",
+    chatListenTts: "শুনুন (TTS)",
+    chatNavicMssBtn: "NavIC MSS কোড",
+    chatMetricZone: "প্রস্তাবিত অঞ্চল",
+    chatMetricEta: "লাইভ সমুদ্র পরিস্থিতি ETA",
+    chatMetricVessels: "সক্রিয় জাহাজ",
+    chatVesselsSuffix: "{count}টি জাহাজ",
+    chatMetricImbl: "IMBL অনুমোদন",
+    chatReasoningTraceSummaryTemplate: "মাল্টি-এজেন্ট রিজনিং ট্রেস দেখুন ({steps}টি ধাপ সম্পন্ন)",
+    chatNodeDagSuffixTemplate: "{count}-নোড DAG",
+    chatNoAdvisoryTextFallback: "ORCA INSIGHT ব্যাকএন্ড একটি পরামর্শ তৈরি করেছে কিন্তু কোনো টেক্সট ফেরত দেয়নি।",
+    chatLiveAdvisoryLabel: "✓ লাইভ মাল্টি-এজেন্ট পরামর্শ",
+    chatGroundedEngineFallback: "তথ্যভিত্তিক ইঞ্জিন",
+    chatOceanSourceTierTemplate: "সমুদ্র উৎস স্তর: {tier} · ক্লোরোফিল: {chlorophyll}",
+    chatCitationsTemplate: "উদ্ধৃতি: {citations}",
+    chatOfflineBannerText: "অফলাইন পরামর্শ ইঞ্জিন — ORCA ব্যাকএন্ডে পৌঁছানো যাচ্ছে না। নিচের সংখ্যাগুলি একটি সিমুলেটেড দৃষ্টান্তমূলক অনুমান, লাইভ টেলিমেট্রি নয়।",
+    chatOfflineImblPlainText: "অফলাইন পরামর্শ (ব্যাকএন্ডে পৌঁছানো যাচ্ছে না, সিমুলেটেড অনুমান): Palk Strait / Gulf of Mannar এলাকায় জাহাজগুলি সাধারণত ভারত-শ্রীলঙ্কা IMBL সীমান্ত থেকে কয়েক নটিক্যাল মাইলের মধ্যে থাকে। পশ্চিমমুখী দিক বজায় রাখুন এবং VHF ট্রান্সপন্ডার চ্যানেল 16-এ সক্রিয় রাখুন। সীমান্তের প্রকৃত পরিমাপকৃত দূরত্ব জানতে ORCA ব্যাকএন্ডের সাথে পুনরায় সংযুক্ত হোন।",
+    chatOfflineImblHtmlHeading: "IMBL জিওফেন্সিং পরামর্শ (সিমুলেটেড অফলাইন অনুমান):",
+    chatOfflineImblHtmlBody1: "লাইভ ব্যাকএন্ড সংযোগ ছাড়া, জাহাজ থেকে সীমান্তের সঠিক দূরত্ব পরিমাপ করা যায় না। Palk Strait সেক্টর 4-এর কাছে সাধারণ সতর্কতা হিসেবে, Mandapam-এর দিকে পশ্চিমমুখী দিক বজায় রাখুন।",
+    chatOfflineImblHtmlBody2: "এটি একটি সাধারণ অফলাইন নিরাপত্তা স্মরণিকা, পরিমাপকৃত জিওফেন্স রিডিং নয়। IMBL-এর প্রকৃত দূরত্ব গণনার জন্য ORCA ব্যাকএন্ডের সাথে পুনরায় সংযুক্ত হোন।",
+    chatOfflineImblStep1: "ব্যাকএন্ডে পৌঁছানো যাচ্ছে না। স্থানীয় কীওয়ার্ড মিলের মাধ্যমে প্রশ্নটিকে IMBL_BOUNDARY হিসেবে শ্রেণীবদ্ধ করা হয়েছে।",
+    chatOfflineImblStep2: "কোনো লাইভ জিওফেন্সিং টেলিমেট্রি উপলব্ধ নেই -- শুধুমাত্র সাধারণ সীমান্ত-নিরাপত্তা নির্দেশনা ফেরত দেওয়া হচ্ছে।",
+    chatOfflineDensityPlainText: "অফলাইন পরামর্শ (ব্যাকএন্ডে পৌঁছানো যাচ্ছে না, সিমুলেটেড অনুমান): ব্যাকএন্ড সংযোগ ছাড়া লাইভ জাহাজের সংখ্যা পাওয়া যায় না। ঐতিহাসিকভাবে, Wadge Bank এবং Kochi Deep Offshore-এ মাঝারি মাছ ধরার ট্র্যাফিক দেখা যায়। জাহাজ ডেটাসেট থেকে প্রকৃত নৌবহর-ঘনত্ব রিডিং পেতে ORCA ব্যাকএন্ডের সাথে পুনরায় সংযুক্ত হোন।",
+    chatOfflineDensityHtmlHeading: "নৌবহর ঘনত্ব (অফলাইন — সিমুলেটেড প্লেসহোল্ডার):",
+    chatOfflineDensityHtmlBody: "নৌবহর ও ট্র্যাফিক এজেন্টের লাইভ জাহাজ ডেটাসেট এই মুহূর্তে পৌঁছানো যাচ্ছে না, তাই অঞ্চল-ভিত্তিক সঠিক জাহাজ সংখ্যা পাওয়া যাচ্ছে না।",
+    chatOfflineDensityListItem: "প্রকৃত অঞ্চল-ভিত্তিক জাহাজ সংখ্যা এবং অতিরিক্ত ভিড়ের রায় পেতে ORCA ব্যাকএন্ডের সাথে পুনরায় সংযুক্ত হোন।",
+    chatOfflineDensityStep1: "ব্যাকএন্ডে পৌঁছানো যাচ্ছে না। স্থানীয় কীওয়ার্ড মিলের মাধ্যমে প্রশ্নটিকে FLEET_DENSITY হিসেবে শ্রেণীবদ্ধ করা হয়েছে।",
+    chatOfflineDensityStep2: "কোনো লাইভ নৌবহর ডেটাসেট উপলব্ধ নেই -- বানানো সংখ্যা উপস্থাপন এড়াতে জাহাজের সংখ্যা দেখানো হচ্ছে না।",
+    chatOfflineGenericPlainTextTemplate: "অফলাইন পরামর্শ (ব্যাকএন্ডে পৌঁছানো যাচ্ছে না): ORCA-এর মাল্টি-এজেন্ট ব্যাকএন্ডে পৌঁছানো যায়নি, তাই এই উত্তরটি একটি তথ্যভিত্তিক রিডিং নয় বরং একটি সাধারণ, নন-লাইভ প্লেসহোল্ডার। আপনার ব্রাউজারের নিজস্ব Open-Meteo উইজেট প্রায় {liveWave}মি উল্লেখযোগ্য ঢেউয়ের উচ্চতা জানাচ্ছে, তবে PFZ র‍্যাঙ্কিং, রুট দূরত্ব, ETA এবং নৌবহরের সংখ্যা — এসবের জন্য ব্যাকএন্ড প্রয়োজন এবং এখানে দেখানো হচ্ছে না। প্রকৃত পরামর্শের জন্য ORCA ব্যাকএন্ডের সাথে পুনরায় সংযুক্ত হোন।",
+    chatOfflineGenericHtmlHeading: "অফলাইন প্লেসহোল্ডার পরামর্শ",
+    chatOfflineGenericHtmlBody1Template: "ORCA-এর মাল্টি-এজেন্ট ব্যাকএন্ড (স্যাটেলাইট, আবহাওয়া, PFZ র‍্যাঙ্কিং, জিওফেন্সিং, নৌবহর, রুটিং এবং নিউরাল সংশ্লেষণ) এই মুহূর্তে পৌঁছানো যাচ্ছে না। ক্লায়েন্ট-সাইডে, এই ব্রাউজারটি Open-Meteo থেকে সর্বশেষ <strong>{liveWave}মি</strong> ঢেউয়ের উচ্চতা দেখেছিল, তবে অন্যান্য প্রতিটি সংখ্যার জন্য ব্যাকএন্ড প্রয়োজন।",
+    chatOfflineGenericHtmlBody2: "<strong>কোনো PFZ সুপারিশ, রুট, ETA বা নৌবহরের সংখ্যা দেখানো হচ্ছে না</strong> কারণ সেগুলি গণনা না করে বানাতে হতো। সম্পূর্ণ তথ্যভিত্তিক পরামর্শের জন্য ORCA ব্যাকএন্ডের সাথে পুনরায় সংযুক্ত হোন।",
+    chatOfflineGenericStep1: "ব্যাকএন্ডে পৌঁছানো যাচ্ছে না। কোনো উদ্দেশ্য-নির্দিষ্ট কীওয়ার্ড মেলেনি -- GENERAL_VOYAGE_SAFETY অফলাইন প্লেসহোল্ডার ফেরত দেওয়া হচ্ছে।",
+    chatOfflineGenericStep2Template: "শুধুমাত্র ক্লায়েন্ট-দৃশ্যমান সংখ্যা উপলব্ধ: সর্বশেষ জানা Open-Meteo ঢেউয়ের উচ্চতা {liveWave}মি (ব্যাকএন্ড ছাড়াই সরাসরি ব্রাউজার দ্বারা সংগৃহীত)।",
+    chatTtsUnsupportedAlert: "আপনার ব্রাউজার স্পিচ সিন্থেসিস সমর্থন করে না।",
+    chatTtsWelcomeFallback: "ORCA INSIGHT-এ স্বাগতম। সমস্ত স্যাটেলাইট ফিড এবং উপকূলীয় সমুদ্রবিজ্ঞান সিস্টেম স্বাভাবিক অবস্থায় কাজ করছে।",
+    chatStopAudio: "অডিও বন্ধ করুন",
+    chatListenAudioAdvisory: "অডিও পরামর্শ শুনুন",
+    chatTabTitle: "AI সিদ্ধান্ত স্টুডিও ও মাল্টি-এজেন্ট চ্যাটবট",
+    chatTabSubtitle: "Oceansat-3, INSAT-3DR এবং উপকূলীয় জিওফেন্সিং-এর উপর যুক্তি প্রয়োগকারী সহযোগী এজেন্ট দ্বারা চালিত",
+    chatNewConversationBtn: "নতুন কথোপকথন",
+    chatPromptPFZ: "Kochi Harbour থেকে সবচেয়ে কাছের উচ্চ-ফলনশীল PFZ মাছ ধরার অঞ্চল খুঁজুন, ধরার সম্ভাবনা ও প্রজাতিসহ।",
+    chatPromptSafety: "আজকের সমুদ্রযাত্রা-অনুমোদন স্কোর, উল্লেখযোগ্য ঢেউয়ের উচ্চতা এবং বাতাসের বিপদ পরীক্ষা করুন।",
+    chatPromptBorder: "ভারত-শ্রীলঙ্কা IMBL সীমান্তের দূরত্ব পরীক্ষা করুন এবং 2 NM বিপদ অঞ্চলে থাকা জাহাজের তালিকা দিন।",
+    chatPromptDensity: "Wadge Bank এবং Kochi Deep জুড়ে বর্তমান জাহাজের সংখ্যা এবং ঘনত্বের বণ্টন কী?",
+    chatPromptETA: "Kochi থেকে PFZ-01 পর্যন্ত যাত্রার ETA গণনা করুন এবং যাচাই করুন যে সন্ধ্যা 18:30-এর আগে নিরাপদে যাওয়া-আসা সম্ভব কিনা।",
+    chatConversationLabel: "কথোপকথন",
+    chatNeuralCoreActive: "ORCA INSIGHT নিউরাল কোর সক্রিয়",
+    chatAgentsReadyUptime: "8টি এজেন্ট প্রস্তুত · 99.94% আপটাইম",
+    chatWelcomeMessage: "Vanakkam / নমস্তে! আমি <strong>ORCA INSIGHT</strong> মাল্টি-এজেন্ট সংশ্লেষণ সিস্টেম। আপনি নিরাপদ যাত্রা অনুমোদন, ভারতের উপকূল বরাবর উচ্চ-ফলনশীল PFZ অঞ্চল, লাইভ জাহাজ চলাচল, IMBL সীমান্তের নৈকট্য এবং সমুদ্র-পরিস্থিতি অনুযায়ী সমন্বিত ETA গণনা সম্পর্কে আপনার প্রশ্ন বলতে বা টাইপ করতে পারেন।",
+    chatMicHint: "তামিল, হিন্দি, মালায়ালাম বা ইংরেজিতে কথা বলতে নিচের মাইক্রোফোন আইকনে ক্লিক করুন!",
+    chatVoiceInputTitle: "কথা বলে প্রশ্ন করুন (স্পিচ-টু-টেক্সট)",
+    chatLiveReasoningTraceTitle: "লাইভ রিজনিং ট্রেস",
+    chatReasoningTraceEmptyHint: "বামদিকে একটি প্রশ্ন জিজ্ঞাসা করুন এবং এখানে লাইভভাবে দেখুন কীভাবে 8টি সহযোগী এজেন্ট এটির উপর যুক্তি প্রয়োগ করছে।",
+    chatLiveTelemetryTitle: "লাইভ সমুদ্র টেলিমেট্রি",
+    chatCurrentSeaClearance: "বর্তমান সমুদ্রযাত্রা অনুমোদন:",
+    chatSignificantWaves: "উল্লেখযোগ্য ঢেউ:",
+    chatSurfaceWind: "ভূপৃষ্ঠের বাতাস:",
+    chatActiveVessels: "সক্রিয় জাহাজ:",
+    chatOpenDagVisualizerBtn: "সম্পূর্ণ এজেন্ট DAG ভিজ্যুয়ালাইজার খুলুন ➔",
+    navicConnected: "NavIC রিসিভার: সংযুক্ত (L5/S-ব্যান্ড)",
+    navicDisconnected: "NavIC রিসিভার: সংযোগ বিচ্ছিন্ন",
+    navicTrackMyPosition: "আমার অবস্থান ট্র্যাক করুন",
+    navicStopTracking: "ট্র্যাকিং বন্ধ করুন",
+    navicSimulateMovement: "জাহাজের চলাচল সিমুলেট করুন",
+    navicStopSimulation: "সিমুলেশন বন্ধ করুন",
+    navicStatusTrackingOff: "ট্র্যাকিং বন্ধ · কোনো অবস্থান অনুরোধ করা হচ্ছে না",
+    navicStatusGeoUnsupported: "এই ব্রাউজার জিওলোকেশন সমর্থন করে না। ডেমোর জন্য সিমুলেটেড জাহাজ চলাচল ব্যবহার করুন।",
+    navicStatusRequestingPermission: "ডিভাইস-অবস্থানের অনুমতি চাওয়া হচ্ছে…",
+    navicStatusLiveTrackingTemplate: "লাইভ ডিভাইস ট্র্যাকিং · নির্ভুলতা ±{accuracy}মি · সংরক্ষণ করা হয় না",
+    navicStatusPermissionErrorTemplate: "অবস্থানের অনুমতি অনুপলব্ধ ({error})। কোনো অবস্থান পাঠানো হয়নি।",
+    navicStatusBackendUnavailable: "ব্যাকএন্ড অনুপলব্ধ — স্থানীয় সিমুলেশনে সঠিক জিওফেন্স দূরত্ব মূল্যায়ন করা যায় না।",
+    navicStatusSimStopped: "জিওফেন্স সিমুলেশন বন্ধ হয়েছে",
+    navicStatusSimMovingTemplate: "সিমুলেটেড জাহাজের চলাচল · বিন্দু {index}/{total} · {lat}, {lon}",
+    navicMssCopiedAlertTemplate: "NavIC MSS / SMS 120-অক্ষরের স্যাটেলাইট জরুরি কোড কপি করা হয়েছে:\n\n{code}",
+    navicSkyplotTitle: "ISRO NavIC (IRNSS) স্কাইপ্লট",
+    navicConstellationDesc: "7-স্যাটেলাইট জিওস্টেশনারি / IGSO নক্ষত্রমণ্ডল",
+    navicConnectedShort: "সংযুক্ত (L5/S)",
+    navicTrackedSatellitesTitle: "ট্র্যাক করা স্যাটেলাইট (SNR dB-Hz)",
+    navicNmeaStreamTitle: "লাইভ NMEA-0183 হার্ডওয়্যার স্ট্রিম ($GNGGA / $GNRMC)",
+    navicBaudRateDesc: "বড রেট: 9600 bps · 1 Hz ফিড",
+    navicDopPrecisionLabel: "DOP নির্ভুলতা",
+    navicDopValue: "HDOP 1.05 (চমৎকার)",
+    navicDiffFixLabel: "ডিফারেনশিয়াল ফিক্স",
+    navicDiffFixValue: "NavIC DGPS সক্রিয়",
+    navicBorderHwLabel: "সীমান্ত সতর্কতা হার্ডওয়্যার",
+    navicBorderHwValue: "বাজার সক্রিয়",
+    navicGeofenceTitle: "লাইভ অবস্থান জিওফেন্সিং",
+    navicGeofenceDesc: "আপনার ডিভাইসের অবস্থান শুধুমাত্র সেশন-চলাকালীন IMBL/MPA পরীক্ষার জন্য ব্যবহৃত হয় এবং ORCA দ্বারা কখনো সংরক্ষণ করা হয় না।",
+    navicGeofenceInitialStatus: "ট্র্যাকিং বন্ধ · 5 NM IMBL সতর্কতা / MPA বাফার সতর্কতা",
+    safetyVerdictDescTemplate: "লাইভ Open-Meteo সামুদ্রিক টেলিমেট্রি অনুযায়ী আপনার নির্বাচিত হারবারের কাছে উল্লেখযোগ্য ঢেউয়ের উচ্চতা {wave}মি এবং ভূপৃষ্ঠের বাতাস {wind}kn, যা {score}/100 নিরাপত্তা স্কোর নির্দেশ করে।",
+    safetyWindDefaultDirection: "পশ্চিমা",
+    safetyBreezeSuffix: "{direction} মৃদুবায়ু",
+    severityLow: "কম",
+    severityModerate: "মাঝারি",
+    severityHigh: "উচ্চ",
+    waveBandCalm: "শান্ত (< 0.5মি)",
+    waveBandSlight: "সামান্য (0.5 - 1.25মি)",
+    waveBandModerate: "মাঝারি (1.25 - 2.5মি)",
+    waveBandRough: "উত্তাল (> 2.5মি)",
+    seaStateCalm: "শান্ত",
+    seaStateSlight: "সামান্য",
+    seaStateSlightModerate: "সামান্য থেকে মাঝারি",
+    seaStateModerateRough: "মাঝারি থেকে উত্তাল",
+    seaStateUnknown: "অজানা",
+    lightningBandSafe: "নিরাপদ বায়ুমণ্ডলীয় প্রোফাইল",
+    lightningBandElevated: "উচ্চতর পরিচলন ঝুঁকি",
+    lightningBandSevere: "তীব্র ঝড়ো হাওয়া সতর্কতা",
+    safetySyncLatencyLabel: "সিঙ্ক লেটেন্সি:",
+    safetyBatteryLabel: "ব্যাটারি:",
+    safetyLastPassLabel: "সর্বশেষ পাস:",
+    safetyAltitudeLabel: "উচ্চতা:",
+    telemetryLiveOpenMeteoTemplate: "লাইভ OPEN-METEO টেলিমেট্রি ({wave}মি SWH)",
+    telemetryCachedArchive: "টেলিমেট্রি সক্রিয় (ক্যাশড স্যাটেলাইট আর্কাইভ)",
+    backendOnlineStatus: "লাইভ FASTAPI ব্যাকএন্ড সংযুক্ত",
+    backendOfflineStatus: "ব্যাকএন্ড অফলাইন · স্থানীয় সিমুলেশন মোড",
+    aisLiveCountTemplate: "{count}টি লাইভ AIS জাহাজ{plural}",
+    aisNoLiveVessels: "এই মুহূর্তে কোনো লাইভ AIS জাহাজ নেই",
+    aisBlendedBannerTemplate: "{liveText} + {simCount}টি সিমুলেটেড জাহাজ{plural} দেখানো হচ্ছে, যেসব বন্দরে এই মুহূর্তে লাইভ AIS কভারেজ নেই সেগুলি পূরণ করতে।",
+    aisUnavailableDefault: "লাইভ AIS জাহাজ ফিড অনুপলব্ধ -- 0টি জাহাজ দেখানো হচ্ছে।",
+    aisNotConfigured: "এই ডেপ্লয়মেন্টে লাইভ AIS জাহাজ ফিড কনফিগার করা নেই।",
+    aisConnectedNotSending: "AIS প্রদানকারীর (AISstream.io) সাথে সংযুক্ত, কিন্তু এটি এই মুহূর্তে জাহাজের তথ্য পাঠাচ্ছে না — সম্ভবত প্রদানকারীর দিক থেকে বিভ্রাট, স্থানীয় ত্রুটি নয়।",
+    aisDisconnectedReconnecting: "AIS প্রদানকারীর (AISstream.io) সাথে সংযোগ বিচ্ছিন্ন; স্বয়ংক্রিয়ভাবে পুনরায় সংযুক্ত হচ্ছে।",
+    imblAlertActiveTemplate: "<strong>{vesselId} ({vesselName})</strong> ভারত–শ্রীলঙ্কা IMBL থেকে <strong>{dist} NM</strong> দূরত্বে চলাচল করছে{simTag}। স্বয়ংক্রিয় সতর্কতা পাঠানো হয়েছে।",
+    imblAlertNoneTemplate: "বর্তমানে {warnDist} NM IMBL সতর্কতা দূরত্বের মধ্যে কোনো জাহাজ নেই। সবচেয়ে কাছের ট্র্যাক করা জাহাজ: <strong>{dist} NM</strong> দূরে।",
+    imblAlertNoData: "এখনো কোনো জাহাজ টেলিমেট্রি উপলব্ধ নেই।",
+    simulatedSuffix: " (সিমুলেটেড)",
+    notifUnavailableTitle: "ব্রাউজার বিজ্ঞপ্তি অনুপলব্ধ",
+    notifUnavailableMsg: "এই ট্যাব খোলা থাকাকালীন অ্যাপের মধ্যে বিপদ ব্যানার তবুও দেখানো হবে।",
+    notifNotEnabledTitle: "ব্রাউজার বিজ্ঞপ্তি সক্রিয় নেই",
+    notifNotEnabledMsg: "এই ট্যাব খোলা থাকাকালীন অ্যাপের মধ্যে বিপদ ব্যানার সক্রিয় থাকে।",
+    hazardHighWavesTitle: "উঁচু ঢেউ — স্থানীয় সিমুলেশন",
+    hazardHighWavesMsgTemplate: "{wave}মি 2.5মি সতর্কতা সীমা অতিক্রম করেছে। উৎস: ব্রাউজার Open-Meteo টেলিমেট্রি।",
+    hazardHighWindTitle: "প্রবল বাতাস — স্থানীয় সিমুলেশন",
+    hazardHighWindMsgTemplate: "{wind} kn 25 kn সতর্কতা সীমা অতিক্রম করেছে। উৎস: ব্রাউজার Open-Meteo টেলিমেট্রি।",
+    hazardLightningTitle: "বজ্রপাতের ঝুঁকি — স্থানীয় সিমুলেশন",
+    hazardLightningMsgTemplate: "বজ্রপাতের প্রক্সি {pct}%। উৎস: ব্রাউজার Open-Meteo টেলিমেট্রি।",
+    safetyOfficialClearanceLabel: "সরকারি সামুদ্রিক অনুমোদন",
+    safetyVerdictDescInitial: "সমস্ত স্যাটেলাইট সমুদ্রবিজ্ঞান সূচক (Oceansat-3 SSTM তাপীয় ফ্রন্ট, Sentinel-3 ঢেউ অল্টিমেট্রি) কেরালা, কর্ণাটক এবং তামিলনাড়ু উপকূলীয় জলে অনুকূল মাছ ধরার পরিস্থিতি নিশ্চিত করে।",
+    safetyIndexLabel: "নিরাপত্তা সূচক",
+    satConstellationTitle: "ISRO ও আন্তর্জাতিক সমুদ্রবিজ্ঞান স্যাটেলাইট নক্ষত্রমণ্ডল",
+    satStaticDataNote: "স্থির রেফারেন্স ডেটা (লাইভ টেলিমেট্রি নয়)",
+    mapIndiaBoundaryPopup: "ভারত — সরকারি সীমানা (Survey of India)",
+    mapPfzYieldSuffix: "{rating} ফলন ({pct}%)",
+    mapPfzSstLabel: "SST:",
+    mapPfzChlorophyllLabel: "ক্লোরোফিল:",
+    mapPfzDepthLabel: "গভীরতা:",
+    mapPfzVesselsLabel: "জাহাজ:",
+    mapPfzActiveSuffix: "{count}টি সক্রিয়",
+    mapPfzTargetSpeciesLabel: "লক্ষ্য প্রজাতি:",
+    mapPfzSimulateRouteBtn: "এখানে রুট সিমুলেট করুন ➔",
+    mapImblPopupBodyTemplate: "কঠোর আন্তর্জাতিক সামুদ্রিক সীমানা। সতর্কতা বাফার: {warn} NM। সংকটজনক জিওফেন্স: {danger} NM।",
+    mapImblPopupTreatyNote: "UNCLOS সামুদ্রিক চুক্তি অনুযায়ী সীমান্ত অতিক্রম নিষিদ্ধ।",
+    mapImblBufferCorridorTemplate: "{dist} NM IMBL বাফার করিডোর",
+    mapMpaRestrictedBadge: "নিষিদ্ধ বাস্তুসংস্থান সংরক্ষিত অঞ্চল",
+    mapHarbourCoastSuffix: "{state} উপকূল",
+    mapHarbourCapacityLabel: "ধারণক্ষমতা:",
+    mapHarbourVhfLabel: "VHF:",
+    mapHarbourFuelLabel: "জ্বালানি স্টেশন:",
+    mapHarbourFuelAvailable: "উপলব্ধ",
+    mapHarbourIceLabel: "বরফ কারখানা:",
+    mapHarbourIceActive: "সক্রিয়",
+    mapHarbourSetOriginBtn: "উৎস হারবার হিসেবে নির্ধারণ করুন",
+    mapVesselSimulatedBadge: "সিমুলেটেড · এখানে লাইভ AIS কভারেজ নেই",
+    mapVesselSpeedLabel: "গতি:",
+    mapVesselHeadingLabel: "দিক:",
+    mapVesselZoneLabel: "অঞ্চল:",
+    mapVesselImblDistLabel: "IMBL দূরত্ব:",
+    mapVesselStatusLabel: "অবস্থা:",
+    mapVesselFuelLabel: "জ্বালানি:",
+    mapVesselFuelNA: "প্রযোজ্য নয়",
+    mapRoutePopupTitle: "শুধুমাত্র সমুদ্র A* রুট (স্থল + MPA পরিহার)",
+    mapRouteDistanceEtaTemplate: "দূরত্ব: {dist} NM · ETA: {eta}{detourNote}",
+    mapRouteDetourTemplate: " · {zones}-এর চারপাশে {pct}% ঘুরপথ",
+    mapRouteLandNoGoZones: "স্থল/নিষিদ্ধ অঞ্চল",
+    vesselStatusSafeFishing: "নিরাপদ মাছ ধরা",
+    vesselStatusBorderAlert: "সীমান্ত সতর্কতা",
+    vesselStatusBorderWarn: "সীমান্ত হুঁশিয়ারি",
+    vesselStatusInTransit: "যাত্রারত",
+    vesselSimBadgeText: "SIM",
+    vesselSimBadgeTitle: "সিমুলেটেড -- এই বন্দরের কাছে লাইভ AIS কভারেজ নেই",
+    vesselLocateAction: "অবস্থান দেখুন ➔",
+    fleetVesselCountSuffix: "{count}টি জাহাজ",
+    fleetLiveSimBreakdownTemplate: "{total} ({live} লাইভ · {sim} সিম)",
+    mapActiveVesselsBreakdownTemplate: "{total}টি সক্রিয় জাহাজ ({live} লাইভ · {sim} সিমুলেটেড)",
+    mapActiveVesselsSimpleTemplate: "{total}টি সক্রিয় জাহাজ",
+    mapTabTitle: "GIS কমান্ড মানচিত্র · ভারতীয় উপকূলীয় জলসীমা",
+    mapTabDesc: "রিয়েল-টাইম স্যাটেলাইট PFZ, IMBL সীমানা করিডোর এবং AIS জাহাজ ট্র্যাক সহ ইন্টারঅ্যাক্টিভ উচ্চ-কনট্রাস্ট নটিক্যাল মানচিত্র।",
+    layerPfzZones: "PFZ অঞ্চল",
+    layerImblBuffer: "IMBL বাফার",
+    layerEcoReserves: "বাস্তুসংস্থান সংরক্ষিত অঞ্চল (MPA)",
+    layerHarbours: "হারবার",
+    layerLiveVessels: "লাইভ জাহাজ",
+    layerDensityHeatmap: "ঘনত্ব হিটম্যাপ",
+    layerIndiaBoundary: "ভারতের সীমানা (Survey of India)",
+    routePlannerDesc: "MPA ও সীমান্ত বিপদ পরিহারকারী A*-শৈলীর পথ",
+    routeVesselSpeedLabel: "জাহাজের গতি:",
+    fleetMonitorTitle: "নৌবহর মনিটর · লাইভ জাহাজ টেলিমেট্রি",
+    fleetTotalActiveTitle: "মোট সক্রিয় জাহাজ",
+    fleetTotalActiveDesc: "বর্তমানে AIS ট্রান্সপন্ডার সংকেত প্রেরণকারী জাহাজ",
+    fleetZoneDistTitle: "প্রতি অঞ্চলে জাহাজের বণ্টন",
+    imblAlertCardTitle: "IMBL সীমান্ত নৈকট্য সতর্কতা",
+    fleetTableSubDesc: "AISstream.io থেকে লাইভ AIS অবস্থান, যেখানে বর্তমানে কোনো লাইভ রিসিভার কভারেজ নেই সেখানে স্পষ্টভাবে চিহ্নিত সিমুলেটেড নৌবহর দিয়ে পূরণ করা হয়েছে (\"SIM\" ব্যাজ দেখুন)",
+    vesselSearchPlaceholder: "জাহাজের নাম বা ID অনুসন্ধান করুন...",
+    filterAllStatuses: "সব অবস্থা",
+    filterSafeFishing: "নিরাপদ মাছ ধরা",
+    filterInTransit: "যাত্রারত",
+    filterBorderAlert: "সীমান্ত সতর্কতা",
+    thVesselId: "জাহাজ ID",
+    thVesselName: "জাহাজের নাম",
+    thType: "ধরন",
+    thCurrentZone: "বর্তমান অঞ্চল",
+    thSpeedHeading: "গতি / দিক",
+    thImblDist: "IMBL দূরত্ব",
+    thStatus: "অবস্থা",
+    thAction: "কার্যক্রম",
+    bulletinIssuedLabel: "প্রকাশিত:",
+    bulletinRegionLabel: "অঞ্চল:",
+    bulletinWavesLabel: "ঢেউ:",
+    bulletinWindsLabel: "বাতাস:",
+    bulletinSourceLabel: "উৎস:",
+    bulletinListenBtn: "বুলেটিন শুনুন",
+    bulletinsTabTitle: "সরকারি সামুদ্রিক ও মৎস্য বুলেটিন (ISRO - INCOIS)",
+    bulletinsTabDesc: "ক্রমাঙ্কিত পরামর্শ, ঘূর্ণিঝড় বিপদ সতর্কতা এবং আন্তর্জাতিক সীমানা সম্মতি সতর্কতা।",
+    bulletinNotifyToggleTitle: "শুধুমাত্র এই ট্যাব/PWA খোলা থাকাকালীন ব্রাউজার সতর্কতা পান",
+    bulletinNotifyToggleLabel: "খোলা থাকলে জানান",
+    bulletinFilterAll: "সব বুলেটিন",
+    bulletinFilterCritical: "সংকটজনক",
+    bulletinFilterWarning: "সতর্কতা",
+    bulletinFilterAdvisory: "পরামর্শ",
+    bulletinsPushNote: "এই ট্যাব/PWA খোলা থাকাকালীনই বিপদ সতর্কতা সক্রিয়ভাবে দেখানো হয়। অ্যাপ বন্ধ থাকা অবস্থায় পুশ বিজ্ঞপ্তির জন্য একটি প্রোডাকশন পুশ-সাবস্ক্রিপশন পরিষেবা প্রয়োজন, যা এই প্রোটোটাইপে বাস্তবায়িত হয়নি।",
+    sosModalTitle: "জরুরি বিপদ সংকেত বীকন (SOS)",
+    sosInstructions: "জরুরি SOS সক্রিয় করলে <strong>INSAT-3DR SAS&R</strong>-এর মাধ্যমে একটি জরুরি 406 MHz বিপদ সংকেত ভারতীয় কোস্ট গার্ডের সামুদ্রিক উদ্ধার সমন্বয় কেন্দ্রে (MRCC) প্রেরণ করা হবে।",
+    sosCurrentPositionLabel: "বর্তমান অবস্থান:",
+    sosVhfChannelLabel: "জরুরি VHF চ্যানেল:",
+    sosMrccHelplineLabel: "MRCC হেল্পলাইন:",
+    sosConfirmBtn: "নিশ্চিত করুন ও বিপদ সংকেত সম্প্রচার করুন",
+    sosBeaconTransmittingBanner: "406 MHz SAS&R বীকন ISRO ও কোস্ট গার্ড MRCC-তে প্রেরিত হচ্ছে",
+    sosDistressRelayedMsg: "INSAT-3DR SAS&R রিসিভারের মাধ্যমে বিপদ প্যাকেট প্রেরণ করা হয়েছে। সামুদ্রিক উদ্ধার সমন্বয় কেন্দ্র (MRCC Chennai/Mumbai) VHF চ্যানেল 16-এ সতর্ক করা হয়েছে।",
+    sosGpsVesselIdTemplate: "GPS স্থানাঙ্ক: {coords} · জাহাজ ID: {vesselId} ({vesselName})",
+    landingEyebrow: "ISRO সহযোগী সামুদ্রিক বুদ্ধিমত্তা · Smart India Hackathon 2026",
+    landingSubtitle: "একটি সহযোগী সামুদ্রিক-বুদ্ধিমত্তা প্ল্যাটফর্ম, দুটি কমান্ড ডেক: একজন জেলের দৈনিক সুযোগ কনসোল, এবং সম্পূর্ণ ISRO স্যাটেলাইট, AIS ও জিওফেন্সিং ইনসাইট স্যুট।",
+    landingStripItem1: "Oceansat-3 SSTM তাপীয় ফ্রন্ট",
+    landingStripItem2: "INSAT-3DR স্যাটেলাইট সমুদ্রবিজ্ঞান",
+    landingStripItem3: "8-নোড সহযোগী এজেন্ট DAG",
+    landingStripItem4: "NavIC (IRNSS) GPS ব্রিজ",
+    landingStripItem5: "IMBL সীমান্ত জিওফেন্সিং সতর্কতা",
+    landingStripItem6: "লাইভ AIS নৌবহর ও GIS কমান্ড",
+    landingStripItem7: "Sell Smarter ক্রেতা মূল্য নির্ধারণ",
+    landingStripItem8: "406 MHz SOS বিপদ সংকেত বীকন",
+    landingFishermanCardTitle: "ORCA Fisherman",
+    landingFishermanCardDesc: "আজকের সুযোগ স্কোর, Sell Smarter মূল্য নির্ধারণ, একটি ভ্রমণ-খরচ ক্যালকুলেটর এবং আপনার ধরার জন্য ক্রেতার তথ্য — নৌকার জন্য তৈরি।",
+    landingFishermanCardCta: "Fisherman কনসোল খুলুন",
+    landingFishermanCardTitleAttr: "Fisherman কনসোল খুলুন",
+    landingInsightCardTitle: "ORCA Insight",
+    landingInsightCardDesc: "সম্পূর্ণ কমান্ড ডেক: ISRO স্যাটেলাইট সমুদ্রবিজ্ঞান, GIS মানচিত্র, 8-নোড এজেন্ট DAG, নিরাপত্তা ব্যারোমিটার, নৌবহর মনিটর এবং NavIC ব্রিজ।",
+    landingInsightCardCta: "Insight কমান্ড ডেক খুলুন",
+    landingInsightCardTitleAttr: "Insight কমান্ড ডেক খুলুন",
+    backToOverviewTitle: "ওভারভিউতে ফিরে যান",
+    statSimulatedFleetLabel: "সিমুলেটেড AIS নৌবহর",
+    statSatellitesActiveTemplate: "{count}টি সক্রিয়",
+    statSatellitesListLabel: "Oceansat-3, INSAT-3DR, Sentinel-3",
+    statPfzZonesCountTemplate: "{count}টি অঞ্চল",
+    statPfzZonesListLabel: "Wadge Bank, Kochi, Veraval...",
+    statImblCorridorsCountTemplate: "{count}টি করিডোর",
+    statImblBordersLabel: "ভারত-শ্রীলঙ্কা ও পাকিস্তান সীমান্ত",
+    pillarDagTitle: "8-নোড সহযোগী এজেন্ট DAG",
+    pillarDagDesc: "মাল্টি-এজেন্ট আর্কিটেকচার যা প্রশ্নগুলিকে স্যাটেলাইট, ঢেউ বিপদ, জিওফেন্সিং, জাহাজ গণনা, ETA এবং নিউরাল সংশ্লেষণ ধাপে বিভক্ত করে, এক সেকেন্ডেরও কম লেটেন্সিতে।",
+    pillarEtaTitle: "লাইভ সমুদ্র-পরিস্থিতি ETA ও সন্ধ্যা নিরাপত্তা",
+    pillarEtaDesc: "ঢেউয়ের প্রতিরোধ অনুযায়ী সমন্বিত হাইড্রোডাইনামিক যাত্রা গণনা, সূর্যাস্তের পর জেলেরা আটকে না পড়ে তা নিশ্চিত করতে স্বয়ংক্রিয় সন্ধ্যার-আগে-ফেরা নিরাপত্তা সতর্কতাসহ।",
+    pillarFleetTitle: "লাইভ নৌবহর ঘনত্ব ও IMBL সতর্কতা",
+    pillarFleetDesc: "প্রতি অঞ্চলে রিয়েল-টাইম জাহাজ গণনা, অতিরিক্ত ভিড়ের ঝুঁকি সূচক এবং সামুদ্রিক সীমান্ত রক্ষাকারী স্বয়ংক্রিয় 5 NM/2 NM জিওফেন্স নৈকট্য সতর্কতা।",
+    footerCreditLine: "<span class=\"text-slate-200 font-semibold\">{appTitle}</span> · নির্মাতা <strong class=\"text-cyan-400\">{teamName}</strong> · Smart India Hackathon 2026 · সমস্যা বিবৃতি 26176 (ISRO)",
+    sttListeningStatusTemplate: "<b>{lang}</b>-এ শোনা হচ্ছে... এখন বলুন।",
+    sttUnsupportedTitle: "এই ব্রাউজারে স্পিচ রিকগনিশন সমর্থিত নয়",
+    routeUnavailableLabel: " রুট অনুপলব্ধ:",
+    routeUnavailableMsg: "ORCA ব্যাকএন্ডে পৌঁছানো যাচ্ছে না, তাই কোনো রুটেড দূরত্ব/ETA দেখানো যাচ্ছে না। স্থানীয় ফলব্যাক মোডে চলছে।",
+    routeNoSafeRouteLabel: "✕ কোনো নিরাপদ সামুদ্রিক রুট পাওয়া যায়নি:",
+    routeNoSafeRouteMsgTemplate: "{detail}",
+    routeNoSafeRouteDefaultReason: "রাউটার এই হারবার/PFZ জোড়ার জন্য স্থল ও সামুদ্রিক সংরক্ষিত অঞ্চল পরিহার করে কোনো পথ খুঁজে পায়নি।",
+    routeSafeReturnLabel: "✓ নিরাপদ প্রত্যাবর্তন:",
+    routeSafeReturnTemplate: "প্রত্যাশিত হারবার আগমন {time}-এর মধ্যে (সন্ধ্যা 18:30 IST-এর আগে)।",
+    routeReturnAfterDuskLabel: " সন্ধ্যার পর প্রত্যাবর্তন:",
+    routeReturnAfterDuskTemplate: "প্রত্যাশিত প্রত্যাবর্তন {time}-এ (18:30 IST সূর্যাস্ত অতিক্রম করে)। আগে রওনা হওয়া বা রাতের নেভিগেশনাল বীকন পরীক্ষার পরামর্শ দেওয়া হচ্ছে।"
   }
 };
 
@@ -2519,7 +5839,9 @@ const agentsList = [
   {
     id: "supervisor",
     name: "Master Supervisor / DAG Planner",
+    nameKey: "dagAgentSupervisorName",
     role: "Decomposes multi-modal marine query, allocates subtasks to satellite, hazard, and geofence agents.",
+    roleKey: "dagAgentSupervisorRole",
     sensors: ["Intent Parser", "Task Scheduler"],
     latency: "18ms",
     status: "idle",
@@ -2528,7 +5850,9 @@ const agentsList = [
   {
     id: "satellite_agent",
     name: "Satellite Oceanography Agent",
+    nameKey: "dagAgentSatelliteName",
     role: "Ingests Oceansat-3 OCM-3 (chlorophyll-a) & SSTM (thermal fronts) along with INSAT-3DR cloud imagery.",
+    roleKey: "dagAgentSatelliteRole",
     sensors: ["Oceansat-3 OCM-3", "SSTM", "INSAT-3DR Sounder"],
     latency: "34ms",
     status: "idle",
@@ -2537,7 +5861,9 @@ const agentsList = [
   {
     id: "weather_agent",
     name: "Weather & Marine Hazard Agent",
+    nameKey: "dagAgentWeatherName",
     role: "Evaluates Significant Wave Height (SWH), wind gust vectors, lightning probability, and generates sea-clearance score.",
+    roleKey: "dagAgentWeatherRole",
     sensors: ["Open-Meteo Live SWH", "Sentinel-3 SRAL Altimeter", "Scatterometer"],
     latency: "29ms",
     status: "idle",
@@ -2546,7 +5872,9 @@ const agentsList = [
   {
     id: "pfz_agent",
     name: "Ocean Analytics & PFZ Agent",
+    nameKey: "dagAgentPfzName",
     role: "Identifies thermal-chlorophyll front intersections, calculates pelagic biomass density, and ranks target fishing zones.",
+    roleKey: "dagAgentPfzRole",
     sensors: ["INCOIS Frontal Matrix", "MODIS-Aqua Validation"],
     latency: "42ms",
     status: "idle",
@@ -2555,7 +5883,9 @@ const agentsList = [
   {
     id: "geofencing_agent",
     name: "Geofencing & Routing Agent",
+    nameKey: "dagAgentGeofenceName",
     role: "Monitors International Maritime Boundary Lines (IMBL), buffers Marine Protected Areas, and calculates A* safe waypoints.",
+    roleKey: "dagAgentGeofenceRole",
     sensors: ["ISRO NavIC Geofence Engine", "UNCLOS Maritime Grid"],
     latency: "22ms",
     status: "idle",
@@ -2564,7 +5894,9 @@ const agentsList = [
   {
     id: "fleet_agent",
     name: "Fleet & Traffic Agent (New)",
+    nameKey: "dagAgentFleetName",
     role: "Scans AIS & ARGOS-4 vessel transponders, tracks fleet distribution, and flags overcrowding or border congestion.",
+    roleKey: "dagAgentFleetRole",
     sensors: ["ARGOS-4 Marine Beacon", "AIS Coastal VTS Receiver"],
     latency: "31ms",
     status: "idle",
@@ -2573,7 +5905,9 @@ const agentsList = [
   {
     id: "eta_agent",
     name: "ETA & Voyage Safety Agent (New)",
+    nameKey: "dagAgentEtaName",
     role: "Calculates transit duration adjusted for real-time wave resistance and evaluates return-by-dusk safety window.",
+    roleKey: "dagAgentEtaRole",
     sensors: ["Hydrodynamic Transit Model", "Astronomical Ephemeris (Dusk)"],
     latency: "25ms",
     status: "idle",
@@ -2582,7 +5916,9 @@ const agentsList = [
   {
     id: "synthesis_agent",
     name: "Neural Synthesis Agent (Stats-Driven)",
+    nameKey: "dagAgentSynthesisName",
     role: "Aggregates multi-agent telemetry into an authoritative, grounded natural-language advisory with citation tags and TTS -- entirely rule-based, reasoning over this site's own live telemetry and its own accumulated stats ledger. No external AI/LLM API is used.",
+    roleKey: "dagAgentSynthesisRole",
     sensors: ["ORCA Stats Reasoning Engine (Rule-Based)", "Web Speech Synthesizer"],
     latency: "52ms",
     status: "idle",
@@ -2690,9 +6026,9 @@ async function checkBackendHealth() {
 }
 
 function updateBackendStatusBadges() {
-  const onlineHtml = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> LIVE FASTAPI BACKEND CONNECTED`;
+  const onlineHtml = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${t('backendOnlineStatus', 'LIVE FASTAPI BACKEND CONNECTED')}`;
   const onlineClass = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-[11px] font-mono";
-  const offlineHtml = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> BACKEND OFFLINE · LOCAL SIMULATION MODE`;
+  const offlineHtml = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> ${t('backendOfflineStatus', 'BACKEND OFFLINE · LOCAL SIMULATION MODE')}`;
   const offlineClass = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-950/60 border border-amber-500/40 text-amber-300 text-[11px] font-mono";
 
   ['backendStatusBadge', 'dagBackendStatusBadge'].forEach(id => {
@@ -2752,24 +6088,28 @@ function updateAisFeedBanner(status, gatewayState, liveCount, simulatedCount) {
   }
 
   // Blended live + simulated coverage: informational, not an error/warning.
+  // The English plural "s" suffix only applies when the display language is
+  // English -- other languages get an empty suffix so a translated noun
+  // never has a stray English "s" appended to it.
+  const enPlural = (n) => (state.currentLang === 'en' && n !== 1) ? 's' : '';
   if ((status === 'LIVE' || status === 'SIMULATED_FALLBACK') && simulatedCount) {
     el.style.background = '#0c4a6e';
     el.style.color = '#e0f2fe';
-    const liveText = liveCount ? `${liveCount} live AIS vessel${liveCount === 1 ? '' : 's'}` : 'no live AIS vessels right now';
-    el.innerHTML = `${orcaIcon('vessel')} Showing ${liveText} + ${simulatedCount} simulated vessel${simulatedCount === 1 ? '' : 's'} filling ports with no live AIS coverage right now.`;
+    const liveText = liveCount ? tFormat('aisLiveCountTemplate', { count: liveCount, plural: enPlural(liveCount) }, `${liveCount} live AIS vessel${enPlural(liveCount)}`) : t('aisNoLiveVessels', 'no live AIS vessels right now');
+    el.innerHTML = `${orcaIcon('vessel')} ${tFormat('aisBlendedBannerTemplate', { liveText, simCount: simulatedCount, plural: enPlural(simulatedCount) }, `Showing ${liveText} + ${simulatedCount} simulated vessel${enPlural(simulatedCount)} filling ports with no live AIS coverage right now.`)}`;
     return;
   }
 
   el.style.background = '#78350f';
   el.style.color = '#fef3c7';
-  let detail = 'Live AIS vessel feed unavailable -- showing 0 vessels.';
+  let detail = t('aisUnavailableDefault', 'Live AIS vessel feed unavailable -- showing 0 vessels.');
   if (gatewayState) {
     if (!gatewayState.configured) {
-      detail = 'Live AIS vessel feed is not configured on this deployment.';
+      detail = t('aisNotConfigured', 'Live AIS vessel feed is not configured on this deployment.');
     } else if (gatewayState.connected) {
-      detail = 'Connected to the AIS provider (AISstream.io), but it isn’t sending vessel data right now — likely a provider-side outage, not a local fault.';
+      detail = t('aisConnectedNotSending', 'Connected to the AIS provider (AISstream.io), but it isn’t sending vessel data right now — likely a provider-side outage, not a local fault.');
     } else {
-      detail = 'Disconnected from the AIS provider (AISstream.io); reconnecting automatically.';
+      detail = t('aisDisconnectedReconnecting', 'Disconnected from the AIS provider (AISstream.io); reconnecting automatically.');
     }
   }
   el.innerHTML = orcaIcon('alert') + ' ' + detail;
@@ -2807,15 +6147,15 @@ function updateImblAlertBox() {
   }
 
   if (isAlert) {
-    const simTag = closest.is_simulated ? ' (simulated)' : '';
+    const simTag = closest.is_simulated ? t('simulatedSuffix', ' (simulated)') : '';
     box.className = 'text-xs text-red-200 leading-relaxed';
-    box.innerHTML = `<strong>${closest.id} (${closest.name})</strong> is operating at <strong>${closest.imbl_dist_nm} NM</strong> from the India–Sri Lanka IMBL${simTag}. Automated warning dispatched.`;
+    box.innerHTML = tFormat('imblAlertActiveTemplate', { vesselId: closest.id, vesselName: closest.name, dist: closest.imbl_dist_nm, simTag }, `<strong>${closest.id} (${closest.name})</strong> is operating at <strong>${closest.imbl_dist_nm} NM</strong> from the India–Sri Lanka IMBL${simTag}. Automated warning dispatched.`);
   } else if (closest) {
     box.className = 'text-xs text-emerald-200 leading-relaxed';
-    box.innerHTML = `No vessels currently within the ${IMBL_WARNING_DISTANCE_NM} NM IMBL warning distance. Nearest tracked vessel: <strong>${closest.imbl_dist_nm} NM</strong> away.`;
+    box.innerHTML = tFormat('imblAlertNoneTemplate', { warnDist: IMBL_WARNING_DISTANCE_NM, dist: closest.imbl_dist_nm }, `No vessels currently within the ${IMBL_WARNING_DISTANCE_NM} NM IMBL warning distance. Nearest tracked vessel: <strong>${closest.imbl_dist_nm} NM</strong> away.`);
   } else {
     box.className = 'text-xs text-slate-400 leading-relaxed';
-    box.innerHTML = 'No vessel telemetry available yet.';
+    box.innerHTML = t('imblAlertNoData', 'No vessel telemetry available yet.');
   }
 }
 
@@ -2840,7 +6180,7 @@ async function fetchLiveMarineTelemetry(lat, lon) {
       else state.liveMarine.seaState = 4;
 
       if (badgeEl) {
-        badgeEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> LIVE OPEN-METEO TELEMETRY (${state.liveMarine.waveHeight}m SWH)`;
+        badgeEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${tFormat('telemetryLiveOpenMeteoTemplate', { wave: state.liveMarine.waveHeight }, `LIVE OPEN-METEO TELEMETRY (${state.liveMarine.waveHeight}m SWH)`)}`;
         badgeEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-mono";
       }
 
@@ -2850,7 +6190,7 @@ async function fetchLiveMarineTelemetry(lat, lon) {
   } catch (err) {
     console.log("Open-Meteo Marine API running in cached offline mode", err);
     if (badgeEl) {
-      badgeEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400"></span> TELEMETRY ACTIVE (CACHED SATELLITE ARCHIVE)`;
+      badgeEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400"></span> ${t('telemetryCachedArchive', 'TELEMETRY ACTIVE (CACHED SATELLITE ARCHIVE)')}`;
       badgeEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 text-xs font-mono";
     }
   }
@@ -2879,13 +6219,13 @@ function setupProactiveAlerts() {
       }
       if (!('Notification' in window)) {
         toggle.checked = false;
-        showHazardAlert({ title: 'Browser notifications unavailable', message: 'In-app hazard banners will still be shown while this tab is open.', severity: 'INFO' }, false);
+        showHazardAlert({ title: t('notifUnavailableTitle', 'Browser notifications unavailable'), message: t('notifUnavailableMsg', 'In-app hazard banners will still be shown while this tab is open.'), severity: 'INFO' }, false);
         return;
       }
       const permission = await Notification.requestPermission();
       state.browserNotificationsEnabled = permission === 'granted';
       toggle.checked = state.browserNotificationsEnabled;
-      if (!state.browserNotificationsEnabled) showHazardAlert({ title: 'Browser notifications not enabled', message: 'In-app hazard banners remain active while this tab is open.', severity: 'INFO' }, false);
+      if (!state.browserNotificationsEnabled) showHazardAlert({ title: t('notifNotEnabledTitle', 'Browser notifications not enabled'), message: t('notifNotEnabledMsg', 'In-app hazard banners remain active while this tab is open.'), severity: 'INFO' }, false);
     });
   }
   connectHazardAlertStream();
@@ -2921,9 +6261,9 @@ function evaluateLocalHazards() {
   const wave = state.liveMarine.waveHeight;
   const wind = state.liveMarine.windSpeed;
   const localCandidates = [
-    wave >= 2.5 && { key: 'LOCAL_HIGH_WAVES', severity: 'WARNING', title: 'High waves — local simulation', message: `${wave.toFixed(2)}m exceeds the 2.5m caution threshold. Source: browser Open-Meteo telemetry.` },
-    wind >= 25 && { key: 'LOCAL_HIGH_WIND', severity: 'WARNING', title: 'High wind — local simulation', message: `${wind.toFixed(1)} kn exceeds the 25 kn caution threshold. Source: browser Open-Meteo telemetry.` },
-    state.liveMarine.lightningRisk >= 50 && { key: 'LOCAL_LIGHTNING', severity: 'CRITICAL', title: 'Lightning risk — local simulation', message: `Lightning proxy is ${state.liveMarine.lightningRisk}%. Source: browser Open-Meteo telemetry.` }
+    wave >= 2.5 && { key: 'LOCAL_HIGH_WAVES', severity: 'WARNING', title: t('hazardHighWavesTitle', 'High waves — local simulation'), message: tFormat('hazardHighWavesMsgTemplate', { wave: wave.toFixed(2) }, `${wave.toFixed(2)}m exceeds the 2.5m caution threshold. Source: browser Open-Meteo telemetry.`) },
+    wind >= 25 && { key: 'LOCAL_HIGH_WIND', severity: 'WARNING', title: t('hazardHighWindTitle', 'High wind — local simulation'), message: tFormat('hazardHighWindMsgTemplate', { wind: wind.toFixed(1) }, `${wind.toFixed(1)} kn exceeds the 25 kn caution threshold. Source: browser Open-Meteo telemetry.`) },
+    state.liveMarine.lightningRisk >= 50 && { key: 'LOCAL_LIGHTNING', severity: 'CRITICAL', title: t('hazardLightningTitle', 'Lightning risk — local simulation'), message: tFormat('hazardLightningMsgTemplate', { pct: state.liveMarine.lightningRisk }, `Lightning proxy is ${state.liveMarine.lightningRisk}%. Source: browser Open-Meteo telemetry.`) }
   ].filter(Boolean);
   localCandidates.forEach(alert => {
     if (!state.localAlertKeys.has(alert.key)) {
@@ -3324,6 +6664,37 @@ function applyLanguage(lang) {
     }
   });
 
+  // Some translated sentences legitimately need embedded HTML (e.g. a
+  // <strong> around a brand name) rather than plain text -- data-i18n above
+  // always does textContent, which would show literal "<strong>" tags, so
+  // these two extra sweeps use innerHTML instead for that small set of keys.
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[key]) {
+      el.innerHTML = t[key];
+    }
+  });
+
+  // footerCreditLine reuses the already-translated appTitle/teamName keys
+  // via {placeholder} substitution instead of duplicating the brand text.
+  document.querySelectorAll('[data-i18n-html-tpl]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html-tpl');
+    if (t[key]) {
+      el.innerHTML = tFormat(key, { appTitle: t.appTitle || 'ORCA INSIGHT', teamName: t.teamName || 'Team SavioursX' }, t[key]);
+    }
+  });
+
+  // The 5 AI Decision Studio quick-prompt chips carry the actual query text
+  // sent to the backend in a plain data-chat-prompt attribute, separate from
+  // their visible (already-covered-by-data-i18n) chip label -- retranslate
+  // that attribute value here since it isn't part of the sweeps above.
+  document.querySelectorAll('[data-chat-prompt-i18n]').forEach(el => {
+    const key = el.getAttribute('data-chat-prompt-i18n');
+    if (t[key]) {
+      el.setAttribute('data-chat-prompt', t[key]);
+    }
+  });
+
   // Keep BOTH language selectors (Insight's #langSelect and Fisherman's
   // #fmLangSelect) showing the same choice, whichever one the user actually
   // changed, so switching language in one module is reflected in the other
@@ -3368,6 +6739,38 @@ function applyLanguage(lang) {
       console.log('ORCA FISHERMAN: dynamic re-render on language switch skipped', err);
     }
   }
+
+  // ORCA INSIGHT's own JS-rendered sections (DAG cards, satellite cards,
+  // fleet table/chart, bulletins, NavIC satellite list, safety score card)
+  // aren't covered by the [data-i18n] sweep above either -- re-run their
+  // render functions against whatever data is already cached so a language
+  // switch never leaves stale-language dynamic content on screen. Each is
+  // guarded so this is a cheap no-op for any tab that hasn't been opened yet.
+  try {
+    if (typeof agentsList !== 'undefined' && document.getElementById('dagNodesGrid')) {
+      renderDAGNodes();
+    }
+    if (typeof state !== 'undefined' && state.satellites && state.satellites.length) {
+      renderSatelliteCards();
+    }
+    if (typeof state !== 'undefined' && state.vessels && state.vessels.length) {
+      renderVesselsTable();
+      renderFleetDistributionChart();
+      renderVesselsOnMap();
+      updateImblAlertBox();
+    }
+    if (typeof state !== 'undefined' && state.bulletins && state.bulletins.length) {
+      renderBulletinsList();
+    }
+    if (typeof state !== 'undefined' && state.navicSatellites && state.navicSatellites.length) {
+      renderNavICSatelliteList();
+    }
+    if (typeof state !== 'undefined' && state.lastWeatherResponse) {
+      updateSafetyIndexCard(state.lastWeatherResponse);
+    }
+  } catch (err) {
+    console.log('ORCA INSIGHT: dynamic re-render on language switch skipped', err);
+  }
 }
 
 // Live Clock
@@ -3390,7 +6793,7 @@ function setupSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
     if (micBtn) {
-      micBtn.title = "Speech Recognition not supported in this browser";
+      micBtn.title = t('sttUnsupportedTitle', "Speech Recognition not supported in this browser");
       micBtn.classList.add('opacity-50', 'cursor-not-allowed');
     }
     return;
@@ -3433,7 +6836,7 @@ function setupSpeechRecognition() {
     micBtn.classList.add('bg-red-600', 'text-white', 'stt-recording');
     if (sttStatus) {
       sttStatus.classList.remove('hidden');
-      sttStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Listening in <b>${state.recognition.lang}</b>... Speak now.`;
+      sttStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> ${tFormat('sttListeningStatusTemplate', { lang: state.recognition.lang }, `Listening in <b>${state.recognition.lang}</b>... Speak now.`)}`;
     }
   };
 
@@ -3569,7 +6972,7 @@ function renderIndiaBoundaryLayer() {
         strokeColor: '#ff9933',
         strokeOpacity: 0.95,
         strokeWeight: 3,
-        popupHtml: 'India — official boundary (Survey of India)',
+        popupHtml: t('mapIndiaBoundaryPopup', 'India — official boundary (Survey of India)'),
         popupOptions: true
       });
       state.mapLayers.indiaBoundary.push(line);
@@ -3594,20 +6997,20 @@ function renderPFZLayers() {
       <div class="p-2 min-w-[220px]">
         <div class="flex items-center justify-between gap-2 mb-1">
           <span class="font-bold text-cyan-400 text-sm">${zone.name}</span>
-          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${isHigh ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${zone.yield_rating} YIELD (${zone.yield_score_pct}%)</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${isHigh ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${tFormat('mapPfzYieldSuffix', { rating: zone.yield_rating, pct: zone.yield_score_pct }, `${zone.yield_rating} YIELD (${zone.yield_score_pct}%)`)}</span>
         </div>
         <p class="text-xs text-slate-300 mb-2">${zone.advisory_notes}</p>
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900/80 p-1.5 rounded border border-slate-700">
-          <div><span class="text-slate-400">SST:</span> <span class="text-slate-200 font-semibold">${zone.sst_celsius}°C</span></div>
-          <div><span class="text-slate-400">Chlorophyll:</span> <span class="text-slate-200 font-semibold">${zone.chlorophyll_mg_m3} mg/m³</span></div>
-          <div><span class="text-slate-400">Depth:</span> <span class="text-slate-200 font-semibold">${zone.depth_m} m</span></div>
-          <div><span class="text-slate-400">Vessels:</span> <span class="text-cyan-400 font-bold">${zone.vessels_in_zone} Active</span></div>
+          <div><span class="text-slate-400">${t('mapPfzSstLabel', 'SST:')}</span> <span class="text-slate-200 font-semibold">${zone.sst_celsius}°C</span></div>
+          <div><span class="text-slate-400">${t('mapPfzChlorophyllLabel', 'Chlorophyll:')}</span> <span class="text-slate-200 font-semibold">${zone.chlorophyll_mg_m3} mg/m³</span></div>
+          <div><span class="text-slate-400">${t('mapPfzDepthLabel', 'Depth:')}</span> <span class="text-slate-200 font-semibold">${zone.depth_m} m</span></div>
+          <div><span class="text-slate-400">${t('mapPfzVesselsLabel', 'Vessels:')}</span> <span class="text-cyan-400 font-bold">${tFormat('mapPfzActiveSuffix', { count: zone.vessels_in_zone }, `${zone.vessels_in_zone} Active`)}</span></div>
         </div>
         <div class="mt-2 text-[10px] text-slate-400">
-          <span class="font-semibold text-slate-300">Target Species:</span> ${zone.dominant_species.join(', ')}
+          <span class="font-semibold text-slate-300">${t('mapPfzTargetSpeciesLabel', 'Target Species:')}</span> ${zone.dominant_species.join(', ')}
         </div>
         <button onclick="selectPFZForRouting('${zone.id}')" class="mt-2 w-full py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-xs font-semibold transition">
-          Simulate Route Here ➔
+          ${t('mapPfzSimulateRouteBtn', 'Simulate Route Here ➔')}
         </button>
       </div>
     `;
@@ -3655,8 +7058,8 @@ function renderIMBLLayers() {
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
           ${bound.name}
         </div>
-        <p class="text-xs text-slate-300">Strict International Maritime Boundary. Warning buffer: <span class="text-amber-400 font-bold">${bound.warning_distance_nm} NM</span>. Critical geofence: <span class="text-red-400 font-bold">${bound.danger_distance_nm} NM</span>.</p>
-        <p class="text-[11px] text-slate-400 mt-1">Cross-border crossing prohibited under UNCLOS maritime treaty.</p>
+        <p class="text-xs text-slate-300">${tFormat('mapImblPopupBodyTemplate', { warn: bound.warning_distance_nm, danger: bound.danger_distance_nm }, `Strict International Maritime Boundary. Warning buffer: ${bound.warning_distance_nm} NM. Critical geofence: ${bound.danger_distance_nm} NM.`)}</p>
+        <p class="text-[11px] text-slate-400 mt-1">${t('mapImblPopupTreatyNote', 'Cross-border crossing prohibited under UNCLOS maritime treaty.')}</p>
       </div>
     `;
 
@@ -3671,7 +7074,7 @@ function renderIMBLLayers() {
     state.mapLayers.imbl.push(polyline);
 
     const bufferPaths = bound.coordinates.map(c => ({ lat: c[0] + 0.08, lng: c[1] + 0.08 }));
-    const bufferPopupHtml = `${orcaIcon('alert')} ${bound.warning_distance_nm} NM IMBL Buffer Corridor`;
+    const bufferPopupHtml = `${orcaIcon('alert')} ${tFormat('mapImblBufferCorridorTemplate', { dist: bound.warning_distance_nm }, `${bound.warning_distance_nm} NM IMBL Buffer Corridor`)}`;
     const bufferPoly = new mappls.Polyline({
       map: state.map,
       paths: bufferPaths,
@@ -3696,7 +7099,7 @@ function renderMPALayers() {
       <div class="p-2">
         <span class="text-xs font-bold text-pink-400">${orcaIcon('shield')} ${mpa.name}</span>
         <div class="text-[11px] bg-pink-950/60 border border-pink-700/50 text-pink-200 px-1.5 py-0.5 rounded my-1 font-semibold">
-          RESTRICTED ECO-RESERVE
+          ${t('mapMpaRestrictedBadge', 'RESTRICTED ECO-RESERVE')}
         </div>
         <p class="text-xs text-slate-300">${mpa.description}</p>
       </div>
@@ -3729,15 +7132,15 @@ function renderHarbourMarkers() {
     const popupHtml = `
       <div class="p-2 min-w-[200px]">
         <div class="font-bold text-cyan-400 text-sm">${hbr.name}</div>
-        <div class="text-xs text-slate-400 mb-2">${hbr.state} Coast</div>
+        <div class="text-xs text-slate-400 mb-2">${tFormat('mapHarbourCoastSuffix', { state: hbr.state }, `${hbr.state} Coast`)}</div>
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900 p-1.5 rounded border border-slate-700">
-          <div><span class="text-slate-400">Capacity:</span> <span class="text-slate-200 font-semibold">${hbr.capacity_vessels}</span></div>
-          <div><span class="text-slate-400">VHF:</span> <span class="text-cyan-400 font-bold">${hbr.vhf_channel}</span></div>
-          <div><span class="text-slate-400">Fuel Station:</span> <span class="text-emerald-400 font-semibold">Available</span></div>
-          <div><span class="text-slate-400">Ice Plant:</span> <span class="text-emerald-400 font-semibold">Active</span></div>
+          <div><span class="text-slate-400">${t('mapHarbourCapacityLabel', 'Capacity:')}</span> <span class="text-slate-200 font-semibold">${hbr.capacity_vessels}</span></div>
+          <div><span class="text-slate-400">${t('mapHarbourVhfLabel', 'VHF:')}</span> <span class="text-cyan-400 font-bold">${hbr.vhf_channel}</span></div>
+          <div><span class="text-slate-400">${t('mapHarbourFuelLabel', 'Fuel Station:')}</span> <span class="text-emerald-400 font-semibold">${t('mapHarbourFuelAvailable', 'Available')}</span></div>
+          <div><span class="text-slate-400">${t('mapHarbourIceLabel', 'Ice Plant:')}</span> <span class="text-emerald-400 font-semibold">${t('mapHarbourIceActive', 'Active')}</span></div>
         </div>
         <button onclick="selectHarbourForRouting('${hbr.id}')" class="mt-2 w-full py-1 bg-teal-600 hover:bg-teal-500 text-white rounded text-xs font-semibold transition">
-          ${orcaIcon('anchor', 12)} Set as Origin Harbour
+          ${orcaIcon('anchor', 12)} ${t('mapHarbourSetOriginBtn', 'Set as Origin Harbour')}
         </button>
       </div>
     `;
@@ -3791,7 +7194,7 @@ function renderVesselsOnMap() {
 
     const popupHtml = `
       <div class="p-2 min-w-[220px]">
-        ${vessel.is_simulated ? '<div class="mb-1 px-1.5 py-0.5 inline-block rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500">Simulated · no live AIS coverage here</div>' : ''}
+        ${vessel.is_simulated ? `<div class="mb-1 px-1.5 py-0.5 inline-block rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500">${t('mapVesselSimulatedBadge', 'Simulated · no live AIS coverage here')}</div>` : ''}
         <div class="flex items-center justify-between mb-1">
           <span class="font-bold text-white text-xs">${vessel.name}</span>
           <span class="text-[10px] font-mono px-1 rounded glass-chip text-cyan-300">${vessel.id}</span>
@@ -3799,12 +7202,12 @@ function renderVesselsOnMap() {
         <div class="text-[11px] text-slate-400 mb-2">${vessel.type} · ${vessel.owner}</div>
 
         <div class="grid grid-cols-2 gap-1 text-[11px] bg-slate-900 p-2 rounded border border-slate-700">
-          <div><span class="text-slate-400">Speed:</span> <span class="text-cyan-400 font-bold">${vessel.speed_knots} kn</span></div>
-          <div><span class="text-slate-400">Heading:</span> <span class="text-slate-200 font-semibold">${vessel.heading}°</span></div>
-          <div><span class="text-slate-400">Zone:</span> <span class="text-slate-200 font-semibold">${vessel.zone}</span></div>
-          <div><span class="text-slate-400">IMBL Dist:</span> <span class="${vessel.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${vessel.imbl_dist_nm} NM</span></div>
-          <div><span class="text-slate-400">Status:</span> <span class="font-bold ${vessel.status.includes('ALERT') ? 'text-red-400' : 'text-emerald-400'}">${vessel.status}</span></div>
-          <div><span class="text-slate-400">Fuel:</span> <span class="text-slate-200">${vessel.fuel_pct != null ? vessel.fuel_pct + '%' : 'N/A'}</span></div>
+          <div><span class="text-slate-400">${t('mapVesselSpeedLabel', 'Speed:')}</span> <span class="text-cyan-400 font-bold">${vessel.speed_knots} kn</span></div>
+          <div><span class="text-slate-400">${t('mapVesselHeadingLabel', 'Heading:')}</span> <span class="text-slate-200 font-semibold">${vessel.heading}°</span></div>
+          <div><span class="text-slate-400">${t('mapVesselZoneLabel', 'Zone:')}</span> <span class="text-slate-200 font-semibold">${vessel.zone}</span></div>
+          <div><span class="text-slate-400">${t('mapVesselImblDistLabel', 'IMBL Dist:')}</span> <span class="${vessel.imbl_dist_nm < 5 ? 'text-red-400 font-bold' : 'text-emerald-400'}">${vessel.imbl_dist_nm} NM</span></div>
+          <div><span class="text-slate-400">${t('mapVesselStatusLabel', 'Status:')}</span> <span class="font-bold ${vessel.status.includes('ALERT') ? 'text-red-400' : 'text-emerald-400'}">${vessel.status}</span></div>
+          <div><span class="text-slate-400">${t('mapVesselFuelLabel', 'Fuel:')}</span> <span class="text-slate-200">${vessel.fuel_pct != null ? vessel.fuel_pct + '%' : t('mapVesselFuelNA', 'N/A')}</span></div>
 
         </div>
       </div>
@@ -3827,8 +7230,8 @@ function renderVesselsOnMap() {
   const mapVesselCounter = document.getElementById('mapActiveVessels');
   if (mapVesselCounter) {
     mapVesselCounter.textContent = state.simulatedVesselCount
-      ? `${state.vessels.length} Active Vessels (${state.liveVesselCount} live · ${state.simulatedVesselCount} simulated)`
-      : `${state.vessels.length} Active Vessels`;
+      ? tFormat('mapActiveVesselsBreakdownTemplate', { total: state.vessels.length, live: state.liveVesselCount, sim: state.simulatedVesselCount }, `${state.vessels.length} Active Vessels (${state.liveVesselCount} live · ${state.simulatedVesselCount} simulated)`)
+      : tFormat('mapActiveVesselsSimpleTemplate', { total: state.vessels.length }, `${state.vessels.length} Active Vessels`);
   }
 
   // These two live outside the map tab (home KPI card + DAG side panel)
@@ -4014,7 +7417,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     if (etaEl) etaEl.textContent = '—';
     if (speedEl) speedEl.textContent = '—';
     if (duskEl) {
-      duskEl.innerHTML = `<span class="text-slate-400 font-bold"> ROUTE UNAVAILABLE:</span> ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.`;
+      duskEl.innerHTML = `<span class="text-slate-400 font-bold">${t('routeUnavailableLabel', ' ROUTE UNAVAILABLE:')}</span> ${t('routeUnavailableMsg', 'ORCA backend is unreachable, so no routed distance/ETA can be shown. Running in local fallback mode.')}`;
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-neutral text-slate-300";
       duskEl.style.color = "";
     }
@@ -4026,7 +7429,7 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
     if (etaEl) etaEl.textContent = '—';
     if (speedEl) speedEl.textContent = '—';
     if (duskEl) {
-      duskEl.innerHTML = `<span class="text-red-400 font-bold">✕ NO SAFE MARITIME ROUTE FOUND:</span> ${route.detail || route.reason || 'The router could not find a path avoiding land and Marine Protected Areas for this harbour/PFZ pair.'}`;
+      duskEl.innerHTML = `<span class="text-red-400 font-bold">${t('routeNoSafeRouteLabel', '✕ NO SAFE MARITIME ROUTE FOUND:')}</span> ${tFormat('routeNoSafeRouteMsgTemplate', { detail: route.detail || route.reason || t('routeNoSafeRouteDefaultReason', 'The router could not find a path avoiding land and Marine Protected Areas for this harbour/PFZ pair.') }, `${route.detail || route.reason || 'The router could not find a path avoiding land and Marine Protected Areas for this harbour/PFZ pair.'}`)}`;
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-danger text-red-200";
     }
     return;
@@ -4048,11 +7451,11 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
 
   if (duskEl) {
     if (isReturnSafe) {
-      duskEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ SAFE RETURN:</span> Expected harbour arrival by <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Before 18:30 IST dusk).`;
+      duskEl.innerHTML = `<span class="text-emerald-400 font-bold">${t('routeSafeReturnLabel', '✓ SAFE RETURN:')}</span> ${tFormat('routeSafeReturnTemplate', { time: `<span class="font-mono text-white">${route.estimated_return_ist || '—'}</span>` }, `Expected harbour arrival by <span class="font-mono text-white">${route.estimated_return_ist || '—'}</span> (Before 18:30 IST dusk).`)}`;
       duskEl.className = "p-2.5 rounded-lg text-xs glass-card glass-card-safe text-emerald-200";
       duskEl.style.color = "";
     } else {
-      duskEl.innerHTML = `<span class="font-bold" style="color:#ff0000;"> RETURN AFTER DUSK:</span> Expected return at <span class="font-mono" style="color:#ff0000;">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`;
+      duskEl.innerHTML = `<span class="font-bold" style="color:#ff0000;">${t('routeReturnAfterDuskLabel', ' RETURN AFTER DUSK:')}</span> ${tFormat('routeReturnAfterDuskTemplate', { time: `<span class="font-mono" style="color:#ff0000;">${route.estimated_return_ist || '—'}</span>` }, `Expected return at <span class="font-mono" style="color:#ff0000;">${route.estimated_return_ist || '—'}</span> (Exceeds 18:30 IST sunset). Recommend an earlier departure or a night navigational beacon check.`)}`;
       duskEl.className = "p-2.5 rounded-lg text-xs";
       duskEl.style.color = "#ff0000";
     }
@@ -4064,15 +7467,16 @@ async function calculateAndRenderRoute(harbourId, pfzId) {
       // frontend never invents its own waypoints.
       const paths = route.waypoints.map(p => ({ lat: p.lat, lng: p.lon }));
 
+      const zonesText = route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : t('mapRouteLandNoGoZones', 'land/no-go zones');
       const detourNote = route.detour_percent > 1
-        ? ` · Detour ${route.detour_percent}% around ${route.avoided_mpas && route.avoided_mpas.length ? route.avoided_mpas.join(', ') : 'land/no-go zones'}`
+        ? tFormat('mapRouteDetourTemplate', { pct: route.detour_percent, zones: zonesText }, ` · Detour ${route.detour_percent}% around ${zonesText}`)
         : '';
 
       const routePopupHtml = `
         <div class="p-1 text-xs">
-          <span class="font-bold text-cyan-400">Sea-Only A* Route (Land + MPA Avoidance)</span><br/>
+          <span class="font-bold text-cyan-400">${t('mapRoutePopupTitle', 'Sea-Only A* Route (Land + MPA Avoidance)')}</span><br/>
           <span>${harbour.name} ➔ ${pfz.name}</span><br/>
-          <span>Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> · ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}</span>
+          <span>${tFormat('mapRouteDistanceEtaTemplate', { dist: `<b class="text-white">${distNM.toFixed(1)}</b>`, eta: `<b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>`, detourNote }, `Distance: <b class="text-white">${distNM.toFixed(1)} NM</b> · ETA: <b class="text-white">${etaHoursFloor}h ${etaMinutes}m</b>${detourNote}`)}</span>
         </div>
       `;
 
@@ -4157,22 +7561,22 @@ function renderDAGNodes() {
             <span class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-mono text-xs font-bold flex items-center justify-center border border-cyan-500/40">
               ${idx + 1}
             </span>
-            <h4 class="font-bold text-slate-100 text-sm group-hover:text-cyan-300 transition">${agent.name}</h4>
+            <h4 class="font-bold text-slate-100 text-sm group-hover:text-cyan-300 transition">${t(agent.nameKey, agent.name)}</h4>
           </div>
           <span id="badge-lat-${agent.id}" class="text-[10px] font-mono px-1.5 py-0.5 rounded glass-chip text-slate-400">
             ${agent.latency}
           </span>
         </div>
-        <p class="text-xs text-slate-400 mb-3 line-clamp-2">${agent.role}</p>
+        <p class="text-xs text-slate-400 mb-3 line-clamp-2">${t(agent.roleKey, agent.role)}</p>
         <div class="flex flex-wrap gap-1 mb-2">
           ${agent.sensors.map(s => `<span class="text-[10px] text-slate-400 font-mono">${s}</span>`).join(' ')}
         </div>
         <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800">
           <span class="flex items-center gap-1.5">
             <span id="status-dot-${agent.id}" class="w-2 h-2 rounded-full bg-slate-500"></span>
-            <span id="status-text-${agent.id}" class="capitalize">Idle</span>
+            <span id="status-text-${agent.id}" class="capitalize">${t('dagStatusIdle', 'Idle')}</span>
           </span>
-          <span class="text-cyan-400 text-xs font-medium group-hover:translate-x-0.5 transition">Inspect ➔</span>
+          <span class="text-cyan-400 text-xs font-medium group-hover:translate-x-0.5 transition">${t('dagInspectLink', 'Inspect ➔')}</span>
         </div>
       </div>
     `;
@@ -4190,9 +7594,9 @@ window.inspectDAGNode = function(agentId) {
   const latencyEl = document.getElementById('inspectorLatency');
   const jsonEl = document.getElementById('inspectorRawJSON');
 
-  if (titleEl) titleEl.textContent = agent.name;
-  if (roleEl) roleEl.textContent = agent.role;
-  if (latencyEl) latencyEl.textContent = `Execution Latency: ${agent.latency} · Subtasks Verified`;
+  if (titleEl) titleEl.textContent = t(agent.nameKey, agent.name);
+  if (roleEl) roleEl.textContent = t(agent.roleKey, agent.role);
+  if (latencyEl) latencyEl.textContent = tFormat('dagInspectorLatencyTemplate', { latency: agent.latency }, `Execution Latency: ${agent.latency} · Subtasks Verified`);
   if (jsonEl) jsonEl.textContent = JSON.stringify(agent.sampleOutput, null, 2);
 
   if (modal) modal.classList.remove('hidden');
@@ -4210,7 +7614,7 @@ function resetDAGNodeUI() {
     const textEl = document.getElementById(`status-text-${a.id}`);
     if (nodeEl) nodeEl.classList.remove('border-cyan-400', 'bg-cyan-950/40', 'glow-cyan', 'border-emerald-500/70', 'opacity-45', 'grayscale');
     if (dotEl) dotEl.className = "w-2 h-2 rounded-full bg-slate-500";
-    if (textEl) textEl.textContent = "Queued";
+    if (textEl) textEl.textContent = t('dagStatusQueued', 'Queued');
   });
 }
 
@@ -4220,7 +7624,7 @@ function setDAGNodeExecuting(agentId) {
   const textEl = document.getElementById(`status-text-${agentId}`);
   if (nodeEl) nodeEl.classList.add('border-cyan-400', 'bg-cyan-950/40', 'glow-cyan');
   if (dotEl) dotEl.className = "w-2 h-2 rounded-full bg-cyan-400 animate-ping";
-  if (textEl) textEl.textContent = "Executing...";
+  if (textEl) textEl.textContent = t('dagStatusExecuting', 'Executing...');
 }
 
 function setDAGNodeCompleted(agentId) {
@@ -4229,7 +7633,7 @@ function setDAGNodeCompleted(agentId) {
   const textEl = document.getElementById(`status-text-${agentId}`);
   if (nodeEl) { nodeEl.classList.remove('border-cyan-400', 'glow-cyan'); nodeEl.classList.add('border-emerald-500/70'); }
   if (dotEl) dotEl.className = "w-2 h-2 rounded-full bg-emerald-400";
-  if (textEl) textEl.textContent = "Completed";
+  if (textEl) textEl.textContent = t('dagStatusCompleted', 'Completed');
 }
 
 function setDAGNodeSkipped(agentId, reason) {
@@ -4238,7 +7642,7 @@ function setDAGNodeSkipped(agentId, reason) {
   const textEl = document.getElementById(`status-text-${agentId}`);
   if (nodeEl) nodeEl.classList.add('opacity-45', 'grayscale');
   if (dotEl) dotEl.className = "w-2 h-2 rounded-full bg-slate-500";
-  if (textEl) textEl.textContent = "Not invoked — intent did not require it";
+  if (textEl) textEl.textContent = t('dagStatusSkipped', 'Not invoked — intent did not require it');
   const agentDef = agentsList.find(a => a.id === agentId);
   if (agentDef) agentDef.sampleOutput = { status: 'SKIPPED', reason };
 }
@@ -4288,7 +7692,7 @@ function runFullDAGPipelineSimulationLive() {
 
       if (runBtn) {
         runBtn.disabled = true;
-        runBtn.innerHTML = `<span class="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></span> Reasoning Active (Live Backend)...`;
+        runBtn.innerHTML = `<span class="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></span> ${t('dagBtnReasoningActiveLive', 'Reasoning Active (Live Backend)...')}`;
       }
       resetDAGNodeUI();
       ws.send(JSON.stringify({ query: state.latestChatQuery }));
@@ -4324,7 +7728,7 @@ function runFullDAGPipelineSimulationLive() {
         state.isSimulatingDAG = false;
         if (runBtn) {
           runBtn.disabled = false;
-          runBtn.innerHTML = `✓ Pipeline Executed via Live Backend · Run Again`;
+          runBtn.innerHTML = t('dagBtnExecutedLive', '✓ Pipeline Executed via Live Backend · Run Again');
         }
         try { ws.close(); } catch (e) { /* noop */ }
         return;
@@ -4335,7 +7739,7 @@ function runFullDAGPipelineSimulationLive() {
         state.isSimulatingDAG = false;
         if (runBtn) {
           runBtn.disabled = false;
-          runBtn.innerHTML = `▶ Run Live Pipeline Simulation`;
+          runBtn.innerHTML = t('dagBtnErrorRetry', '▶ Run Live Pipeline Simulation');
         }
         try { ws.close(); } catch (e) { /* noop */ }
       }
@@ -4368,7 +7772,7 @@ async function runFullDAGPipelineSimulationOffline() {
   const runBtn = document.getElementById('btnRunDAGSimulation');
   if (runBtn) {
     runBtn.disabled = true;
-    runBtn.innerHTML = `<span class="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></span> Reasoning Active (Local Simulation)...`;
+    runBtn.innerHTML = `<span class="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></span> ${t('dagBtnReasoningActiveOffline', 'Reasoning Active (Local Simulation)...')}`;
   }
 
   resetDAGNodeUI();
@@ -4383,7 +7787,7 @@ async function runFullDAGPipelineSimulationOffline() {
   state.isSimulatingDAG = false;
   if (runBtn) {
     runBtn.disabled = false;
-    runBtn.innerHTML = `✓ Pipeline Executed (Local Simulation) · Run Again`;
+    runBtn.innerHTML = t('dagBtnExecutedOffline', '✓ Pipeline Executed (Local Simulation) · Run Again');
   }
 }
 
@@ -4431,7 +7835,7 @@ function startNewConversation() {
   state.chatHistory = [];
   state.latestAdvisoryText = '';
   const messages = document.getElementById('chatMessages');
-  if (messages) messages.innerHTML = `<div class="text-xs text-slate-400 font-mono text-center py-4">New conversation started. ORCA will not use earlier chat context.</div>`;
+  if (messages) messages.innerHTML = `<div class="text-xs text-slate-400 font-mono text-center py-4">${t('chatNewConversationMsg', 'New conversation started. ORCA will not use earlier chat context.')}</div>`;
 }
 
 async function handleChatQuery(queryText) {
@@ -4449,7 +7853,7 @@ async function handleChatQuery(queryText) {
         <span class="text-[10px] text-cyan-300 font-mono mt-1 block text-right">${new Date().toLocaleTimeString()}</span>
       </div>
       <div class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-bold flex items-center justify-center text-xs shadow-md">
-        YOU
+        ${t('chatYouLabel', 'YOU')}
       </div>
     </div>
   `;
@@ -4461,12 +7865,12 @@ async function handleChatQuery(queryText) {
   const skeletonHtml = `
     <div id="${loaderId}" class="flex items-start gap-3 mb-4 animate-pulse">
       <div class="w-8 h-8 rounded-full bg-slate-800 border border-cyan-500/50 flex items-center justify-center text-cyan-400 text-xs">
-        ORCA
+        ${t('chatOrcaLabel', 'ORCA')}
       </div>
       <div class="max-w-[85%] p-4 rounded-2xl glass-card text-slate-300 text-sm space-y-2 w-full">
         <div class="flex items-center gap-2 text-cyan-400 text-xs font-mono">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-          Orchestrating 8 Specialized AI Agents across Oceansat-3, INSAT-3DR & Open-Meteo...
+          ${t('chatOrchestratingMsg', 'Orchestrating 8 Specialized AI Agents across Oceansat-3, INSAT-3DR & Open-Meteo...')}
         </div>
         <div class="h-3 bg-slate-800 rounded w-3/4"></div>
         <div class="h-3 bg-slate-800 rounded w-1/2"></div>
@@ -4507,25 +7911,25 @@ async function handleChatQuery(queryText) {
   const botMsgHtml = `
     <div class="flex items-start gap-3 mb-6">
       <div class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black flex items-center justify-center text-xs shadow-lg shadow-cyan-500/20">
-        AI
+        ${t('chatAiLabel', 'AI')}
       </div>
       <div class="max-w-[88%] p-5 rounded-2xl glass-card shadow-xl space-y-3">
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">Multi-Agent Marine Advisory</span>
+            <span class="text-xs font-bold text-cyan-400 tracking-wider uppercase">${t('chatAdvisoryHeader', 'Multi-Agent Marine Advisory')}</span>
             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              ${advisory.confidence}% Grounded Confidence
+              ${tFormat('chatGroundedConfidenceTemplate', { confidence: advisory.confidence }, `${advisory.confidence}% Grounded Confidence`)}
             </span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-200 border border-violet-400/30" title="Language detected from the message">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-200 border border-violet-400/30" title="${t('chatLangDetectedTooltip', 'Language detected from the message')}">
               ${languageBadgeLabel(advisory.language)}
             </span>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="playAudioText('${encodeURIComponent(advisory.plainText)}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-600 text-xs flex items-center gap-1.5 transition">
-              <span class="text-xs"></span> Listen (TTS)
+              <span class="text-xs"></span> ${t('chatListenTts', 'Listen (TTS)')}
             </button>
             <button onclick="copyAdvisoryMSS()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-600 text-xs flex items-center gap-1 transition">
-              <span>${orcaIcon('radar')}</span> NavIC MSS Code
+              <span>${orcaIcon('radar')}</span> ${t('chatNavicMssBtn', 'NavIC MSS Code')}
             </button>
           </div>
         </div>
@@ -4536,26 +7940,26 @@ async function handleChatQuery(queryText) {
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono">
           <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
-            <span class="text-slate-400 block">Recommended Zone</span>
+            <span class="text-slate-400 block">${t('chatMetricZone', 'Recommended Zone')}</span>
             <span class="text-cyan-400 font-bold">${advisory.metrics.zone}</span>
           </div>
           <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
-            <span class="text-slate-400 block">Live Sea State ETA</span>
+            <span class="text-slate-400 block">${t('chatMetricEta', 'Live Sea State ETA')}</span>
             <span class="text-emerald-400 font-bold">${advisory.metrics.eta}</span>
           </div>
           <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
-            <span class="text-slate-400 block">Active Vessels</span>
-            <span class="text-amber-300 font-bold">${advisory.metrics.vesselCount} Vessels</span>
+            <span class="text-slate-400 block">${t('chatMetricVessels', 'Active Vessels')}</span>
+            <span class="text-amber-300 font-bold">${tFormat('chatVesselsSuffix', { count: advisory.metrics.vesselCount }, `${advisory.metrics.vesselCount} Vessels`)}</span>
           </div>
           <div class="p-2 rounded bg-slate-950/80 border border-slate-800">
-            <span class="text-slate-400 block">IMBL Clearance</span>
+            <span class="text-slate-400 block">${t('chatMetricImbl', 'IMBL Clearance')}</span>
             <span class="text-slate-200 font-bold">${advisory.metrics.imblClearance}</span>
           </div>
         </div>
 
         <details class="group mt-3 pt-2 border-t border-slate-800/80">
           <summary class="text-xs text-slate-400 hover:text-cyan-400 cursor-pointer flex items-center justify-between font-mono">
-            <span>${orcaIcon('search')} View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)</span>
+            <span>${orcaIcon('search')} ${tFormat('chatReasoningTraceSummaryTemplate', { steps: advisory.agentSteps.length }, `View Multi-Agent Reasoning Trace (${advisory.agentSteps.length} steps executed)`)}</span>
             <span class="text-[10px] text-slate-500 group-open:rotate-180 transition">▼</span>
           </summary>
           <div class="mt-3 space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono">
@@ -4587,7 +7991,7 @@ function renderReasoningTrace(steps) {
   const list = document.getElementById('reasoningTraceList');
   const countEl = document.getElementById('reasoningTraceCount');
   if (!list || !steps || !steps.length) return;
-  if (countEl) countEl.textContent = `${steps.length}-node DAG`;
+  if (countEl) countEl.textContent = tFormat('chatNodeDagSuffixTemplate', { count: steps.length }, `${steps.length}-node DAG`);
   list.innerHTML = steps.map((step, idx) => `
     <div class="flex gap-3 pb-3 mb-3 border-b border-ocean-700/60 last:border-0 last:pb-0 last:mb-0">
       <div class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 text-[10px] font-mono font-bold flex items-center justify-center flex-none mt-0.5">${idx + 1}</div>
@@ -4662,11 +8066,11 @@ function buildAdvisoryFromBackend(data, query) {
   return {
     confidence: adv.confidence_pct ?? 90,
     metrics: { zone, eta: etaLabel, vesselCount: fleet.total_active_vessels ?? '—', imblClearance },
-    plainText: adv.advisory_text || 'The ORCA INSIGHT backend generated an advisory but returned no text.',
-    formattedHtml: `<p><strong class="text-emerald-400">✓ Live Multi-Agent Advisory</strong> <span class="text-[10px] text-slate-500 font-mono">(${adv.llm_engine || 'Grounded Engine'})</span></p>
+    plainText: adv.advisory_text || tFormat('chatNoAdvisoryTextFallback', null, 'The ORCA INSIGHT backend generated an advisory but returned no text.'),
+    formattedHtml: `<p><strong class="text-emerald-400">${tFormat('chatLiveAdvisoryLabel', null, '✓ Live Multi-Agent Advisory')}</strong> <span class="text-[10px] text-slate-500 font-mono">(${adv.llm_engine || tFormat('chatGroundedEngineFallback', null, 'Grounded Engine')})</span></p>
       <p class="mt-2 text-slate-300">${adv.advisory_text || ''}</p>
-      <p class="mt-2 text-[11px] font-mono ${chlorophyllSource.includes('ESTIMATED') ? 'text-amber-300' : 'text-slate-500'}">Ocean source tier: ${oceanTier} · Chlorophyll: ${chlorophyllSource}</p>
-      <p class="mt-2 text-[11px] text-slate-500">Citations: ${(adv.citations || []).join(', ') || '—'}</p>`,
+      <p class="mt-2 text-[11px] font-mono ${chlorophyllSource.includes('ESTIMATED') ? 'text-amber-300' : 'text-slate-500'}">${tFormat('chatOceanSourceTierTemplate', { tier: oceanTier, chlorophyll: chlorophyllSource }, `Ocean source tier: ${oceanTier} · Chlorophyll: ${chlorophyllSource}`)}</p>
+      <p class="mt-2 text-[11px] text-slate-500">${tFormat('chatCitationsTemplate', { citations: (adv.citations || []).join(', ') || '—' }, `Citations: ${(adv.citations || []).join(', ') || '—'}`)}</p>`,
     agentSteps,
     language
   };
@@ -4701,19 +8105,19 @@ function syncDetectedLanguage(language) {
 // to be live when it is actually simulated" requirement.
 function generateAgentAdvisory(query) {
   const q = query.toLowerCase();
-  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1">${orcaIcon('alert')} OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.</p>`;
+  const OFFLINE_BANNER = `<p class="mb-2 text-[11px] font-mono text-amber-300 bg-amber-950/40 border border-amber-700/40 rounded px-2 py-1">${orcaIcon('alert')} ${t('chatOfflineBannerText', 'OFFLINE ADVISORY ENGINE — ORCA backend unreachable. The figures below are a simulated illustrative estimate, not live telemetry.')}</p>`;
 
   if (q.includes('border') || q.includes('imbl') || q.includes('sri lanka') || q.includes('pakistan') || q.includes('सीमा') || q.includes('எல்லை')) {
     return {
       confidence: 60,
       metrics: { zone: "Palk Strait & Rameswaram", eta: "1h 45m (simulated)", vesselCount: 7, imblClearance: "SIMULATED ~2-4 NM" },
-      plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Vessels in the Palk Strait / Gulf of Mannar area are typically within a few Nautical Miles of the India-Sri Lanka IMBL boundary. Maintain a westward heading and keep VHF transponders active on Channel 16. Reconnect to the ORCA backend for an actual measured distance to the boundary.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400">${orcaIcon('alert')} IMBL Geofencing Advisory (Simulated Offline Estimate):</strong></p>
-        <p class="mt-1">Without a live backend connection, exact vessel-to-boundary distances cannot be measured. As a general precaution near Palk Strait Sector 4, maintain a westward heading toward Mandapam.</p>
-        <p class="mt-2 text-slate-300">This is a generic offline safety reminder, not a measured geofence reading. Reconnect to ORCA backend for a real distance-to-IMBL calculation.</p>`,
+      plainText: t('chatOfflineImblPlainText', "OFFLINE ADVISORY (backend unreachable, simulated estimate): Vessels in the Palk Strait / Gulf of Mannar area are typically within a few Nautical Miles of the India-Sri Lanka IMBL boundary. Maintain a westward heading and keep VHF transponders active on Channel 16. Reconnect to the ORCA backend for an actual measured distance to the boundary."),
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-red-400">${orcaIcon('alert')} ${t('chatOfflineImblHtmlHeading', 'IMBL Geofencing Advisory (Simulated Offline Estimate):')}</strong></p>
+        <p class="mt-1">${t('chatOfflineImblHtmlBody1', 'Without a live backend connection, exact vessel-to-boundary distances cannot be measured. As a general precaution near Palk Strait Sector 4, maintain a westward heading toward Mandapam.')}</p>
+        <p class="mt-2 text-slate-300">${t('chatOfflineImblHtmlBody2', 'This is a generic offline safety reminder, not a measured geofence reading. Reconnect to ORCA backend for a real distance-to-IMBL calculation.')}</p>`,
       agentSteps: [
-        { agent: "Offline Advisory Engine", trace: "Backend unreachable. Classified query as IMBL_BOUNDARY using local keyword match.", latency: "offline" },
-        { agent: "Offline Advisory Engine", trace: "No live geofencing telemetry available -- returning generic boundary-safety guidance only.", latency: "offline" },
+        { agent: "Offline Advisory Engine", trace: t('chatOfflineImblStep1', "Backend unreachable. Classified query as IMBL_BOUNDARY using local keyword match."), latency: "offline" },
+        { agent: "Offline Advisory Engine", trace: t('chatOfflineImblStep2', "No live geofencing telemetry available -- returning generic boundary-safety guidance only."), latency: "offline" },
       ]
     };
   }
@@ -4722,15 +8126,15 @@ function generateAgentAdvisory(query) {
     return {
       confidence: 55,
       metrics: { zone: "PFZ-01 & Wadge Bank", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
-      plainText: "OFFLINE ADVISORY (backend unreachable, simulated estimate): Live vessel counts cannot be retrieved without a backend connection. Historically, Wadge Bank and Kochi Deep Offshore see moderate fishing traffic. Reconnect to the ORCA backend for an actual fleet-density reading from the vessel dataset.",
-      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400">${orcaIcon('vessel')} Fleet Density (Offline — Simulated Placeholder):</strong></p>
-        <p class="mt-1">The Fleet & Traffic Agent's live vessel dataset is not reachable right now, so an exact in-zone vessel count is unavailable.</p>
+      plainText: t('chatOfflineDensityPlainText', "OFFLINE ADVISORY (backend unreachable, simulated estimate): Live vessel counts cannot be retrieved without a backend connection. Historically, Wadge Bank and Kochi Deep Offshore see moderate fishing traffic. Reconnect to the ORCA backend for an actual fleet-density reading from the vessel dataset."),
+      formattedHtml: OFFLINE_BANNER + `<p><strong class="text-cyan-400">${orcaIcon('vessel')} ${t('chatOfflineDensityHtmlHeading', 'Fleet Density (Offline — Simulated Placeholder):')}</strong></p>
+        <p class="mt-1">${t('chatOfflineDensityHtmlBody', "The Fleet & Traffic Agent's live vessel dataset is not reachable right now, so an exact in-zone vessel count is unavailable.")}</p>
         <ul class="list-disc list-inside mt-2 space-y-1 text-slate-300">
-          <li>Reconnect to the ORCA backend for a real per-zone vessel count and overcrowding verdict.</li>
+          <li>${t('chatOfflineDensityListItem', 'Reconnect to the ORCA backend for a real per-zone vessel count and overcrowding verdict.')}</li>
         </ul>`,
       agentSteps: [
-        { agent: "Offline Advisory Engine", trace: "Backend unreachable. Classified query as FLEET_DENSITY using local keyword match.", latency: "offline" },
-        { agent: "Offline Advisory Engine", trace: "No live fleet dataset available -- vessel counts not shown to avoid presenting a fabricated figure.", latency: "offline" },
+        { agent: "Offline Advisory Engine", trace: t('chatOfflineDensityStep1', "Backend unreachable. Classified query as FLEET_DENSITY using local keyword match."), latency: "offline" },
+        { agent: "Offline Advisory Engine", trace: t('chatOfflineDensityStep2', "No live fleet dataset available -- vessel counts not shown to avoid presenting a fabricated figure."), latency: "offline" },
       ]
     };
   }
@@ -4739,13 +8143,13 @@ function generateAgentAdvisory(query) {
   return {
     confidence: 55,
     metrics: { zone: "PFZ-01 (Kochi Deep) — simulated", eta: "— (simulated)", vesselCount: "unavailable", imblClearance: "unavailable" },
-    plainText: `OFFLINE ADVISORY (backend unreachable): ORCA's multi-agent backend could not be reached, so this answer is a generic, non-live placeholder rather than a grounded reading. Your browser's own Open-Meteo widget reports significant wave height around ${liveWave}m, but PFZ ranking, route distance, ETA, and fleet counts all require the backend and are not shown here. Reconnect to the ORCA backend for a real advisory.`,
-    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400">${orcaIcon('alert')} Offline Placeholder Advisory</strong></p>
-      <p class="mt-1">The ORCA multi-agent backend (satellite, weather, PFZ ranking, geofencing, fleet, routing, and Neural Synthesis) is currently unreachable. Client-side, this browser last saw a wave height of <strong>${liveWave}m</strong> from Open-Meteo, but every other figure requires the backend.</p>
-      <p class="mt-2 text-slate-300"><strong>No PFZ recommendation, route, ETA, or fleet count is shown</strong> because those would have to be invented rather than computed. Reconnect to the ORCA backend for a full grounded advisory.</p>`,
+    plainText: tFormat('chatOfflineGenericPlainTextTemplate', { liveWave }, `OFFLINE ADVISORY (backend unreachable): ORCA's multi-agent backend could not be reached, so this answer is a generic, non-live placeholder rather than a grounded reading. Your browser's own Open-Meteo widget reports significant wave height around ${liveWave}m, but PFZ ranking, route distance, ETA, and fleet counts all require the backend and are not shown here. Reconnect to the ORCA backend for a real advisory.`),
+    formattedHtml: OFFLINE_BANNER + `<p><strong class="text-amber-400">${orcaIcon('alert')} ${t('chatOfflineGenericHtmlHeading', 'Offline Placeholder Advisory')}</strong></p>
+      <p class="mt-1">${tFormat('chatOfflineGenericHtmlBody1Template', { liveWave }, `The ORCA multi-agent backend (satellite, weather, PFZ ranking, geofencing, fleet, routing, and Neural Synthesis) is currently unreachable. Client-side, this browser last saw a wave height of <strong>${liveWave}m</strong> from Open-Meteo, but every other figure requires the backend.`)}</p>
+      <p class="mt-2 text-slate-300">${t('chatOfflineGenericHtmlBody2', '<strong>No PFZ recommendation, route, ETA, or fleet count is shown</strong> because those would have to be invented rather than computed. Reconnect to the ORCA backend for a full grounded advisory.')}</p>`,
     agentSteps: [
-      { agent: "Offline Advisory Engine", trace: "Backend unreachable. No intent-specific keyword matched -- returning GENERAL_VOYAGE_SAFETY offline placeholder.", latency: "offline" },
-      { agent: "Offline Advisory Engine", trace: `Only client-visible figure available: last known Open-Meteo wave height ${liveWave}m (fetched directly by the browser, not via backend).`, latency: "offline" },
+      { agent: "Offline Advisory Engine", trace: t('chatOfflineGenericStep1', "Backend unreachable. No intent-specific keyword matched -- returning GENERAL_VOYAGE_SAFETY offline placeholder."), latency: "offline" },
+      { agent: "Offline Advisory Engine", trace: tFormat('chatOfflineGenericStep2Template', { liveWave }, `Only client-visible figure available: last known Open-Meteo wave height ${liveWave}m (fetched directly by the browser, not via backend).`), latency: "offline" },
     ]
   };
 }
@@ -4754,7 +8158,7 @@ function generateAgentAdvisory(query) {
 window.playAudioText = function(encodedText) {
   const text = decodeURIComponent(encodedText);
   if (!state.speechSynth) {
-    alert("Speech Synthesis not supported by your browser.");
+    alert(t('chatTtsUnsupportedAlert', "Speech Synthesis not supported by your browser."));
     return;
   }
 
@@ -4796,7 +8200,7 @@ function toggleAudioAdvisory() {
   if (state.latestAdvisoryText) {
     window.playAudioText(encodeURIComponent(state.latestAdvisoryText));
   } else {
-    window.playAudioText(encodeURIComponent("Welcome to ORCA INSIGHT. All satellite feeds and coastal oceanography systems are operating with normal status."));
+    window.playAudioText(encodeURIComponent(t('chatTtsWelcomeFallback', "Welcome to ORCA INSIGHT. All satellite feeds and coastal oceanography systems are operating with normal status.")));
   }
 }
 
@@ -4809,12 +8213,12 @@ function updateTTSButtons(isPlaying) {
           <span class="w-1 h-3 bg-cyan-400 soundbar"></span>
           <span class="w-1 h-3 bg-cyan-400 soundbar"></span>
           <span class="w-1 h-3 bg-cyan-400 soundbar"></span>
-          <span class="ml-1 text-xs">Stop Audio</span>
+          <span class="ml-1 text-xs">${t('chatStopAudio', 'Stop Audio')}</span>
         </span>
       `;
       ttsBtn.classList.add('bg-cyan-600', 'text-white');
     } else {
-      ttsBtn.innerHTML = `<span>${orcaIcon('speaker')} Listen Audio Advisory</span>`;
+      ttsBtn.innerHTML = `<span>${orcaIcon('speaker')} ${t('chatListenAudioAdvisory', 'Listen Audio Advisory')}</span>`;
       ttsBtn.classList.remove('bg-cyan-600', 'text-white');
     }
   }
@@ -4829,9 +8233,9 @@ function setupNavICTelemetry() {
   if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
       state.navicConnected = !state.navicConnected;
-      toggleBtn.innerHTML = state.navicConnected ? 
-        `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> NavIC Receiver: Connected (L5/S-Band)` :
-        `<span class="w-2 h-2 rounded-full bg-red-500"></span> NavIC Receiver: Disconnected`;
+      toggleBtn.innerHTML = state.navicConnected ?
+        `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> ${t('navicConnected', 'NavIC Receiver: Connected (L5/S-Band)')}` :
+        `<span class="w-2 h-2 rounded-full bg-red-500"></span> ${t('navicDisconnected', 'NavIC Receiver: Disconnected')}`;
       toggleBtn.className = state.navicConnected ? 
         "px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 text-xs font-mono flex items-center gap-2" :
         "px-3 py-1.5 rounded-lg bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-mono flex items-center gap-2";
@@ -4875,25 +8279,25 @@ function togglePositionTracking(button) {
   if (state.positionWatchId !== null) {
     navigator.geolocation.clearWatch(state.positionWatchId);
     state.positionWatchId = null;
-    button.textContent = 'Track my position';
-    setGeofenceTrackingStatus('Tracking off · no position is being requested');
+    button.textContent = t('navicTrackMyPosition', 'Track my position');
+    setGeofenceTrackingStatus(t('navicStatusTrackingOff', 'Tracking off · no position is being requested'));
     return;
   }
   if (!navigator.geolocation) {
-    setGeofenceTrackingStatus('Geolocation is not supported by this browser. Use simulated vessel movement for the demo.', 'text-amber-300');
+    setGeofenceTrackingStatus(t('navicStatusGeoUnsupported', 'Geolocation is not supported by this browser. Use simulated vessel movement for the demo.'), 'text-amber-300');
     return;
   }
-  setGeofenceTrackingStatus('Requesting device-location permission…', 'text-cyan-300');
+  setGeofenceTrackingStatus(t('navicStatusRequestingPermission', 'Requesting device-location permission…'), 'text-cyan-300');
   state.positionWatchId = navigator.geolocation.watchPosition(
     position => {
       checkGeofenceAt(position.coords.latitude, position.coords.longitude, 'DEVICE_GEOLOCATION');
-      button.textContent = 'Stop tracking';
-      setGeofenceTrackingStatus(`Live device tracking · accuracy ±${Math.round(position.coords.accuracy)}m · not stored`, 'text-emerald-300');
+      button.textContent = t('navicStopTracking', 'Stop tracking');
+      setGeofenceTrackingStatus(tFormat('navicStatusLiveTrackingTemplate', { accuracy: Math.round(position.coords.accuracy) }, `Live device tracking · accuracy ±${Math.round(position.coords.accuracy)}m · not stored`), 'text-emerald-300');
     },
     error => {
       state.positionWatchId = null;
-      button.textContent = 'Track my position';
-      setGeofenceTrackingStatus(`Location permission unavailable (${error.message}). No position was sent.`, 'text-amber-300');
+      button.textContent = t('navicTrackMyPosition', 'Track my position');
+      setGeofenceTrackingStatus(tFormat('navicStatusPermissionErrorTemplate', { error: error.message }, `Location permission unavailable (${error.message}). No position was sent.`), 'text-amber-300');
     },
     { enableHighAccuracy: true, maximumAge: 15000, timeout: 15000 }
   );
@@ -4914,7 +8318,7 @@ async function checkGeofenceAt(lat, lon, source) {
   } catch (error) {
     // In Local Simulation no client-side boundary geometry is available, so
     // explicitly avoid inventing a distance or a boundary-crossing claim.
-    setGeofenceTrackingStatus('Backend unavailable — exact geofence distance cannot be evaluated in local simulation.', 'text-amber-300');
+    setGeofenceTrackingStatus(t('navicStatusBackendUnavailable', 'Backend unavailable — exact geofence distance cannot be evaluated in local simulation.'), 'text-amber-300');
     return null;
   }
 }
@@ -4923,8 +8327,8 @@ function toggleGeofenceSimulation(button) {
   if (state.simulatedGeofenceInterval) {
     clearInterval(state.simulatedGeofenceInterval);
     state.simulatedGeofenceInterval = null;
-    button.textContent = 'Simulate vessel movement';
-    setGeofenceTrackingStatus('Geofence simulation stopped');
+    button.textContent = t('navicSimulateMovement', 'Simulate vessel movement');
+    setGeofenceTrackingStatus(t('navicStatusSimStopped', 'Geofence simulation stopped'));
     return;
   }
   // A clearly-labelled route toward the Palk Strait IMBL. It calls the same
@@ -4935,15 +8339,15 @@ function toggleGeofenceSimulation(button) {
   const advance = () => {
     const [lat, lon] = path[index];
     checkGeofenceAt(lat, lon, 'SIMULATED_VESSEL_DEMO');
-    setGeofenceTrackingStatus(`Simulated vessel movement · point ${index + 1}/${path.length} · ${lat.toFixed(2)}, ${lon.toFixed(2)}`, 'text-amber-300');
+    setGeofenceTrackingStatus(tFormat('navicStatusSimMovingTemplate', { index: index + 1, total: path.length, lat: lat.toFixed(2), lon: lon.toFixed(2) }, `Simulated vessel movement · point ${index + 1}/${path.length} · ${lat.toFixed(2)}, ${lon.toFixed(2)}`), 'text-amber-300');
     index += 1;
     if (index >= path.length) {
       clearInterval(state.simulatedGeofenceInterval);
       state.simulatedGeofenceInterval = null;
-      button.textContent = 'Simulate vessel movement';
+      button.textContent = t('navicSimulateMovement', 'Simulate vessel movement');
     }
   };
-  button.textContent = 'Stop simulation';
+  button.textContent = t('navicStopSimulation', 'Stop simulation');
   advance();
   state.simulatedGeofenceInterval = setInterval(advance, 2200);
 }
@@ -5031,7 +8435,7 @@ function setupMSSCodeGenerator() {
     const liveWave = state.liveMarine.waveHeight.toFixed(1);
     const mssCode = `ORCA#KL01#SST28.4#W${liveWave}M#CLR:SAFE(88)#RET1645#CH16`;
     navigator.clipboard.writeText(mssCode).then(() => {
-      alert(`Copied NavIC MSS / SMS 120-char Satellite Emergency Code:\n\n${mssCode}`);
+      alert(tFormat('navicMssCopiedAlertTemplate', { code: mssCode }, `Copied NavIC MSS / SMS 120-char Satellite Emergency Code:\n\n${mssCode}`));
     });
   };
 }
@@ -5086,10 +8490,10 @@ function renderSatelliteCards() {
       </div>
 
       <div class="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800 text-slate-400 font-mono">
-        <div><span>Sync Latency:</span> <strong class="text-cyan-400">${sat.data_sync_latency_sec}s</strong></div>
-        <div><span>Battery:</span> <strong class="text-emerald-400">${sat.battery_level_pct}%</strong></div>
-        <div><span>Last Pass:</span> <span class="text-slate-300 text-[10px]">${sat.last_pass_ist}</span></div>
-        <div><span>Altitude:</span> <span class="text-slate-300 text-[10px]">${sat.altitude_km} km</span></div>
+        <div><span>${t('safetySyncLatencyLabel', 'Sync Latency:')}</span> <strong class="text-cyan-400">${sat.data_sync_latency_sec}s</strong></div>
+        <div><span>${t('safetyBatteryLabel', 'Battery:')}</span> <strong class="text-emerald-400">${sat.battery_level_pct}%</strong></div>
+        <div><span>${t('safetyLastPassLabel', 'Last Pass:')}</span> <span class="text-slate-300 text-[10px]">${sat.last_pass_ist}</span></div>
+        <div><span>${t('safetyAltitudeLabel', 'Altitude:')}</span> <span class="text-slate-300 text-[10px]">${sat.altitude_km} km</span></div>
       </div>
     </div>
   `).join('');
@@ -5101,6 +8505,7 @@ async function refreshSafetyBarometer(lat, lon) {
     const res = await fetchWithTimeout(`${BACKEND_CONFIG.apiBase}/api/weather?lat=${lat}&lon=${lon}`, {}, 6000);
     if (!res.ok) throw new Error(`Weather agent responded with ${res.status}`);
     const weather = await res.json();
+    state.lastWeatherResponse = weather;
 
     updateSafetyIndexCard(weather);
 
@@ -5188,7 +8593,7 @@ function updateSafetyIndexCard(weather) {
     verdictEl.className = `text-2xl sm:text-3xl font-extrabold ${c.text}`;
   }
   if (descEl) {
-    descEl.textContent = `Live Open-Meteo marine telemetry places significant wave height at ${weather.significant_wave_height_m}m and surface wind at ${weather.surface_wind_knots}kn near your selected harbour, giving a computed safety score of ${weather.safety_score}/100.`;
+    descEl.textContent = tFormat('safetyVerdictDescTemplate', { wave: weather.significant_wave_height_m, wind: weather.surface_wind_knots, score: weather.safety_score }, `Live Open-Meteo marine telemetry places significant wave height at ${weather.significant_wave_height_m}m and surface wind at ${weather.surface_wind_knots}kn near your selected harbour, giving a computed safety score of ${weather.safety_score}/100.`);
   }
   const glassVariant = { emerald: 'glass-card-safe', amber: 'glass-card-warn', rose: 'glass-card-danger' }[theme.color] || 'glass-card-safe';
   if (cardEl) {
@@ -5214,7 +8619,7 @@ function updateSafetyIndexCard(weather) {
   const windVal = document.getElementById('safetyTileWindVal');
   const windBand = document.getElementById('safetyTileWindBand');
   if (windVal) windVal.textContent = `${weather.surface_wind_knots} kn`;
-  if (windBand) windBand.textContent = `${weather.wind_direction || 'Westerly'} Breeze`;
+  if (windBand) windBand.textContent = tFormat('safetyBreezeSuffix', { direction: weather.wind_direction || t('safetyWindDefaultDirection', 'Westerly') }, `${weather.wind_direction || 'Westerly'} Breeze`);
 
   const seaVal = document.getElementById('marineSeaVal');
   const seaBand = document.getElementById('safetyTileSeaBand');
@@ -5224,7 +8629,7 @@ function updateSafetyIndexCard(weather) {
   const lightVal = document.getElementById('safetyTileLightningVal');
   const lightBand = document.getElementById('safetyTileLightningBand');
   const lightPct = weather.lightning_risk_pct;
-  if (lightVal) lightVal.textContent = `${lightPct}% ${lightPct < 20 ? 'Low' : lightPct < 50 ? 'Moderate' : 'High'}`;
+  if (lightVal) lightVal.textContent = `${lightPct}% ${lightPct < 20 ? t('severityLow', 'Low') : lightPct < 50 ? t('severityModerate', 'Moderate') : t('severityHigh', 'High')}`;
   if (lightBand) lightBand.textContent = lightningBandLabel(lightPct);
 }
 
@@ -5293,20 +8698,20 @@ function speakBigVerdict() {
 window.speakBigVerdict = speakBigVerdict;
 
 function waveBandLabel(h) {
-  if (h < 0.5) return 'Calm (< 0.5m)';
-  if (h < 1.25) return 'Slight (0.5 - 1.25m)';
-  if (h < 2.5) return 'Moderate (1.25 - 2.5m)';
-  return 'Rough (> 2.5m)';
+  if (h < 0.5) return t('waveBandCalm', 'Calm (< 0.5m)');
+  if (h < 1.25) return t('waveBandSlight', 'Slight (0.5 - 1.25m)');
+  if (h < 2.5) return t('waveBandModerate', 'Moderate (1.25 - 2.5m)');
+  return t('waveBandRough', 'Rough (> 2.5m)');
 }
 
 function seaStateLabel(seaState) {
-  return { 1: 'Calm', 2: 'Slight', 3: 'Slight to Moderate', 4: 'Moderate to Rough' }[seaState] || 'Unknown';
+  return { 1: t('seaStateCalm', 'Calm'), 2: t('seaStateSlight', 'Slight'), 3: t('seaStateSlightModerate', 'Slight to Moderate'), 4: t('seaStateModerateRough', 'Moderate to Rough') }[seaState] || t('seaStateUnknown', 'Unknown');
 }
 
 function lightningBandLabel(pct) {
-  if (pct < 20) return 'Safe Atmospheric Profile';
-  if (pct < 50) return 'Elevated Convective Risk';
-  return 'Severe Squall Warning';
+  if (pct < 20) return t('lightningBandSafe', 'Safe Atmospheric Profile');
+  if (pct < 50) return t('lightningBandElevated', 'Elevated Convective Risk');
+  return t('lightningBandSevere', 'Severe Squall Warning');
 }
 
 function seaStateFromSwh(h) {
@@ -5458,7 +8863,7 @@ function renderFleetDistributionChart() {
       <div class="space-y-1">
         <div class="flex justify-between text-xs">
           <span class="text-slate-300 font-medium">${zone}</span>
-          <span class="text-cyan-400 font-mono font-bold">${count} vessels</span>
+          <span class="text-cyan-400 font-mono font-bold">${tFormat('fleetVesselCountSuffix', { count }, `${count} vessels`)}</span>
         </div>
         <div class="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
           <div class="h-full rounded-full bg-cyan-500 transition-all duration-500" style="width: ${pct}%"></div>
@@ -5470,7 +8875,7 @@ function renderFleetDistributionChart() {
   const totalEl = document.getElementById('fleetTotalActive');
   if (totalEl) {
     totalEl.textContent = state.simulatedVesselCount
-      ? `${state.vessels.length} (${state.liveVesselCount} live · ${state.simulatedVesselCount} sim)`
+      ? tFormat('fleetLiveSimBreakdownTemplate', { total: state.vessels.length, live: state.liveVesselCount, sim: state.simulatedVesselCount }, `${state.vessels.length} (${state.liveVesselCount} live · ${state.simulatedVesselCount} sim)`)
       : state.vessels.length;
   }
 }
@@ -5482,18 +8887,18 @@ function renderVesselsTable(filteredList = null) {
   const list = filteredList || state.vessels;
 
   tbody.innerHTML = list.map(v => {
-    let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#006A4E]">SAFE FISHING</span>`;
+    let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#006A4E]">${t('vesselStatusSafeFishing', 'SAFE FISHING')}</span>`;
     if (v.status === 'BORDER_ALERT') {
-      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#7E3517] animate-pulse">BORDER ALERT</span>`;
+      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#7E3517] animate-pulse">${t('vesselStatusBorderAlert', 'BORDER ALERT')}</span>`;
     } else if (v.status === 'BORDER_WARNING') {
-      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#B8860B]">BORDER WARN</span>`;
+      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#B8860B]">${t('vesselStatusBorderWarn', 'BORDER WARN')}</span>`;
     } else if (v.status === 'TRANSIT') {
-      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-cyan-300">IN TRANSIT</span>`;
+      statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold text-cyan-300">${t('vesselStatusInTransit', 'IN TRANSIT')}</span>`;
     }
     // Simulated fill-in vessels always carry their own tag alongside the
     // status badge, so a scan of the table never mistakes one for real AIS.
     const simTag = v.is_simulated
-      ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500" title="Simulated -- no live AIS coverage near this port">SIM</span>`
+      ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-700 text-slate-200 border border-slate-500" title="${t('vesselSimBadgeTitle', 'Simulated -- no live AIS coverage near this port')}">${t('vesselSimBadgeText', 'SIM')}</span>`
       : '';
 
     return `
@@ -5507,7 +8912,7 @@ function renderVesselsTable(filteredList = null) {
         <td class="py-2.5 px-3">${statusBadge}${simTag}</td>
         <td class="py-2.5 px-3 text-right">
           <button onclick="zoomToVessel('${v.id}')" class="px-2 py-1 bg-slate-800 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded text-[11px] font-medium transition">
-            Locate ➔
+            ${t('vesselLocateAction', 'Locate ➔')}
           </button>
         </td>
       </tr>
@@ -5581,22 +8986,22 @@ function renderBulletinsList(filterSeverity = 'ALL') {
             <span class="text-xs font-mono font-bold" style="color: ${severityColor};">${b.severity}</span>
             <span class="text-xs font-mono text-slate-400">${b.id}</span>
           </div>
-          <span class="text-xs text-slate-400 font-mono">Issued: ${b.issued_at}</span>
+          <span class="text-xs text-slate-400 font-mono">${t('bulletinIssuedLabel', 'Issued:')} ${b.issued_at}</span>
         </div>
 
         <h3 class="text-base font-bold" style="color: ${severityColor};">${b.title}</h3>
         <p class="text-sm text-slate-300 leading-relaxed">${b.summary}</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 font-mono">
-          <div><span class="text-slate-400">Region:</span> <span class="text-slate-200 font-medium">${b.region}</span></div>
-          <div><span class="text-slate-400">Waves:</span> <span class="text-cyan-400 font-medium">${b.wave_forecast}</span></div>
-          <div><span class="text-slate-400">Winds:</span> <span class="text-slate-200 font-medium">${b.wind_forecast}</span></div>
+          <div><span class="text-slate-400">${t('bulletinRegionLabel', 'Region:')}</span> <span class="text-slate-200 font-medium">${b.region}</span></div>
+          <div><span class="text-slate-400">${t('bulletinWavesLabel', 'Waves:')}</span> <span class="text-cyan-400 font-medium">${b.wave_forecast}</span></div>
+          <div><span class="text-slate-400">${t('bulletinWindsLabel', 'Winds:')}</span> <span class="text-slate-200 font-medium">${b.wind_forecast}</span></div>
         </div>
 
         <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
-          <span class="text-slate-400">Source: <strong class="text-slate-300">${b.source}</strong></span>
+          <span class="text-slate-400">${t('bulletinSourceLabel', 'Source:')} <strong class="text-slate-300">${b.source}</strong></span>
           <button onclick="playAudioText('${encodeURIComponent(b.title + '. ' + b.summary)}')" class="text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 transition">
-            <span>${orcaIcon('speaker')}</span> Listen Bulletin
+            <span>${orcaIcon('speaker')}</span> ${t('bulletinListenBtn', 'Listen Bulletin')}
           </button>
         </div>
       </div>
@@ -5650,10 +9055,10 @@ function triggerDistressBeacon() {
       <div class="p-4 rounded-xl glass-card glass-card-danger text-red-200 text-sm space-y-2">
         <div class="flex items-center gap-2 font-bold text-red-400 text-base">
           <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
-          406 MHz SAS&R BEACON TRANSMITTING TO ISRO & COAST GUARD MRCC
+          ${t('sosBeaconTransmittingBanner', '406 MHz SAS&R BEACON TRANSMITTING TO ISRO & COAST GUARD MRCC')}
         </div>
-        <p>Distress packet relayed via INSAT-3DR SAS&R receiver. Maritime Rescue Coordination Centre (MRCC Chennai/Mumbai) alerted on VHF Ch 16.</p>
-        <p class="font-mono text-xs text-slate-300">GPS Coordinates: 09°52'N, 75°33'E · Vessel ID: IND-KL-001 (Matsya Vardhini 4)</p>
+        <p>${t('sosDistressRelayedMsg', 'Distress packet relayed via INSAT-3DR SAS&R receiver. Maritime Rescue Coordination Centre (MRCC Chennai/Mumbai) alerted on VHF Ch 16.')}</p>
+        <p class="font-mono text-xs text-slate-300">${tFormat('sosGpsVesselIdTemplate', { coords: "09°52'N, 75°33'E", vesselId: 'IND-KL-001', vesselName: 'Matsya Vardhini 4' }, "GPS Coordinates: 09°52'N, 75°33'E · Vessel ID: IND-KL-001 (Matsya Vardhini 4)")}</p>
       </div>
     `;
   }
