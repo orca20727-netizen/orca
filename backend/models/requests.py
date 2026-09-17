@@ -3,6 +3,7 @@ from typing import List, Literal, Optional
 from pydantic import BaseModel, Field, field_validator
 
 from constants import DEFAULT_HARBOUR_ID, DEFAULT_PFZ_ID, MAX_QUERY_LENGTH
+from language import SUPPORTED_LANGUAGES
 
 
 class QueryRequest(BaseModel):
@@ -37,8 +38,10 @@ class QueryRequest(BaseModel):
         if v is None:
             return None
         v = v.lower().strip()
-        if v not in {"en", "hi", "ta", "ml"}:
-            raise ValueError("response_language must be one of en, hi, ta, ml")
+        if v not in SUPPORTED_LANGUAGES:
+            raise ValueError(
+                f"response_language must be one of {', '.join(sorted(SUPPORTED_LANGUAGES))}"
+            )
         return v
 
 
