@@ -585,34 +585,16 @@ class NeuralSynthesisAgent:
                 "hi": f" बिजली/तूफान जोखिम: {_fmt(lightning, '%')}।" if isinstance(lightning, (int, float)) else "",
                 "ta": f" மின்னல்/புயல் அபாயம்: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
                 "ml": f" ഇടിമിന്നൽ/കൊടുങ്കാറ്റ് സാധ്യത: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
-                "gu": f" વીજળી/તોફાનનું જોખમ: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
-                "mr": f" वीज/वादळाचा धोका: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
-                "kn": f" ಮಿಂಚು/ಚಂಡಮಾರುತ ಅಪಾಯ: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
-                "te": f" మెరుపు/తుఫాను ప్రమాదం: {_fmt(lightning, '%')}." if isinstance(lightning, (int, float)) else "",
-                "or": f" ବିଜୁଳି/ଝଡ଼ ବିପଦ: {_fmt(lightning, '%')}।" if isinstance(lightning, (int, float)) else "",
-                "bn": f" বজ্রপাত/ঝড়ের ঝুঁকি: {_fmt(lightning, '%')}।" if isinstance(lightning, (int, float)) else "",
             }
             templates = {
                 "hi": f"समुद्री सलाह: लहर की ऊंचाई {wave} और हवा {wind} है। मौसम सुरक्षा स्थिति: {verdict}।{lightning_suffix.get('hi', '')} सावधानी से यात्रा करें।",
                 "ta": f"கடல் ஆலோசனை: அலை உயரம் {wave}, காற்று {wind}. வானிலை பாதுகாப்பு நிலை: {verdict}.{lightning_suffix.get('ta', '')} எச்சரிக்கையுடன் பயணம் செய்யவும்.",
                 "ml": f"കടൽ നിർദേശം: തിരമാല ഉയരം {wave}, കാറ്റ് {wind}. കാലാവസ്ഥാ സുരക്ഷാ നില: {verdict}.{lightning_suffix.get('ml', '')} ജാഗ്രതയോടെ യാത്ര ചെയ്യുക.",
-                "gu": f"દરિયાઈ સલાહ: મોજાની ઊંચાઈ {wave} અને પવન {wind} છે. હવામાન સુરક્ષા સ્થિતિ: {verdict}.{lightning_suffix.get('gu', '')} સાવધાનીથી મુસાફરી કરો.",
-                "mr": f"सागरी सल्ला: लाटेची उंची {wave} आणि वारा {wind} आहे. हवामान सुरक्षा स्थिती: {verdict}.{lightning_suffix.get('mr', '')} सावधगिरीने प्रवास करा.",
-                "kn": f"ಸಮುದ್ರ ಸಲಹೆ: ಅಲೆಯ ಎತ್ತರ {wave} ಮತ್ತು ಗಾಳಿ {wind} ಆಗಿದೆ. ಹವಾಮಾನ ಸುರಕ್ಷತಾ ಸ್ಥಿತಿ: {verdict}.{lightning_suffix.get('kn', '')} ಎಚ್ಚರಿಕೆಯಿಂದ ಪ್ರಯಾಣಿಸಿ.",
-                "te": f"సముద్ర సలహా: అల ఎత్తు {wave} మరియు గాలి {wind} గా ఉంది. వాతావరణ భద్రతా స్థితి: {verdict}.{lightning_suffix.get('te', '')} జాగ్రత్తగా ప్రయాణించండి.",
-                "or": f"ସାମୁଦ୍ରିକ ପରାମର୍ଶ: ତରଙ୍ଗର ଉଚ୍ଚତା {wave} ଏବଂ ପବନ {wind}। ପାଣିପାଗ ସୁରକ୍ଷା ସ୍ଥିତି: {verdict}।{lightning_suffix.get('or', '')} ସତର୍କତାର ସହ ଯାତ୍ରା କରନ୍ତୁ।",
-                "bn": f"সামুদ্রিক পরামর্শ: ঢেউয়ের উচ্চতা {wave} এবং বাতাস {wind}। আবহাওয়া সুরক্ষা অবস্থা: {verdict}।{lightning_suffix.get('bn', '')} সতর্কতার সাথে ভ্রমণ করুন।",
             }
             return templates.get(language, english_text)
         prefixes = {
             "hi": "समुद्री सलाह: ",
             "ta": "கடல் ஆலோசனை: ",
             "ml": "കടൽ നിർദേശം: ",
-            "gu": "દરિયાઈ સલાહ: ",
-            "mr": "सागरी सल्ला: ",
-            "kn": "ಸಮುದ್ರ ಸಲಹೆ: ",
-            "te": "సముద్ర సలహా: ",
-            "or": "ସାମୁଦ୍ରିକ ପରାମର୍ଶ: ",
-            "bn": "সামুদ্রিক পরামর্শ: ",
         }
         return prefixes.get(language, "Marine advisory: ") + english_text
