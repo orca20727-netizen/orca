@@ -8042,6 +8042,15 @@ function buildAdvisoryFromBackend(data, query) {
   const provenance = t.source_provenance || {};
   const oceanTier = provenance.ocean?.tier || satellite.source_tier || 'UNSPECIFIED';
   const chlorophyllSource = satellite.data_source?.chlorophyll || 'UNAVAILABLE';
+  // The Satellite Oceanography agent is only invoked for queries whose
+  // classified intent actually needs ocean-color data (e.g. PFZ/ocean
+  // conditions) -- for greetings, thanks, help, date/time, and other
+  // small-talk it is deliberately skipped (see supervisor.py's
+  // INTENT_RELEVANT_AGENTS). Without this check, every one of those
+  // ordinary "hi"/"hello" replies would show a "Chlorophyll: UNAVAILABLE"
+  // footer line, which reads as broken data rather than "not applicable to
+  // this question". Only render that line when satellite actually ran.
+  const satelliteRan = (t.plan?.executed_agents || []).includes('satellite');
 
   const zone = pfz.top_recommended_pfz || state.selectedPFZ;
   const etaHours = eta.one_way_eta_hours;
@@ -8069,7 +8078,7 @@ function buildAdvisoryFromBackend(data, query) {
     plainText: adv.advisory_text || tFormat('chatNoAdvisoryTextFallback', null, 'The ORCA INSIGHT backend generated an advisory but returned no text.'),
     formattedHtml: `<p><strong class="text-emerald-400">${tFormat('chatLiveAdvisoryLabel', null, '✓ Live Multi-Agent Advisory')}</strong> <span class="text-[10px] text-slate-500 font-mono">(${adv.llm_engine || tFormat('chatGroundedEngineFallback', null, 'Grounded Engine')})</span></p>
       <p class="mt-2 text-slate-300">${adv.advisory_text || ''}</p>
-      <p class="mt-2 text-[11px] font-mono ${chlorophyllSource.includes('ESTIMATED') ? 'text-amber-300' : 'text-slate-500'}">${tFormat('chatOceanSourceTierTemplate', { tier: oceanTier, chlorophyll: chlorophyllSource }, `Ocean source tier: ${oceanTier} · Chlorophyll: ${chlorophyllSource}`)}</p>
+      ${satelliteRan ? `<p class="mt-2 text-[11px] font-mono ${chlorophyllSource.includes('ESTIMATED') ? 'text-amber-300' : 'text-slate-500'}">${tFormat('chatOceanSourceTierTemplate', { tier: oceanTier, chlorophyll: chlorophyllSource }, `Ocean source tier: ${oceanTier} · Chlorophyll: ${chlorophyllSource}`)}</p>` : ''}
       <p class="mt-2 text-[11px] text-slate-500">${tFormat('chatCitationsTemplate', { citations: (adv.citations || []).join(', ') || '—' }, `Citations: ${(adv.citations || []).join(', ') || '—'}`)}</p>`,
     agentSteps,
     language
