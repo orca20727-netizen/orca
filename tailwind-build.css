@@ -228,6 +228,9 @@ img,video{max-width:100%;height:auto}
 .border-ocean-700\/80 {
   border-color: color-mix(in srgb, var(--ocean-700) 80%, transparent);
 }
+.border-ocean-700\/60 {
+  border-color: color-mix(in srgb, var(--ocean-700) 60%, transparent);
+}
 .border-red-400\/50 {
   border-color: rgba(248, 113, 113, 0.5);
 }
