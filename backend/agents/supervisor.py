@@ -162,6 +162,102 @@ INTENT_SIGNALS_BY_LANG: Dict[str, Dict[str, List[str]]] = {
         "DATE_TIME": ["ഇപ്പോൾ എത്ര മണിയായി", "ഇന്നത്തെ തീയതി", "ഇന്ന് ഏത് ദിവസമാണ്"],
         "OFF_TOPIC_GENERIC": ["തലസ്ഥാനം", "കണ്ടുപിടിച്ചത്", "ഒരു തമാശ പറയൂ"],
     },
+    "gu": {
+        "IMBL_BOUNDARY": ["સીમા", "દરિયાઈ સીમા", "આઈએમબીએલ", "શ્રીલંકા"],
+        "MPA_SAFETY": ["સંરક્ષિત વિસ્તાર", "માછલી પકડી શકું", "પ્રતિબંધિત વિસ્તાર"],
+        "ROUTE_PLANNING": ["માર્ગ", "રસ્તો", "સુરક્ષિત રસ્તો"],
+        "ETA_RETURN": ["પાછા", "કેટલો સમય", "સૂર્યાસ્ત"],
+        "FLEET_DENSITY": ["કેટલી બોટ", "બોટો", "ભીડ"],
+        "WEATHER_SAFETY": ["હવામાન", "મોજા", "પવન", "તોફાન", "ચક્રવાત", "ભરતી", "વીજળી"],
+        "YIELD_TREND_ANALYSIS": ["ઉત્પાદકતા ઘટી", "ઓછી માછલી", "કેમ ઘટ્યું"],
+        "OCEAN_CONDITIONS": ["ક્લોરોફિલ", "સમુદ્ર સપાટીનું તાપમાન"],
+        "PFZ_RECOMMENDATION": ["માછીમારી ક્ષેત્ર", "પીએફઝેડ", "શ્રેષ્ઠ ક્ષેત્ર"],
+        "GREETING": ["નમસ્તે", "હેલો", "સુપ્રભાત"],
+        "THANKS_FAREWELL": ["આભાર", "આવજો", "ફરી મળીશું"],
+        "HELP_CAPABILITY": ["મદદ", "તમે શું કરી શકો છો", "તમે કોણ છો"],
+        "DATE_TIME": ["અત્યારે સમય શું છે", "આજની તારીખ", "આજે કયો દિવસ છે"],
+        "OFF_TOPIC_GENERIC": ["રાજધાની", "કોણે શોધ કરી", "મજાક કહો"],
+    },
+    "mr": {
+        "IMBL_BOUNDARY": ["सीमा", "सागरी सीमा", "आयएमबीएल", "श्रीलंका"],
+        "MPA_SAFETY": ["संरक्षित क्षेत्र", "मासेमारी करू शकतो", "प्रतिबंधित क्षेत्र"],
+        "ROUTE_PLANNING": ["मार्ग", "रस्ता", "सुरक्षित मार्ग"],
+        "ETA_RETURN": ["परत", "किती वेळ", "सूर्यास्त"],
+        "FLEET_DENSITY": ["किती बोटी", "बोटी", "गर्दी"],
+        "WEATHER_SAFETY": ["हवामान", "लाट", "वारा", "वादळ", "चक्रीवादळ", "भरती", "वीज"],
+        "YIELD_TREND_ANALYSIS": ["उत्पादकता घटली", "कमी मासे", "का घटले"],
+        "OCEAN_CONDITIONS": ["क्लोरोफिल", "समुद्र पृष्ठभाग तापमान"],
+        "PFZ_RECOMMENDATION": ["मासेमारी क्षेत्र", "पीएफझेड", "सर्वोत्तम क्षेत्र"],
+        "GREETING": ["नमस्कार", "हॅलो", "सुप्रभात"],
+        "THANKS_FAREWELL": ["धन्यवाद", "निरोप", "पुन्हा भेटू"],
+        "HELP_CAPABILITY": ["मदत", "तुम्ही काय करू शकता", "तुम्ही कोण आहात"],
+        "DATE_TIME": ["आत्ता किती वाजले", "आजची तारीख", "आज कोणता वार आहे"],
+        "OFF_TOPIC_GENERIC": ["राजधानी", "कोणी शोध लावला", "विनोद सांगा"],
+    },
+    "kn": {
+        "IMBL_BOUNDARY": ["ಗಡಿ", "ಸಮುದ್ರ ಗಡಿ", "ಐಎಂಬಿಎಲ್", "ಶ್ರೀಲಂಕಾ"],
+        "MPA_SAFETY": ["ಸಂರಕ್ಷಿತ ಪ್ರದೇಶ", "ಮೀನು ಹಿಡಿಯಬಹುದೇ", "ನಿರ್ಬಂಧಿತ ಪ್ರದೇಶ"],
+        "ROUTE_PLANNING": ["ಮಾರ್ಗ", "ದಾರಿ", "ಸುರಕ್ಷಿತ ಮಾರ್ಗ"],
+        "ETA_RETURN": ["ಹಿಂತಿರುಗು", "ಎಷ್ಟು ಸಮಯ", "ಸೂರ್ಯಾಸ್ತ"],
+        "FLEET_DENSITY": ["ಎಷ್ಟು ದೋಣಿಗಳು", "ದೋಣಿಗಳು", "ಜನದಟ್ಟಣೆ"],
+        "WEATHER_SAFETY": ["ಹವಾಮಾನ", "ಅಲೆ", "ಗಾಳಿ", "ಚಂಡಮಾರುತ", "ಉಬ್ಬರವಿಳಿತ", "ಮಿಂಚು"],
+        "YIELD_TREND_ANALYSIS": ["ಉತ್ಪಾದಕತೆ ಕಡಿಮೆಯಾಗಿದೆ", "ಕಡಿಮೆ ಮೀನು", "ಏಕೆ ಕಡಿಮೆಯಾಗಿದೆ"],
+        "OCEAN_CONDITIONS": ["ಕ್ಲೋರೊಫಿಲ್", "ಸಮುದ್ರ ಮೇಲ್ಮೈ ತಾಪಮಾನ"],
+        "PFZ_RECOMMENDATION": ["ಮೀನುಗಾರಿಕೆ ವಲಯ", "ಪಿಎಫ್‌ಝಡ್", "ಅತ್ಯುತ್ತಮ ವಲಯ"],
+        "GREETING": ["ನಮಸ್ಕಾರ", "ಹಲೋ", "ಶುಭೋದಯ"],
+        "THANKS_FAREWELL": ["ಧನ್ಯವಾದ", "ವಿದಾಯ", "ಮತ್ತೆ ಸಿಗೋಣ"],
+        "HELP_CAPABILITY": ["ಸಹಾಯ", "ನೀವು ಏನು ಮಾಡಬಲ್ಲಿರಿ", "ನೀವು ಯಾರು"],
+        "DATE_TIME": ["ಈಗ ಸಮಯ ಎಷ್ಟು", "ಇಂದಿನ ದಿನಾಂಕ", "ಇಂದು ಯಾವ ದಿನ"],
+        "OFF_TOPIC_GENERIC": ["ರಾಜಧಾನಿ", "ಯಾರು ಕಂಡುಹಿಡಿದರು", "ಒಂದು ಜೋಕ್ ಹೇಳಿ"],
+    },
+    "te": {
+        "IMBL_BOUNDARY": ["సరిహద్దు", "సముద్ర సరిహద్దు", "ఐఎంబిఎల్", "శ్రీలంక"],
+        "MPA_SAFETY": ["సంరక్షిత ప్రాంతం", "చేపలు పట్టవచ్చా", "నిషేధిత ప్రాంతం"],
+        "ROUTE_PLANNING": ["మార్గం", "దారి", "సురక్షిత మార్గం"],
+        "ETA_RETURN": ["తిరిగి", "ఎంత సమయం", "సూర్యాస్తమయం"],
+        "FLEET_DENSITY": ["ఎన్ని పడవలు", "పడవలు", "రద్దీ"],
+        "WEATHER_SAFETY": ["వాతావరణం", "అల", "గాలి", "తుఫాను", "ఆటుపోట్లు", "మెరుపు"],
+        "YIELD_TREND_ANALYSIS": ["ఉత్పాదకత తగ్గింది", "తక్కువ చేపలు", "ఎందుకు తగ్గింది"],
+        "OCEAN_CONDITIONS": ["క్లోరోఫిల్", "సముద్ర ఉపరితల ఉష్ణోగ్రత"],
+        "PFZ_RECOMMENDATION": ["మత్స్య మండలం", "పిఎఫ్‌జెడ్", "ఉత్తమ మండలం"],
+        "GREETING": ["నమస్కారం", "హలో", "శుభోదయం"],
+        "THANKS_FAREWELL": ["ధన్యవాదాలు", "వీడ్కోలు", "మళ్ళీ కలుద్దాం"],
+        "HELP_CAPABILITY": ["సహాయం", "మీరు ఏమి చేయగలరు", "మీరు ఎవరు"],
+        "DATE_TIME": ["ఇప్పుడు సమయం ఎంత", "ఈరోజు తేదీ", "ఈరోజు ఏ రోజు"],
+        "OFF_TOPIC_GENERIC": ["రాజధాని", "ఎవరు కనుగొన్నారు", "ఒక జోక్ చెప్పు"],
+    },
+    "or": {
+        "IMBL_BOUNDARY": ["ସୀମା", "ସାମୁଦ୍ରିକ ସୀମା", "ଆଇଏମବିଏଲ", "ଶ୍ରୀଲଙ୍କା"],
+        "MPA_SAFETY": ["ସୁରକ୍ଷିତ ମଣ୍ଡଳ", "ମାଛ ଧରିପାରିବି", "ପ୍ରତିବନ୍ଧିତ ମଣ୍ଡଳ"],
+        "ROUTE_PLANNING": ["ମାର୍ଗ", "ରାସ୍ତା", "ସୁରକ୍ଷିତ ମାର୍ଗ"],
+        "ETA_RETURN": ["ଫେରିବା", "କେତେ ସମୟ", "ସୂର୍ଯ୍ୟାସ୍ତ"],
+        "FLEET_DENSITY": ["କେତେ ଡଙ୍ଗା", "ଡଙ୍ଗାଗୁଡ଼ିକ", "ଭିଡ଼"],
+        "WEATHER_SAFETY": ["ପାଣିପାଗ", "ତରଙ୍ଗ", "ପବନ", "ଝଡ଼", "ଜୁଆର", "ବିଜୁଳି"],
+        "YIELD_TREND_ANALYSIS": ["ଉତ୍ପାଦକତା କମିଗଲା", "କମ ମାଛ", "କାହିଁକି କମିଗଲା"],
+        "OCEAN_CONDITIONS": ["କ୍ଲୋରୋଫିଲ", "ସମୁଦ୍ର ପୃଷ୍ଠ ତାପମାତ୍ରା"],
+        "PFZ_RECOMMENDATION": ["ମତ୍ସ୍ୟଜୀବୀ ମଣ୍ଡଳ", "ପିଏଫଜେଡ", "ସର୍ବୋତ୍ତମ ମଣ୍ଡଳ"],
+        "GREETING": ["ନମସ୍କାର", "ହେଲୋ", "ଶୁଭ ସକାଳ"],
+        "THANKS_FAREWELL": ["ଧନ୍ୟବାଦ", "ବିଦାୟ", "ପୁଣି ଦେଖା ହେବ"],
+        "HELP_CAPABILITY": ["ସାହାଯ୍ୟ", "ଆପଣ କଣ କରିପାରିବେ", "ଆପଣ କିଏ"],
+        "DATE_TIME": ["ବର୍ତ୍ତମାନ କେତେ ବେଳ", "ଆଜିର ତାରିଖ", "ଆଜି କେଉଁ ଦିନ"],
+        "OFF_TOPIC_GENERIC": ["ରାଜଧାନୀ", "କିଏ ଉଦ୍ଭାବନ କଲେ", "ଏକ ପରିହାସ କୁହନ୍ତୁ"],
+    },
+    "bn": {
+        "IMBL_BOUNDARY": ["সীমানা", "সামুদ্রিক সীমানা", "আইএমবিএল", "শ্রীলঙ্কা"],
+        "MPA_SAFETY": ["সংরক্ষিত এলাকা", "মাছ ধরতে পারি", "নিষিদ্ধ এলাকা"],
+        "ROUTE_PLANNING": ["পথ", "রাস্তা", "নিরাপদ পথ"],
+        "ETA_RETURN": ["ফিরে", "কত সময়", "সূর্যাস্ত"],
+        "FLEET_DENSITY": ["কতগুলো নৌকা", "নৌকাগুলো", "ভিড়"],
+        "WEATHER_SAFETY": ["আবহাওয়া", "ঢেউ", "বাতাস", "ঝড়", "জোয়ার", "বজ্রপাত"],
+        "YIELD_TREND_ANALYSIS": ["উৎপাদনশীলতা কমেছে", "কম মাছ", "কেন কমেছে"],
+        "OCEAN_CONDITIONS": ["ক্লোরোফিল", "সমুদ্র পৃষ্ঠের তাপমাত্রা"],
+        "PFZ_RECOMMENDATION": ["মৎস্য অঞ্চল", "পিএফজেড", "সেরা অঞ্চল"],
+        "GREETING": ["নমস্কার", "হ্যালো", "শুভ সকাল"],
+        "THANKS_FAREWELL": ["ধন্যবাদ", "বিদায়", "আবার দেখা হবে"],
+        "HELP_CAPABILITY": ["সাহায্য", "আপনি কী করতে পারেন", "আপনি কে"],
+        "DATE_TIME": ["এখন কয়টা বাজে", "আজকের তারিখ", "আজ কী বার"],
+        "OFF_TOPIC_GENERIC": ["রাজধানী", "কে আবিষ্কার করেছেন", "একটা কৌতুক বলুন"],
+    },
 }
 
 # Priority is preserved across languages. Exporting this alias keeps older
@@ -211,24 +307,44 @@ _SUBTASK_LIBRARY = {
 
 _WORD_BOUNDARY_CACHE: Dict[str, "re.Pattern[str]"] = {}
 
+# Only these newly-added intents get word-boundary-safe matching for their
+# single-token signals (see _signal_matches). Every pre-existing maritime
+# intent (WEATHER_SAFETY, IMBL_BOUNDARY, etc.) keeps the ORIGINAL plain
+# substring check, completely untouched -- a first version of this fix
+# applied word-boundary matching to every ASCII single-token signal
+# indiscriminately, which silently broke plural/inflected forms of
+# existing keywords that used to match fine via plain substring (e.g.
+# "wave" no longer matching inside "waves", "storm" inside "storms",
+# "tide" inside "tides", "route" inside "routes", "border" inside
+# "borders") -- caught via a live production test ("waves 2-3 m expected,
+# is it safe?" wrongly fell through to GENERAL_VOYAGE_SAFETY instead of
+# WEATHER_SAFETY). Scoping the boundary check to only the intents that
+# actually need it eliminates that regression entirely while still
+# stopping the original problem this was meant to fix: a bare "hi" (or
+# "help") matching inside "fishing" / "helpful".
+_WORD_BOUNDARY_INTENTS = {
+    "GREETING", "THANKS_FAREWELL", "HELP_CAPABILITY", "OFF_TOPIC_GENERIC",
+}
 
-def _signal_matches(signal: str, q: str) -> bool:
+
+def _signal_matches(signal: str, q: str, use_word_boundary: bool) -> bool:
     """True if `signal` is present in the already-lowercased query `q`.
 
-    Multi-word phrases ("fishing zone", "how many boats") keep the exact
-    original plain-substring check -- a phrase that long can't plausibly
-    match inside an unrelated word, and several non-English signal lists
-    rely on this for agglutinative-language matching (a suffix can attach
-    directly to a word with no space).
+    Multi-word phrases ("fishing zone", "how many boats") and any
+    non-ASCII (Hindi/Tamil/Malayalam) signal always keep the exact plain-
+    substring check -- a phrase that long can't plausibly match inside an
+    unrelated word, and several non-English signal lists rely on substring
+    matching for agglutinative-language suffixes that attach to a word
+    with no space.
 
-    A single ASCII token (no space, e.g. "hi", "border", "imbl") instead
-    matches only as its own whole word via a word-boundary regex. Without
-    this, a short new signal like "hi" would match inside "fishing" (index
-    3-4) -- a real false-positive this function exists to prevent. Existing
-    ASCII single-word signals only get *stricter* (never looser) under this
-    change, so they keep matching every genuine standalone use while losing
-    only accidental substring hits."""
-    if " " in signal or not signal.isascii():
+    A single ASCII token belonging to one of the new small-talk/generic
+    intents (`_WORD_BOUNDARY_INTENTS`, e.g. "hi", "help") instead matches
+    only as its own whole word via a word-boundary regex, so it can't
+    false-positive inside an unrelated longer word ("hi" inside "fishing",
+    "help" inside "helpful"). Every pre-existing maritime intent's signals
+    are NEVER passed `use_word_boundary=True` and so are completely
+    unaffected by this -- see the note on `_WORD_BOUNDARY_INTENTS` above."""
+    if not use_word_boundary or " " in signal or not signal.isascii():
         return signal in q
     pattern = _WORD_BOUNDARY_CACHE.get(signal)
     if pattern is None:
@@ -282,7 +398,8 @@ def classify_intents(query: str, language_code: str = "en") -> List[str]:
     matched = []
     for intent in INTENT_SIGNALS_BY_LANG["en"]:
         signals = signals_by_intent.get(intent, [])
-        if any(_signal_matches(signal, q) for signal in signals):
+        use_word_boundary = intent in _WORD_BOUNDARY_INTENTS
+        if any(_signal_matches(signal, q, use_word_boundary) for signal in signals):
             matched.append(intent)
     # MATH_CALCULATION isn't in the keyword table above -- number/operator
     # shapes vary too much for a fixed phrase list, so it gets its own
