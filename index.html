@@ -56,6 +56,12 @@ plain XYZ tile layer that plugs into Leaflet, so app.js's map code
 was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
 <script src="https://sdk.mappls.com/map/sdk/web?v=3.0&access_token=mnxypxvjwhjexkllncpgvjrhkfacvjcjnjfa"></script>
 
+<!-- <model-viewer> web component: renders the lightweight GLB vessel model
+used inside GIS Command Map vessel markers (see renderVesselsOnMap in
+app.js). Purely a small custom element on top of the existing Mappls
+marker system below -- it does not add or replace any mapping library. -->
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+
 <!-- Custom Styles -->
 <link rel="stylesheet" href="styles.css">
 
