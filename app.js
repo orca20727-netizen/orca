@@ -132,6 +132,11 @@ const state = {
   selectedHarbour: 'HBR-KOC',
   selectedPFZ: 'PFZ-01',
   activeVesselMarkers: {},
+  selectedVesselId: null,   // vessel id whose 3D marker is currently highlighted (Locate action / marker click)
+  vesselShipSpriteUrl: null,      // cached 3D-rendered ship PNG, shared by every vessel marker
+  vesselShipSpriteLoading: false,
+  vesselShipSpriteFailed: false,
+  vesselShipSpriteCallbacks: [],
   chatHistory: [],
   sessionId: null,
   isSimulatingDAG: false,
@@ -7158,8 +7163,114 @@ function renderHarbourMarkers() {
   });
 }
 
+// ---------------------------------------------------------------------
+// Shared vessel ship sprite (perf): a <model-viewer> per vessel means a
+// separate GLB parse + WebGL context per marker, which gets expensive fast
+// with many vessels on screen (browsers also cap concurrent WebGL
+// contexts, so a large fleet could start silently losing contexts).
+// Instead, cargo_ship.glb is loaded into ONE hidden <model-viewer>, that
+// single 3D render is captured once to a PNG data URL, and every vessel
+// marker below just reuses that cached image via a plain <img> tag --
+// same rendered-3D look, one model load total instead of one per vessel.
+// Positioning, rotation, popups, and selection are untouched; only how the
+// pixels for the ship icon are produced/reused changes.
+// ---------------------------------------------------------------------
+function ensureVesselShipSprite(onReady) {
+  if (state.vesselShipSpriteUrl || state.vesselShipSpriteFailed) {
+    onReady();
+    return;
+  }
+
+  state.vesselShipSpriteCallbacks = state.vesselShipSpriteCallbacks || [];
+  state.vesselShipSpriteCallbacks.push(onReady);
+  if (state.vesselShipSpriteLoading) return; // already fetching/rendering for an earlier caller
+  state.vesselShipSpriteLoading = true;
+
+  const finish = () => {
+    state.vesselShipSpriteLoading = false;
+    const callbacks = state.vesselShipSpriteCallbacks || [];
+    state.vesselShipSpriteCallbacks = [];
+    callbacks.forEach(cb => cb());
+  };
+
+  if (typeof customElements === 'undefined' || !customElements.get('model-viewer')) {
+    // <model-viewer> script hasn't loaded (e.g. blocked/offline) -- markers
+    // fall back to per-vessel inline <model-viewer> below, same as before.
+    state.vesselShipSpriteFailed = true;
+    finish();
+    return;
+  }
+
+  const mv = document.createElement('model-viewer');
+  mv.setAttribute('src', 'assets/models/cargo_ship.glb');
+  mv.setAttribute('camera-orbit', '0deg 55deg 2.4m');
+  mv.setAttribute('field-of-view', '25deg');
+  mv.setAttribute('exposure', '1.1');
+  mv.setAttribute('shadow-intensity', '0');
+  mv.setAttribute('disable-zoom', '');
+  mv.setAttribute('interaction-prompt', 'none');
+  mv.setAttribute('camera-controls', 'false');
+  mv.setAttribute('loading', 'eager');
+  mv.setAttribute('reveal', 'auto');
+  // Rendered off-screen at a higher pixel size than the 34x34 marker so the
+  // cached sprite still looks crisp on hi-DPI screens / when zoomed.
+  mv.style.cssText = 'position:fixed; top:-9999px; left:-9999px; width:160px; height:160px; background:transparent; pointer-events:none;';
+  document.body.appendChild(mv);
+
+  const capture = () => {
+    // Two animation frames so the renderer has definitely painted before
+    // the canvas gets read back out.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      try {
+        state.vesselShipSpriteUrl = mv.toDataURL('image/png');
+      } catch (err) {
+        console.warn('ORCA GIS: vessel ship sprite capture failed, falling back to per-marker 3D model.', err);
+        state.vesselShipSpriteFailed = true;
+      }
+      mv.remove();
+      finish();
+    }));
+  };
+
+  mv.addEventListener('load', capture, { once: true });
+  mv.addEventListener('error', () => {
+    state.vesselShipSpriteFailed = true;
+    mv.remove();
+    finish();
+  }, { once: true });
+}
+
+// Reads whichever anomaly flag ORCA's existing (unmodified) anomaly-detection
+// logic already attaches to a vessel record -- this never computes, scores,
+// or infers an anomaly itself, only displays a result that already exists on
+// the vessel object. Checks a few of the most conventional shapes such a
+// pre-computed flag could arrive in (a plain boolean field, or a nested
+// `anomaly` object) so this keeps working regardless of exactly which of
+// those shapes the backend uses; add another key here if the real one is
+// different, but no detection logic belongs in this function.
+function isVesselAnomalous(vessel) {
+  if (!vessel) return false;
+  if (vessel.is_anomalous || vessel.anomaly_detected || vessel.flagged_anomalous) return true;
+  const a = vessel.anomaly;
+  if (a === true) return true;
+  if (a && typeof a === 'object') {
+    return !!(a.detected || a.is_anomalous || a.flagged);
+  }
+  return false;
+}
+
 function renderVesselsOnMap() {
   if (!state.map) return;
+
+  // First call on a page load renders nothing until the shared sprite is
+  // ready (a few frames), then re-renders itself once -- every later call
+  // (periodic refreshes, etc.) already has the sprite cached and returns
+  // immediately below, so this never repeats the expensive part.
+  if (!state.vesselShipSpriteUrl && !state.vesselShipSpriteFailed) {
+    ensureVesselShipSprite(renderVesselsOnMap);
+    return;
+  }
+
   clearMapLayerGroup('vessels');
   state.activeVesselMarkers = {};
 
@@ -7181,14 +7292,81 @@ function renderVesselsOnMap() {
     // AIS traffic at a glance, regardless of their status color.
     const simBorder = vessel.is_simulated ? 'border-dashed border-2 border-slate-200 opacity-80' : 'border border-ocean-700';
 
+    // Visual vessel marker: a lightweight 3D low-poly cargo-ship GLB
+    // (assets/models/cargo_ship.glb), in place of the old flat circle+arrow
+    // icon. Everything else about the marker (Mappls positioning, popup,
+    // selection) is unchanged below.
+    // The colored status ring keeps the same BORDER_ALERT/WARNING/TRANSIT/
+    // simulated signal the old circle used to convey, now sitting behind
+    // the ship model instead of being the marker itself. The inner wrapper
+    // carries a stable id so heading rotation can be updated in place by
+    // startLiveVesselSimulation() without needing a full marker rebuild.
+    //
+    // Bow orientation: cargo_ship.glb is authored bow-forward on -Z, which
+    // is the glTF "front" convention -- so camera-orbit's theta=0 below
+    // faces the bow, and it renders pointing toward the top of the icon at
+    // heading 0. The wrapper's rotate(vessel.heading deg) then turns the
+    // whole rendered ship clockwise from there, exactly like the old "▲"
+    // compass arrow did, so the bow now tracks true heading.
+    //
+    // shipVisual: normally the shared cached sprite (see
+    // ensureVesselShipSprite above) reused as a plain <img> for every
+    // vessel. Only falls back to a per-vessel <model-viewer> if the shared
+    // capture failed for some reason -- same visual result either way.
+    const shipVisual = state.vesselShipSpriteUrl
+      ? `<img src="${state.vesselShipSpriteUrl}" alt="" draggable="false" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">`
+      : `<model-viewer
+              src="assets/models/cargo_ship.glb"
+              style="width:100%;height:100%;background:transparent;"
+              camera-orbit="0deg 55deg 2.4m"
+              field-of-view="25deg"
+              exposure="1.1"
+              shadow-intensity="0"
+              disable-zoom
+              interaction-prompt="none"
+              camera-controls="false"
+              loading="eager"
+              reveal="auto">
+            </model-viewer>`;
+
+    // Selection highlight: a Tailwind ring (same ring/animate-pulse utilities
+    // already used elsewhere in this file, e.g. the live-status dots) drawn
+    // around the marker when this vessel is the currently selected one.
+    // Seeded from state.selectedVesselId here so a full re-render (periodic
+    // refresh, layer toggle, etc.) never drops the highlight; toggled live
+    // in between re-renders by setVesselSelectionHighlight() below, which
+    // only touches this one element -- the ship model, status ring, label,
+    // popup and marker positioning are all untouched by selection.
+    const isSelected = state.selectedVesselId === vessel.id;
+
+    // Anomaly warning: a subtle, static (non-pulsing, on purpose -- this is
+    // a passive data flag, not an active alert like BORDER_ALERT's pulse)
+    // dashed amber ring plus a small corner badge, shown only for vessels
+    // the existing anomaly-detection logic has already flagged via
+    // isVesselAnomalous() above. Deliberately visually distinct from the
+    // (larger, solid, pulsing cyan) selection ring so the two never read as
+    // the same thing, and from the colored status ring underneath, which
+    // keeps signaling BORDER_ALERT/WARNING/TRANSIT exactly as before.
+    const isAnomalous = isVesselAnomalous(vessel);
+    const anomalyRing = isAnomalous
+      ? `<div class="absolute -inset-1 rounded-full border-2 border-dashed border-amber-400/80 pointer-events-none" title="${t('mapVesselAnomalyTitle', 'Flagged anomalous by ORCA detection')}"></div>`
+      : '';
+    const anomalyBadge = isAnomalous
+      ? `<span class="absolute -top-1 -right-1 flex items-center justify-center w-3.5 h-3.5 rounded-full bg-amber-400 text-slate-950 text-[8px] leading-none pointer-events-none" title="${t('mapVesselAnomalyTitle', 'Flagged anomalous by ORCA detection')}">⚠</span>`
+      : '';
+
     const html = `
-        <div class="relative flex items-center justify-center">
-          <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md ${simBorder} ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
-            ▲
+        <div id="vesselMarkerWrap-${vessel.id}" class="relative flex items-center justify-center" style="width:40px;height:40px;">
+          <div id="vesselSelectRing-${vessel.id}" class="absolute -inset-2 rounded-full ring-4 ring-cyan-300 animate-pulse pointer-events-none ${isSelected ? '' : 'hidden'}"></div>
+          <div class="absolute inset-0 rounded-full ${simBorder} ${colorClass} ${pulseClass} opacity-70"></div>
+          ${anomalyRing}
+          <div id="vesselShip-${vessel.id}" data-heading="${vessel.heading}" style="width:34px;height:34px;transform: rotate(${vessel.heading}deg); transition: transform 0.4s linear; pointer-events:none;">
+            ${shipVisual}
           </div>
           <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-[#14A3C7] px-1 rounded text-[#00008B] border border-[#00008B]/30 pointer-events-none">
                         ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' · SIM' : ''}
           </span>
+          ${anomalyBadge}
         </div>
       `;
 
@@ -7225,6 +7403,17 @@ function renderVesselsOnMap() {
 
     state.mapLayers.vessels.push(marker);
     state.activeVesselMarkers[vessel.id] = { marker, popupHtml };
+
+    // Clicking the marker itself also selects/highlights it, in addition to
+    // the existing "Locate ➔" table action below. Wrapped in try/catch like
+    // the other Mappls calls beyond addListener()/resize() in this file
+    // (see focusFishermanZone() above) -- if this particular event isn't
+    // actually supported, the marker's existing built-in click-to-open-popup
+    // behavior (popupOptions: true) still works exactly as before; only the
+    // extra highlight would be skipped.
+    try {
+      marker.addListener('click', () => selectVessel(vessel.id));
+    } catch (err) { /* Mappls marker click listener not available -- ignore */ }
   });
 
   const mapVesselCounter = document.getElementById('mapActiveVessels');
@@ -8950,9 +9139,30 @@ function setupVesselFilters() {
   if (statusFilter) statusFilter.addEventListener('change', applyFilter);
 }
 
+// Highlights vessel `vesselId`'s 3D marker (the ring added in
+// renderVesselsOnMap()) and un-highlights whichever vessel was previously
+// selected. Purely a visual toggle on existing DOM nodes -- it never
+// touches marker creation, positioning, the popup, or any other
+// interaction, so the existing info panel/popup behavior in zoomToVessel()
+// and the marker's own click-to-open-popup are unaffected.
+function setVesselSelectionHighlight(vesselId, on) {
+  const ring = document.getElementById(`vesselSelectRing-${vesselId}`);
+  if (ring) ring.classList.toggle('hidden', !on);
+}
+
+function selectVessel(vesselId) {
+  if (state.selectedVesselId === vesselId) return;
+  const previousId = state.selectedVesselId;
+  state.selectedVesselId = vesselId;
+  if (previousId) setVesselSelectionHighlight(previousId, false);
+  setVesselSelectionHighlight(vesselId, true);
+}
+
 window.zoomToVessel = function(vesselId) {
   const vessel = state.vessels.find(v => v.id === vesselId);
   if (!vessel || !state.map) return;
+
+  selectVessel(vesselId);
 
   switchTab('fleetgis');
   state.map.setCenter({ lat: vessel.lat, lng: vessel.lon });
@@ -9094,6 +9304,13 @@ function startLiveVesselSimulation() {
       const entry = state.activeVesselMarkers[v.id];
       if (entry) {
         entry.marker.setPosition({ lat: v.lat, lng: v.lon });
+        // Keep the 3D ship model's rotation in sync with heading changes
+        // (e.g. the boundary-bounce turns above) without rebuilding the
+        // marker -- same lightweight in-place update as setPosition.
+        const shipEl = document.getElementById(`vesselShip-${v.id}`);
+        if (shipEl) {
+          shipEl.style.transform = `rotate(${v.heading}deg)`;
+        }
       }
     });
 
