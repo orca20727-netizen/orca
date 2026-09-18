@@ -197,7 +197,7 @@ One collaborative marine-intelligence platform, two command decks: a fisherman's
 <span class="landing-strip-item"><span class="strip-dot"></span>EN · हिन्दी · தமிழ் · മലയാളം</span>
 </div>
 </div>
-<div class="reveal grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl w-full mt-9">
+<div class="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl w-full mt-9">
 <button type="button" onclick="orcaEnterFisherman()" title="Open the Fisherman Console" data-i18n-title="landingFishermanCardTitleAttr" class="glass-card hover:border-emerald-500/60 text-left p-6 rounded-2xl transition transform hover:-translate-y-1 cursor-pointer group">
 <div class="flex items-center gap-3 mb-3">
 <div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-xl text-emerald-300"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12s4-6 9-6 9 6 9 6-4 6-9 6-9-6-9-6z"/><circle cx="16" cy="11" r="0.9" fill="currentColor" stroke="none"/><path d="M3 12L1 9m2 3l-2 3"/></svg></div>
@@ -214,6 +214,14 @@ One collaborative marine-intelligence platform, two command decks: a fisherman's
 <p class="text-xs text-slate-400 leading-relaxed mb-3" data-i18n="landingInsightCardDesc">Full command deck: ISRO satellite oceanography, GIS map, the 8-node agent DAG, Safety Barometer, Fleet Monitor and NavIC bridge.</p>
 <span class="text-xs font-semibold text-cyan-300 flex items-center gap-1"><span data-i18n="landingInsightCardCta">Open Insight Command Deck</span> <span aria-hidden="true">→</span></span>
 </button>
+<button type="button" onclick="orcaEnterDefence()" title="Open the Defence Command Centre" data-i18n-title="landingDefenceCardTitleAttr" class="glass-card hover:border-amber-500/60 text-left p-6 rounded-2xl transition transform hover:-translate-y-1 cursor-pointer group">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-11 h-11 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-xl text-amber-300"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3.2v5.6c0 4.6-3 8.6-7 9.9-4-1.3-7-5.3-7-9.9V6.2L12 3z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg></div>
+<h3 class="text-lg font-bold text-slate-100 group-hover:text-amber-300 transition" data-i18n="landingDefenceCardTitle">ORCA Defence</h3>
+</div>
+<p class="text-xs text-slate-400 leading-relaxed mb-3" data-i18n="landingDefenceCardDesc">Maritime domain awareness for coastal security: AOI monitoring, vessel anomaly detection, SAR dark-vessel correlation and the entity graph — for command centres.</p>
+<span class="text-xs font-semibold text-amber-300 flex items-center gap-1"><span data-i18n="landingDefenceCardCta">Open Defence Command Centre</span> <span aria-hidden="true">→</span></span>
+</button>
 </div>
 </div>
 </section>
@@ -229,6 +237,9 @@ function orcaEnterFisherman(){
   document.getElementById('fishermanShell').classList.remove('hidden');
   window.scrollTo(0,0);
   if (window.ORCA_FISHERMAN_INIT) { window.ORCA_FISHERMAN_INIT(); }
+}
+function orcaEnterDefence(){
+  window.location.href = '/defence/';
 }
 function orcaBackToLanding(){
   document.getElementById('dashboardShell').classList.add('hidden');
