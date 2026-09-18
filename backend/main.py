@@ -64,16 +64,17 @@ _defence_client = httpx.AsyncClient(timeout=30.0) if _defence_upstream else None
 _defence_req_exclude = {"host", "content-length", "connection", "transfer-encoding"}
 _defence_resp_exclude = {"content-encoding", "content-length", "connection", "transfer-encoding"}
 # Defence's frontend HTML references its own assets with root-absolute
-# paths (/favicon.ico, /styles.css, /app.js), which is correct when it is
-# the only app on its domain but wrong once it's served under /defence on
-# this domain (those paths would resolve to *this* site's root instead).
-# Its API calls are unaffected -- Defence's own API_BASE is "/api/defence",
-# which is proxied below at that exact path regardless of page path -- so
-# only these three HTML asset references need rewriting.
+# paths (/favicon.ico, /styles.css, /app.js, /theme.js), which is correct
+# when it is the only app on its domain but wrong once it's served under
+# /defence on this domain (those paths would resolve to *this* site's root
+# instead). Its API calls are unaffected -- Defence's own API_BASE is
+# "/api/defence", which is proxied below at that exact path regardless of
+# page path -- so only these HTML asset references need rewriting.
 _defence_html_asset_rewrites = (
     ('href="/favicon.ico"', 'href="/defence/favicon.ico"'),
     ('href="/styles.css"', 'href="/defence/styles.css"'),
     ('src="/app.js"', 'src="/defence/app.js"'),
+    ('src="/theme.js"', 'src="/defence/theme.js"'),
 )
 
 
