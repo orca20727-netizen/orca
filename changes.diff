@@ -1,0 +1,78 @@
+diff --git a/app.js b/app.js
+index f4ac1a1..206c193 100644
+--- a/app.js
++++ b/app.js
+@@ -7181,10 +7181,39 @@ function renderVesselsOnMap() {
+     // AIS traffic at a glance, regardless of their status color.
+     const simBorder = vessel.is_simulated ? 'border-dashed border-2 border-slate-200 opacity-80' : 'border border-ocean-700';
+ 
++    // Visual vessel marker: a lightweight 3D low-poly cargo-ship GLB
++    // (assets/models/cargo_ship.glb) rendered via <model-viewer>, in place
++    // of the old flat circle+arrow icon. Everything else about the marker
++    // (Mappls positioning, popup, selection) is unchanged below.
++    // The colored status ring keeps the same BORDER_ALERT/WARNING/TRANSIT/
++    // simulated signal the old circle used to convey, now sitting behind
++    // the ship model instead of being the marker itself. The inner wrapper
++    // carries a stable id so heading rotation can be updated in place by
++    // startLiveVesselSimulation() without needing a full marker rebuild.
++    //
++    // Bow orientation: cargo_ship.glb is authored bow-forward on -Z, which
++    // is the glTF "front" convention -- so camera-orbit's theta=0 below
++    // faces the bow, and it renders pointing toward the top of the 34x34
++    // icon at heading 0. The wrapper's rotate(vessel.heading deg) then
++    // turns the whole rendered ship clockwise from there, exactly like the
++    // old "▲" compass arrow did, so the bow now tracks true heading.
+     const html = `
+-        <div class="relative flex items-center justify-center">
+-          <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-md ${simBorder} ${colorClass} ${pulseClass}" style="transform: rotate(${vessel.heading}deg);">
+-            ▲
++        <div class="relative flex items-center justify-center" style="width:40px;height:40px;">
++          <div class="absolute inset-0 rounded-full ${simBorder} ${colorClass} ${pulseClass} opacity-70"></div>
++          <div id="vesselShip-${vessel.id}" data-heading="${vessel.heading}" style="width:34px;height:34px;transform: rotate(${vessel.heading}deg); transition: transform 0.4s linear; pointer-events:none;">
++            <model-viewer
++              src="assets/models/cargo_ship.glb"
++              style="width:100%;height:100%;background:transparent;"
++              camera-orbit="0deg 55deg 2.4m"
++              field-of-view="25deg"
++              exposure="1.1"
++              shadow-intensity="0"
++              disable-zoom
++              interaction-prompt="none"
++              camera-controls="false"
++              loading="eager"
++              reveal="auto">
++            </model-viewer>
+           </div>
+           <span class="absolute -top-4 whitespace-nowrap text-[9px] font-mono bg-[#14A3C7] px-1 rounded text-[#00008B] border border-[#00008B]/30 pointer-events-none">
+                         ${vessel.id.includes('-') ? vessel.id.split('-').slice(1).join('-') : vessel.id}${vessel.is_simulated ? ' · SIM' : ''}
+@@ -9094,6 +9123,13 @@ function startLiveVesselSimulation() {
+       const entry = state.activeVesselMarkers[v.id];
+       if (entry) {
+         entry.marker.setPosition({ lat: v.lat, lng: v.lon });
++        // Keep the 3D ship model's rotation in sync with heading changes
++        // (e.g. the boundary-bounce turns above) without rebuilding the
++        // marker -- same lightweight in-place update as setPosition.
++        const shipEl = document.getElementById(`vesselShip-${v.id}`);
++        if (shipEl) {
++          shipEl.style.transform = `rotate(${v.heading}deg)`;
++        }
+       }
+     });
+ 
+diff --git a/index.html b/index.html
+index 0b20448..384441d 100644
+--- a/index.html
++++ b/index.html
+@@ -56,6 +56,12 @@ plain XYZ tile layer that plugs into Leaflet, so app.js's map code
+ was ported to Mappls' own Marker/Polygon/Polyline/Circle APIs. -->
+ <script src="https://sdk.mappls.com/map/sdk/web?v=3.0&access_token=mnxypxvjwhjexkllncpgvjrhkfacvjcjnjfa"></script>
+ 
++<!-- <model-viewer> web component: renders the lightweight GLB vessel model
++used inside GIS Command Map vessel markers (see renderVesselsOnMap in
++app.js). Purely a small custom element on top of the existing Mappls
++marker system below -- it does not add or replace any mapping library. -->
++<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
++
+ <!-- Custom Styles -->
+ <link rel="stylesheet" href="styles.css">
+ 
