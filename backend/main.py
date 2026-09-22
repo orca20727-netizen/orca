@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 
 from api.routes import router
 from api.fisherman_ai_routes import router as fisherman_ai_router
+from api.intel_routes import router as intel_router
 from live_scheduler import lifespan
 
 logging.basicConfig(level=logging.INFO)
@@ -51,6 +52,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 app.include_router(router)
 app.include_router(fisherman_ai_router)
+app.include_router(intel_router)
 
 # --- ORCA Defence reverse proxy --------------------------------------------
 # ORCA Defence runs as its own Railway service with its own backend,
@@ -75,6 +77,7 @@ _defence_html_asset_rewrites = (
     ('href="/styles.css"', 'href="/defence/styles.css"'),
     ('src="/app.js"', 'src="/defence/app.js"'),
     ('src="/theme.js"', 'src="/defence/theme.js"'),
+    ('src="/intel.js"', 'src="/defence/intel.js"'),
 )
 
 
