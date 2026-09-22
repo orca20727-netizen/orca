@@ -11,6 +11,7 @@ from alert_service import alert_service
 from ais_gateway import start_ais_gateway, stop_ais_gateway
 import copernicus_marine_feed
 import imd_marine_feed
+import osiris_intel
 
 logger = logging.getLogger(__name__)
 REFRESH_SECONDS = max(60, int(os.getenv("LIVE_FEED_REFRESH_SECONDS", "60")))
@@ -105,11 +106,18 @@ async def lifespan(app):
     # shortly after boot instead, with SatelliteAgent's existing estimate
     # covering that gap exactly as it already does for any other cache miss.
     copernicus_task = asyncio.create_task(copernicus_refresh_loop())
+    # Fire-and-forget, same reasoning as the Copernicus task above: OSIRIS
+    # (osirisai.live) has been observed to occasionally take 12-15s to
+    # respond on a cold cache miss, so this is never awaited on the
+    # startup path -- the cache fills in shortly after boot, and every
+    # route in api/intel_routes.py already tolerates an empty cache.
+    osiris_task = asyncio.create_task(osiris_intel.poll_loop())
     try:
         yield
     finally:
         refresh_task.cancel()
         copernicus_task.cancel()
+        osiris_task.cancel()
         try:
             await refresh_task
         except asyncio.CancelledError:
@@ -118,4 +126,9 @@ async def lifespan(app):
             await copernicus_task
         except asyncio.CancelledError:
             pass
+        try:
+            await osiris_task
+        except asyncio.CancelledError:
+            pass
+        await osiris_intel.shutdown()
         await stop_ais_gateway()
