@@ -1,5 +1,5 @@
 // ORCA INSIGHT Service Worker - Offline Marine Caching
-const CACHE_NAME = 'orca-insight-v2.1.0-live';
+const CACHE_NAME = 'orca-insight-v2.1.1-live';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -50,6 +50,14 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
+
+  // ORCA Defence is a separate app proxied in under /defence/. Never cache it
+  // or answer for it here: a stale cached /defence/ page served next to a
+  // fresh /defence/app.js left its buttons dead after login. Returning
+  // without respondWith() lets the browser fetch it normally.
+  if (url.pathname === '/defence' || url.pathname.startsWith('/defence/')) {
+    return;
+  }
 
   // Never intercept anything but simple same-origin GETs. In particular:
   //  - The FastAPI backend lives on a different origin/port (see
