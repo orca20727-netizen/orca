@@ -72,12 +72,15 @@ _defence_resp_exclude = {"content-encoding", "content-length", "connection", "tr
 # instead). Its API calls are unaffected -- Defence's own API_BASE is
 # "/api/defence", which is proxied below at that exact path regardless of
 # page path -- so only these HTML asset references need rewriting.
+# Prefix matches (no closing quote), so versioned references such as
+# src="/app.js?v=2026092302" are rewritten too -- Defence cache-busts its
+# assets with a ?v= query so a new page never runs with an old script.
 _defence_html_asset_rewrites = (
-    ('href="/favicon.ico"', 'href="/defence/favicon.ico"'),
-    ('href="/styles.css"', 'href="/defence/styles.css"'),
-    ('src="/app.js"', 'src="/defence/app.js"'),
-    ('src="/theme.js"', 'src="/defence/theme.js"'),
-    ('src="/intel.js"', 'src="/defence/intel.js"'),
+    ('href="/favicon.ico', 'href="/defence/favicon.ico'),
+    ('href="/styles.css', 'href="/defence/styles.css'),
+    ('src="/app.js', 'src="/defence/app.js'),
+    ('src="/theme.js', 'src="/defence/theme.js'),
+    ('src="/intel.js', 'src="/defence/intel.js'),
 )
 
 
