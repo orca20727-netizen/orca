@@ -1038,37 +1038,36 @@ Numbered advisories, cyclone hazard warnings, and international boundary complia
 <!-- ==================================================== -->
 <!-- 8. GLOBAL INTEL (third-party OSINT via OSIRIS/osirisai.live) -->
 <!-- ==================================================== -->
-@@ -1054,29 +17,47 @@ <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+<section id="tab-intel" class="tab-content hidden space-y-6">
+<div class="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 text-xs text-amber-300">
+Third-party open-source intelligence via <strong>OSIRIS</strong> (osirisai.live, MIT licensed, github.com/carbon-evolution/osiris). Supplementary situational awareness only &mdash; not a primary ORCA data source, and not used in any routing, safety, or PFZ recommendation.
+</div>
+<div class="flex flex-wrap items-center justify-between gap-3">
+<h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="inline-block align-[-2px] shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg> Global Intel Sources
+</h3>
+<div class="flex items-center gap-3">
+<span id="intelUpdatedAt" class="text-xs text-slate-400 font-mono"></span>
+<button id="intelRefreshBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-ocean-800 text-cyan-300 hover:bg-ocean-700 transition">Refresh</button>
+</div>
+</div>
 <div id="intelSourceHealth" class="flex flex-wrap gap-3"></div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-<div class="p-5 rounded-xl glass-card space-y-3">
-<h4 class="text-sm font-bold text-slate-100">Global Incidents &amp; Conflict Zones</h4>
-<div id="intelIncidentsList" class="text-xs text-slate-400 space-y-2 max-h-80 overflow-y-auto">Loading&hellip;</div>
 <div class="p-5 rounded-xl glass-card space-y-3 border-l-4 border-l-red-500/50">
 <div class="flex items-center gap-2">
 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-red-400"><polygon points="12 2 22 8 22 16 12 22 2 16 2 8 12 2"/></svg>
 <h4 class="text-sm font-bold text-slate-100">Incidents &amp; Conflicts</h4>
 </div>
-<div class="p-5 rounded-xl glass-card space-y-3">
-<h4 class="text-sm font-bold text-slate-100">Recent Earthquakes (USGS/EMSC)</h4>
-<div id="intelEarthquakesList" class="text-xs text-slate-400 space-y-2 max-h-80 overflow-y-auto">Loading&hellip;</div>
 <div id="intelIncidentsList" class="text-xs text-slate-400 space-y-2 max-h-96 overflow-y-auto">Loading&hellip;</div>
 </div>
-<div class="p-5 rounded-xl glass-card space-y-3">
-<h4 class="text-sm font-bold text-slate-100">Maritime Ports &amp; Chokepoints</h4>
-<div id="intelMaritimeList" class="text-xs text-slate-400 space-y-2 max-h-80 overflow-y-auto">Loading&hellip;</div>
 <div class="p-5 rounded-xl glass-card space-y-3 border-l-4 border-l-yellow-500/50">
 <div class="flex items-center gap-2">
 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-yellow-400"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
 <h4 class="text-sm font-bold text-slate-100">Earthquakes (USGS/EMSC)</h4>
 </div>
-<div class="p-5 rounded-xl glass-card space-y-3">
-<h4 class="text-sm font-bold text-slate-100">Strategic Infrastructure</h4>
-<div id="intelInfraList" class="text-xs text-slate-400 space-y-2 max-h-80 overflow-y-auto">Loading&hellip;</div>
 <div id="intelEarthquakesList" class="text-xs text-slate-400 space-y-2 max-h-96 overflow-y-auto">Loading&hellip;</div>
 </div>
-<div class="p-5 rounded-xl glass-card space-y-3">
 <div class="p-5 rounded-xl glass-card space-y-3 border-l-4 border-l-cyan-500/50">
 <div class="flex items-center gap-2">
 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-cyan-400"><path d="M3 3h18v8h-6v10h-6V11H3V3z"/><circle cx="12" cy="7" r="1.5"/></svg>
@@ -1087,25 +1086,31 @@ Numbered advisories, cyclone hazard warnings, and international boundary complia
 <div class="flex items-center gap-2">
 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-teal-400"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s4 5 10 5c7 0 13-5 13-13a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
 <h4 class="text-sm font-bold text-slate-100">Live News Streams</h4>
-<div id="intelLiveNewsList" class="text-xs text-slate-400 space-y-2 max-h-80 overflow-y-auto">Loading&hellip;</div>
 </div>
-<div class="p-5 rounded-xl glass-card space-y-3">
 <div id="intelLiveNewsList" class="text-xs text-slate-400 space-y-2 max-h-96 overflow-y-auto">Loading&hellip;</div>
 </div>
 <div class="p-5 rounded-xl glass-card space-y-3 border-l-4 border-l-violet-500/50">
 <div class="flex items-center gap-2">
 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="text-violet-400"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 <h4 class="text-sm font-bold text-slate-100">OSINT News Feed</h4>
-<div id="intelNewsList" class="text-xs text-slate-400 space-y-2 max-h-80 overflow-y-auto">Loading&hellip;</div>
 </div>
 <div id="intelNewsList" class="text-xs text-slate-400 space-y-2 max-h-96 overflow-y-auto">Loading&hellip;</div>
 </div>
 </div>
 
-@@ -1092,731 +73,3 @@ <h4 class="text-sm font-bold text-slate-100">CCTV &mdash; Region Lookup</h4>
+<div class="p-5 rounded-xl glass-card space-y-3">
+<h4 class="text-sm font-bold text-slate-100">CCTV &mdash; Region Lookup</h4>
+<p class="text-xs text-slate-500">Public camera networks near a point, fetched live from OSIRIS on demand &mdash; not cached, since global coverage is ~38,000 cameras and always needs a region. Metadata only; &quot;Open feed&quot; opens the original stream in a new tab rather than embedding third-party video here.</p>
+<form id="intelCctvForm" class="flex flex-wrap items-end gap-3">
+<div><label class="block text-xs text-slate-400 mb-1">Latitude</label><input name="lat" type="number" step="any" value="20.0" required class="px-2 py-1.5 rounded-lg bg-ocean-900 border border-ocean-700 text-sm w-28 text-slate-100"></div>
+<div><label class="block text-xs text-slate-400 mb-1">Longitude</label><input name="lng" type="number" step="any" value="77.0" required class="px-2 py-1.5 rounded-lg bg-ocean-900 border border-ocean-700 text-sm w-28 text-slate-100"></div>
+<div><label class="block text-xs text-slate-400 mb-1">Radius (km)</label><input name="radius_km" type="number" step="any" value="500" required class="px-2 py-1.5 rounded-lg bg-ocean-900 border border-ocean-700 text-sm w-28 text-slate-100"></div>
+<button type="submit" class="px-4 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-semibold text-sm">Search</button>
+</form>
 <div id="intelCctvList" class="text-xs text-slate-400 space-y-2 max-h-80 overflow-y-auto">Enter a location and search.</div>
 </div>
 </section>
+
 
 
 </main>
