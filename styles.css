@@ -1123,3 +1123,59 @@ nav.glass-nav {
 #intelCctvList::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.8);
 }
+   /* ============================================
+   Global Intel Tab Enhancements (Phase 6)
+   ============================================ */
+
+/* Improved scrollbar styling for intel data containers */
+#intelIncidentsList,
+#intelEarthquakesList,
+#intelMaritimeList,
+#intelInfraList,
+#intelLiveNewsList,
+#intelNewsList,
+#intelCctvList {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.5) transparent;
+}
+
+#intelIncidentsList::-webkit-scrollbar,
+#intelEarthquakesList::-webkit-scrollbar,
+#intelMaritimeList::-webkit-scrollbar,
+#intelInfraList::-webkit-scrollbar,
+#intelLiveNewsList::-webkit-scrollbar,
+#intelNewsList::-webkit-scrollbar,
+#intelCctvList::-webkit-scrollbar {
+  width: 6px;
+}
+
+#intelIncidentsList::-webkit-scrollbar-track,
+#intelEarthquakesList::-webkit-scrollbar-track,
+#intelMaritimeList::-webkit-scrollbar-track,
+#intelInfraList::-webkit-scrollbar-track,
+#intelLiveNewsList::-webkit-scrollbar-track,
+#intelNewsList::-webkit-scrollbar-track,
+#intelCctvList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#intelIncidentsList::-webkit-scrollbar-thumb,
+#intelEarthquakesList::-webkit-scrollbar-thumb,
+#intelMaritimeList::-webkit-scrollbar-thumb,
+#intelInfraList::-webkit-scrollbar-thumb,
+#intelLiveNewsList::-webkit-scrollbar-thumb,
+#intelNewsList::-webkit-scrollbar-thumb,
+#intelCctvList::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 3px;
+}
+
+#intelIncidentsList::-webkit-scrollbar-thumb:hover,
+#intelEarthquakesList::-webkit-scrollbar-thumb:hover,
+#intelMaritimeList::-webkit-scrollbar-thumb:hover,
+#intelInfraList::-webkit-scrollbar-thumb:hover,
+#intelLiveNewsList::-webkit-scrollbar-thumb:hover,
+#intelNewsList::-webkit-scrollbar-thumb:hover,
+#intelCctvList::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
